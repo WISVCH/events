@@ -43,6 +43,9 @@ dependencies {
         exclude module: "spring-boot-starter-tomcat"
     }
     compile("com.zaxxer:HikariCP:2.4.1")
+    compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
+    compile("org.webjars:jquery:2.1.4")
+
     runtime("org.hsqldb:hsqldb")
     // For future production use
     //runtime("org.postgresql:postgresql:9.4-1203-jdbc41")
