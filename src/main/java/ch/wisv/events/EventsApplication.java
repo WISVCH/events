@@ -1,12 +1,12 @@
-package ch.wisv.eventreg;
+package ch.wisv.events;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EventregApplication {
+public class EventsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EventregApplication.class, args);
+        SpringApplication.run(EventsApplication.class, args);
     }
 }
