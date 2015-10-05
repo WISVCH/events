@@ -23,6 +23,7 @@ public class Event {
     private LocalDateTime end;
     private LocalDateTime registrationStart;
     private LocalDateTime registrationEnd;
+    private int registrationLimit;
 
     @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL})
     private Set<Registration> registrations;
@@ -86,6 +87,14 @@ public class Event {
         this.start = start;
     }
 
+    public int getRegistrationLimit() {
+        return registrationLimit;
+    }
+
+    public void setRegistrationLimit(int registrationLimit) {
+        this.registrationLimit = registrationLimit;
+    }
+
     public Set<Registration> getRegistrations() {
         return registrations;
     }
@@ -96,6 +105,7 @@ public class Event {
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
         return id == event.id &&
+                registrationLimit == event.registrationLimit &&
                 Objects.equals(title, event.title) &&
                 Objects.equals(description, event.description) &&
                 Objects.equals(start, event.start) &&
@@ -106,19 +116,20 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, start, end, registrationStart, registrationEnd);
+        return Objects.hash(id, title, description, start, end, registrationStart, registrationEnd, registrationLimit);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("title", title)
-                .add("description", description)
-                .add("start", start)
-                .add("end", end)
-                .add("registrationStart", registrationStart)
+                .add("registrationLimit", registrationLimit)
                 .add("registrationEnd", registrationEnd)
+                .add("registrationStart", registrationStart)
+                .add("end", end)
+                .add("start", start)
+                .add("description", description)
+                .add("title", title)
+                .add("id", id)
                 .toString();
     }
 }
