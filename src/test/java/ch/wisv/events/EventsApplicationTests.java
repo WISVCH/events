@@ -1,18 +1,74 @@
 package ch.wisv.events;
 
+import ch.wisv.events.model.Event;
+import ch.wisv.events.model.Person;
+import ch.wisv.events.model.Registration;
+import ch.wisv.events.repository.EventRepository;
+import ch.wisv.events.repository.PersonRepository;
+import ch.wisv.events.repository.RegistrationRepository;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.stream.StreamSupport;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = EventsApplication.class)
 @WebAppConfiguration
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EventsApplicationTests {
+    @Autowired
+    EventRepository eventRepository;
+    @Autowired
+    PersonRepository personRepository;
+    @Autowired
+    RegistrationRepository registrationRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(EventsApplicationTests.class);
 
     @Test
     public void contextLoads() {
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    public void model1() {
+        Event event1 = eventRepository.save(new Event("Borrel"));
+        assertThat(eventRepository.count(), equalTo(1L));
+        printObjects("Events", eventRepository.findAll());
+
+        Person person1 = personRepository.save(new Person(1, "derp"));
+        assertThat(personRepository.count(), equalTo(1L));
+        printObjects("People", personRepository.findAll());
+
+        Registration reg1 = registrationRepository.save(new Registration(person1, event1, LocalDateTime.now()));
+        assertThat(personRepository.count(), equalTo(1L));
+        printObjects("Registrations", registrationRepository.findAll());
+    }
+
+    @Test
+    public void model2() {
+        // Assert that persistence works
+        assertThat(personRepository.count(), equalTo(1L));
+    }
+
+    private static void printObjects(String title, Iterable<?> objects) {
+        log.info(title + ":");
+        StreamSupport.stream(objects.spliterator(), false).map(Object::toString).map(s -> "- " + s).forEach(log::info);
     }
 
 }
