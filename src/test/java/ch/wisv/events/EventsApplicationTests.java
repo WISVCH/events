@@ -47,7 +47,12 @@ public class EventsApplicationTests {
     @Transactional
     @Commit
     public void model1() {
-        Event event1 = eventRepository.save(new Event("Borrel"));
+        Event event1 = new Event("Borrel");
+        event1.setStart(LocalDateTime.now().plusDays(1));
+        event1.setEnd(LocalDateTime.now().plusHours(26));
+        event1.setRegistrationStart(LocalDateTime.now().plusHours(1));
+        event1.setRegistrationEnd(LocalDateTime.now().plusHours(12));
+        event1 = eventRepository.save(event1);
         assertThat(eventRepository.count(), equalTo(1L));
         printObjects("Events", eventRepository.findAll());
 
@@ -67,6 +72,15 @@ public class EventsApplicationTests {
         assertThat(personRepository.count(), equalTo(1L));
         assertThat(eventRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
         assertThat(personRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
+
+        assertThat(eventRepository.findByEndAfter(LocalDateTime.now().plusHours(12)).size(), equalTo(1));
+        assertThat(eventRepository.findByEndAfter(LocalDateTime.now().plusDays(2)).size(), equalTo(0));
+
+        assertThat(eventRepository.findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime.now().plusHours
+                (3), LocalDateTime.now().plusHours(3)).size(), equalTo(1));
+        assertThat(eventRepository.findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime.now(),
+                LocalDateTime.now().plusDays(1)).size(), equalTo(0));
+
     }
 
     private static void printObjects(String title, Iterable<?> objects) {
