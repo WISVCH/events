@@ -55,15 +55,18 @@ public class EventsApplicationTests {
         assertThat(personRepository.count(), equalTo(1L));
         printObjects("People", personRepository.findAll());
 
-        Registration reg1 = registrationRepository.save(new Registration(person1, event1, LocalDateTime.now()));
+        registrationRepository.save(new Registration(person1, event1, LocalDateTime.now()));
         assertThat(personRepository.count(), equalTo(1L));
         printObjects("Registrations", registrationRepository.findAll());
     }
 
     @Test
+    @Transactional
     public void model2() {
         // Assert that persistence works
         assertThat(personRepository.count(), equalTo(1L));
+        assertThat(eventRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
+        assertThat(personRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
     }
 
     private static void printObjects(String title, Iterable<?> objects) {

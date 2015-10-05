@@ -2,7 +2,6 @@ package ch.wisv.events.model;
 
 import com.google.common.base.MoreObjects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -22,7 +21,7 @@ public class Person {
     private String email;
     private String telephone;
 
-    @OneToMany(mappedBy = "person", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "person")
     private Set<Registration> registrations;
 
     protected Person() {

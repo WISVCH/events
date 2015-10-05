@@ -2,7 +2,10 @@ package ch.wisv.events.model;
 
 import com.google.common.base.MoreObjects;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,11 +20,9 @@ import java.util.Objects;
 public class Registration {
     @Id
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
     @Id
     @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
     private LocalDateTime date;
 

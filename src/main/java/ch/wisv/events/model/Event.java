@@ -25,7 +25,7 @@ public class Event {
     private LocalDateTime registrationEnd;
     private int registrationLimit;
 
-    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "event")
     private Set<Registration> registrations;
 
     protected Event() {
