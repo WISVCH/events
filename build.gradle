@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.2.5.RELEASE'
+        springBootVersion = '1.2.6.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -42,7 +42,8 @@ dependencies {
         // We're using Jetty instead
         exclude module: "spring-boot-starter-tomcat"
     }
-    compile("com.zaxxer:HikariCP:2.4.1")
+    compile("com.zaxxer:HikariCP")
+
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:jquery:2.1.4")
 
