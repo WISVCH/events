@@ -35,20 +35,20 @@ repositories {
     }
 }
 
+configurations {
+    // We're using Jetty instead
+    compile.exclude module: "spring-boot-starter-tomcat"
+    // We're using HikariCP instead
+    compile.exclude module: "tomcat-jdbc"
+}
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-data-jpa") {
-        // We're using HikariCP instead
-        exclude module: "tomcat-jdbc"
-    }
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-mail")
     // For future use
     //compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf") {
-        // We're using Jetty instead
-        exclude module: "spring-boot-starter-tomcat"
-    }
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("com.zaxxer:HikariCP")
 
     compile("com.google.guava:guava:18.0")
@@ -56,8 +56,8 @@ dependencies {
     compile("org.webjars:jquery:2.1.4")
 
     runtime("org.hsqldb:hsqldb")
-    // For future production use
-    //runtime("org.postgresql:postgresql")
+    runtime("org.postgresql:postgresql")
+
     testCompile("org.springframework.boot:spring-boot-starter-test") 
 }
 
