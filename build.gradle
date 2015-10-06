@@ -61,7 +61,6 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test") 
 }
 
-
 eclipse {
     classpath {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
@@ -70,5 +69,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.7'
 }
