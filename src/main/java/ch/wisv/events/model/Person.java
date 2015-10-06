@@ -2,9 +2,7 @@ package ch.wisv.events.model;
 
 import com.google.common.base.MoreObjects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,9 +14,15 @@ public class Person {
 
     // Not an @GeneratedValue because we want to depend on id (sub value) from OIDC
     @Id
-    long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    // sub (subject) value from OIDC to identify logged-on users
+    @Column(unique = true, nullable = true)
+    private String oidcSub;
     private String name;
+    @Column(unique = true, nullable = true)
     private String email;
+    private boolean emailValidated;
     private String telephone;
 
     @OneToMany(mappedBy = "person")
@@ -27,13 +31,21 @@ public class Person {
     protected Person() {
     }
 
-    public Person(long id, String name) {
-        this.id = id;
+    public Person(String name, String email) {
         this.name = name;
+        this.email = email;
     }
 
     public long getId() {
         return id;
+    }
+
+    public String getOidcSub() {
+        return oidcSub;
+    }
+
+    public void setOidcSub(String oidcSub) {
+        this.oidcSub = oidcSub;
     }
 
     public String getName() {
@@ -50,6 +62,14 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
     }
 
     public String getTelephone() {
@@ -69,7 +89,9 @@ public class Person {
         if (this == o) return true;
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id) &&
+        return id == person.id &&
+                emailValidated == person.emailValidated &&
+                Objects.equals(oidcSub, person.oidcSub) &&
                 Objects.equals(name, person.name) &&
                 Objects.equals(email, person.email) &&
                 Objects.equals(telephone, person.telephone);
@@ -77,16 +99,18 @@ public class Person {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, telephone);
+        return Objects.hash(id, oidcSub, name, email, emailValidated, telephone);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("id", id)
+                .add("telephone", telephone)
+                .add("oidcSub", oidcSub)
                 .add("name", name)
                 .add("email", email)
-                .add("telephone", telephone)
+                .add("emailValidated", emailValidated)
+                .add("id", id)
                 .toString();
     }
 }

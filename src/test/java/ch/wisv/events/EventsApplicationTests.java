@@ -56,7 +56,7 @@ public class EventsApplicationTests {
         assertThat(eventRepository.count(), equalTo(1L));
         printObjects("Events", eventRepository.findAll());
 
-        Person person1 = personRepository.save(new Person(1, "derp"));
+        Person person1 = personRepository.save(new Person("derp", "herp@example.com"));
         assertThat(personRepository.count(), equalTo(1L));
         printObjects("People", personRepository.findAll());
 
@@ -80,7 +80,6 @@ public class EventsApplicationTests {
                 (3), LocalDateTime.now().plusHours(3)).size(), equalTo(1));
         assertThat(eventRepository.findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1)).size(), equalTo(0));
-
     }
 
     private static void printObjects(String title, Iterable<?> objects) {
