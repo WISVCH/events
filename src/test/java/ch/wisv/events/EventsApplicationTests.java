@@ -60,7 +60,7 @@ public class EventsApplicationTests {
         assertThat(personRepository.count(), equalTo(1L));
         printObjects("People", personRepository.findAll());
 
-        registrationRepository.save(new Registration(person1, event1, LocalDateTime.now()));
+        registrationRepository.save(new Registration(person1, event1, LocalDateTime.now(), "0000"));
         assertThat(personRepository.count(), equalTo(1L));
         printObjects("Registrations", registrationRepository.findAll());
     }

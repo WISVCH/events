@@ -2,10 +2,7 @@ package ch.wisv.events.model;
 
 import com.google.common.base.MoreObjects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,6 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @IdClass(Registration.RegistrationId.class)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "code"}))
 public class Registration {
     @Id
     @ManyToOne
@@ -25,14 +23,17 @@ public class Registration {
     @ManyToOne
     private Event event;
     private LocalDateTime date;
+    @Column(length = 4)
+    private String code;
 
     protected Registration() {
     }
 
-    public Registration(Person person, Event event, LocalDateTime date) {
+    public Registration(Person person, Event event, LocalDateTime date, String code) {
         this.person = person;
         this.event = event;
         this.date = date;
+        this.code = code;
     }
 
     public LocalDateTime getDate() {
@@ -43,6 +44,14 @@ public class Registration {
         this.date = date;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,12 +59,13 @@ public class Registration {
         Registration that = (Registration) o;
         return Objects.equals(person, that.person) &&
                 Objects.equals(event, that.event) &&
-                Objects.equals(date, that.date);
+                Objects.equals(date, that.date) &&
+                Objects.equals(code, that.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(person, event, date);
+        return Objects.hash(person, event, date, code);
     }
 
     @Override
@@ -64,6 +74,7 @@ public class Registration {
                 .add("person", person)
                 .add("event", event)
                 .add("date", date)
+                .add("code", code)
                 .toString();
     }
 
