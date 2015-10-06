@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -46,6 +47,9 @@ public class EventsApplicationTests {
     @Test
     @Transactional
     @Commit
+    /**
+     * Create some test data
+     */
     public void model1() {
         Event event1 = new Event("Borrel");
         event1.setStart(LocalDateTime.now().plusDays(1));
@@ -67,8 +71,10 @@ public class EventsApplicationTests {
 
     @Test
     @Transactional
+    /**
+     * Assert that persistence works as expected
+     */
     public void model2() {
-        // Assert that persistence works
         assertThat(personRepository.count(), equalTo(1L));
         assertThat(eventRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
         assertThat(personRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
@@ -80,6 +86,39 @@ public class EventsApplicationTests {
                 (3), LocalDateTime.now().plusHours(3)).size(), equalTo(1));
         assertThat(eventRepository.findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1)).size(), equalTo(0));
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    @Transactional
+    /**
+     * Email should be unique
+     */
+    public void uniqueness() {
+        personRepository.save(new Person("derp", "herp@example.com"));
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    @Transactional
+    /**
+     * Two registrations for same event cannot have same code
+     */
+    public void uniqueness2() {
+        Event event1 = eventRepository.findAll().iterator().next();
+        Person person2 = personRepository.save(new Person("herp", "derp@example.com"));
+        registrationRepository.save(new Registration(person2, event1, LocalDateTime.now(), "0000"));
+        printObjects("Registrations", registrationRepository.findAll());
+    }
+
+    @Test
+    @Transactional
+    /**
+     * Registering for another event with same code should succeed
+     */
+    public void uniqueness3() {
+        Event event2 = eventRepository.save(new Event("Lecture"));
+        Person person2 = personRepository.save(new Person("herp", "derp@example.com"));
+        registrationRepository.save(new Registration(person2, event2, LocalDateTime.now(), "0000"));
+        printObjects("Registrations", registrationRepository.findAll());
     }
 
     private static void printObjects(String title, Iterable<?> objects) {
