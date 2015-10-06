@@ -1,13 +1,17 @@
 buildscript {
     ext {
-        springBootVersion = '1.2.6.RELEASE'
+        // Using 1.3.0 milestone for newer spring-data-jpa version
+        springBootVersion = '1.3.0.M5'
     }
     repositories {
         mavenCentral()
+        maven {
+            url 'http://repo.spring.io/milestone'
+        }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE")
     }
 }
 
@@ -26,30 +30,34 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        url 'http://repo.spring.io/milestone'
+    }
 }
 
+configurations {
+    // We're using Jetty instead
+    compile.exclude module: "spring-boot-starter-tomcat"
+    // We're using HikariCP instead
+    compile.exclude module: "tomcat-jdbc"
+}
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-data-jpa") {
-        // We're using HikariCP instead
-        exclude module: "tomcat-jdbc"
-    }
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-mail")
     // For future use
     //compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf") {
-        // We're using Jetty instead
-        exclude module: "spring-boot-starter-tomcat"
-    }
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("com.zaxxer:HikariCP")
 
+    compile("com.google.guava:guava:18.0")
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:jquery:2.1.4")
 
     runtime("org.hsqldb:hsqldb")
-    // For future production use
-    //runtime("org.postgresql:postgresql:9.4-1203-jdbc41")
+    runtime("org.postgresql:postgresql")
+
     testCompile("org.springframework.boot:spring-boot-starter-test") 
 }
 
