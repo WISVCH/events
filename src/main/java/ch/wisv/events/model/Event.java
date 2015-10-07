@@ -1,6 +1,7 @@
 package ch.wisv.events.model;
 
 import com.google.common.base.MoreObjects;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,22 +14,28 @@ import java.util.Set;
 @Entity
 public class Event {
 
+    public final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String title;
     @Lob
     private String description;
+    @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime start;
+    @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime end;
+    @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime registrationStart;
+    @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime registrationEnd;
     private int registrationLimit;
 
     @OneToMany(mappedBy = "event")
     private Set<Registration> registrations;
 
-    protected Event() {
+    public Event() {
     }
 
     public Event(String title) {

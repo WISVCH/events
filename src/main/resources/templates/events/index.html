@@ -9,7 +9,7 @@
           rel="stylesheet" media="screen"/>
     <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
             th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/dist/0.0.3/js/bootstrap.min.js"
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js"
             th:src="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js}"></script>
 </head>
 <body>
@@ -33,25 +33,32 @@
         <h1>Events</h1>
 
         <p>
-            Welcome to the CH event registration app!
+            Shown below are the upcoming events.
+        </p>
+
+        <p>
+            <a href="#" th:href="@{/events/create}">Create an event</a>
         </p>
     </div>
-    <p th:if="${#lists.isEmpty(events)}">Currently no events scheduled. Check back later!</p>
-
-    <div class="container" th:unless="${#lists.isEmpty(events)}">
-        <div class="row">
-            <div class="col-md-4" th:each="event : ${events}">
-                <h2 th:text="${event.title}"></h2>
-
-                <p th:text="${event.description}"></p>
-                <a href="#" class="btn btn-default">Register &raquo;</a>
-            </div>
+    <div class="container">
+        <div class="alert alert-info" role="alert" th:unless="${#strings.isEmpty(message)}"><p th:text="${message}"></p>
         </div>
-        <div class="row" style="margin-top: 20px">
-            <div class="col-md-12">
-                <p><a href="#" th:href="@{/events/}">View all upcoming events &raquo;</a></p>
-            </div>
-        </div>
+        <table class="table" th:unless="${#lists.isEmpty(events)}">
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Start time</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tr th:each="event : ${events}">
+                <td th:text="${event.title}"></td>
+                <td th:text="${event.start}"></td>
+                <td><a href="#" class="btn btn-default btn-sm">More info &raquo;</a> <a href="#"
+                                                                                        class="btn btn-default btn-sm">Register &raquo;</a>
+                </td>
+            </tr>
+        </table>
     </div>
     <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
 </div>

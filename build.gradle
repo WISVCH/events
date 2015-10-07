@@ -52,6 +52,8 @@ dependencies {
     compile("com.zaxxer:HikariCP")
 
     compile("com.google.guava:guava:18.0")
+    compile("org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37")
+    compile("org.webjars.bower:momentjs:2.10.6")
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:jquery:2.1.4")
 
