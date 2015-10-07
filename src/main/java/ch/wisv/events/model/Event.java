@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 public class Event {
 
-    private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    public final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

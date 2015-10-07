@@ -21,10 +21,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.StreamSupport;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = EventsApplication.class)
@@ -119,6 +121,19 @@ public class EventsApplicationTests {
         Person person2 = personRepository.save(new Person("herp", "derp@example.com"));
         registrationRepository.save(new Registration(person2, event2, LocalDateTime.now(), "0000"));
         printObjects("Registrations", registrationRepository.findAll());
+    }
+
+    @Test
+    @Transactional
+    public void storeEventFromStringAndGetEndAfter() {
+        long count = eventRepository.count();
+
+        Event event = new Event("Excursion to TimeMachine");
+        event.setEnd(LocalDateTime.parse("20/06/2060 00:00", DateTimeFormatter.ofPattern(Event.TIME_FORMAT)));
+        eventRepository.save(event);
+
+        assertThat(eventRepository.count(), equalTo(count + 1));
+        assertThat(eventRepository.findByEndAfter(LocalDateTime.now()), hasItem(event));
     }
 
     private static void printObjects(String title, Iterable<?> objects) {
