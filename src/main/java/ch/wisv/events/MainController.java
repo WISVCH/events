@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * Main Spring MVC controller
- *
- * @author Mark Janssen
  */
 @Controller
 public class MainController {

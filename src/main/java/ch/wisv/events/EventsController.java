@@ -15,8 +15,6 @@ import java.util.List;
 
 /**
  * Controller for creating and getting events.
- *
- * @author Rick Wieman
  */
 @Controller
 @RequestMapping(value = "/events")
