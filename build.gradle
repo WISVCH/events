@@ -46,12 +46,13 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-mail")
-    // For future use
-    //compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("com.zaxxer:HikariCP")
+    compile("com.google.guava:guava")
 
-    compile("com.google.guava:guava:18.0")
+    compile("org.mitre:openid-connect-client:1.2.2")
+
     compile("org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37")
     compile("org.webjars.bower:momentjs:2.10.6")
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
