@@ -3,6 +3,7 @@ package ch.wisv.events;
 import ch.wisv.events.model.Event;
 import ch.wisv.events.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,12 +33,14 @@ public class EventsController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public String createEvent(Model model) {
         model.addAttribute("event", new Event());
         return "events/create";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public String createEvent(@ModelAttribute Event event, RedirectAttributes redirectAttributes) {
         event = eventRepository.save(event);
 

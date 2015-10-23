@@ -33,7 +33,8 @@
         <h1>Events</h1>
 
         <p>
-            Welcome to the CH event registration app!
+            Welcome to the CH event registration app<span sec:authorize="isAuthenticated()">, <span
+                th:text="${userInfo.givenName}">Derp</span></span>!
         </p>
     </div>
     <p th:if="${#lists.isEmpty(events)}">Currently no events scheduled. Check back later!</p>

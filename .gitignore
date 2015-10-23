@@ -1,4 +1,5 @@
 application.properties
+oidc-client-registration.json
 rebel.xml
 .gradle*
 .idea
