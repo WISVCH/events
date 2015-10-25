@@ -12,6 +12,7 @@ import org.mitre.openid.connect.client.service.ServerConfigurationService;
 import org.mitre.openid.connect.client.service.impl.*;
 import org.mitre.openid.connect.web.UserInfoInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,15 +36,16 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CHConnectConfiguration extends WebSecurityConfigurerAdapter {
 
-    // TODO: Move these settings to a properties file
     /**
      * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration
      */
-    private final String issuerUri = "https://connect.ch.tudelft.nl/";
+    @Value("${connect.issuerUri}")
+    private String issuerUri;
     /**
      * URI of this application, without trailing slash
      */
-    private final String clientUri = "http://localhost:8080";
+    @Value("${connect.clientUri}")
+    private String clientUri;
     /**
      * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
      */
