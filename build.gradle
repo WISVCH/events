@@ -33,6 +33,9 @@ repositories {
     maven {
         url 'http://repo.spring.io/milestone'
     }
+    maven {
+        url 'https://dl.bintray.com/wisvch/maven'
+    }
 }
 
 configurations {
@@ -52,7 +55,7 @@ dependencies {
     compile("com.zaxxer:HikariCP")
     compile("com.google.guava:guava")
 
-    compile("org.mitre:openid-connect-client:1.2.2")
+    compile("ch.wisv:wisvch-connect-client:1.2.2.2")
 
     compile("org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37")
     compile("org.webjars.bower:momentjs:2.10.6")

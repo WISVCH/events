@@ -1,7 +1,7 @@
-oidc-client-registration.json
 rebel.xml
 .gradle*
 .idea
 *.iml
 build/
 bin/
+config/

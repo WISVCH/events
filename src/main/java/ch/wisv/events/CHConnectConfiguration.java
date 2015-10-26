@@ -1,5 +1,6 @@
 package ch.wisv.events;
 
+import ch.wisv.connect.client.CHUserInfoFetcher;
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jose.JWSAlgorithm;
 import org.mitre.oauth2.model.ClientDetailsEntity;
@@ -41,11 +42,13 @@ public class CHConnectConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Value("${connect.issuerUri}")
     private String issuerUri;
+
     /**
      * URI of this application, without trailing slash
      */
     @Value("${connect.clientUri}")
     private String clientUri;
+
     /**
      * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
      */
@@ -77,10 +80,10 @@ public class CHConnectConfiguration extends WebSecurityConfigurerAdapter {
         return new LoginUrlAuthenticationEntryPoint(loginPath);
     }
 
-    @Bean
     /**
      * Register OIDC {@link UserInfoInterceptor}, which makes UserInfo available in MVC views as a request attribute.
      */
+    @Bean
     public WebMvcConfigurerAdapter mvcInterceptor() {
         return new WebMvcConfigurerAdapter() {
             @Override
@@ -99,6 +102,7 @@ public class CHConnectConfiguration extends WebSecurityConfigurerAdapter {
         SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
 
         OIDCAuthenticationProvider authenticationProvider = new OIDCAuthenticationProvider();
+        authenticationProvider.setUserInfoFetcher(new CHUserInfoFetcher());
         // TODO: implement an actual authorities mapper for production
         authenticationProvider.setAuthoritiesMapper((idToken, userInfo) -> ImmutableSet.of(ROLE_ADMIN, ROLE_USER));
         return authenticationProvider;
@@ -139,14 +143,14 @@ public class CHConnectConfiguration extends WebSecurityConfigurerAdapter {
     public ClientConfigurationService clientConfigurationService() {
         RegisteredClient client = new RegisteredClient();
         client.setClientName("Events Development");
-        client.setScope(ImmutableSet.of("openid", "email", "phone", "profile"));
+        client.setScope(ImmutableSet.of("openid", "email", "phone", "profile", "ldap"));
         client.setTokenEndpointAuthMethod(ClientDetailsEntity.AuthMethod.SECRET_BASIC);
         client.setRedirectUris(Collections.singleton(clientUri + loginPath));
         client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
         client.setJwksUri(clientUri + "/jwk");
 
         RegisteredClientService registeredClientService = new JsonFileRegisteredClientService
-                ("oidc-client-registration.json");
+                ("config/oidc-client-registration.json");
 
         DynamicRegistrationClientConfigurationService clientConfigurationService = new
                 DynamicRegistrationClientConfigurationService();
