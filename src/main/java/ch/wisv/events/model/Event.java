@@ -106,6 +106,11 @@ public class Event {
         return registrations;
     }
 
+    public boolean isRegistrationOpen() {
+        LocalDateTime now = LocalDateTime.now();
+        return registrationStart.isBefore(now) && registrationEnd.isAfter(now);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

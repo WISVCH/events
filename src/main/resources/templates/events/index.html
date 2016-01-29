@@ -40,9 +40,9 @@
             <a href="#" th:href="@{/events/create}">Create an event</a>
         </p>
     </div>
+    <div class="alert alert-info" role="alert" th:unless="${#strings.isEmpty(message)}"><p th:text="${message}"></p>
+    </div>
     <div class="container">
-        <div class="alert alert-info" role="alert" th:unless="${#strings.isEmpty(message)}"><p th:text="${message}"></p>
-        </div>
         <table class="table" th:unless="${#lists.isEmpty(events)}">
             <thead>
             <tr>

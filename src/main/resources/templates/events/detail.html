@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Event</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
+          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js"
+            th:src="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header">
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Static header</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="event event-detail" th:unless="${event == null}">
+        <th:block data-sec-authorize="hasRole('ROLE_ADMIN')">
+            <div class="controls pull-right">
+                    <a th:href="@{${event.id} + '/edit'}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>
+                    <a th:href="@{${event.id} + '/delete'}" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
+            </div>
+        </th:block>
+        <div class="page-header">
+            <h1 th:text="${event.title}">Title</h1>
+        </div>
+        <p class="description lead" th:text="${event.description}">Description</p>
+        <div class="progress" th:unless="${event.registrationLimit == 0}">
+            <div class="progress-bar" role="progressbar"
+                 th:aria-valuenow="${event.registrations.size()/event.registrationLimit}"
+                 aria-valuemin="0" aria-valuemax="100">
+                <span class="sr-only" th:text="${event.registrations.size()} + ' / ' + ${event.registrationLimit}">0 / 0</span>
+            </div>
+        </div>
+        <dl class="dl-horizontal">
+            <dt>Start</dt>
+            <dd th:text="${event.start}"></dd>
+            <dt>End</dt>
+            <dd th:text="${event.end}"></dd>
+            <dt>Registration open</dt>
+            <dd th:text="${event.registrationStart}"></dd>
+            <dt>Registration closed</dt>
+            <dd th:text="${event.registrationEnd}"></dd>
+            <dt>Status</dt>
+            <dd th:text="${event.isRegistrationOpen()} ? OPEN : CLOSED" th:class="${event.isRegistrationOpen()} ? text-success : text-danger"></dd>
+        </dl>
+    </div>
+    <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
+</div>
+</body>
+</html>
