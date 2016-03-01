@@ -1,15 +1,15 @@
 package ch.wisv.events;
 
+import ch.wisv.events.exception.EventNotFoundException;
 import ch.wisv.events.model.Event;
 import ch.wisv.events.repository.EventRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
@@ -24,6 +24,14 @@ public class EventsController {
 
     @Autowired
     private EventRepository eventRepository;
+
+    private final Logger log = org.slf4j.LoggerFactory.getLogger(EventsController.class);
+
+    @ExceptionHandler(EventNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Event not found")
+    public void eventNotFound(Exception e) {
+        log.warn("Event not found", e);
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getEvents(Model model, @ModelAttribute("message") String message) {
@@ -63,16 +71,15 @@ public class EventsController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
-    public String removeEvent(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+    public String removeEvent(@PathVariable("id") long id, RedirectAttributes redirectAttributes) throws EventNotFoundException {
         Event event = eventRepository.findOne(id);
         if (event != null) {
             eventRepository.delete(event);
             redirectAttributes.addFlashAttribute("message", "Event '" + event.getTitle() + "' deleted!");
+            return "redirect:/events/";
         } else {
-            redirectAttributes.addFlashAttribute("message", "That event does not exist.");
+            throw new EventNotFoundException("This event does not exist");
         }
-
-        return "redirect:/events/";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
