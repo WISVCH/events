@@ -69,7 +69,7 @@ public class EventsController {
         }
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     public String removeEvent(@PathVariable("id") long id, RedirectAttributes redirectAttributes) throws EventNotFoundException {
         Event event = eventRepository.findOne(id);
