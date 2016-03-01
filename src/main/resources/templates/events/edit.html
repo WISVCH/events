@@ -36,9 +36,7 @@
     </div>
 </div>
 <div class="container">
-    <h1>Create an event</h1>
-
-    <p>Fill in all the fields in the form below to create a new event.</p>
+    <h1>Edit event: <span th:text="${event.title}">Event</span></h1>
 
     <div th:replace="fragments/forms/event :: eventform(${event})"></div>
 

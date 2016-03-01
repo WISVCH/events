@@ -40,12 +40,12 @@ public class EventsController {
         return "events/create";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public String createEvent(@ModelAttribute Event event, RedirectAttributes redirectAttributes) {
+    public String saveEvent(@ModelAttribute Event event, RedirectAttributes redirectAttributes) {
         event = eventRepository.save(event);
 
-        redirectAttributes.addFlashAttribute("message", "Event '" + event.getTitle() + "' created!");
+        redirectAttributes.addFlashAttribute("message", "Event '" + event.getTitle() + "' saved!");
         return "redirect:/events/";
     }
 
@@ -61,7 +61,7 @@ public class EventsController {
         }
     }
 
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
     public String removeEvent(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Event event = eventRepository.findOne(id);
@@ -73,5 +73,18 @@ public class EventsController {
         }
 
         return "redirect:/events/";
+    }
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public String updateEvent(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
+        Event event = eventRepository.findOne(id);
+        if (event != null) {
+            model.addAttribute("event", event);
+            return "events/edit";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "That event does not exist.");
+            return "redirect:/events/";
+        }
     }
 }

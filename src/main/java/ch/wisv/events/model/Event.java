@@ -46,6 +46,10 @@ public class Event {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -116,19 +120,12 @@ public class Event {
         if (this == o) return true;
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
-        return id == event.id &&
-                registrationLimit == event.registrationLimit &&
-                Objects.equals(title, event.title) &&
-                Objects.equals(description, event.description) &&
-                Objects.equals(start, event.start) &&
-                Objects.equals(end, event.end) &&
-                Objects.equals(registrationStart, event.registrationStart) &&
-                Objects.equals(registrationEnd, event.registrationEnd);
+        return id == event.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, start, end, registrationStart, registrationEnd, registrationLimit);
+        return Objects.hash(id);
     }
 
     @Override
