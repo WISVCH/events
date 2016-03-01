@@ -54,7 +54,7 @@
             <tr th:each="event : ${events}">
                 <td th:text="${event.title}"></td>
                 <td th:text="${event.start}"></td>
-                <td><a href="#" class="btn btn-default btn-sm">More info &raquo;</a> <a href="#"
+                <td><a th:href="@{${event.id}}" class="btn btn-default btn-sm">More info &raquo;</a> <a href="#"
                                                                                         class="btn btn-default btn-sm">Register &raquo;</a>
                 </td>
             </tr>
