@@ -22,8 +22,10 @@ public class Event {
     private String title;
     @Lob
     private String description;
+    @Column(name = "eventStart")
     @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime start;
+    @Column(name = "eventEnd")
     @DateTimeFormat(pattern = TIME_FORMAT)
     private LocalDateTime end;
     @DateTimeFormat(pattern = TIME_FORMAT)
