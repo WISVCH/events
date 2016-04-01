@@ -4,6 +4,7 @@ import ch.wisv.events.exception.EventNotFoundException;
 import ch.wisv.events.model.Event;
 import ch.wisv.events.repository.EventRepository;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,7 @@ public class EventsController {
     @Autowired
     private EventRepository eventRepository;
 
-    private final Logger log = org.slf4j.LoggerFactory.getLogger(EventsController.class);
+    private final Logger log = LoggerFactory.getLogger(EventsController.class);
 
     @ExceptionHandler(EventNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Event not found")
@@ -58,14 +59,13 @@ public class EventsController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String getEvent(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+    public String getEvent(Model model, @PathVariable("id") long id) throws EventNotFoundException {
         Event event = eventRepository.findOne(id);
         if (event != null) {
             model.addAttribute("event", event);
             return "events/detail";
         } else {
-            redirectAttributes.addFlashAttribute("message", "That event does not exist.");
-            return "redirect:/events/";
+            throw new EventNotFoundException("This event does not exist");
         }
     }
 
@@ -84,14 +84,13 @@ public class EventsController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateEvent(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
+    public String updateEvent(@PathVariable("id") long id, Model model) throws EventNotFoundException{
         Event event = eventRepository.findOne(id);
         if (event != null) {
             model.addAttribute("event", event);
             return "events/edit";
         } else {
-            redirectAttributes.addFlashAttribute("message", "That event does not exist.");
-            return "redirect:/events/";
+            throw new EventNotFoundException("This event does not exist");
         }
     }
 }
