@@ -48,6 +48,10 @@ public class Event {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -106,6 +110,11 @@ public class Event {
 
     public Set<Registration> getRegistrations() {
         return registrations;
+    }
+
+    public boolean isRegistrationOpen() {
+        LocalDateTime now = LocalDateTime.now();
+        return registrationStart.isBefore(now) && registrationEnd.isAfter(now);
     }
 
     @Override

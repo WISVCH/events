@@ -7,10 +7,17 @@
     <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/eonasdan-bootstrap-datetimepicker/4.17.37/build/css/bootstrap-datetimepicker.min.css"
+          th:href="@{/webjars/eonasdan-bootstrap-datetimepicker/4.17.37/build/css/bootstrap-datetimepicker.min.css}"
+          rel="stylesheet" media="screen"/>
     <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
             th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
     <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js"
             th:src="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/js/bootstrap.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/momentjs/2.10.6/min/moment.min.js"
+            th:src="@{/webjars/momentjs/2.10.6/min/moment.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/eonasdan-bootstrap-datetimepicker/4.17.37/build/js/bootstrap-datetimepicker.min.js"
+            th:src="@{/webjars/eonasdan-bootstrap-datetimepicker/4.17.37/build/js/bootstrap-datetimepicker.min.js}"></script>
 </head>
 <body>
 <!-- Header -->
@@ -29,37 +36,10 @@
     </div>
 </div>
 <div class="container">
-    <div class="jumbotron">
-        <h1>Events</h1>
+    <h1>Edit event: <span th:text="${event.title}">Event</span></h1>
 
-        <p>
-            Shown below are the upcoming events.
-        </p>
+    <div th:replace="fragments/forms/event :: eventform(${event})"></div>
 
-        <p>
-            <a href="#" th:href="@{/events/create}">Create an event</a>
-        </p>
-    </div>
-    <div class="alert alert-info" role="alert" th:unless="${#strings.isEmpty(message)}"><p th:text="${message}"></p>
-    </div>
-    <div class="container">
-        <table class="table" th:unless="${#lists.isEmpty(events)}">
-            <thead>
-            <tr>
-                <th>Event</th>
-                <th>Start time</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tr th:each="event : ${events}">
-                <td th:text="${event.title}"></td>
-                <td th:text="${event.start}"></td>
-                <td><a th:href="@{${event.id}}" class="btn btn-default btn-sm">More info &raquo;</a> <a href="#"
-                                                                                        class="btn btn-default btn-sm">Register &raquo;</a>
-                </td>
-            </tr>
-        </table>
-    </div>
     <div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>
 </div>
 </body>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div class="container">
+    <form th:fragment="eventform(event)" action="#" th:action="@{/events/save}" th:object="${event}" class="form-horizontal" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="inputTitle" class="col-sm-2 control-label">Title</label>
+
+            <div class="col-sm-8">
+                <input type="text" th:field="*{title}" id="inputTitle" class="form-control" placeholder="Title"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-8">
+                <textarea th:field="*{description}" id="inputDescription" rows="5" class="form-control"
+                          placeholder="Description"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputStart" class="col-sm-2 control-label">Starts at</label>
+
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" th:field="*{start}" class="form-control" id="inputStart"
+                           placeholder="Start time"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEnd" class="col-sm-2 control-label">Ends at</label>
+
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" th:field="*{end}" class="form-control" id="inputEnd" placeholder="End time"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputLimit" class="col-sm-2 control-label">Registration limit</label>
+
+            <div class="col-sm-3">
+                <input type="number" th:field="*{registrationLimit}" id="inputLimit" class="form-control"
+                       placeholder="Maximum participants"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputRegistrationStart" class="col-sm-2 control-label">Registration open from</label>
+
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" th:field="*{registrationStart}" class="form-control" id="inputRegistrationStart"
+                           placeholder="Start time"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputRegistrationEnd" class="col-sm-2 control-label">Registration closes at</label>
+
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" th:field="*{registrationEnd}" class="form-control" id="inputRegistrationEnd"
+                           placeholder="End time"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" value="Save"/>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var startPicker = $('#inputStart');
+                var endPicker = $('#inputEnd');
+                var registrationStartPicker = $('#inputRegistrationStart');
+                var registrationEndPicker = $('#inputRegistrationEnd');
+                var format = "DD/MM/YYYY HH:mm";
+
+                // Enable date/time pickers
+                startPicker.datetimepicker({
+                    sideBySide: true,
+                    format: format
+                });
+                endPicker.datetimepicker({
+                    useCurrent: false,
+                    sideBySide: true,
+                    format: format
+                });
+                registrationStartPicker.datetimepicker({
+                    sideBySide: true,
+                    format: format
+                });
+                registrationEndPicker.datetimepicker({
+                    useCurrent: false,
+                    sideBySide: true,
+                    format: format
+                });
+
+                // Make date/time pickers dependent
+                startPicker.on("dp.change", function (e) {
+                    $('#inputEnd').data("DateTimePicker").minDate(e.date);
+                });
+                endPicker.on("dp.change", function (e) {
+                    $('#inputStart').data("DateTimePicker").maxDate(e.date);
+                });
+
+                registrationStartPicker.on("dp.change", function (e) {
+                    $('#inputRegistrationEnd').data("DateTimePicker").minDate(e.date);
+                });
+                registrationEndPicker.on("dp.change", function (e) {
+                    $('#inputRegistrationStart').data("DateTimePicker").maxDate(e.date);
+                });
+            });
+        </script>
+    </form>
+</div>
+</body>
+</html>
