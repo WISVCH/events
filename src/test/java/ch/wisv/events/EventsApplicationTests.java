@@ -13,11 +13,10 @@ import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -29,16 +28,15 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = EventsApplication.class)
-@WebAppConfiguration
+@SpringBootTest(classes = EventsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EventsApplicationTests {
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
     @Autowired
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
     @Autowired
-    RegistrationRepository registrationRepository;
+    private RegistrationRepository registrationRepository;
 
     private static final Logger log = LoggerFactory.getLogger(EventsApplicationTests.class);
 
@@ -46,12 +44,12 @@ public class EventsApplicationTests {
     public void contextLoads() {
     }
 
-    @Test
-    @Transactional
-    @Commit
     /**
      * Create some test data
      */
+    @Test
+    @Transactional
+    @Commit
     public void model1() {
         Event event1 = new Event("Borrel");
         event1.setStart(LocalDateTime.now().plusDays(1));
@@ -71,11 +69,11 @@ public class EventsApplicationTests {
         printObjects("Registrations", registrationRepository.findAll());
     }
 
-    @Test
-    @Transactional
     /**
      * Assert that persistence works as expected
      */
+    @Test
+    @Transactional
     public void model2() {
         assertThat(personRepository.count(), equalTo(1L));
         assertThat(eventRepository.findAll().iterator().next().getRegistrations().size(), equalTo(1));
@@ -90,20 +88,20 @@ public class EventsApplicationTests {
                 LocalDateTime.now().plusDays(1)).size(), equalTo(0));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    @Transactional
     /**
      * Email should be unique
      */
+    @Test(expected = DataIntegrityViolationException.class)
+    @Transactional
     public void uniqueness() {
         personRepository.save(new Person("derp", "herp@example.com"));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    @Transactional
     /**
      * Two registrations for same event cannot have same code
      */
+    @Test(expected = DataIntegrityViolationException.class)
+    @Transactional
     public void uniqueness2() {
         Event event1 = eventRepository.findAll().iterator().next();
         Person person2 = personRepository.save(new Person("herp", "derp@example.com"));
@@ -111,11 +109,11 @@ public class EventsApplicationTests {
         printObjects("Registrations", registrationRepository.findAll());
     }
 
-    @Test
-    @Transactional
     /**
      * Registering for another event with same code should succeed
      */
+    @Test
+    @Transactional
     public void uniqueness3() {
         Event event2 = eventRepository.save(new Event("Lecture"));
         Person person2 = personRepository.save(new Person("herp", "derp@example.com"));
