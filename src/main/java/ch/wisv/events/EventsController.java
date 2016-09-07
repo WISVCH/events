@@ -2,7 +2,6 @@ package ch.wisv.events;
 
 import ch.wisv.events.model.Event;
 import ch.wisv.events.repository.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +20,11 @@ import java.util.List;
 @RequestMapping(value = "/events")
 public class EventsController {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+
+    public EventsController(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getEvents(Model model, @ModelAttribute("message") String message) {

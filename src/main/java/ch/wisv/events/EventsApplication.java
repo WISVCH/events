@@ -2,7 +2,7 @@ package ch.wisv.events;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.orm.jpa.EntityScan;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 // Jsr310JpaConverters.class is necessary for correctly persisting e.g. LocalDateTime objects

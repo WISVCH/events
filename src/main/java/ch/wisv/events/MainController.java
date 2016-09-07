@@ -2,7 +2,6 @@ package ch.wisv.events;
 
 import ch.wisv.events.model.Event;
 import ch.wisv.events.repository.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,11 @@ import java.util.List;
 @Controller
 public class MainController {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+
+    public MainController(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @RequestMapping("/")
     String index(Model model) {
