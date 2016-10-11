@@ -54,6 +54,7 @@ dependencies {
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:jquery:2.1.4")
     compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.projectlombok:lombok:1.16.10")
 
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")

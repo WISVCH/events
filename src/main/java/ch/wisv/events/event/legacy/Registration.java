@@ -1,5 +1,7 @@
-package ch.wisv.events.model;
+package ch.wisv.events.event.legacy;
 
+import ch.wisv.events.event.model.Event;
+import ch.wisv.events.user.model.Person;
 import com.google.common.base.MoreObjects;
 
 import javax.persistence.*;

@@ -1,6 +1,6 @@
-package ch.wisv.events.repository;
+package ch.wisv.events.event.repository;
 
-import ch.wisv.events.model.Event;
+import ch.wisv.events.event.model.Event;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;

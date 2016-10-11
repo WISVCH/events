@@ -1,11 +1,11 @@
 package ch.wisv.events;
 
-import ch.wisv.events.model.Event;
-import ch.wisv.events.model.Person;
-import ch.wisv.events.model.Registration;
-import ch.wisv.events.repository.EventRepository;
-import ch.wisv.events.repository.PersonRepository;
-import ch.wisv.events.repository.RegistrationRepository;
+import ch.wisv.events.event.model.Event;
+import ch.wisv.events.user.model.Person;
+import ch.wisv.events.event.legacy.Registration;
+import ch.wisv.events.event.repository.EventRepository;
+import ch.wisv.events.event.repository.PersonRepository;
+import ch.wisv.events.event.legacy.RegistrationRepository;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +51,7 @@ public class EventsApplicationTests {
     @Transactional
     @Commit
     public void model1() {
-        Event event1 = new Event("Borrel");
+        Event event1 = new Event();
         event1.setStart(LocalDateTime.now().plusDays(1));
         event1.setEnd(LocalDateTime.now().plusHours(26));
         event1.setRegistrationStart(LocalDateTime.now().plusHours(1));
