@@ -1,4 +1,4 @@
-package ch.wisv.events.event.model;
+package ch.wisv.events.dashboard.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.experimental.Accessors;
  * Created by sven on 14/10/2016.
  */
 @Data
-@Accessors(fluent = true)
 @NoArgsConstructor
 public class EventRequest {
 

@@ -1,58 +1,61 @@
 package ch.wisv.events.event.model;
 
-import ch.wisv.events.event.legacy.Registration;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Event entity.
  */
 @Entity
 @Data
+@Accessors(fluent = true)
+@AllArgsConstructor
 public class Event {
 
     public final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue
+    public long id;
 
-    private String title;
+    public String key;
 
+    public String title;
+
+    // TODO: fix large text issue
     @Lob
-    private String description;
+    public String description;
 
-    @OneToMany(mappedBy = "event")
-    private Set<Ticket> tickets;
+    public String location;
 
-    @Column(name = "eventStart")
-    @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime start;
+    public String imageURL;
 
-    @Column(name = "eventEnd")
-    @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime end;
+    @OneToMany(cascade = CascadeType.MERGE, targetEntity = Ticket.class, fetch = FetchType.EAGER)
+    public Set<Ticket> tickets;
 
     @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime registrationStart;
+    public LocalDateTime start;
 
     @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime registrationEnd;
-    private int registrationLimit;
+    public LocalDateTime end;
 
-    @OneToMany(mappedBy = "event")
-    private Set<Registration> registrations;
+    public int registrationLimit;
 
     public Event() {
         this.tickets = new HashSet<>();
+        this.key = UUID.randomUUID().toString();
     }
+
     public Event(String title) {
+        this();
         this.title = title;
     }
 

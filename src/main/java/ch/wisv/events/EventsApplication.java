@@ -1,8 +1,14 @@
 package ch.wisv.events;
 
+import ch.wisv.events.event.repository.EventRepository;
+import ch.wisv.events.event.repository.TicketRepository;
+import ch.wisv.events.utils.TestDataRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 // Jsr310JpaConverters.class is necessary for correctly persisting e.g. LocalDateTime objects
@@ -12,5 +18,13 @@ public class EventsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EventsApplication.class, args);
+    }
+
+    @Bean
+    @Profile("dev")
+    CommandLineRunner init(EventRepository eventRepository, TicketRepository ticketRepository) {
+
+        return new TestDataRunner(eventRepository, ticketRepository);
+
     }
 }

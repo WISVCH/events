@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Created by svenp on 11-10-2016.
@@ -16,24 +17,27 @@ public class Ticket {
     public final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue
+    public long id;
 
-    private String title;
+    public String title;
+
+    public String key;
 
     @Lob
-    private String description;
+    public String description;
 
-    private float cost;
+    public float cost;
 
-    private int maxSold;
+    public int maxSold;
 
-    @Column(name = "eventStart")
     @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime start;
+    public LocalDateTime start;
 
-    @Column(name = "eventEnd")
     @DateTimeFormat(pattern = TIME_FORMAT)
-    private LocalDateTime end;
+    public LocalDateTime end;
 
+    public Ticket() {
+        this.key = UUID.randomUUID().toString();
+    }
 }

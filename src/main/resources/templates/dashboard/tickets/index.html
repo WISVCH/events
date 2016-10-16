@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Events - Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/api/v1/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
+          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
+
 <body>
-$END$
+<!--<div th:replace="dashboard/fragments/header :: header">-->
+<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
+<!--</div>-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="/dashboard/fragments/header :: header">
+            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        </div>
+    </div>
+    <div class="row content-wrapper">
+        <div th:replace="/dashboard/fragments/sidebar :: sidebar" class="col-xs-2"></div>
+        <div class="col-xs-10 main">
+            <div class="page-header">
+                <h1><samp>tickets</samp><a class="btn btn-primary btn-dashboard-header" href="create/">Create new
+                    ticket</a></h1>
+            </div>
+
+            <div class="table-responsive">
+                <table id="ticketTable" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Cost</th>
+                        <th>Max sold</th>
+                        <th>Key</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ticket : ${tickets}">
+                        <td th:text="${ticket.id}">Row 1 Data 1</td>
+                        <td th:text="${ticket.title}">Row 1 Data 1</td>
+                        <td th:text="'€ ' + ${ticket.cost}"></td>
+                        <td th:text="${ticket.maxSold}"></td>
+                        <td><samp th:text="${ticket.key}"></samp></td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a th:href="'edit/' + ${ticket.key}" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                                <a th:href="'delete/' + ${ticket.key}" class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
+<script src="/api/v1/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#ticketTable').DataTable();
+    });
+</script>
 </body>
 </html>
