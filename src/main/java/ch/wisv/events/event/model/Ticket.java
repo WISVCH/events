@@ -20,6 +20,7 @@ public class Ticket {
     @GeneratedValue
     public long id;
 
+    @Column(unique = true)
     public String title;
 
     public String key;

@@ -12,6 +12,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     Ticket findById(Long orderId);
 
-    Ticket findByKey(String ticketKey);
+    Optional<Ticket> findByKey(String ticketKey);
 
 }

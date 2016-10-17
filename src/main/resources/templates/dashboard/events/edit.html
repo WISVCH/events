@@ -44,8 +44,12 @@
         <div class="col-xs-10 main">
             <div class="page-header">
                 <h1><samp>edit event</samp></h1>
+            </div>
 
-
+            <div class="row">
+                <div class="col-sm-12">
+                    <div th:replace="/dashboard/fragments/message :: messages"></div>
+                </div>
             </div>
 
             <div class="row">
@@ -113,6 +117,11 @@
                                                th:value="*{limit}">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <input type="submit" class="btn btn-success" value="Update">
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -127,8 +136,9 @@
                             <form th:action="@{/dashboard/events/add/ticket}" th:object="${addticket}"
                                   class="form-horizontal"
                                   id="addTicket" method="POST">
+                                <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
                                 <input type="hidden" th:field="*{eventKey}" th:value="*{eventKey}">
-                                <input id="ticketKey" type="hidden" th:field="*{ticketKey}">
+                                <input id="addTicketKey" type="hidden" th:field="*{ticketID}">
                             </form>
 
                             <div class="input-group" style="width: 100%">
@@ -166,7 +176,7 @@
                                                class="btn btn-info">
                                                 <i class="glyphicon glyphicon-edit"></i>
                                             </a>
-                                            <a th:href="'delete/' + ${event.key} + '/ticket/' + ${ticket.key}"
+                                            <a th:href="@{../delete/} + ${event.key} + '/ticket/' + ${ticket.id}"
                                                class="btn btn-danger">
                                                 <i class="glyphicon glyphicon-remove"></i>
                                             </a>
@@ -194,11 +204,11 @@
 <script>
     $(document).ready(function () {
         $("#q").autocomplete({
-            serviceUrl: '/api/v1/tickets/search',
+            serviceUrl: '/api/v1/tickets/unused/search',
             lookupLimit: 3,
             minChars: 3,
             onSelect: function (suggestion) {
-                $("#ticketKey").val(suggestion.data);
+                $("#addTicketKey").val(suggestion.data);
                 $("#addTicket").submit();
             }
         });

@@ -2,7 +2,10 @@ package ch.wisv.events.user.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Person entity.
@@ -22,7 +25,7 @@ public class Person {
 
     private String name;
 
-//    @Column(unique = true, nullable = true)
+    //    @Column(unique = true, nullable = true)
     private String email;
 
     private boolean emailValidated;

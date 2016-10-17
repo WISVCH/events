@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Created by sven on 15/10/2016.
@@ -45,37 +46,58 @@ public class DashboardEventController {
             return "redirect:/dashboard/events/";
         }
 
+        // TODO: Code clean up
         EventRequest request = new EventRequest();
-        request.setTitle(event.title());
-        request.setDescription(event.description());
-        request.setLimit(event.registrationLimit());
-        request.setEventStart(event.start().toString());
-        request.setEventEnd(event.end().toString());
-        request.setLocation(event.location());
-        request.setKey(event.key());
+        request.setTitle(event.getTitle());
+        request.setDescription(event.getDescription());
+        request.setLimit(event.getRegistrationLimit());
+        request.setEventStart(event.getStart().toString());
+        request.setEventEnd(event.getEnd().toString());
+        request.setLocation(event.getLocation());
+        request.setKey(event.getKey());
 
         AddTicketRequest ticket = new AddTicketRequest();
-        ticket.setEventKey(event.key());
+        ticket.setEventID(event.getId());
+        ticket.setEventKey(event.getKey());
 
         model.addAttribute("event", request);
-        model.addAttribute("tickets", event.tickets());
+        model.addAttribute("tickets", event.getTickets());
         model.addAttribute("addticket", ticket);
 
         return "dashboard/events/edit";
     }
 
     @PostMapping("/add")
-    public String createEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest) {
+    public String createEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
+            redirectAttributes) {
         eventService.addEvent(eventRequest);
+
+        redirectAttributes.addFlashAttribute("message", eventRequest.getTitle() + " successfully created!");
 
         return "redirect:/dashboard/events/";
     }
 
     @PostMapping("/add/ticket")
-    public String addTicketToEvent(Model model, @ModelAttribute @Validated AddTicketRequest addTicketRequest) {
-        eventService.addTicketToEvent(addTicketRequest);
+    public String addTicketToEvent(Model model, @ModelAttribute @Validated AddTicketRequest addTicketRequest,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            eventService.addTicketToEvent(addTicketRequest);
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
 
         return "redirect:/dashboard/events/edit/" + addTicketRequest.getEventKey();
+    }
+
+    @GetMapping("/delete/{eventKey}/ticket/{ticketId}")
+    public String deleteTicketFromEvent(Model model, @PathVariable String eventKey, @PathVariable Long ticketId,
+                                        RedirectAttributes redirectAttributes) {
+
+        eventService.deleteTicketFromEvent(eventKey, ticketId);
+        redirectAttributes.addFlashAttribute("message", "Ticket removed from Event!");
+
+
+        return "redirect:/dashboard/events/edit/" + eventKey;
     }
 
     @PostMapping("/edit")

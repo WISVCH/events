@@ -10,9 +10,9 @@ public class TicketSearchItem {
 
     public String value;
 
-    public String data;
+    public Long data;
 
-    public TicketSearchItem(String title, String key) {
+    public TicketSearchItem(String title, Long key) {
         this.value = title;
         this.data = key;
     }

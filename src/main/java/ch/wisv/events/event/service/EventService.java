@@ -1,8 +1,8 @@
 package ch.wisv.events.event.service;
 
 import ch.wisv.events.dashboard.request.AddTicketRequest;
-import ch.wisv.events.event.model.Event;
 import ch.wisv.events.dashboard.request.EventRequest;
+import ch.wisv.events.event.model.Event;
 
 import java.util.Collection;
 
@@ -24,4 +24,5 @@ public interface EventService {
 
     Event getEventByKey(String key);
 
+    void deleteTicketFromEvent(String eventKey, Long ticketId);
 }

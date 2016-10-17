@@ -2,7 +2,6 @@ package ch.wisv.events.dashboard.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
  * Created by sven on 14/10/2016.

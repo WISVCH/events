@@ -5,12 +5,13 @@ import ch.wisv.events.event.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by sven on 14/10/2016.
  */
 @Service
-public class TicketServiceImpl implements TicketService{
+public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
 
@@ -25,6 +26,10 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public Ticket getTicketByKey(String ticketKey) {
-        return this.ticketRepository.findByKey(ticketKey);
+        Optional<Ticket> ticketOptional = ticketRepository.findByKey(ticketKey);
+        if (ticketOptional.isPresent()) {
+            return ticketOptional.get();
+        }
+        return null;
     }
 }

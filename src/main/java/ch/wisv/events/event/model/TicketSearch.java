@@ -20,7 +20,7 @@ public class TicketSearch {
         this.suggestions = new ArrayList<>();
     }
 
-    public void addItem(String title, String key) {
+    public void addItem(String title, Long key) {
         TicketSearchItem temp = new TicketSearchItem(title, key);
         this.suggestions.add(temp);
     }

@@ -2,7 +2,6 @@ package ch.wisv.events.event.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,7 +15,6 @@ import java.util.UUID;
  */
 @Entity
 @Data
-@Accessors(fluent = true)
 @AllArgsConstructor
 public class Event {
 
@@ -30,7 +28,6 @@ public class Event {
 
     public String title;
 
-    // TODO: fix large text issue
     @Lob
     public String description;
 
@@ -57,6 +54,17 @@ public class Event {
     public Event(String title) {
         this();
         this.title = title;
+    }
+
+    public Event(String title, String description, String location, int limit, LocalDateTime start, LocalDateTime
+            end, String imageURL) {
+        this(title);
+        this.description = description;
+        this.location = location;
+        this.registrationLimit = limit;
+        this.start = start;
+        this.end = end;
+        this.imageURL = imageURL;
     }
 
     public void addTicket(Ticket ticket) {

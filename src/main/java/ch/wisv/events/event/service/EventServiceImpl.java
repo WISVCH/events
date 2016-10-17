@@ -6,11 +6,14 @@ import ch.wisv.events.event.model.Event;
 import ch.wisv.events.event.model.Ticket;
 import ch.wisv.events.event.repository.EventRepository;
 import ch.wisv.events.event.repository.TicketRepository;
+import ch.wisv.events.exception.TicketInUseException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by svenp on 11-10-2016.
@@ -46,36 +49,51 @@ public class EventServiceImpl implements EventService {
     @Override
     public void addEvent(EventRequest eventRequest) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        Event event = new Event(eventRequest.getTitle());
-        event.description(eventRequest.getDescription())
-                .location(eventRequest.getLocation())
-                .registrationLimit(eventRequest.getLimit())
-                .start(LocalDateTime.parse(eventRequest.getEventStart(), format))
-                .end(LocalDateTime.parse(eventRequest.getEventEnd()))
-                .imageURL(eventRequest.getImage());
+        Event event = new Event(eventRequest.getTitle(),
+                eventRequest.getDescription(),
+                eventRequest.getLocation(),
+                eventRequest.getLimit(),
+                LocalDateTime.parse(eventRequest.getEventStart(), format),
+                LocalDateTime.parse(eventRequest.getEventEnd()),
+                eventRequest.getImage()
+        );
 
         eventRepository.saveAndFlush(event);
     }
 
     @Override
     public void addTicketToEvent(AddTicketRequest addTicketRequest) {
-        Event event = eventRepository.findByKey(addTicketRequest.getEventKey());
-        Ticket ticket = new Ticket();
-        ticket.setTitle("Help");
-        ticket.setTitle("Hello world!");
-        ticket.setCost(10.0f);
-        ticket.setMaxSold(100);
+        List<Event> eventList = eventRepository.findAllByTicketsId(addTicketRequest.getTicketID());
+        if (eventList.size() > 0) {
+            throw new TicketInUseException("This Ticket is already used for other Event");
+        }
 
-//        event.addTicket(ticketRepository.findByKey(addTicketRequest.getTicketKey()));
+        Event event = eventRepository.findOne(addTicketRequest.getEventID());
+        Ticket ticket = ticketRepository.findOne(addTicketRequest.getTicketID());
 
         event.addTicket(ticket);
-
         eventRepository.save(event);
     }
 
     @Override
     public Event getEventByKey(String key) {
-        return eventRepository.findByKey(key);
+        Optional<Event> eventOptional = eventRepository.findByKey(key);
+        if (eventOptional.isPresent()) {
+            return eventOptional.get();
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteTicketFromEvent(String eventKey, Long ticketId) {
+        Optional<Event> eventOptional = eventRepository.findByKey(eventKey);
+        if(eventOptional.isPresent()) {
+            Event event = eventOptional.get();
+
+            Ticket ticket = ticketRepository.findOne(ticketId);
+            event.getTickets().remove(ticket);
+            eventRepository.save(event);
+        }
     }
 
 }

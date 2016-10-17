@@ -2,6 +2,7 @@ package ch.wisv.events.event.controller;
 
 import ch.wisv.events.event.model.Ticket;
 import ch.wisv.events.event.model.TicketSearch;
+import ch.wisv.events.event.repository.EventRepository;
 import ch.wisv.events.event.repository.TicketRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +19,13 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/tickets")
 public class TicketRESTController {
 
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
-    public TicketRESTController(TicketRepository ticketRepository) {
+    private final EventRepository eventRepository;
+
+    public TicketRESTController(TicketRepository ticketRepository, EventRepository eventRepository) {
         this.ticketRepository = ticketRepository;
+        this.eventRepository = eventRepository;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -30,18 +34,19 @@ public class TicketRESTController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/unused/search")
     public TicketSearch getSearchTickets(@RequestParam(value = "query", required = false) String query) {
         List<Ticket> ticketList = ticketRepository.findAll();
         TicketSearch search = new TicketSearch(query);
 
         if (query != null) {
             List<Ticket> filterTicket = ticketList.stream()
-                    .filter(p -> p.getTitle().toLowerCase()
-                    .contains(query.toLowerCase()))
-                    .collect(Collectors.toCollection(ArrayList::new));
+                                                  .filter(p -> eventRepository.findAllByTicketsId(p.getId()).size() < 1)
+                                                  .filter(p -> p.getTitle().toLowerCase()
+                                                                .contains(query.toLowerCase()))
+                                                  .collect(Collectors.toCollection(ArrayList::new));
             for (Ticket ticket : filterTicket) {
-                search.addItem(ticket.getTitle(), ticket.getKey());
+                search.addItem(ticket.getTitle(), ticket.getId());
             }
         }
 
