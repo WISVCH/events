@@ -27,4 +27,6 @@ public interface EventService {
     void deleteProductFromEvent(Long eventId, Long productId);
 
     void updateEvent(EventRequest eventRequest);
+
+    void deleteEvent(Event event);
 }

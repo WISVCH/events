@@ -33,6 +33,7 @@ public class DashboardEventController {
 
     @GetMapping("/")
     public String eventsOverview(Model model) {
+        // TODO: For testing
         Random random = new Random();
         Collection<Event> events = eventService.getAllEvents();
         events.forEach(e -> e.setSold(random.nextInt(100)));
@@ -66,6 +67,16 @@ public class DashboardEventController {
         return "dashboard/events/edit";
     }
 
+    @GetMapping("/delete/{key}")
+    public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
+        Event event = eventService.getEventByKey(key);
+        eventService.deleteEvent(event);
+
+        redirectAttributes.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
+
+        return "redirect:/dashboard/events/";
+    }
+
     @PostMapping("/add")
     public String createEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
             redirectAttributes) {
@@ -79,6 +90,7 @@ public class DashboardEventController {
 
         return "redirect:/dashboard/events/";
     }
+
 
     @PostMapping("/add/product")
     public String addProductToEvent(Model model, @ModelAttribute @Validated EventProductRequest eventProductRequest,
