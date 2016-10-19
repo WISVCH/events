@@ -45,87 +45,111 @@
                 <h1><samp>create event</samp></h1>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Information</h3>
+            <!--/*@thymesVar id="event" type="ch.wisv.events.dashboard.request.EventRequest"*/-->
+            <form th:action="@{/dashboard/events/add}" th:object="${event}"
+                  method="POST">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Information</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="eventTitle">Title*</label>
+                                    <input type="text" class="form-control" id="eventTitle"
+                                           placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
+                                           th:field="*{title}"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDescription">Description*</label>
+                                    <textarea id="eventDescription" class="form-control" placeholder="Description"
+                                              th:field="*{description}"
+                                              rows="5" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventLocation">Location</label>
+                                    <input type="text" id="eventLocation" class="form-control"
+                                           th:field="*{location}"
+                                           placeholder="Location (e.g. Lecture Hall Boole)">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventStart">Starting time*</label>
+
+                                            <input type="datetime-local" id="eventStart"
+                                                   th:field="*{eventStart}"
+                                                   class="form-control"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventEnd">Ending time*</label>
+
+                                            <input type="datetime-local" id="eventEnd"
+                                                   th:field="*{eventEnd}"
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="image">Image</label>
+                                    <input type="file" id="image" class="form-control">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventTarget">Target*</label>
+
+                                            <input type="text" step="1" id="eventTarget" class="form-control"
+                                                   placeholder="Registration target (e.g. 100)"
+                                                   th:field="*{target}"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventLimit">Limit</label>
+
+                                            <input type="text" step="1" id="eventLimit" class="form-control"
+                                                   placeholder="Registration limit (e.g. 100)"
+                                                   th:field="*{limit}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Option</h3>
+                            </div>
+                            <div class="panel-body">
+                                <b>TODO: options</b>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <!--/*@thymesVar id="event" type="ch.wisv.events.dashboard.request.EventRequest"*/-->
-                    <form th:action="@{/dashboard/events/add}" th:object="${event}" class="form-horizontal"
-                          method="POST">
-                        <div class="form-group">
-                            <label for="eventTitle" class="col-sm-2 control-label">Title</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="eventTitle"
-                                       placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
-                                       th:field="*{title}"
-                                       required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventDescription" class="col-sm-2 control-label">Description</label>
-                            <div class="col-sm-10">
-                                <textarea id="eventDescription" class="form-control" placeholder="Description"
-                                          th:field="*{description}"
-                                          rows="5" required></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventLocation" class="col-sm-2 control-label">Location</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="eventLocation" class="form-control"
-                                       th:field="*{location}"
-                                       placeholder="Location (e.g. Lecture Hall Boole)"
-                                       required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventStart" class="col-sm-2 control-label">Starting time</label>
-                            <div class="col-sm-10">
-                                <input type="datetime-local" id="eventStart"
-                                       th:field="*{eventStart}"
-                                       class="form-control"
-                                       required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventEnd" class="col-sm-2 control-label">Ending time</label>
-                            <div class="col-sm-10">
-                                <input type="datetime-local" id="eventEnd"
-                                       th:field="*{eventEnd}"
-                                       class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="image" class="col-sm-2 control-label">Image</label>
-                            <div class="col-sm-10">
-                                <input type="file" id="image" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventLimit" class="col-sm-2 control-label">Registration limit</label>
-                            <div class="col-sm-10">
-                                <input type="number" step="1" id="eventLimit" class="form-control"
-                                       th:field="*{limit}"
-                                       placeholder="Registration limit (e.g. 100)">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <input type="submit" class="btn btn-success" value="Create">
-                            </div>
-                        </div>
-                    </form>
+
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-block btn-lg btn-primary" value="Create">
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-</div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-<script src="/api/v1/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
+    <script src="/api/v1/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </body>
 </html>

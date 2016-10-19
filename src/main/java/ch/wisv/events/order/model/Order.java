@@ -1,6 +1,6 @@
 package ch.wisv.events.order.model;
 
-import ch.wisv.events.event.model.Ticket;
+import ch.wisv.events.event.model.Product;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -23,6 +23,6 @@ public class Order {
     String reference;
 
     @OneToMany
-    Set<Ticket> tickets;
+    Set<Product> products;
 
 }

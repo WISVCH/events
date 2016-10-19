@@ -10,19 +10,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventRequest {
 
-    String title;
+    Long id;
 
-    String key;
+    String title, key, description, location, eventStart, eventEnd, image;
 
-    String description;
+    int target;
 
-    String location;
+    Integer limit;
 
-    String eventStart;
+    public EventRequest(Long id, String title, String description, String location, int target, Integer limit,
+                        String eventStart, String eventEnd, String image, String key) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.target = target;
+        this.limit = limit;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.image = image;
+        this.key = key;
+    }
 
-    String eventEnd;
-
-    int limit;
-
-    String image;
 }

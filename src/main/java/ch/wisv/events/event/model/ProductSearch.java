@@ -9,19 +9,19 @@ import java.util.Collection;
  * Created by sven on 16/10/2016.
  */
 @JsonAutoDetect
-public class TicketSearch {
+public class ProductSearch {
 
     public String query;
 
-    public Collection<TicketSearchItem> suggestions;
+    public Collection<ProductSearchItem> suggestions;
 
-    public TicketSearch(String query) {
+    public ProductSearch(String query) {
         this.query = query;
         this.suggestions = new ArrayList<>();
     }
 
     public void addItem(String title, Long key) {
-        TicketSearchItem temp = new TicketSearchItem(title, key);
+        ProductSearchItem temp = new ProductSearchItem(title, key);
         this.suggestions.add(temp);
     }
 }

@@ -1,6 +1,6 @@
 package ch.wisv.events.dashboard.controller;
 
-import ch.wisv.events.event.service.TicketService;
+import ch.wisv.events.event.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by sven on 15/10/2016.
  */
 @Controller
-@RequestMapping("/dashboard/tickets")
-public class DashboardTicketController {
+@RequestMapping("/dashboard/products")
+public class DashboardProductController {
 
-    private final TicketService ticketService;
+    private final ProductService productService;
 
     @Autowired
-    public DashboardTicketController(TicketService ticketService) {
-        this.ticketService = ticketService;
+    public DashboardProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("tickets", ticketService.getAllTickets());
-        return "dashboard/tickets/index";
+        model.addAttribute("products", productService.getAllProducts());
+        return "dashboard/products/index";
     }
 
 }

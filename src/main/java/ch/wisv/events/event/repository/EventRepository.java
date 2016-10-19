@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findById(Long orderId);
+    Event findById(Long orderId);
 
     List<Event> findByTitle(String title);
 
@@ -20,7 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findByKey(String key);
 
-    List<Event> findAllByTicketsId(Long id);
+    List<Event> findAllByProductsId(Long id);
 //    List<Event> findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime registrationStart, LocalDateTime
 //            registrationEnd);
 }

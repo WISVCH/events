@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class AddTicketRequest {
+public class EventProductRequest {
 
     String eventKey;
 
     Long eventID;
 
-    Long ticketID;
+    Long productID;
 
 }

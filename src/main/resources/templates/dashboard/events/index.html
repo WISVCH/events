@@ -51,21 +51,38 @@
                 <table id="eventsTable" class="table table-hover">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Title</th>
-                        <th>Location</th>
-                        <th>Starting Time</th>
-                        <th>Ending Time</th>
-                        <th></th>
+                        <th>Status</th>
+                        <th>Sold/Target/Limit</th>
+                        <th>Progress target</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <!--/*@thymesVar id="event" type="ch.wisv.events.event.model.Event"*/-->
                     <tr th:each="event : ${events}">
-                        <td th:text="${event.id}">Row 1 Data 1</td>
+                        <td>
+                            <input type="checkbox"/>
+                        </td>
                         <td th:text="${event.title}">Row 1 Data 1</td>
-                        <td th:text="${event.location}">Row 1 Data 1</td>
-                        <td th:text="${event.start}">Row 1 Data 1</td>
-                        <td th:text="${event.end}">Row 1 Data 1</td>
+                        <td th:text="${event.options.published}"></td>
+                        <td>
+                            <span class="label label-success" th:text="'Sold: ' + ${event.sold}"></span>
+                            <span class="label label-primary" th:text="'Target: ' + ${event.target}"></span>
+                            <span class="label label-default" th:text="'Limit: ' + ${event.limit}"></span>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.sold}"
+                                     aria-valuemin="0"
+                                     th:aria-valuemax="${event.target}"
+                                     th:style="'width: ' + ${event.calcProgress()} + '%;'"
+                                     th:text="${event.calcProgress()} + '%'">
+                                    59%
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'edit/' + ${event.key}" class="btn btn-info">
@@ -92,7 +109,15 @@
 <script src="/api/v1/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#eventsTable').DataTable();
+        $('#eventsTable').DataTable({
+            columnDefs: [
+                {width: "20px", targets: 0},
+                {width: "60px", targets: 2},
+                {width: "180px", targets: 3},
+                {width: "360px", targets: 4},
+                {width: "80px", targets: 5}
+            ]
+        });
     });
 </script>
 </body>

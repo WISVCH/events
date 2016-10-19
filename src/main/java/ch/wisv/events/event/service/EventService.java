@@ -1,6 +1,6 @@
 package ch.wisv.events.event.service;
 
-import ch.wisv.events.dashboard.request.AddTicketRequest;
+import ch.wisv.events.dashboard.request.EventProductRequest;
 import ch.wisv.events.dashboard.request.EventRequest;
 import ch.wisv.events.event.model.Event;
 
@@ -16,13 +16,15 @@ public interface EventService {
 
     Collection<Event> getUpcomingEvents();
 
-    Collection<Event> getEventById(Long id);
+    Event getEventById(Long id);
 
     void addEvent(EventRequest eventRequest);
 
-    void addTicketToEvent(AddTicketRequest addTicketRequest);
+    void addProductToEvent(EventProductRequest eventProductRequest);
 
     Event getEventByKey(String key);
 
-    void deleteTicketFromEvent(String eventKey, Long ticketId);
+    void deleteProductFromEvent(Long eventId, Long productId);
+
+    void updateEvent(EventRequest eventRequest);
 }

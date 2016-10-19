@@ -1,14 +1,17 @@
 package ch.wisv.events.event.controller;
 
 import ch.wisv.events.event.model.Event;
-import ch.wisv.events.event.model.Ticket;
+import ch.wisv.events.event.model.Product;
 import ch.wisv.events.event.service.EventService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by svenp on 11-10-2016.
@@ -34,15 +37,14 @@ public class EventRESTController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Collection<Event> getEventById(@PathVariable Long id) {
+    public Event getEventById(@PathVariable Long id) {
         return this.eventService.getEventById(id);
     }
 
     @RequestMapping(value = "/{id}/tickets", method = RequestMethod.GET)
-    public Collection<Ticket> getTicketByEvent(@PathVariable Long id) {
-        Collection<Event> eventById = this.eventService.getEventById(id);
+    public Collection<Product> getProductByEvent(@PathVariable Long id) {
+        Event event = this.eventService.getEventById(id);
 
-        return eventById.stream()
-                        .findFirst().get().getTickets();
+        return event.getProducts();
     }
 }

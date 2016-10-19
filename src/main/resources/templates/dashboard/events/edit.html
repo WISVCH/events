@@ -60,67 +60,75 @@
                         </div>
                         <div class="panel-body">
                             <!--/*@thymesVar id="event" type="ch.wisv.events.dashboard.request.EventRequest"*/-->
-                            <form th:action="@{/dashboard/events/add}" th:object="${event}" class="form-horizontal"
+                            <form th:action="@{/dashboard/events/update}" th:object="${event}"
                                   method="POST">
+                                <input type="hidden" th:field="*{id}" th:value="*{id}">
+                                <input type="hidden" th:field="*{key}" th:value="*{key}">
                                 <div class="form-group">
-                                    <label for="eventTitle" class="col-sm-2 control-label">Title</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="eventTitle"
-                                               placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
-                                               th:value="*{title}"
-                                               required>
+                                    <label for="eventTitle">Title*</label>
+                                    <input type="text" class="form-control" id="eventTitle"
+                                           placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
+                                           th:value="*{title}"
+                                           th:field="*{title}"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDescription">Description</label>
+                                    <textarea id="eventDescription" class="form-control" placeholder="Description"
+                                              rows="5"
+                                              th:text="*{description}"
+                                              th:field="*{description}"
+                                              required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventLocation">Location*</label>
+                                    <input type="text" id="eventLocation" class="form-control"
+                                           placeholder="Location (e.g. Lecture Hall Boole)"
+                                           th:value="*{location}"
+                                           th:field="*{location}"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventStart">Starting time*</label>
+                                    <input type="datetime-local" id="eventStart" class="form-control"
+                                           th:value="*{eventStart}"
+                                           th:field="*{eventStart}"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventEnd">Ending time*</label>
+                                    <input type="datetime-local" id="eventEnd" class="form-control"
+                                           th:value="*{eventEnd}"
+                                           th:field="*{eventEnd}"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="image">Image</label>
+                                    <input type="file" id="image" class="form-control">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventTarget">Target*</label>
+                                            <input type="number" step="1" id="eventTarget" class="form-control"
+                                                   placeholder="Registration target (e.g. 100)"
+                                                   th:value="*{target}"
+                                                   th:field="*{target}"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="eventLimit">Limit</label>
+                                            <input type="number" step="1" id="eventLimit" class="form-control"
+                                                   placeholder="Registration limit (e.g. 100)"
+                                                   th:value="*{limit}"
+                                                   th:field="*{limit}">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="eventDescription" class="col-sm-2 control-label">Description</label>
-                                    <div class="col-sm-10">
-                                <textarea id="eventDescription" class="form-control" placeholder="Description"
-                                          rows="5"
-                                          required></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventLocation" class="col-sm-2 control-label">Location</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="eventLocation" class="form-control"
-                                               placeholder="Location (e.g. Lecture Hall Boole)"
-                                               th:value="*{location}"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventStart" class="col-sm-2 control-label">Starting time</label>
-                                    <div class="col-sm-10">
-                                        <input type="datetime-local" id="eventStart"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventEnd" class="col-sm-2 control-label">Ending time</label>
-                                    <div class="col-sm-10">
-                                        <input type="datetime-local" id="eventEnd"
-                                               class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="image" class="col-sm-2 control-label">Image</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" id="image" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventLimit" class="col-sm-2 control-label">Registration limit</label>
-                                    <div class="col-sm-10">
-                                        <input type="number" step="1" id="eventLimit" class="form-control"
-                                               placeholder="Registration limit (e.g. 100)"
-                                               th:value="*{limit}">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <input type="submit" class="btn btn-success" value="Update">
-                                    </div>
+                                    <input type="submit" class="btn btn-success" value="Update">
                                 </div>
                             </form>
                         </div>
@@ -129,55 +137,67 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Tickets</h3>
+                            <h3 class="panel-title">Options</h3>
                         </div>
                         <div class="panel-body">
-                            <!--/*@thymesVar id="addticket" type="ch.wisv.events.dashboard.request.AddTicketRequest"*/-->
-                            <form th:action="@{/dashboard/events/add/ticket}" th:object="${addticket}"
+                            <b>TODO: options</b>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Products</h3>
+                        </div>
+                        <div class="panel-body">
+                            <!--/*@thymesVar id="addProduct" type="ch.wisv.events.dashboard.request.EventProductRequest"*/-->
+                            <form th:action="@{/dashboard/events/add/product}" th:object="${addProduct}"
                                   class="form-horizontal"
-                                  id="addTicket" method="POST">
+                                  id="addProduct" method="POST">
                                 <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
                                 <input type="hidden" th:field="*{eventKey}" th:value="*{eventKey}">
-                                <input id="addTicketKey" type="hidden" th:field="*{ticketID}">
+                                <input id="addProductKey" type="hidden" th:field="*{productID}">
+                            </form>
+
+                            <!--/*@thymesVar id="deleteProduct" type="ch.wisv.events.dashboard.request.EventProductRequest"*/-->
+                            <form th:action="@{/dashboard/events/delete/product}" th:object="${addProduct}"
+                                  class="form-horizontal"
+                                  id="deleteProduct" method="POST">
+                                <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
+                                <input type="hidden" th:field="*{eventKey}" th:value="*{eventKey}">
+                                <input id="deleteProductKey" type="hidden" th:field="*{productID}">
                             </form>
 
                             <div class="input-group" style="width: 100%">
                                 <input id="q" autocomplete="off" type="text" class="form-control"
-                                       placeholder="Add ticket">
+                                       placeholder="Add product">
                                 <div class="input-group-btn" style="width: 39px;">
                             <span class="btn btn-success">
                                 <i class="glyphicon glyphicon-plus"></i>
                             </span>
                                 </div>
                             </div>
-                            <p class="help-block">
-                                Start typing to look for a ticket.
-                                <i id="spinner" class="fa fa-fw fa-spinner fa-pulse" style="display: none;"></i>
-                            </p>
-                            <br/>
+                            <p class="help-block">Start typing to look for a product.</p>
 
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Tickets</th>
+                                    <th>Product</th>
                                     <th>Start selling</th>
                                     <th>End selling</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="ticket : ${tickets}">
-                                    <td th:text="${ticket.title}">Data</td>
-                                    <td th:text="${ticket.start}">Data</td>
-                                    <td th:text="${ticket.end}">Data</td>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.title}">Data</td>
+                                    <td th:text="${product.start}">Data</td>
+                                    <td th:text="${product.end}">Data</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a th:href="@{/dashboard/tickets/edit/} + ${event.key}"
+                                            <a th:href="@{/dashboard/products/edit/} + ${event.key}"
                                                class="btn btn-info">
                                                 <i class="glyphicon glyphicon-edit"></i>
                                             </a>
-                                            <a th:href="@{../delete/} + ${event.key} + '/ticket/' + ${ticket.id}"
-                                               class="btn btn-danger">
+                                            <a class="btn btn-danger remove-product" th:data-id="${product.id}">
                                                 <i class="glyphicon glyphicon-remove"></i>
                                             </a>
                                         </div>
@@ -204,13 +224,18 @@
 <script>
     $(document).ready(function () {
         $("#q").autocomplete({
-            serviceUrl: '/api/v1/tickets/unused/search',
+            serviceUrl: '/api/v1/products/unused/search',
             lookupLimit: 3,
             minChars: 3,
             onSelect: function (suggestion) {
-                $("#addTicketKey").val(suggestion.data);
-                $("#addTicket").submit();
+                $("#addProductKey").val(suggestion.data);
+                $("#addProduct").submit();
             }
+        });
+
+        $(".remove-product").click(function () {
+            $("#deleteProductKey").val($(this).data('id'));
+            $("#deleteProduct").submit();
         });
     });
 </script>

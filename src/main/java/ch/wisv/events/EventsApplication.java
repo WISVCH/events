@@ -1,7 +1,7 @@
 package ch.wisv.events;
 
 import ch.wisv.events.event.repository.EventRepository;
-import ch.wisv.events.event.repository.TicketRepository;
+import ch.wisv.events.event.repository.ProductRepository;
 import ch.wisv.events.utils.TestDataRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,9 +22,9 @@ public class EventsApplication {
 
     @Bean
     @Profile("dev")
-    CommandLineRunner init(EventRepository eventRepository, TicketRepository ticketRepository) {
+    CommandLineRunner init(EventRepository eventRepository, ProductRepository productRepository) {
 
-        return new TestDataRunner(eventRepository, ticketRepository);
+        return new TestDataRunner(eventRepository, productRepository);
 
     }
 }

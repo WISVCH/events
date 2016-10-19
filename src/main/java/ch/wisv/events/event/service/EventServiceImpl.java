@@ -1,16 +1,16 @@
 package ch.wisv.events.event.service;
 
-import ch.wisv.events.dashboard.request.AddTicketRequest;
+import ch.wisv.events.dashboard.request.EventProductRequest;
 import ch.wisv.events.dashboard.request.EventRequest;
+import ch.wisv.events.dashboard.request.EventRequestFactory;
 import ch.wisv.events.event.model.Event;
-import ch.wisv.events.event.model.Ticket;
+import ch.wisv.events.event.model.Product;
 import ch.wisv.events.event.repository.EventRepository;
-import ch.wisv.events.event.repository.TicketRepository;
-import ch.wisv.events.exception.TicketInUseException;
+import ch.wisv.events.event.repository.ProductRepository;
+import ch.wisv.events.exception.ProductInUseException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +23,12 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
 
-    private final TicketRepository ticketRepository;
+    private final ProductRepository productRepository;
 
-    public EventServiceImpl(EventRepository eventRepository, TicketRepository ticketRepository) {
+    public EventServiceImpl(EventRepository eventRepository, ProductRepository productRepository) {
         this.eventRepository = eventRepository;
-        this.ticketRepository = ticketRepository;
+        this.productRepository = productRepository;
     }
-
 
     @Override
     public Collection<Event> getAllEvents() {
@@ -42,36 +41,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Collection<Event> getEventById(Long id) {
+    public Event getEventById(Long id) {
         return eventRepository.findById(id);
     }
 
     @Override
     public void addEvent(EventRequest eventRequest) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        Event event = new Event(eventRequest.getTitle(),
-                eventRequest.getDescription(),
-                eventRequest.getLocation(),
-                eventRequest.getLimit(),
-                LocalDateTime.parse(eventRequest.getEventStart(), format),
-                LocalDateTime.parse(eventRequest.getEventEnd()),
-                eventRequest.getImage()
-        );
+        Event event = EventRequestFactory.create(eventRequest);
 
         eventRepository.saveAndFlush(event);
     }
 
     @Override
-    public void addTicketToEvent(AddTicketRequest addTicketRequest) {
-        List<Event> eventList = eventRepository.findAllByTicketsId(addTicketRequest.getTicketID());
+    public void addProductToEvent(EventProductRequest eventProductRequest) {
+        List<Event> eventList = eventRepository.findAllByProductsId(eventProductRequest.getProductID());
         if (eventList.size() > 0) {
-            throw new TicketInUseException("This Ticket is already used for other Event");
+            throw new ProductInUseException("This Product is already used for other Event");
         }
 
-        Event event = eventRepository.findOne(addTicketRequest.getEventID());
-        Ticket ticket = ticketRepository.findOne(addTicketRequest.getTicketID());
+        Event event = eventRepository.findOne(eventProductRequest.getEventID());
+        Product product = productRepository.findOne(eventProductRequest.getProductID());
 
-        event.addTicket(ticket);
+        event.addProduct(product);
         eventRepository.save(event);
     }
 
@@ -85,15 +76,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void deleteTicketFromEvent(String eventKey, Long ticketId) {
-        Optional<Event> eventOptional = eventRepository.findByKey(eventKey);
-        if(eventOptional.isPresent()) {
-            Event event = eventOptional.get();
+    public void deleteProductFromEvent(Long eventId, Long productId) {
+        Event event = eventRepository.findOne(eventId);
 
-            Ticket ticket = ticketRepository.findOne(ticketId);
-            event.getTickets().remove(ticket);
-            eventRepository.save(event);
-        }
+        Product product = productRepository.findOne(productId);
+        event.getProducts().remove(product);
+        eventRepository.save(event);
+    }
+
+    @Override
+    public void updateEvent(EventRequest eventRequest) {
+        Event event = eventRepository.findById(eventRequest.getId());
+        event = EventRequestFactory.update(event, eventRequest);
+
+        eventRepository.save(event);
     }
 
 }

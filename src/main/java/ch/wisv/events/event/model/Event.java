@@ -1,8 +1,12 @@
 package ch.wisv.events.event.model;
 
+import ch.wisv.events.view.View;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,61 +18,71 @@ import java.util.UUID;
  * Event entity.
  */
 @Entity
-@Data
 @AllArgsConstructor
 public class Event {
 
-    public final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     @Id
     @GeneratedValue
-    public long id;
+    @Getter
+    private long id;
 
-    public String key;
+    @JsonView(View.Event.class)
+    @Getter
+    private String key;
 
-    public String title;
+    @Getter
+    @Setter
+    private String title, description, location, imageURL;
 
-    @Lob
-    public String description;
-
-    public String location;
-
-    public String imageURL;
-
-    @OneToMany(cascade = CascadeType.MERGE, targetEntity = Ticket.class, fetch = FetchType.EAGER)
-    public Set<Ticket> tickets;
-
-    @DateTimeFormat(pattern = TIME_FORMAT)
-    public LocalDateTime start;
+    @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
+    @Getter
+    @Setter
+    private Set<Product> products;
 
     @DateTimeFormat(pattern = TIME_FORMAT)
-    public LocalDateTime end;
+    @Getter
+    @Setter
+    private LocalDateTime start, end;
 
-    public int registrationLimit;
+    @Getter
+    @Setter
+    private int sold, target;
+
+    @Getter
+    @Setter
+    private Integer limit;
+
+    @Getter
+    @Setter
+    private EventOption options;
 
     public Event() {
-        this.tickets = new HashSet<>();
         this.key = UUID.randomUUID().toString();
+        this.products = new HashSet<>();
+        this.options = new EventOption();
     }
 
-    public Event(String title) {
+    public Event(String title, String description, String location, int target, Integer limit, LocalDateTime
+            end, String imageURL, LocalDateTime start) {
         this();
         this.title = title;
-    }
-
-    public Event(String title, String description, String location, int limit, LocalDateTime start, LocalDateTime
-            end, String imageURL) {
-        this(title);
         this.description = description;
         this.location = location;
-        this.registrationLimit = limit;
+        this.target = target;
+        this.limit = limit;
         this.start = start;
         this.end = end;
         this.imageURL = imageURL;
     }
 
-    public void addTicket(Ticket ticket) {
-        this.tickets.add(ticket);
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public double calcProgress() {
+        return Math.min(Math.round((((double) this.sold / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }
 
 }
