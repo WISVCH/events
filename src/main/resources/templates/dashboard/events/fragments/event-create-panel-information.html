@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/dashboard.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div th:fragment="create-information">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Information</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="eventTitle">Title*</label>
+                <input type="text" class="form-control" id="eventTitle"
+                       placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
+                       th:field="*{title}"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="eventDescription">Description*</label>
+                <textarea id="eventDescription" class="form-control" placeholder="Description"
+                          th:field="*{description}"
+                          rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="eventLocation">Location</label>
+                <input type="text" id="eventLocation" class="form-control"
+                       th:field="*{location}"
+                       placeholder="Location (e.g. Lecture Hall Boole)">
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="eventStart">Starting time*</label>
+
+                        <input type="datetime-local" id="eventStart"
+                               th:field="*{eventStart}"
+                               class="form-control"
+                               required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="eventEnd">Ending time*</label>
+
+                        <input type="datetime-local" id="eventEnd"
+                               th:field="*{eventEnd}"
+                               class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" id="image" class="form-control">
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="eventTarget">Target*</label>
+
+                        <input type="text" step="1" id="eventTarget" class="form-control"
+                               placeholder="Registration target (e.g. 100)"
+                               th:field="*{target}"
+                               required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="eventLimit">Limit</label>
+
+                        <input type="text" step="1" id="eventLimit" class="form-control"
+                               placeholder="Registration limit (e.g. 100)"
+                               th:field="*{limit}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+</body>
+</html>
