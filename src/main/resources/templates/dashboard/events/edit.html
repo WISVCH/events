@@ -54,7 +54,11 @@
 
             <div class="row">
                 <div class="col-sm-12 col-md-6">
-                    <div th:replace="dashboard/events/fragments/event-edit-panel-information :: edit-information"></div>
+                    <!--/*@thymesVar id="event" type="ch.wisv.events.dashboard.request.EventRequest"*/-->
+                    <form th:action="@{/dashboard/events/update}" th:object="${event}"
+                          method="POST" id="editEvent">
+                        <div th:replace="dashboard/events/fragments/event-edit-panel-information :: edit-information"></div>
+                    </form>
                 </div>
                 <div class="col-sm-12 col-md-6">
                     <div th:replace="dashboard/events/fragments/event-edit-panel-options :: edit-options"></div>
@@ -72,24 +76,6 @@
 <script src="/api/v1/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $("#q").autocomplete({
-            serviceUrl: '/api/v1/products/unused/search',
-            lookupLimit: 3,
-            minChars: 3,
-            onSelect: function (suggestion) {
-                $("#addProductKey").val(suggestion.data);
-                $("#addProduct").submit();
-            }
-        });
-
-        $(".remove-product").click(function () {
-            $("#deleteProductKey").val($(this).data('id'));
-            $("#deleteProduct").submit();
-        });
-    });
-</script>
+<script th:src="@{/js/dashboard/edit.min.js}"></script>
 </body>
 </html>

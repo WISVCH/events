@@ -30,8 +30,8 @@
             <h3 class="panel-title">Products</h3>
         </div>
         <div class="panel-body">
-            <!--/*@thymesVar id="addProduct" type="ch.wisv.events.dashboard.request.EventProductRequest"*/-->
-            <form th:action="@{/dashboard/events/add/product}" th:object="${addProduct}"
+            <!--/*@thymesVar id="eventProduct" type="ch.wisv.events.dashboard.request.EventProductRequest"*/-->
+            <form th:action="@{/dashboard/events/add/product}" th:object="${eventProduct}"
                   class="form-horizontal"
                   id="addProduct" method="POST">
                 <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
@@ -39,8 +39,7 @@
                 <input id="addProductKey" type="hidden" th:field="*{productID}">
             </form>
 
-            <!--/*@thymesVar id="deleteProduct" type="ch.wisv.events.dashboard.request.EventProductRequest"*/-->
-            <form th:action="@{/dashboard/events/delete/product}" th:object="${addProduct}"
+            <form th:action="@{/dashboard/events/delete/product}" th:object="${eventProduct}"
                   class="form-horizontal"
                   id="deleteProduct" method="POST">
                 <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
@@ -49,7 +48,7 @@
             </form>
 
             <div class="input-group" style="width: 100%">
-                <input id="q" autocomplete="off" type="text" class="form-control"
+                <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                        placeholder="Add product">
                 <div class="input-group-btn" style="width: 39px;">
                             <span class="btn btn-success">

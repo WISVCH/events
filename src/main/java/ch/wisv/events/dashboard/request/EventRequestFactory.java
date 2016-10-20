@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  * Created by sven on 17/10/2016.
  */
 public class EventRequestFactory {
-    public static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     public static EventRequest create(Event event) {
         return new EventRequest(
@@ -22,7 +22,8 @@ public class EventRequestFactory {
                 event.getStart().toString(),
                 event.getEnd().toString(),
                 event.getImageURL(),
-                event.getKey()
+                event.getKey(),
+                event.getOptions()
         );
     }
 

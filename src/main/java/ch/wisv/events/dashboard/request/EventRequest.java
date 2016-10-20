@@ -1,5 +1,6 @@
 package ch.wisv.events.dashboard.request;
 
+import ch.wisv.events.event.model.EventOptions;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +19,10 @@ public class EventRequest {
 
     Integer limit;
 
+    EventOptions options;
+
     public EventRequest(Long id, String title, String description, String location, int target, Integer limit,
-                        String eventStart, String eventEnd, String image, String key) {
+                        String eventStart, String eventEnd, String image, String key, EventOptions options) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -30,6 +33,7 @@ public class EventRequest {
         this.eventEnd = eventEnd;
         this.image = image;
         this.key = key;
+        this.options = options;
     }
 
 }

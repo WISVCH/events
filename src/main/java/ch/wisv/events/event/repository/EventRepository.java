@@ -21,6 +21,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Event> findByKey(String key);
 
     List<Event> findAllByProductsId(Long id);
-//    List<Event> findByRegistrationStartBeforeAndRegistrationEndAfter(LocalDateTime registrationStart, LocalDateTime
-//            registrationEnd);
+
 }

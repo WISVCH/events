@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -56,12 +55,12 @@ public class Event {
 
     @Getter
     @Setter
-    private EventOption options;
+    private EventOptions options;
 
     public Event() {
         this.key = UUID.randomUUID().toString();
         this.products = new HashSet<>();
-        this.options = new EventOption();
+        this.options = new EventOptions();
     }
 
     public Event(String title, String description, String location, int target, Integer limit, LocalDateTime

@@ -1,13 +1,21 @@
 package ch.wisv.events.dashboard.request;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by sven on 19/10/2016.
  */
-public class EventOptionRequest {
+@Data
+@NoArgsConstructor
+public class EventOptionsRequest {
 
-    public String published;
+    public String key;
 
-    public EventOptionRequest(String published) {
-        this.published = published;
+    public int status;
+
+    public EventOptionsRequest(String key, int status) {
+        this.key = key;
+        this.status = status;
     }
 }

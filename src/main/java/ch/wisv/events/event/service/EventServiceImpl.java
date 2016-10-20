@@ -1,9 +1,8 @@
 package ch.wisv.events.event.service;
 
-import ch.wisv.events.dashboard.request.EventProductRequest;
-import ch.wisv.events.dashboard.request.EventRequest;
-import ch.wisv.events.dashboard.request.EventRequestFactory;
+import ch.wisv.events.dashboard.request.*;
 import ch.wisv.events.event.model.Event;
+import ch.wisv.events.event.model.EventOptions;
 import ch.wisv.events.event.model.Product;
 import ch.wisv.events.event.repository.EventRepository;
 import ch.wisv.events.event.repository.ProductRepository;
@@ -95,6 +94,16 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(Event event) {
         eventRepository.delete(event);
+    }
+
+    @Override
+    public void updateEventOptions(EventOptionsRequest request) {
+        Event event = this.getEventByKey(request.getKey());
+        EventOptions options = EventOptionRequestFactory.create(request);
+
+        event.setOptions(options);
+
+        eventRepository.save(event);
     }
 
 }

@@ -1,9 +1,8 @@
 package ch.wisv.events.dashboard.controller;
 
-import ch.wisv.events.dashboard.request.EventProductRequest;
-import ch.wisv.events.dashboard.request.EventRequest;
-import ch.wisv.events.dashboard.request.EventRequestFactory;
+import ch.wisv.events.dashboard.request.*;
 import ch.wisv.events.event.model.Event;
+import ch.wisv.events.event.model.EventOptions;
 import ch.wisv.events.event.service.EventService;
 import ch.wisv.events.event.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -56,13 +55,12 @@ public class DashboardEventController {
         }
 
         EventRequest request = EventRequestFactory.create(event);
-        EventProductRequest eventProductRequest = new EventProductRequest();
-        eventProductRequest.setEventID(event.getId());
-        eventProductRequest.setEventKey(event.getKey());
+        EventProductRequest eventProductRequest = EventProductRequestFactory.create(event);
 
         model.addAttribute("event", request);
         model.addAttribute("products", event.getProducts());
-        model.addAttribute("addProduct", eventProductRequest);
+        model.addAttribute("options", EventOptionRequestFactory.create(event, event.getOptions()));
+        model.addAttribute("eventProduct", eventProductRequest);
 
         return "dashboard/events/edit";
     }
@@ -119,8 +117,17 @@ public class DashboardEventController {
     public String editEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest,
                             RedirectAttributes redirectAttributes) {
         eventService.updateEvent(eventRequest);
-        redirectAttributes.addFlashAttribute("message", "Information Event successfully updated!");
+        redirectAttributes.addFlashAttribute("message", "Autosaved!");
 
         return "redirect:/dashboard/events/edit/" + eventRequest.getKey();
+    }
+
+    @PostMapping("/update/options")
+    public String updateEventOptions(Model model, @ModelAttribute @Validated EventOptionsRequest request,
+                            RedirectAttributes redirectAttributes) {
+        eventService.updateEventOptions(request);
+        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+
+        return "redirect:/dashboard/events/edit/" + request.getKey();
     }
 }

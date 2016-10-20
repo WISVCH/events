@@ -1,5 +1,6 @@
 package ch.wisv.events.event.service;
 
+import ch.wisv.events.dashboard.request.EventOptionsRequest;
 import ch.wisv.events.dashboard.request.EventProductRequest;
 import ch.wisv.events.dashboard.request.EventRequest;
 import ch.wisv.events.event.model.Event;
@@ -29,4 +30,6 @@ public interface EventService {
     void updateEvent(EventRequest eventRequest);
 
     void deleteEvent(Event event);
+
+    void updateEventOptions(EventOptionsRequest request);
 }
