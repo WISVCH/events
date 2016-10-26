@@ -2,7 +2,6 @@ package ch.wisv.events.controller.dashboard;
 
 import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,12 @@ public class DashboardProductController {
         return "dashboard/products/index";
     }
 
+    @GetMapping("/create/")
+    public String createEventView(Model model) {
+        model.addAttribute("product", new ProductRequest());
+        return "dashboard/products/create";
+    }
+
     @GetMapping("/edit/{key}")
     public String editEventView(Model model, @PathVariable String key) {
         Product product = productService.getProductByKey(key);
@@ -57,8 +62,22 @@ public class DashboardProductController {
         return "dashboard/products/edit";
     }
 
+    @PostMapping("/add")
+    public String createEvent(@ModelAttribute @Validated ProductRequest productRequest, RedirectAttributes
+            redirectAttributes) {
+//        try {
+            productService.addProduct(productRequest);
+//        } catch (RuntimeException e) {
+//            redirectAttributes.addFlashAttribute("error", e.getMessage());
+//        }
+
+        redirectAttributes.addFlashAttribute("message", productRequest.getTitle() + " successfully created!");
+
+        return "redirect:/dashboard/products/";
+    }
+
     @PostMapping("/update")
-    public String editEvent(Model model, @ModelAttribute @Validated ProductRequest productRequest,
+    public String editEvent(@ModelAttribute @Validated ProductRequest productRequest,
                             RedirectAttributes redirectAttributes) {
         productService.updateProduct(productRequest);
         redirectAttributes.addFlashAttribute("message", "Autosaved!");

@@ -47,4 +47,11 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
     }
+
+    @Override
+    public void addProduct(ProductRequest productRequest) {
+        Product product = ProductRequestFactory.create(productRequest);
+
+        productRepository.saveAndFlush(product);
+    }
 }

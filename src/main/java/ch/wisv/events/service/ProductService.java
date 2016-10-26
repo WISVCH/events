@@ -20,4 +20,12 @@ public interface ProductService {
      * @param productRequest ProductRequest containing the new product information
      */
     void updateProduct(ProductRequest productRequest);
+
+    /**
+     * Add a new Product using a ProductRequest
+     *
+     * @param productRequest ProductRequest containing the product information
+     */
+    void addProduct(ProductRequest productRequest);
+
 }

@@ -1,6 +1,7 @@
 package ch.wisv.events.data.model.product;
 
 import ch.wisv.events.data.model.Model;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +17,7 @@ import java.util.UUID;
  * Created by svenp on 11-10-2016.
  */
 @Entity
+@AllArgsConstructor
 public class Product implements Model {
     private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
@@ -48,5 +50,16 @@ public class Product implements Model {
 
     public Product() {
         this.key = UUID.randomUUID().toString();
+    }
+
+    public Product(String title, String description, float cost, Integer maxSold, LocalDateTime sellStart,
+                   LocalDateTime sellEnd) {
+        this();
+        this.title = title;
+        this.description = description;
+        this.cost = cost;
+        this.maxSold = maxSold;
+        this.sellStart = sellStart;
+        this.sellEnd = sellEnd;
     }
 }

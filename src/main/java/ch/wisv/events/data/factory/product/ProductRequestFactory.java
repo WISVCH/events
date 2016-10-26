@@ -5,6 +5,7 @@ import ch.wisv.events.data.request.product.ProductRequest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -32,7 +33,7 @@ public class ProductRequestFactory {
                 product.getKey(),
                 product.getTitle(),
                 product.getSellStart().toString(),
-                product.getSellEnd().toString(),
+                (product.getSellEnd() == null) ? "" : product.getSellEnd().toString(),
                 product.getDescription(),
                 product.getCost(),
                 product.getMaxSold()
@@ -40,7 +41,14 @@ public class ProductRequestFactory {
     }
 
     public static Product create(ProductRequest request) {
-        return null;
+        return new Product(
+                request.getTitle(),
+                request.getDescription(),
+                request.getCost(),
+                request.getMaxSold(),
+                LocalDateTime.parse(request.getSellStart(), format),
+                (Objects.equals(request.getSellEnd(), "")) ? null : LocalDateTime.parse(request.getSellEnd(), format)
+        );
     }
 
     public static Product update(Product product, ProductRequest request) {

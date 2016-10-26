@@ -77,7 +77,7 @@ public class Event implements Model {
         this.end = end;
         this.imageURL = imageURL;
     }
-
+    
     public void addProduct(Product product) {
         this.products.add(product);
     }
