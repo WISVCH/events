@@ -30,7 +30,7 @@
             <h3 class="panel-title">Information</h3>
         </div>
         <form th:action="@{/dashboard/products/update}" th:object="${product}"
-              method="POST" id="productEvent">
+              method="POST" id="productEdit">
             <!--/*@thymesVar id="product" type="ch.wisv.events.data.request.product.ProductRequest"*/-->
 
             <div class="panel-body">
@@ -46,10 +46,10 @@
                 </div>
                 <div class="form-group">
                     <label for="productDescription">Description*</label>
-                <textarea name="" id="productDescription"
-                          th:value="*{description}"
-                          th:field="*{description}"
-                          rows="5" class="form-control"></textarea>
+                    <textarea name="" id="productDescription"
+                              th:value="*{description}"
+                              th:field="*{description}"
+                              rows="5" class="form-control"></textarea>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -97,7 +97,6 @@
                         </div>
                     </div>
                 </div>
-                <input type="submit">
             </div>
         </form>
     </div>
