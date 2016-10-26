@@ -1,7 +1,7 @@
 package ch.wisv.events;
 
-import ch.wisv.events.event.repository.EventRepository;
-import ch.wisv.events.event.repository.ProductRepository;
+import ch.wisv.events.repository.EventRepository;
+import ch.wisv.events.repository.ProductRepository;
 import ch.wisv.events.utils.TestDataRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

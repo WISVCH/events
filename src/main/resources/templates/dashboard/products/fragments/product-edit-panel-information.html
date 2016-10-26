@@ -30,32 +30,22 @@
             <h3 class="panel-title">Information</h3>
         </div>
         <div class="panel-body">
-
             <input type="hidden" th:field="*{id}" th:value="*{id}">
             <input type="hidden" th:field="*{key}" th:value="*{key}">
             <div class="form-group">
-                <label for="eventTitle">Title*</label>
-                <input type="text" class="form-control" id="eventTitle"
+                <label for="productTitle">Title*</label>
+                <input type="text" class="form-control" id="productTitle"
                        placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
                        th:value="*{title}"
                        th:field="*{title}"
                        required>
             </div>
             <div class="form-group">
-                <label for="eventDescription">Description</label>
-                <textarea id="eventDescription" class="form-control" placeholder="Description"
-                          rows="5"
-                          th:text="*{description}"
+                <label for="productDescription">Description</label>
+                <textarea name="" id="productDescription"
+                          th:value="*{description}"
                           th:field="*{description}"
-                          required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="eventLocation">Location*</label>
-                <input type="text" id="eventLocation" class="form-control"
-                       placeholder="Location (e.g. Lecture Hall Boole)"
-                       th:value="*{location}"
-                       th:field="*{location}"
-                       required>
+                          rows="5" class="form-control"></textarea>
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -63,8 +53,8 @@
                         <label for="eventStart">Starting time*</label>
 
                         <input type="datetime-local" id="eventStart"
-                               th:field="*{eventStart}"
-                               th:value="*{eventStart}"
+                               th:field="*{sellStart}"
+                               th:value="*{sellStart}"
                                class="form-control"
                                required>
                     </div>
@@ -74,35 +64,10 @@
                         <label for="eventEnd">Ending time*</label>
 
                         <input type="datetime-local" id="eventEnd"
-                               th:field="*{eventEnd}"
-                               th:value="*{eventEnd}"
+                               th:field="*{sellEnd}"
+                               th:value="*{sellEnd}"
                                class="form-control"
                                required>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="image">Image</label>
-                <input type="file" id="image" class="form-control">
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="eventTarget">Target*</label>
-                        <input type="number" step="1" id="eventTarget" class="form-control"
-                               placeholder="Registration target (e.g. 100)"
-                               th:value="*{target}"
-                               th:field="*{target}"
-                               required>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="eventLimit">Limit</label>
-                        <input type="number" step="1" id="eventLimit" class="form-control"
-                               placeholder="Registration limit (e.g. 100)"
-                               th:value="*{limit}"
-                               th:field="*{limit}">
                     </div>
                 </div>
             </div>

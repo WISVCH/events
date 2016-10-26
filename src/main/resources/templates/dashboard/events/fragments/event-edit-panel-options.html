@@ -30,15 +30,15 @@
             <h3 class="panel-title">Options</h3>
         </div>
         <div class="panel-body">
-            <!--/*@thymesVar id="options" type="ch.wisv.events.dashboard.request.EventOptionsRequest"*/-->
-            <!--/*@thymesVar id="state" type="ch.wisv.events.event.model.EventStatus"*/-->
+            <!--/*@thymesVar id="options" type="ch.wisv.events.data.request.event.EventOptionsRequest"*/-->
+            <!--/*@thymesVar id="state" type="ch.wisv.events.data.model.event.EventStatus"*/-->
             <form th:action="@{/dashboard/events/update/options}" th:object="${options}"
                   method="POST" id="editEventOptions">
                 <input type="hidden" th:field="*{key}" th:value="${options.getKey()}">
                 <div class="form-group">
                     <label for="eventStatus">Status</label>
                     <select name="" id="eventStatus" class="form-control" th:field="*{status}">
-                        <option th:each="state : ${T(ch.wisv.events.event.model.EventStatus).values()}"
+                        <option th:each="state : ${T(ch.wisv.events.data.model.event.EventStatus).values()}"
                                 th:selected="${options.getStatus() == state.getId()}"
                                 th:value="${state.getId()}"
                                 th:text="${state.getDisplayName()}">

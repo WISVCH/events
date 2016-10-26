@@ -32,10 +32,12 @@
                 <li th:classappend="${#httpServletRequest.getRequestURI() == '/api/v1/dashboard/' ? 'active':''}"><a
                         th:href="@{/dashboard/}">Overview
                     <span class="sr-only">(current)</span></a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/api/v1/dashboard/events/' ? 'active':''}"><a
-                        th:href="@{/dashboard/events/}">Events</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/api/v1/dashboard/products/') ? 'active':''}"><a
-                        th:href="@{/dashboard/products/}" href="#">Products</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/api/v1/dashboard/events/' ? 'active':''}">
+                    <a
+                            th:href="@{/dashboard/events/}">Events</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/api/v1/dashboard/products/') ? 'active':''}">
+                    <a
+                            th:href="@{/dashboard/products/}" href="#">Products</a></li>
             </ul>
         </div>
     </div>

@@ -5,10 +5,13 @@ package ch.wisv.events.view;
  */
 public class View {
 
-    public interface Public {}
+    public interface Public {
+    }
 
-    public interface NoOptions {}
+    public interface NoOptions {
+    }
 
-    public interface Event extends Public, NoOptions {}
+    public interface Event extends Public, NoOptions {
+    }
 
 }
