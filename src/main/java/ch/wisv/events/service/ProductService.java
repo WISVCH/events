@@ -28,4 +28,11 @@ public interface ProductService {
      */
     void addProduct(ProductRequest productRequest);
 
+    /**
+     * Remove a Product
+     *
+     * @param product Product to be deleted.
+     */
+    void deleteProduct(Product product);
+
 }

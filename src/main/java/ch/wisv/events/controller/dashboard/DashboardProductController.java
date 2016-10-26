@@ -62,14 +62,27 @@ public class DashboardProductController {
         return "dashboard/products/edit";
     }
 
+    @GetMapping("/delete/{key}")
+    public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
+        Product product = productService.getProductByKey(key);
+        try {
+            productService.deleteProduct(product);
+            redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/dashboard/products/";
+    }
+
     @PostMapping("/add")
     public String createEvent(@ModelAttribute @Validated ProductRequest productRequest, RedirectAttributes
             redirectAttributes) {
-//        try {
+        try {
             productService.addProduct(productRequest);
-//        } catch (RuntimeException e) {
-//            redirectAttributes.addFlashAttribute("error", e.getMessage());
-//        }
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
 
         redirectAttributes.addFlashAttribute("message", productRequest.getTitle() + " successfully created!");
 

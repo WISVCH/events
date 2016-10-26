@@ -1,8 +1,10 @@
 package ch.wisv.events.service;
 
 import ch.wisv.events.data.factory.product.ProductRequestFactory;
+import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
+import ch.wisv.events.exception.ProductInUseException;
 import ch.wisv.events.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,11 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private final EventService eventService;
+
+    public ProductServiceImpl(ProductRepository productRepository, EventService eventService) {
         this.productRepository = productRepository;
+        this.eventService = eventService;
     }
 
     @Override
@@ -53,5 +58,14 @@ public class ProductServiceImpl implements ProductService {
         Product product = ProductRequestFactory.create(productRequest);
 
         productRepository.saveAndFlush(product);
+    }
+
+    @Override
+    public void deleteProduct(Product product) {
+        List<Event> events = eventService.getEventByProductKey(product.getKey());
+        if (events.size() > 0) {
+            throw new ProductInUseException("Product is already added to an Event");
+        }
+        productRepository.delete(product);
     }
 }
