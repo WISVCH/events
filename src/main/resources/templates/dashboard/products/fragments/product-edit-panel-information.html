@@ -29,49 +29,77 @@
         <div class="panel-heading">
             <h3 class="panel-title">Information</h3>
         </div>
-        <div class="panel-body">
-            <input type="hidden" th:field="*{id}" th:value="*{id}">
-            <input type="hidden" th:field="*{key}" th:value="*{key}">
-            <div class="form-group">
-                <label for="productTitle">Title*</label>
-                <input type="text" class="form-control" id="productTitle"
-                       placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
-                       th:value="*{title}"
-                       th:field="*{title}"
-                       required>
-            </div>
-            <div class="form-group">
-                <label for="productDescription">Description</label>
+        <form th:action="@{/dashboard/products/update}" th:object="${product}"
+              method="POST" id="productEvent">
+            <!--/*@thymesVar id="product" type="ch.wisv.events.data.request.product.ProductRequest"*/-->
+
+            <div class="panel-body">
+                <input type="hidden" th:field="*{id}" th:value="*{id}">
+                <input type="hidden" th:field="*{key}" th:value="*{key}">
+                <div class="form-group">
+                    <label for="productTitle">Title*</label>
+                    <input type="text" class="form-control" id="productTitle"
+                           placeholder="Title (e.g. T.U.E.S.day Lunch Lecture)"
+                           th:value="*{title}"
+                           th:field="*{title}"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description*</label>
                 <textarea name="" id="productDescription"
                           th:value="*{description}"
                           th:field="*{description}"
                           rows="5" class="form-control"></textarea>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="eventStart">Starting time*</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="eventStart">Starting time*</label>
 
-                        <input type="datetime-local" id="eventStart"
-                               th:field="*{sellStart}"
-                               th:value="*{sellStart}"
-                               class="form-control"
-                               required>
+                            <input type="datetime-local" id="eventStart"
+                                   th:field="*{sellStart}"
+                                   th:value="*{sellStart}"
+                                   class="form-control"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="eventEnd">Ending time*</label>
+
+                            <input type="datetime-local" id="eventEnd"
+                                   th:field="*{sellEnd}"
+                                   th:value="*{sellEnd}"
+                                   class="form-control"
+                                   required>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="eventEnd">Ending time*</label>
-
-                        <input type="datetime-local" id="eventEnd"
-                               th:field="*{sellEnd}"
-                               th:value="*{sellEnd}"
-                               class="form-control"
-                               required>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="productCost">Cost*</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">&euro;</div>
+                                <input type="number" step="0.01" class="form-control" id="productCost"
+                                       placeholder="Cost"
+                                       th:value="*{cost}" th:field="*{cost}"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="productMaxSold">Max sold:</label>
+                            <input type="number" step="0.01" class="form-control"
+                                   id="productMaxSold"
+                                   th:value="*{maxSold}" th:field="*{maxSold}">
+                        </div>
                     </div>
                 </div>
+                <input type="submit">
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -81,10 +109,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-    })
-</script>
 </body>
 </html>

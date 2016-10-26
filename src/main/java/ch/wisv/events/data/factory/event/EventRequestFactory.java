@@ -10,10 +10,11 @@ import java.time.format.DateTimeFormatter;
  * Created by sven on 17/10/2016.
  */
 public class EventRequestFactory {
+
     private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-    public static EventRequest create(Event event) {
 
+    public static EventRequest create(Event event) {
             return new EventRequest(
                     event.getId(),
                     event.getTitle(),

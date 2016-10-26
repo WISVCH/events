@@ -23,8 +23,6 @@ public class EventsApplication {
     @Bean
     @Profile("dev")
     CommandLineRunner init(EventRepository eventRepository, ProductRepository productRepository) {
-
         return new TestDataRunner(eventRepository, productRepository);
-
     }
 }

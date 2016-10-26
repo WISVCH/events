@@ -1,9 +1,10 @@
 package ch.wisv.events.data.factory.product;
 
-import ch.wisv.events.data.model.Model;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.request.Request;
 import ch.wisv.events.data.request.product.ProductRequest;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -23,6 +24,8 @@ import ch.wisv.events.data.request.product.ProductRequest;
  */
 public class ProductRequestFactory {
 
+    private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
     public static ProductRequest create(Product product) {
         return new ProductRequest(
                 product.getId(),
@@ -36,8 +39,19 @@ public class ProductRequestFactory {
         );
     }
 
-    public static Model create(Request request) {
+    public static Product create(ProductRequest request) {
         return null;
+    }
+
+    public static Product update(Product product, ProductRequest request) {
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setSellStart(LocalDateTime.parse(request.getSellStart(), format));
+        product.setSellEnd(LocalDateTime.parse(request.getSellEnd(), format));
+        product.setCost(request.getCost());
+        product.setMaxSold(request.getMaxSold());
+
+        return product;
     }
 
 }

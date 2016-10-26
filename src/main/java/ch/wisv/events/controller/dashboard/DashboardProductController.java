@@ -2,13 +2,15 @@ package ch.wisv.events.controller.dashboard;
 
 import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.product.Product;
+import ch.wisv.events.data.request.event.EventRequest;
+import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -53,6 +55,15 @@ public class DashboardProductController {
         model.addAttribute("product", ProductRequestFactory.create(product));
 
         return "dashboard/products/edit";
+    }
+
+    @PostMapping("/update")
+    public String editEvent(Model model, @ModelAttribute @Validated ProductRequest productRequest,
+                            RedirectAttributes redirectAttributes) {
+        productService.updateProduct(productRequest);
+        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+
+        return "redirect:/dashboard/products/edit/" + productRequest.getKey();
     }
 
 }

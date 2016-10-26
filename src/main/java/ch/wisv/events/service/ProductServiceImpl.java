@@ -1,6 +1,8 @@
 package ch.wisv.events.service;
 
+import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.product.Product;
+import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +33,18 @@ public class ProductServiceImpl implements ProductService {
             return productOptional.get();
         }
         return null;
+    }
+
+    /**
+     * Update Product using a ProductRequest
+     *
+     * @param productRequest ProductRequest containing the new product information
+     */
+    @Override
+    public void updateProduct(ProductRequest productRequest) {
+        Product product = productRepository.findById(productRequest.getId());
+        product = ProductRequestFactory.update(product, productRequest);
+
+        productRepository.save(product);
     }
 }

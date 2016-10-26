@@ -1,6 +1,7 @@
 package ch.wisv.events.service;
 
 import ch.wisv.events.data.model.product.Product;
+import ch.wisv.events.data.request.product.ProductRequest;
 
 import java.util.List;
 
@@ -12,4 +13,11 @@ public interface ProductService {
     List<Product> getAllProducts();
 
     Product getProductByKey(String key);
+
+    /**
+     * Update Product using a ProductRequest
+     *
+     * @param productRequest ProductRequest containing the new product information
+     */
+    void updateProduct(ProductRequest productRequest);
 }
