@@ -90,7 +90,9 @@
                                 <a th:href="'edit/' + ${event.key}" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${event.key}" class="btn btn-danger">
+                                <a th:href="'delete/' + ${event.key}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
+                                   class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </div>
