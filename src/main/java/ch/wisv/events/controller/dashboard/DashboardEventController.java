@@ -66,6 +66,8 @@ public class DashboardEventController {
     @GetMapping("/create/")
     public String createEventView(Model model) {
         model.addAttribute("event", new EventRequest());
+        model.addAttribute("eventStatus", new EventOptionsRequest());
+
         return "dashboard/events/create";
     }
 
@@ -115,10 +117,14 @@ public class DashboardEventController {
      * @return redirect
      */
     @PostMapping("/add")
-    public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
+    public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, @ModelAttribute @Validated
+            EventOptionsRequest eventOptionsRequest, RedirectAttributes
             redirectAttributes) {
         try {
-            eventService.addEvent(eventRequest);
+            Event event = eventService.addEvent(eventRequest);
+            eventOptionsRequest.setKey(event.getKey());
+
+            eventService.updateEventOptions(eventOptionsRequest);
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

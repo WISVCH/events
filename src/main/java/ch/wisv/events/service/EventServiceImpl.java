@@ -80,10 +80,11 @@ public class EventServiceImpl implements EventService {
      * @param eventRequest EventRequest
      */
     @Override
-    public void addEvent(EventRequest eventRequest) {
+    public Event addEvent(EventRequest eventRequest) {
         Event event = EventRequestFactory.create(eventRequest);
 
         eventRepository.saveAndFlush(event);
+        return event;
     }
 
     /**
