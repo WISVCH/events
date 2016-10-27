@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="../../../favicon.ico">
 
     <title>Events - Dashboard</title>
 
@@ -29,10 +29,6 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <div th:replace="/dashboard/fragments/header :: header">
@@ -52,7 +48,6 @@
                     <div th:replace="/dashboard/fragments/message :: messages"></div>
                 </div>
             </div>
-
 
             <div class="table-responsive">
                 <table id="eventsTable" class="table table-hover">

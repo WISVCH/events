@@ -14,9 +14,7 @@ import ch.wisv.events.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by svenp on 11-10-2016.
@@ -110,4 +108,15 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
     }
 
+    @Override
+    public List<Event> getEventByProductKey(String key) {
+        List<Event> events = new ArrayList<>();
+        getAllEvents().forEach(x -> x.getProducts().forEach(y -> {
+            if (Objects.equals(y.getKey(), key)) {
+                events.add(x);
+            }
+        }));
+
+        return events;
+    }
 }

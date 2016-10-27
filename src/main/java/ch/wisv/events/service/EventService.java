@@ -6,6 +6,7 @@ import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by svenp on 11-10-2016.
@@ -32,4 +33,7 @@ public interface EventService {
     void deleteEvent(Event event);
 
     void updateEventOptions(EventOptionsRequest request);
+
+    List<Event> getEventByProductKey(String key);
+
 }

@@ -77,7 +77,7 @@ public class DashboardEventController {
     }
 
     @PostMapping("/add")
-    public String createEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
+    public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
             redirectAttributes) {
         try {
             eventService.addEvent(eventRequest);
@@ -92,7 +92,7 @@ public class DashboardEventController {
 
 
     @PostMapping("/add/product")
-    public String addProductToEvent(Model model, @ModelAttribute @Validated EventProductRequest eventProductRequest,
+    public String addProductToEvent(@ModelAttribute @Validated EventProductRequest eventProductRequest,
                                     RedirectAttributes redirectAttributes) {
         try {
             eventService.addProductToEvent(eventProductRequest);
@@ -105,8 +105,7 @@ public class DashboardEventController {
     }
 
     @PostMapping("/delete/product")
-    public String deleteProductFromEvent(Model model,
-                                         @ModelAttribute @Validated EventProductRequest eventProductRequest,
+    public String deleteProductFromEvent(@ModelAttribute @Validated EventProductRequest eventProductRequest,
                                          RedirectAttributes redirectAttributes) {
         eventService.deleteProductFromEvent(eventProductRequest.getEventID(), eventProductRequest.getProductID());
         redirectAttributes.addFlashAttribute("message", "Product removed from Event!");
@@ -115,7 +114,7 @@ public class DashboardEventController {
     }
 
     @PostMapping("/update")
-    public String editEvent(Model model, @ModelAttribute @Validated EventRequest eventRequest,
+    public String editEvent(@ModelAttribute @Validated EventRequest eventRequest,
                             RedirectAttributes redirectAttributes) {
         eventService.updateEvent(eventRequest);
         redirectAttributes.addFlashAttribute("message", "Autosaved!");
@@ -124,7 +123,7 @@ public class DashboardEventController {
     }
 
     @PostMapping("/update/options")
-    public String updateEventOptions(Model model, @ModelAttribute @Validated EventOptionsRequest request,
+    public String updateEventOptions(@ModelAttribute @Validated EventOptionsRequest request,
                                      RedirectAttributes redirectAttributes) {
         eventService.updateEventOptions(request);
         redirectAttributes.addFlashAttribute("message", "Autosaved!");
