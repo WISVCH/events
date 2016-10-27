@@ -37,9 +37,8 @@ public class EventRequestFactory {
                     request.getLocation(),
                     request.getTarget(),
                     request.getLimit(),
-                    LocalDateTime.parse(request.getEventEnd(), format),
-                    request.getImage(),
-                    LocalDateTime.parse(request.getEventStart(), format)
+                    request.getImage(), LocalDateTime.parse(request.getEventStart(), format),
+                    LocalDateTime.parse(request.getEventEnd(), format)
             );
     }
 
