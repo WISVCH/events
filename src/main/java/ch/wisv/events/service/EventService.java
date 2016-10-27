@@ -34,7 +34,7 @@ public interface EventService {
      * @return Event
      */
     Event getEventById(Long id);
-
+    
     /**
      * Get Event by key
      *
