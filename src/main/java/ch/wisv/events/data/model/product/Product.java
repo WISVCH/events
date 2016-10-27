@@ -14,44 +14,86 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Created by svenp on 11-10-2016.
+ * Product Entity.
  */
 @Entity
 @AllArgsConstructor
 public class Product implements Model {
+
+    /**
+     * DateTime Format
+     */
     private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
+    /**
+     * ID of the product, getter only so it can not be changed
+     */
     @Id
     @GeneratedValue
     @Getter
     public Long id;
 
+    /**
+     * Key of the product, getter only so it can not be changed
+     */
+    @Getter
+    public String key;
+
+    /**
+     * Title of the product
+     */
     @Getter
     @Setter
-    public String title, key;
+    public String title;
 
+    /**
+     * Description of the product
+     */
     @Lob
     @Getter
     @Setter
     public String description;
 
+    /**
+     * Price/Cost of the product
+     */
     @Getter
     @Setter
     public float cost;
 
+    /**
+     * Maximum number of sold for the product. It is an
+     * Integer so it can be NULL.
+     */
     @Getter
     @Setter
     public Integer maxSold;
 
+    /**
+     * Start en End selling DateTime for the product.
+     */
     @DateTimeFormat(pattern = TIME_FORMAT)
     @Getter
     @Setter
     public LocalDateTime sellStart, sellEnd;
 
+    /**
+     * Default constructor
+     */
     public Product() {
         this.key = UUID.randomUUID().toString();
     }
 
+    /**
+     * Constructor
+     *
+     * @param title       Title of the product
+     * @param description Description of the product
+     * @param cost        Price/Cost of the product
+     * @param maxSold     Maximum number sold of the product
+     * @param sellStart   Start selling date
+     * @param sellEnd     End selling date
+     */
     public Product(String title, String description, float cost, Integer maxSold, LocalDateTime sellStart,
                    LocalDateTime sellEnd) {
         this();
