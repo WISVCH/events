@@ -1,7 +1,6 @@
 package ch.wisv.events.data.request.event;
 
 import ch.wisv.events.data.model.event.EventOptions;
-import ch.wisv.events.data.request.Request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class EventRequest implements Request {
+public class EventRequest {
 
     Long id;
 

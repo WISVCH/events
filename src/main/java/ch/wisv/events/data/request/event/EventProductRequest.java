@@ -1,6 +1,5 @@
 package ch.wisv.events.data.request.event;
 
-import ch.wisv.events.data.request.Request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventProductRequest implements Request {
+public class EventProductRequest {
 
     String eventKey;
 
