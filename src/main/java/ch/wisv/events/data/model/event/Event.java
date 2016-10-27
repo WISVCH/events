@@ -1,6 +1,5 @@
 package ch.wisv.events.data.model.event;
 
-import ch.wisv.events.data.model.Model;
 import ch.wisv.events.data.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +17,7 @@ import java.util.UUID;
  */
 @Entity
 @AllArgsConstructor
-public class Event implements Model {
+public class Event {
 
     /**
      * Date format

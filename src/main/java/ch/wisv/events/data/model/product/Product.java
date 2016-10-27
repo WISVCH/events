@@ -1,6 +1,5 @@
 package ch.wisv.events.data.model.product;
 
-import ch.wisv.events.data.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import java.util.UUID;
  */
 @Entity
 @AllArgsConstructor
-public class Product implements Model {
+public class Product {
 
     /**
      * DateTime Format
