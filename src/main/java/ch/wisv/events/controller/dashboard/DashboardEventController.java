@@ -60,7 +60,7 @@ public class DashboardEventController {
 
         model.addAttribute("event", EventRequestFactory.create(event));
         model.addAttribute("products", event.getProducts());
-        model.addAttribute("options", EventOptionRequestFactory.create(event, event.getOptions()));
+        model.addAttribute("options", EventOptionRequestFactory.create(event));
         model.addAttribute("eventProduct", EventProductRequestFactory.create(event));
 
         return "dashboard/events/edit";

@@ -6,23 +6,16 @@ import ch.wisv.events.data.model.event.EventStatus;
 import ch.wisv.events.data.request.event.EventOptionsRequest;
 
 /**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * EventOptionRequestFactory
  */
 public class EventOptionRequestFactory {
 
+    /**
+     * Create a EventOptions Object from EventOptionsRequest Object
+     *
+     * @param request EventOptionsRequest
+     * @return EventOptions
+     */
     public static EventOptions create(EventOptionsRequest request) {
         EventOptions newOptions = new EventOptions();
         newOptions.setPublished(EventStatus.getStatus(request.getStatus()));
@@ -30,7 +23,13 @@ public class EventOptionRequestFactory {
         return newOptions;
     }
 
-    public static EventOptionsRequest create(Event event, EventOptions options) {
-        return new EventOptionsRequest(event.getKey(), options.getPublished().getId());
+    /**
+     * Create a EventOptionsRequest Object from Event Object
+     *
+     * @param event Event
+     * @return EventOptionsRequest
+     */
+    public static EventOptionsRequest create(Event event) {
+        return new EventOptionsRequest(event.getKey(), event.getOptions().getPublished().getId());
     }
 }
