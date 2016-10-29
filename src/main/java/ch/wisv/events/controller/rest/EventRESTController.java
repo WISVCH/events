@@ -54,11 +54,8 @@ public class EventRESTController {
                                             .collect(Collectors.toCollection(ArrayList::new));
         if (null == auth) {
             Collection<EventsDefaultResponse> response = new ArrayList<>();
-            events.forEach(n -> {
-                response.add(new EventsDefaultResponse(n.getKey(), n.getTitle(), n.getDescription(), n.getLocation(),
-                        n.getImageURL(), n.getStart(), n.getEnd()));
-
-            });
+            events.forEach(n -> response.add(new EventsDefaultResponse(n.getKey(), n.getTitle(), n.getDescription(), n.getLocation(),
+                    n.getImageURL(), n.getStart(), n.getEnd())));
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
         }

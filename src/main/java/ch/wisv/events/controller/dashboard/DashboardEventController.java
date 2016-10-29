@@ -8,7 +8,6 @@ import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.service.EventService;
-import ch.wisv.events.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +25,9 @@ import java.util.Random;
 public class DashboardEventController {
 
     private final EventService eventService;
-    private final ProductService productService;
 
-
-    public DashboardEventController(EventService eventService, ProductService productService) {
+    public DashboardEventController(EventService eventService) {
         this.eventService = eventService;
-        this.productService = productService;
     }
 
     @GetMapping("/")

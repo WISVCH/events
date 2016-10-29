@@ -6,24 +6,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * ProductSearch Object
- * Object for search API
+ * ProductSearch Object.
+ * Object for search API.
  */
 @JsonAutoDetect
 public class ProductSearch {
 
     /**
-     * Query used for searching
+     * Query used for searching.
      */
     private String query;
 
     /**
-     * Collection of suggested items
+     * Collection of suggested items.
      */
     private Collection<ProductSearchItem> suggestions;
 
     /**
-     * Default Constructor
+     * Default Constructor.
      *
      * @param query Search query
      */
@@ -33,7 +33,7 @@ public class ProductSearch {
     }
 
     /**
-     * Add suggestion item to ProductSearch
+     * Add suggestion item to ProductSearch.
      *
      * @param title Title of the Product
      * @param key   Key of the Product

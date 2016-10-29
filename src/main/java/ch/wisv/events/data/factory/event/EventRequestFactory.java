@@ -7,41 +7,62 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Created by sven on 17/10/2016.
+ * EventRequestFactory
  */
 public class EventRequestFactory {
 
+    /**
+     * DateTimeFormatter.
+     */
     private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-
+    /**
+     * Create new EvenRequest from Event.
+     *
+     * @param event Event
+     * @return EventRequest
+     */
     public static EventRequest create(Event event) {
-            return new EventRequest(
-                    event.getId(),
-                    event.getTitle(),
-                    event.getDescription(),
-                    event.getLocation(),
-                    event.getTarget(),
-                    event.getLimit(),
-                    event.getStart().toString(),
-                    event.getEnd().toString(),
-                    event.getImageURL(),
-                    event.getKey(),
-                    event.getOptions()
-            );
+        return new EventRequest(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getLocation(),
+                event.getTarget(),
+                event.getLimit(),
+                event.getStart().toString(),
+                event.getEnd().toString(),
+                event.getImageURL(),
+                event.getKey(),
+                event.getOptions()
+        );
     }
 
+    /**
+     * Create new Event from EventRequest
+     *
+     * @param request EventRequest
+     * @return Event
+     */
     public static Event create(EventRequest request) {
-            return new Event(
-                    request.getTitle(),
-                    request.getDescription(),
-                    request.getLocation(),
-                    request.getTarget(),
-                    request.getLimit(),
-                    request.getImage(), LocalDateTime.parse(request.getEventStart(), format),
-                    LocalDateTime.parse(request.getEventEnd(), format)
-            );
+        return new Event(
+                request.getTitle(),
+                request.getDescription(),
+                request.getLocation(),
+                request.getTarget(),
+                request.getLimit(),
+                request.getImage(), LocalDateTime.parse(request.getEventStart(), format),
+                LocalDateTime.parse(request.getEventEnd(), format)
+        );
     }
 
+    /**
+     * Update Event by EventRequest
+     *
+     * @param event   Event
+     * @param request EventRequest
+     * @return Event
+     */
     public static Event update(Event event, EventRequest request) {
         event.setTitle(request.getTitle());
         event.setDescription(request.getDescription());

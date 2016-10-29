@@ -8,25 +8,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * ProductRequestFactory.
  */
 public class ProductRequestFactory {
 
+    /**
+     * DateTimeFormatter.
+     */
     private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
+    /**
+     * Create new ProductRequest from Product.
+     *
+     * @param product Event
+     * @return ProductRequest
+     */
     public static ProductRequest create(Product product) {
         return new ProductRequest(
                 product.getId(),
@@ -40,6 +36,12 @@ public class ProductRequestFactory {
         );
     }
 
+    /**
+     * Create new Product from ProductRequest
+     *
+     * @param request ProductRequest
+     * @return Product
+     */
     public static Product create(ProductRequest request) {
         return new Product(
                 request.getTitle(),
@@ -51,6 +53,13 @@ public class ProductRequestFactory {
         );
     }
 
+    /**
+     * Update Product by ProductRequest
+     *
+     * @param product Product
+     * @param request ProductRequest
+     * @return Product
+     */
     public static Product update(Product product, ProductRequest request) {
         product.setTitle(request.getTitle());
         product.setDescription(request.getDescription());
