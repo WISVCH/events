@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 /**
- * Created by sven on 12/10/2016.
+ * TestDataRunner.
+ * <p>
+ * Adds some data into the Repositories.
  */
 public class TestDataRunner implements CommandLineRunner {
 
