@@ -10,6 +10,11 @@ import java.util.List;
  */
 public interface ProductService {
 
+    /**
+     * Get all products
+     *
+     * @return List of Products
+     */
     List<Product> getAllProducts();
 
     Product getProductByKey(String key);

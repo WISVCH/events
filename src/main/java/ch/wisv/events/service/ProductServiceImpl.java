@@ -16,20 +16,43 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    /**
+     * ProductRepository
+     */
     private final ProductRepository productRepository;
 
+    /**
+     * EventService
+     */
     private final EventService eventService;
 
+    /**
+     * Default constructor
+     *
+     * @param productRepository ProductRepository
+     * @param eventService      EventService
+     */
     public ProductServiceImpl(ProductRepository productRepository, EventService eventService) {
         this.productRepository = productRepository;
         this.eventService = eventService;
     }
 
+    /**
+     * Get all Products
+     *
+     * @return list of Products
+     */
     @Override
     public List<Product> getAllProducts() {
         return this.productRepository.findAll();
     }
 
+    /**
+     * Get Product by key
+     *
+     * @param key key of an Product
+     * @return Product
+     */
     @Override
     public Product getProductByKey(String key) {
         return productRepository.findByKey(key);
@@ -48,6 +71,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    /**
+     * Add a new Product by ProductRequest
+     *
+     * @param productRequest ProductRequest containing the product information
+     */
     @Override
     public void addProduct(ProductRequest productRequest) {
         Product product = ProductRequestFactory.create(productRequest);
@@ -55,6 +83,13 @@ public class ProductServiceImpl implements ProductService {
         productRepository.saveAndFlush(product);
     }
 
+    /**
+     * Delete a product.
+     *
+     * @param product Product to be deleted.
+     * @throws ch.wisv.events.exception.ProductInUseException when a Produdct is already added to an
+     *                                                        Event it can not be deleted.
+     */
     @Override
     public void deleteProduct(Product product) {
         List<Event> events = eventService.getEventByProductKey(product.getKey());
