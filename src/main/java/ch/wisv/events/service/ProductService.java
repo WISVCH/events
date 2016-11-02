@@ -6,7 +6,7 @@ import ch.wisv.events.data.request.product.ProductRequest;
 import java.util.List;
 
 /**
- * Created by sven on 14/10/2016.
+ * ProductService.
  */
 public interface ProductService {
 

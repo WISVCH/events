@@ -8,6 +8,7 @@ import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -18,18 +19,33 @@ import java.util.Collection;
 import java.util.Random;
 
 /**
- * Created by sven on 15/10/2016.
+ * DashboardEventController.
  */
 @Controller
 @RequestMapping(value = "/dashboard/events")
 public class DashboardEventController {
 
+    /**
+     * EventService.
+     */
     private final EventService eventService;
 
+    /**
+     * Default constructor
+     *
+     * @param eventService EventService
+     */
+    @Autowired
     public DashboardEventController(EventService eventService) {
         this.eventService = eventService;
     }
 
+    /**
+     * Get request on "/dashboard/events/" will show overview of all Events
+     *
+     * @param model SpringUI model
+     * @return path to Thymeleaf themplate
+     */
     @GetMapping("/")
     public String eventsOverview(Model model) {
         // TODO: For testing
@@ -41,12 +57,24 @@ public class DashboardEventController {
         return "dashboard/events/index";
     }
 
+    /**
+     * Get request on "/dashboard/events/create/" will show page to create Event
+     *
+     * @param model SpringUI model
+     * @return path to Thymeleaf template
+     */
     @GetMapping("/create/")
     public String createEventView(Model model) {
         model.addAttribute("event", new EventRequest());
         return "dashboard/events/create";
     }
 
+    /**
+     * Get request on "/dashboard/events/edit/{key}" will show the edit page to edit Event with requested key
+     *
+     * @param model SpringUI model
+     * @return path to Thymeleaf template
+     */
     @GetMapping("/edit/{key}")
     public String editEventView(Model model, @PathVariable String key) {
         Event event = eventService.getEventByKey(key);
@@ -62,6 +90,13 @@ public class DashboardEventController {
         return "dashboard/events/edit";
     }
 
+    /**
+     * Get request to delete event by Key
+     *
+     * @param redirectAttributes Spring RedirectAttributes
+     * @param key                PathVariable key of the Event
+     * @return redirect
+     */
     @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
         Event event = eventService.getEventByKey(key);
@@ -72,6 +107,13 @@ public class DashboardEventController {
         return "redirect:/dashboard/events/";
     }
 
+    /**
+     * Post request to create a new Event
+     *
+     * @param eventRequest       EventRequest model attr.
+     * @param redirectAttributes Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/add")
     public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, RedirectAttributes
             redirectAttributes) {
@@ -86,7 +128,13 @@ public class DashboardEventController {
         return "redirect:/dashboard/events/";
     }
 
-
+    /**
+     * Post request to add a Product to an Event
+     *
+     * @param eventProductRequest EventProductRequest model attr.
+     * @param redirectAttributes  Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/add/product")
     public String addProductToEvent(@ModelAttribute @Validated EventProductRequest eventProductRequest,
                                     RedirectAttributes redirectAttributes) {
@@ -100,6 +148,13 @@ public class DashboardEventController {
         return "redirect:/dashboard/events/edit/" + eventProductRequest.getEventKey();
     }
 
+    /**
+     * Post request to delete a Product from an Event
+     *
+     * @param eventProductRequest EventProductRequest model attr.
+     * @param redirectAttributes  Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/delete/product")
     public String deleteProductFromEvent(@ModelAttribute @Validated EventProductRequest eventProductRequest,
                                          RedirectAttributes redirectAttributes) {
@@ -109,6 +164,13 @@ public class DashboardEventController {
         return "redirect:/dashboard/events/edit/" + eventProductRequest.getEventKey();
     }
 
+    /**
+     * Post request to update an Event
+     *
+     * @param eventRequest       EventRequest model attr.
+     * @param redirectAttributes Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/update")
     public String editEvent(@ModelAttribute @Validated EventRequest eventRequest,
                             RedirectAttributes redirectAttributes) {
@@ -118,6 +180,13 @@ public class DashboardEventController {
         return "redirect:/dashboard/events/edit/" + eventRequest.getKey();
     }
 
+    /**
+     * Post request to update the options of an Event
+     *
+     * @param request            EventOptionsRequest request
+     * @param redirectAttributes Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/update/options")
     public String updateEventOptions(@ModelAttribute @Validated EventOptionsRequest request,
                                      RedirectAttributes redirectAttributes) {

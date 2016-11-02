@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by sven on 14/10/2016.
+ * ProductServiceImpl.
  */
 @Service
 public class ProductServiceImpl implements ProductService {

@@ -12,46 +12,60 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * DashboardProductController.
  */
 @Controller
 @RequestMapping("/dashboard/products")
 public class DashboardProductController {
 
+    /**
+     * ProductService
+     */
     private final ProductService productService;
 
+    /**
+     * Default constructor
+     *
+     * @param productService ProductService
+     */
     @Autowired
     public DashboardProductController(ProductService productService) {
         this.productService = productService;
     }
 
+    /**
+     * Get request for ProductOverview
+     *
+     * @param model SpringUI model
+     * @return thymeleaf template path
+     */
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("products", productService.getAllProducts());
         return "dashboard/products/index";
     }
 
+    /**
+     * Get request to create a Product
+     *
+     * @param model SpringUI model
+     * @return thymeleaf template path
+     */
     @GetMapping("/create/")
-    public String createEventView(Model model) {
+    public String createProductView(Model model) {
         model.addAttribute("product", new ProductRequest());
         return "dashboard/products/create";
     }
 
+    /**
+     * Get request to edit a Product or if the key does not exists it will redirect to the
+     * Product Overview page
+     *
+     * @param model SpringUI model
+     * @return thymeleaf template path
+     */
     @GetMapping("/edit/{key}")
-    public String editEventView(Model model, @PathVariable String key) {
+    public String editProductView(Model model, @PathVariable String key) {
         Product product = productService.getProductByKey(key);
         if (product == null) {
             return "redirect:/dashboard/events/";
@@ -62,6 +76,13 @@ public class DashboardProductController {
         return "dashboard/products/edit";
     }
 
+    /**
+     * Get request to delete a Product
+     *
+     * @param redirectAttributes Spring RedirectAttributes
+     * @param key                key of a Product
+     * @return redirect
+     */
     @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
         Product product = productService.getProductByKey(key);
@@ -75,6 +96,13 @@ public class DashboardProductController {
         return "redirect:/dashboard/products/";
     }
 
+    /**
+     * Post request to add a Product
+     *
+     * @param productRequest     ProductRequest model attr.
+     * @param redirectAttributes Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/add")
     public String createEvent(@ModelAttribute @Validated ProductRequest productRequest, RedirectAttributes
             redirectAttributes) {
@@ -89,6 +117,13 @@ public class DashboardProductController {
         return "redirect:/dashboard/products/";
     }
 
+    /**
+     * Post request to update a Product
+     *
+     * @param productRequest     ProductRequest model attr.
+     * @param redirectAttributes Spring RedirectAttributes
+     * @return redirect
+     */
     @PostMapping("/update")
     public String editEvent(@ModelAttribute @Validated ProductRequest productRequest,
                             RedirectAttributes redirectAttributes) {

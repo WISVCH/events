@@ -9,9 +9,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by svenp on 11-10-2016.
+ * EventService.
  */
-
 public interface EventService {
 
     /**
