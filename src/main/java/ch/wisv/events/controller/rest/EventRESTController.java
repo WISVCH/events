@@ -20,31 +20,32 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * EventRESTController.
  */
 @RestController
 @RequestMapping("/events")
 public class EventRESTController {
 
+    /**
+     * EventService.
+     */
     private final EventService eventService;
 
+    /**
+     * Default constructor.
+     *
+     * @param eventService EventService.
+     */
     public EventRESTController(EventService eventService) {
         this.eventService = eventService;
     }
 
+    /**
+     * Get all Events depending on the on the auth
+     *
+     * @param auth Authentication
+     * @return ResponseEntity with all available events
+     */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getAllEvents(Authentication auth) {
         Collection<Event> allEvents = eventService.getAllEvents();
@@ -54,11 +55,9 @@ public class EventRESTController {
                                             .collect(Collectors.toCollection(ArrayList::new));
         if (null == auth) {
             Collection<EventsDefaultResponse> response = new ArrayList<>();
-            events.forEach(n -> {
-                response.add(new EventsDefaultResponse(n.getKey(), n.getTitle(), n.getDescription(), n.getLocation(),
-                        n.getImageURL(), n.getStart(), n.getEnd()));
-
-            });
+            events.forEach(n -> response
+                    .add(new EventsDefaultResponse(n.getKey(), n.getTitle(), n.getDescription(), n.getLocation(),
+                            n.getImageURL(), n.getStart(), n.getEnd())));
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
         }
@@ -66,6 +65,11 @@ public class EventRESTController {
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", events);
     }
 
+    /**
+     * Get request for all upcoming Events.
+     *
+     * @return list of all upcoming Events.
+     */
     @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public Collection<Event> getUpcomingEvents() {
         return eventService.getUpcomingEvents().stream()
@@ -73,6 +77,13 @@ public class EventRESTController {
                            .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Get Event by id
+     *
+     * @param auth Authentication.
+     * @param id   id of an Event
+     * @return ResponseEntityBuilder with Event Objct
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventById(Authentication auth, @PathVariable Long id) {
         Event event = eventService.getEventById(id);
@@ -85,7 +96,14 @@ public class EventRESTController {
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", event);
     }
 
-    @RequestMapping(value = "/{id}/tickets", method = RequestMethod.GET)
+    /**
+     * Get Products of a certain Event.
+     *
+     * @param auth Authentication.
+     * @param id   id of an Event
+     * @return list of product by an Event.
+     */
+    @RequestMapping(value = "/{id}/products", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public Collection<Product> getProductByEvent(Authentication auth, @PathVariable Long id) {
         Event event = eventService.getEventById(id);

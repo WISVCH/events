@@ -1,21 +1,27 @@
 package ch.wisv.events.data.model.event;
 
-import ch.wisv.events.data.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
- * Created by sven on 18/10/2016.
+ * EventOption
  */
-public class EventOptions implements Serializable, Model {
+public class EventOptions implements Serializable {
 
+    /**
+     * Status of the Event
+     */
     @Getter
     @Setter
     public EventStatus published;
 
+    /**
+     * Default constructor, with status not published.
+     */
     public EventOptions() {
-        this.published = EventStatus.PUBLISHED;
+        this.published = EventStatus.NOT_PUBLISHED;
     }
+
 }

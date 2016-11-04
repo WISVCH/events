@@ -1,11 +1,17 @@
 package ch.wisv.events.exception;
 
 /**
- * Created by sven on 17/10/2016.
+ * ProductInUseException.
  */
 public class ProductInUseException extends RuntimeException {
 
+    /**
+     * Default constructor
+     *
+     * @param message message in the exception.
+     */
     public ProductInUseException(String message) {
         super(message);
     }
+
 }

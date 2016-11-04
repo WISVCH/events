@@ -6,20 +6,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by sven on 16/10/2016.
+ * ProductSearch Object.
+ * Object for search API.
  */
 @JsonAutoDetect
 public class ProductSearch {
 
+    /**
+     * Query used for searching.
+     */
     private String query;
 
+    /**
+     * Collection of suggested items.
+     */
     private Collection<ProductSearchItem> suggestions;
 
+    /**
+     * Default Constructor.
+     *
+     * @param query Search query
+     */
     public ProductSearch(String query) {
         this.query = query;
         this.suggestions = new ArrayList<>();
     }
 
+    /**
+     * Add suggestion item to ProductSearch.
+     *
+     * @param title Title of the Product
+     * @param key   Key of the Product
+     */
     public void addItem(String title, Long key) {
         ProductSearchItem temp = new ProductSearchItem(title, key);
         this.suggestions.add(temp);

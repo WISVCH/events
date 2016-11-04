@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by sven on 20/10/2016.
+ * ResponseEntityBuilder.
  */
 public class ResponseEntityBuilder {
     /**
@@ -19,10 +19,11 @@ public class ResponseEntityBuilder {
      * @param httpHeaders Optional Http Headers for the response.
      * @param message     The message in human readable String format
      * @param object      Optional object related to the request (like a created User)
-     * @return The ResponseEntity in standard Area FiftyLAN format.
+     * @return The ResponseEntity in standard CH Events format.
      */
-    public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders, String message,
-                                                         Object object) {
+    private static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
+                                                          String message,
+                                                          Object object) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status", httpStatus.toString());
         responseBody.put("timestamp", LocalDateTime.now().toString());
@@ -35,14 +36,37 @@ public class ResponseEntityBuilder {
         return new ResponseEntity<>(responseBody, httpHeaders, httpStatus);
     }
 
+    /**
+     * Create an ResponseEntity by HTTPStatus, message and Object
+     *
+     * @param httpStatus The HTTP Status of the message
+     * @param message    The message in human readable String format
+     * @param object     Object related to the request
+     * @return The ResponseEntity in standard CH Events format.
+     */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, String message, Object object) {
         return createResponseEntity(httpStatus, null, message, object);
     }
 
+    /**
+     * Create an ResponseEntity by HTTPStatus, message
+     *
+     * @param httpStatus The HTTP Status of the message
+     * @param message    The message in human readable String format
+     * @return The ResponseEntity in standard CH Events format.
+     */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, String message) {
         return createResponseEntity(httpStatus, null, message, null);
     }
 
+    /**
+     * Create an ResponseEntity by HTTPStatus, HTTPHeaders and message
+     *
+     * @param httpStatus  The HTTP Status of the message
+     * @param httpHeaders Http Headers for the response.
+     * @param message     The message in human readable String format
+     * @return The ResponseEntity in standard CH Events format.
+     */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
                                                          String message) {
         return createResponseEntity(httpStatus, httpHeaders, message, null);

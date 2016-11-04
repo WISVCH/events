@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 /**
- * Created by sven on 12/10/2016.
+ * TestDataRunner.
+ * <p>
+ * Adds some data into the Repositories.
  */
 public class TestDataRunner implements CommandLineRunner {
 
@@ -45,8 +47,9 @@ public class TestDataRunner implements CommandLineRunner {
                     "Lecture hall A",
                     80,
                     100,
-                    LocalDateTime.of(2017, Month.OCTOBER, i, 13, 30),
-                    "http://placehold.it/300x300", LocalDateTime.of(2016, Month.OCTOBER, i, 12, 45));
+                    "http://placehold.it/300x300", LocalDateTime.of(2016, Month.OCTOBER, i, 12, 45),
+                    LocalDateTime.of(2017, Month.OCTOBER, i, 13, 30)
+            );
 
             event.addProduct(productRepository.findById((long) i));
             eventRepository.save(event);

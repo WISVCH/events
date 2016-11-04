@@ -1,20 +1,31 @@
 package ch.wisv.events.data.request.event;
 
-import ch.wisv.events.data.request.Request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by sven on 19/10/2016.
+ * EventOptionsRequest
  */
 @Data
 @NoArgsConstructor
-public class EventOptionsRequest implements Request {
+public class EventOptionsRequest {
 
+    /**
+     * Key of an Event
+     */
     public String key;
 
+    /**
+     * ID of an EventStatus
+     */
     public int status;
 
+    /**
+     * Default constructor
+     *
+     * @param key    Key of an Event
+     * @param status ID of an EventStatus
+     */
     public EventOptionsRequest(String key, int status) {
         this.key = key;
         this.status = status;

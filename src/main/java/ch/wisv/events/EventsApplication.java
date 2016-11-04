@@ -16,10 +16,22 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 @SpringBootApplication
 public class EventsApplication {
 
+    /**
+     * Application runner default
+     *
+     * @param args args
+     */
     public static void main(String[] args) {
         SpringApplication.run(EventsApplication.class, args);
     }
 
+    /**
+     * Profile "dev" for adding data to the Repositories for development purpose.
+     *
+     * @param eventRepository   EventRepository
+     * @param productRepository ProductRepository
+     * @return TestData
+     */
     @Bean
     @Profile("dev")
     CommandLineRunner init(EventRepository eventRepository, ProductRepository productRepository) {
