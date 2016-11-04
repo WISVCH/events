@@ -23,9 +23,21 @@ $(document).ready(function () {
         clearTimeout(timer);
     });
 
-
     $("#editEventOptions .form-control").change(function () {
         startTimer($("#editEventOptions"));
+    });
+
+    $("#productDatatable").DataTable({
+        searching: false,
+        paging: false,
+        info: false,
+        columnDefs: [
+            {
+                width: "81px",
+                targets: 3,
+                orderable: false
+            }
+        ]
     });
 
     function startTimer(form) {
