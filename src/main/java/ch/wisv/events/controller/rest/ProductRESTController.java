@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ch.wisv.events.repository.EventRepository;
+import ch.wisv.events.repository.ProductRepository;
+import ch.wisv.events.service.EventService;
+import ch.wisv.events.service.ProductService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/products")
 public class ProductRESTController {
+
 
     /**
      * ProductService.
@@ -63,13 +69,12 @@ public class ProductRESTController {
         List<Product> productList = productService.getAllProducts();
         ProductSearch search = new ProductSearch(query);
 
-        if (query != null) {
-            productList.stream()
-                       .filter(p -> eventService.getEventByProductKey(p.getKey()).size() < 1)
-                       .filter(p -> p.getTitle().toLowerCase().contains(query.toLowerCase()))
-                       .collect(Collectors.toCollection(ArrayList::new))
-                       .forEach(x -> search.addItem(x.getTitle(), x.getId()));
-        }
+        String finalQuery = (query != null) ? query : "";
+        productList.stream()
+                   .filter(p -> eventService.getEventByProductKey(p.getKey()).size() < 1)
+                   .filter(p -> p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                   .collect(Collectors.toCollection(ArrayList::new))
+                   .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;
     }
