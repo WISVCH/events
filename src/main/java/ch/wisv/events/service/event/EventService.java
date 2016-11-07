@@ -1,4 +1,4 @@
-package ch.wisv.events.service;
+package ch.wisv.events.service.event;
 
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.request.event.EventOptionsRequest;

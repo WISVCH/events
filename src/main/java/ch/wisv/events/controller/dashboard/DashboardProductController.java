@@ -3,7 +3,7 @@ package ch.wisv.events.controller.dashboard;
 import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
-import ch.wisv.events.service.ProductService;
+import ch.wisv.events.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
