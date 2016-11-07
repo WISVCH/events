@@ -1,11 +1,12 @@
-package ch.wisv.events.service;
+package ch.wisv.events.service.product;
 
 import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.exception.ProductInUseException;
-import ch.wisv.events.repository.ProductRepository;
+import ch.wisv.events.repository.product.ProductRepository;
+import ch.wisv.events.service.event.EventService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,17 +2,12 @@ package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.model.product.ProductSearch;
-import ch.wisv.events.service.EventService;
-import ch.wisv.events.service.ProductService;
+import ch.wisv.events.service.event.EventService;
+import ch.wisv.events.service.product.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ch.wisv.events.repository.EventRepository;
-import ch.wisv.events.repository.ProductRepository;
-import ch.wisv.events.service.EventService;
-import ch.wisv.events.service.ProductService;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

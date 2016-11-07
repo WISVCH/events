@@ -7,7 +7,7 @@ import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
-import ch.wisv.events.service.EventService;
+import ch.wisv.events.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
