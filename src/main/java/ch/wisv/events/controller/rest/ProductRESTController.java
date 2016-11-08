@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * ProductRESTController.
@@ -68,7 +66,6 @@ public class ProductRESTController {
         productList.stream()
                    .filter(p -> eventService.getEventByProductKey(p.getKey()).size() < 1)
                    .filter(p -> p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
-                   .collect(Collectors.toCollection(ArrayList::new))
                    .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;
