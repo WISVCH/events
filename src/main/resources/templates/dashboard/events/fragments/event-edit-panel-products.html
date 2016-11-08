@@ -50,15 +50,14 @@
             <div class="input-group" style="width: 100%">
                 <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                        placeholder="Add product">
-                <div class="input-group-btn" style="width: 39px;">
-                            <span class="btn btn-success">
-                                <i class="glyphicon glyphicon-plus"></i>
-                            </span>
-                </div>
+                <span class="input-group-addon" style="width: 39px;">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
             </div>
+            <!--<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>-->
             <p class="help-block">Start typing to look for a product.</p>
 
-            <table class="table table-hover">
+            <table class="table table-hover" id="productDatatable">
                 <thead>
                 <tr>
                     <th>Product</th>
@@ -74,7 +73,7 @@
                     <td th:text="${product.sellEnd}">Data</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a th:href="@{/dashboard/products/edit/} + ${event.key}"
+                            <a th:href="@{/dashboard/products/edit/} + ${product.key}"
                                class="btn btn-info">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>

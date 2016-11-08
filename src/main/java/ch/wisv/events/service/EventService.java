@@ -48,7 +48,7 @@ public interface EventService {
      *
      * @param eventRequest EventRequest
      */
-    void addEvent(EventRequest eventRequest);
+    Event addEvent(EventRequest eventRequest);
 
     /**
      * Add a product to an Event

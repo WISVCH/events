@@ -15,12 +15,12 @@ public class ProductSearch {
     /**
      * Query used for searching.
      */
-    private String query;
+    public String query;
 
     /**
      * Collection of suggested items.
      */
-    private Collection<ProductSearchItem> suggestions;
+    public Collection<ProductSearchItem> suggestions;
 
     /**
      * Default Constructor.

@@ -1,5 +1,6 @@
 package ch.wisv.events.data.model.product;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Product {
 
-    /**
-     * DateTime Format
-     */
     private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**

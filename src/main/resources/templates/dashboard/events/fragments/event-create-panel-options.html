@@ -30,7 +30,15 @@
             <h3 class="panel-title">Options</h3>
         </div>
         <div class="panel-body">
-            <b>TODO: options</b>
+            <div class="form-group">
+                <label for="eventStatus">Status</label>
+                <select name="" id="eventStatus" class="form-control" th:field="${eventStatus.status}">
+                    <option th:each="state : ${T(ch.wisv.events.data.model.event.EventStatus).values()}"
+                            th:value="${state.getId()}"
+                            th:text="${state.getDisplayName()}">
+                    </option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
