@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../favicon.ico">
+
+    <title>Events - Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
+          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="/dashboard/fragments/header :: header">
+            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        </div>
+    </div>
+    <div class="row content-wrapper">
+        <div th:replace="/dashboard/fragments/sidebar :: sidebar" class="col-xs-2"></div>
+        <div class="col-xs-10 main">
+            <div class="page-header">
+                <h1><samp>events</samp><a class="btn btn-primary btn-dashboard-header" href="create/">Create new
+                    event</a></h1>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div th:replace="/dashboard/fragments/message :: messages"></div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="eventsTable" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Sold/Target/Limit</th>
+                        <th>Progress target</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--/*@thymesVar id="event" type="ch.wisv.events.data.model.event.Event"*/-->
+                    <tr th:each="event : ${events}">
+                        <td>
+                            <input type="checkbox"/>
+                        </td>
+                        <td th:text="${event.title}">Row 1 Data 1</td>
+                        <td th:text="${event.options.published}"></td>
+                        <td>
+                            <span class="label label-success" th:text="'Sold: ' + ${event.sold}"></span>
+                            <span class="label label-primary" th:text="'Target: ' + ${event.target}"></span>
+                            <span class="label label-default" th:text="'Limit: ' + ${event.limit}"></span>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.sold}"
+                                     aria-valuemin="0"
+                                     th:aria-valuemax="${event.target}"
+                                     th:style="'width: ' + ${event.calcProgress()} + '%;'"
+                                     th:text="${event.calcProgress()} + '%'">
+                                    59%
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a th:href="'edit/' + ${event.key}" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                                <a th:href="'delete/' + ${event.key}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
+                                   class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
+<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#eventsTable').DataTable({
+            columnDefs: [
+                {width: "20px", targets: 0},
+                {width: "60px", targets: 2},
+                {width: "180px", targets: 3},
+                {width: "360px", targets: 4},
+                {width: "80px", targets: 5}
+            ]
+        });
+    });
+</script>
+</body>
+</html>

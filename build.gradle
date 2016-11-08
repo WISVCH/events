@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot' 
+apply plugin: 'spring-boot'
 
 jar {
     baseName = 'events'
@@ -30,18 +30,34 @@ repositories {
 }
 
 configurations {
+    // We're using Jetty instead
+    compile.exclude module: "spring-boot-starter-tomcat"
     // We're using HikariCP instead
     compile.exclude module: "tomcat-jdbc"
+    // We're using Log4j2 instead
+    compile.exclude module: "spring-boot-starter-logging"
 }
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.springframework.boot:spring-boot-starter-log4j2")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("javax.el:javax.el-api:2.2.5")
+    compile("org.springframework.boot:spring-boot-devtools")
+
+    compile("org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE")
+    compile("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.0.RELEASE")
+
     compile("com.zaxxer:HikariCP")
     compile("com.google.guava:guava")
+    compile("org.hibernate:hibernate-validator")
+
+    compile("org.webjars:bootstrap:3.3.7-1")
+    compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
 
     compile("ch.wisv:wisvch-connect-client:1.2.6.0") {
         // Workaround for https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/pull/1084
@@ -53,18 +69,18 @@ dependencies {
     compile("org.webjars.bower:momentjs:2.10.6")
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:jquery:2.1.4")
-    compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.projectlombok:lombok:1.16.10")
 
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")
 
-    testCompile("org.springframework.boot:spring-boot-starter-test") 
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
 eclipse {
     classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+        containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
     }
 }
 
