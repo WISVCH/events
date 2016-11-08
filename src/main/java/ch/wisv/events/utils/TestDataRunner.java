@@ -2,8 +2,8 @@ package ch.wisv.events.utils;
 
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.repository.EventRepository;
-import ch.wisv.events.repository.ProductRepository;
+import ch.wisv.events.repository.event.EventRepository;
+import ch.wisv.events.repository.product.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;

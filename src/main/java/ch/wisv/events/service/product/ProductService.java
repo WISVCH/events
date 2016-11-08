@@ -1,4 +1,4 @@
-package ch.wisv.events.service;
+package ch.wisv.events.service.product;
 
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
@@ -17,6 +17,12 @@ public interface ProductService {
      */
     List<Product> getAllProducts();
 
+    /**
+     * Get Product by Key
+     *
+     * @param key key of a Product
+     * @return Product
+     */
     Product getProductByKey(String key);
 
     /**

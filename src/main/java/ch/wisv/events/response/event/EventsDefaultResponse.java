@@ -1,4 +1,4 @@
-package ch.wisv.events.response;
+package ch.wisv.events.response.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

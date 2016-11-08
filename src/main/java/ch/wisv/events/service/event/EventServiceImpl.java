@@ -1,4 +1,4 @@
-package ch.wisv.events.service;
+package ch.wisv.events.service.event;
 
 import ch.wisv.events.data.factory.event.EventOptionRequestFactory;
 import ch.wisv.events.data.factory.event.EventRequestFactory;
@@ -9,8 +9,8 @@ import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.exception.ProductInUseException;
-import ch.wisv.events.repository.EventRepository;
-import ch.wisv.events.repository.ProductRepository;
+import ch.wisv.events.repository.event.EventRepository;
+import ch.wisv.events.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
