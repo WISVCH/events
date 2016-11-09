@@ -9,6 +9,7 @@ import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import java.util.Random;
  */
 @Controller
 @RequestMapping(value = "/dashboard/events")
+@PreAuthorize("hasRole('ADMIN')")
 public class DashboardEventController {
 
     /**
