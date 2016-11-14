@@ -57,10 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String clientUri;
 
     /**
-     *
+     * Groups that are admin in the system
      */
-    @Value("#{'${events.access.groups}'.split(',')}")
-    private Set<String> accessGroups;
+    @Value("#{'${events.admin.groups}'.split(',')}")
+    private Set<String> adminGroups;
 
     /**
      * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
@@ -120,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setAuthoritiesMapper((idToken, userInfo) -> {
             if (userInfo instanceof CHUserInfo) {
                 CHUserInfo info = (CHUserInfo) userInfo;
-                return info.getLdapGroups().stream().anyMatch(x -> this.accessGroups.stream().anyMatch(x::equals)) ?
+                return info.getLdapGroups().stream().anyMatch(x -> this.adminGroups.stream().anyMatch(x::equals)) ?
                        ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
             }
             return ImmutableSet.of();
