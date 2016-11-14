@@ -11,10 +11,12 @@ $(document).ready(function () {
 
     function startTimer(form) {
         clearTimeout(timer);
+        $(".spinner").addClass('active');
         timer = setTimeout(function () {
             if (form[0].checkValidity()) {
                 form.submit();
             }
+            $(".spinner").removeClass('active');
         }, 1000);
     }
 });

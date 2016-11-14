@@ -69,7 +69,7 @@
                     <tr th:each="product : ${products}">
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
-                        <td th:text="'€ ' + ${product.cost}"></td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 0, 'POINT', 2, 'COMMA')}"></td>
                         <td th:text="${product.maxSold}"></td>
                         <td><samp th:text="${product.key}"></samp></td>
                         <td>

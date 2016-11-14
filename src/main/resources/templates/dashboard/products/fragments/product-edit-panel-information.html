@@ -27,7 +27,12 @@
 <div th:fragment="edit-information">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Information</h3>
+            <h3 class="panel-title">Information
+                <small class="spinner">
+                    <i class="fa fa-refresh fa-spin fa-fw"></i>
+                    <span>Saving ...</span>
+                </small>
+            </h3>
         </div>
         <form th:action="@{/dashboard/products/update}" th:object="${product}"
               method="POST" id="productEdit">
@@ -83,7 +88,8 @@
                                 <div class="input-group-addon">&euro;</div>
                                 <input type="number" step="0.01" class="form-control" id="productCost"
                                        placeholder="Cost"
-                                       th:value="*{cost}" th:field="*{cost}"
+                                       th:value="*{cost}"
+                                       th:field="*{cost}"
                                        required>
                             </div>
                         </div>
@@ -91,7 +97,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="productMaxSold">Available</label>
-                            <input type="number" step="0.01" class="form-control"
+                            <input type="number" step="1" class="form-control"
                                    id="productMaxSold"
                                    th:value="*{maxSold}" th:field="*{maxSold}">
                             <p class="help-block">Leave blank for infinite amount of tickets!</p>
