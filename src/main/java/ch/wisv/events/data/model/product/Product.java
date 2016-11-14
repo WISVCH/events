@@ -59,6 +59,13 @@ public class Product {
     public float cost;
 
     /**
+     * Products sold
+     */
+    @Getter
+    @Setter
+    public int sold;
+
+    /**
      * Maximum number of sold for the product. It is an
      * Integer so it can be NULL.
      */
@@ -101,4 +108,5 @@ public class Product {
         this.sellStart = sellStart;
         this.sellEnd = sellEnd;
     }
+
 }

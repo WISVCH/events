@@ -60,9 +60,8 @@
                         <th>ID</th>
                         <th>Title</th>
                         <th>Cost</th>
-                        <th>Max sold</th>
-                        <th>Key</th>
-                        <th></th>
+                        <th>Sold/Available</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,8 +69,10 @@
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 0, 'POINT', 2, 'COMMA')}"></td>
-                        <td th:text="${product.maxSold}"></td>
-                        <td><samp th:text="${product.key}"></samp></td>
+                        <td>
+                            <span class="label label-success" th:text="'Sold: ' + ${product.sold}"></span>
+                            <span class="label label-default" th:text="'Available: ' + ${product.maxSold}"></span>
+                        </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'edit/' + ${product.key}" class="btn btn-info">
@@ -99,7 +100,14 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <script>
     $(document).ready(function () {
-        $('#ticketTable').DataTable();
+        $('#ticketTable').DataTable({
+            columnDefs: [
+                {width: "20px", targets: 0},
+                {width: "120px", targets: 2},
+                {width: "120px", targets: 3},
+                {width: "80px", targets: 4}
+            ]
+        });
     });
 </script>
 </body>
