@@ -7,12 +7,12 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" th:href="@{../../favicon.ico}">
 
     <title>Event - Dashboard</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/api/v1/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>

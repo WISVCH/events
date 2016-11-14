@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" th:href="@{../../favicon.ico}">
 
     <title>Events - Dashboard</title>
 
@@ -41,7 +41,7 @@
     <div class="row content-wrapper">
         <div th:replace="/dashboard/fragments/sidebar :: sidebar"></div>
         <div class="col-sm-9 col-md-10 main">
-            <h1>Dashboard</h1>
+            <h1><samp>Dashboard</samp></h1>
         </div>
     </div>
 
