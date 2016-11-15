@@ -16,7 +16,7 @@ import java.util.List;
  * ProductRESTController.
  */
 @RestController
-@RequestMapping(value = "/products")
+@RequestMapping("/api/v1/products")
 public class ProductRESTController {
 
 

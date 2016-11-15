@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * EventRESTController.
  */
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/api/v1/events")
 public class EventRESTController {
 
     /**
@@ -104,7 +104,7 @@ public class EventRESTController {
      * @return list of product by an Event.
      */
     @RequestMapping(value = "/{id}/products", method = RequestMethod.GET)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Collection<Product> getProductByEvent(Authentication auth, @PathVariable Long id) {
         Event event = eventService.getEventById(id);
 
