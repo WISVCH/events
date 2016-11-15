@@ -7,6 +7,8 @@ $(document).ready(function () {
         startTimer($("#productEdit"));
     }).keydown(function () {
         clearTimeout(timer);
+    }).blur(function () {
+        startTimer($("#productEdit"));
     });
 
     function startTimer(form) {
@@ -17,6 +19,6 @@ $(document).ready(function () {
                 form.submit();
             }
             $(".spinner").removeClass('active');
-        }, 1000);
+        }, 2000);
     }
 });
