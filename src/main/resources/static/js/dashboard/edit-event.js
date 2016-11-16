@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#q").autocomplete({
-        serviceUrl: '/products/unused/search',
+        serviceUrl: '/api/v1/products/unused/search',
         showNoSuggestionNotice: true,
         noSuggestionNotice: "<div class=\"autocomplete-suggestion\" data-index=\"1\">No product found.</div>",
         lookupLimit: 3,

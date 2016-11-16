@@ -67,31 +67,39 @@ public class EventRESTController {
     /**
      * Get Event by id
      *
-     * @param key  key of an Event
+     * @param key key of an Event
      * @return ResponseEntityBuilder with Event Object
      */
     @RequestMapping(value = "/{key}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventById(@PathVariable String key) {
-        Event event = eventService.getEventByKey(key);
+        try {
+            Event event = eventService.getEventByKey(key);
 
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
+        } catch (Exception e) {
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     /**
      * Get Products of a certain Event filtered by the selling starting Date and selling ending Date.
      *
-     * @param key  key of an Event
+     * @param key key of an Event
      * @return list of product by an Event.
      */
     @RequestMapping(value = "/{key}/products", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProductByEvent(@PathVariable String key) {
         Collection<ProductDefaultResponse> response = new ArrayList<>();
-        this.eventService.getEventByKey(key).getProducts().stream()
-                         .filter(x -> x.getSellStart().isAfter(LocalDateTime.now()) &&
-                                 x.getSellEnd().isBefore(LocalDateTime.now()))
-                         .forEach(x -> response.add(new ProductDefaultResponse(x)));
+        try {
+            this.eventService.getEventByKey(key).getProducts().stream()
+                             .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) &&
+                                     x.getSellEnd().isAfter(LocalDateTime.now()))
+                             .forEach(x -> response.add(new ProductDefaultResponse(x)));
 
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
+        } catch (Exception e) {
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
