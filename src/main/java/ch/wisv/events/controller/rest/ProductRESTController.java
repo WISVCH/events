@@ -4,6 +4,7 @@ import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.model.product.ProductSearch;
 import ch.wisv.events.service.event.EventService;
 import ch.wisv.events.service.product.ProductService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +48,7 @@ public class ProductRESTController {
      * @return List of all Products
      */
     @GetMapping(value = "")
+    @PreAuthorize("hasRole('USER')")
     public Collection<Product> getAllProducts() {
         return productService.getAllProducts();
     }
@@ -58,6 +60,7 @@ public class ProductRESTController {
      * @return ProductSearch Object
      */
     @GetMapping(value = "/unused/search")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductSearch getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();
         ProductSearch search = new ProductSearch(query);
