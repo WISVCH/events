@@ -1,30 +1,28 @@
 package ch.wisv.events.response.event;
 
+import ch.wisv.events.data.model.event.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Lob;
 import java.time.LocalDateTime;
 
 /**
- * EventsDefaultResponse.
+ * EventDefaultResponse.
  */
 @AllArgsConstructor
-public class EventsDefaultResponse {
+public class EventDefaultResponse {
 
     /**
      * Key of an Event.
      */
     @Getter
-    @Setter
     private String key;
 
     /**
      * Title of an Event
      */
     @Getter
-    @Setter
     private String title;
 
     /**
@@ -32,35 +30,45 @@ public class EventsDefaultResponse {
      */
     @Lob
     @Getter
-    @Setter
     private String description;
 
     /**
      * Location of an Event
      */
     @Getter
-    @Setter
     private String location;
 
     /**
      * ImageURL of an Event
      */
     @Getter
-    @Setter
     private String imageURL;
 
     /**
      * Start of an Event
      */
     @Getter
-    @Setter
     private LocalDateTime startEvent;
 
     /**
      * End of an Event
      */
     @Getter
-    @Setter
     private LocalDateTime endEvent;
+
+    /**
+     * Constructor by Event
+     *
+     * @param event Event
+     */
+    public EventDefaultResponse(Event event) {
+        this.key = event.getKey();
+        this.title = event.getTitle();
+        this.description = event.getDescription();
+        this.location = event.getLocation();
+        this.imageURL = event.getImageURL();
+        this.startEvent = event.getStart();
+        this.endEvent = event.getEnd();
+    }
 
 }

@@ -1,9 +1,8 @@
 package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.event.Event;
-import ch.wisv.events.data.model.event.EventStatus;
-import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.response.event.EventsDefaultResponse;
+import ch.wisv.events.response.event.EventDefaultResponse;
+import ch.wisv.events.response.product.ProductDefaultResponse;
 import ch.wisv.events.service.event.EventService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * EventRESTController.
@@ -43,26 +41,14 @@ public class EventRESTController {
     /**
      * Get all Events depending on the on the auth
      *
-     * @param auth Authentication
      * @return ResponseEntity with all available events
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllEvents(Authentication auth) {
-        Collection<Event> allEvents = eventService.getAllEvents();
-        Collection<Event> events = allEvents.stream()
-                                            .filter(event -> event.getOptions()
-                                                                  .getPublished() == EventStatus.PUBLISHED)
-                                            .collect(Collectors.toCollection(ArrayList::new));
-        if (null == auth) {
-            Collection<EventsDefaultResponse> response = new ArrayList<>();
-            events.forEach(n -> response
-                    .add(new EventsDefaultResponse(n.getKey(), n.getTitle(), n.getDescription(), n.getLocation(),
-                            n.getImageURL(), n.getStart(), n.getEnd())));
+    public ResponseEntity<?> getAllEvents() {
+        Collection<EventDefaultResponse> response = new ArrayList<>();
+        this.eventService.getAllEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
 
-            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
-        }
-
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", events);
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
 
     /**
@@ -71,43 +57,40 @@ public class EventRESTController {
      * @return list of all upcoming Events.
      */
     @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
-    public Collection<Event> getUpcomingEvents() {
-        return eventService.getUpcomingEvents().stream()
-                           .filter(event -> event.getOptions().getPublished() == EventStatus.PUBLISHED)
-                           .collect(Collectors.toCollection(ArrayList::new));
+    public ResponseEntity<?> getUpcomingEvents() {
+        Collection<EventDefaultResponse> response = new ArrayList<>();
+        this.eventService.getUpcomingEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
+
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
 
     /**
      * Get Event by id
      *
      * @param auth Authentication.
-     * @param id   id of an Event
-     * @return ResponseEntityBuilder with Event Objct
+     * @param key  key of an Event
+     * @return ResponseEntityBuilder with Event Object
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventById(Authentication auth, @PathVariable Long id) {
-        Event event = eventService.getEventById(id);
-        if (auth == null) {
-            EventsDefaultResponse response = new EventsDefaultResponse(event.getKey(), event.getTitle(),
-                    event.getDescription(), event.getLocation(), event.getImageURL(), event.getStart(), event.getEnd());
+    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+    public ResponseEntity<?> getEventById(Authentication auth, @PathVariable String key) {
+        Event event = eventService.getEventByKey(key);
 
-            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
-        }
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", event);
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
     }
 
     /**
      * Get Products of a certain Event.
      *
      * @param auth Authentication.
-     * @param id   id of an Event
+     * @param key  key of an Event
      * @return list of product by an Event.
      */
-    @RequestMapping(value = "/{id}/products", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Collection<Product> getProductByEvent(Authentication auth, @PathVariable Long id) {
-        Event event = eventService.getEventById(id);
+    @RequestMapping(value = "/{key}/products", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getProductByEvent(Authentication auth, @PathVariable String key) {
+        Collection<ProductDefaultResponse> response = new ArrayList<>();
+        this.eventService.getEventByKey(key).getProducts().forEach(x -> response.add(new ProductDefaultResponse(x)));
 
-        return event.getProducts();
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
 }

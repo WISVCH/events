@@ -4,6 +4,7 @@ import ch.wisv.events.data.factory.event.EventOptionRequestFactory;
 import ch.wisv.events.data.factory.event.EventRequestFactory;
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.event.EventOptions;
+import ch.wisv.events.data.model.event.EventStatus;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * EventServiceImpl.
@@ -60,7 +62,19 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public Collection<Event> getUpcomingEvents() {
-        return eventRepository.findByEndAfter(LocalDateTime.now());
+        return eventRepository.findByEndAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
+                == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Get all available Events
+     *
+     * @return Collection of Events
+     */
+    @Override
+    public Collection<Event> getAvailableEvents() {
+        return eventRepository.findAll().stream().filter(x -> x.getOptions().getPublished() == EventStatus.PUBLISHED)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

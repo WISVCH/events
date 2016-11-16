@@ -1,6 +1,7 @@
 package ch.wisv.events.utils;
 
 import ch.wisv.events.data.model.event.Event;
+import ch.wisv.events.data.model.event.EventStatus;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.repository.event.EventRepository;
 import ch.wisv.events.repository.product.ProductRepository;
@@ -52,6 +53,7 @@ public class TestDataRunner implements CommandLineRunner {
             );
 
             event.addProduct(productRepository.findById((long) i));
+            event.getOptions().setPublished(EventStatus.PUBLISHED);
             eventRepository.save(event);
         }
     }
