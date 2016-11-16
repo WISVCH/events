@@ -47,7 +47,7 @@ public class EventRESTController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getAllEvents() {
         Collection<EventDefaultResponse> response = new ArrayList<>();
-        this.eventService.getAllEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
+        eventService.getAllEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
 
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
@@ -60,7 +60,7 @@ public class EventRESTController {
     @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public ResponseEntity<?> getUpcomingEvents() {
         Collection<EventDefaultResponse> response = new ArrayList<>();
-        this.eventService.getUpcomingEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
+        eventService.getUpcomingEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
 
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
@@ -93,7 +93,7 @@ public class EventRESTController {
     public ResponseEntity<?> getProductByEvent(@PathVariable String key) {
         Collection<ProductDefaultResponse> response = new ArrayList<>();
         try {
-            this.eventService.getEventByKey(key).getProducts().stream()
+            eventService.getEventByKey(key).getProducts().stream()
                              .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) &&
                                      x.getSellEnd().isAfter(LocalDateTime.now()))
                              .forEach(x -> response.add(new ProductDefaultResponse(x)));
