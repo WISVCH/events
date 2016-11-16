@@ -8,12 +8,12 @@ import ch.wisv.events.utils.ResponseEntityBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -67,29 +67,30 @@ public class EventRESTController {
     /**
      * Get Event by id
      *
-     * @param auth Authentication.
      * @param key  key of an Event
      * @return ResponseEntityBuilder with Event Object
      */
     @RequestMapping(value = "/{key}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventById(Authentication auth, @PathVariable String key) {
+    public ResponseEntity<?> getEventById(@PathVariable String key) {
         Event event = eventService.getEventByKey(key);
 
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
     }
 
     /**
-     * Get Products of a certain Event.
+     * Get Products of a certain Event filtered by the selling starting Date and selling ending Date.
      *
-     * @param auth Authentication.
      * @param key  key of an Event
      * @return list of product by an Event.
      */
     @RequestMapping(value = "/{key}/products", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getProductByEvent(Authentication auth, @PathVariable String key) {
+    public ResponseEntity<?> getProductByEvent(@PathVariable String key) {
         Collection<ProductDefaultResponse> response = new ArrayList<>();
-        this.eventService.getEventByKey(key).getProducts().forEach(x -> response.add(new ProductDefaultResponse(x)));
+        this.eventService.getEventByKey(key).getProducts().stream()
+                         .filter(x -> x.getSellStart().isAfter(LocalDateTime.now()) &&
+                                 x.getSellEnd().isBefore(LocalDateTime.now()))
+                         .forEach(x -> response.add(new ProductDefaultResponse(x)));
 
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }
