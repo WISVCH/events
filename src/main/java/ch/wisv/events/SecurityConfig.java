@@ -87,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Configure the OIDC login path as our authentication entry point.
+     *
+     * @return AuthenticationEntryPoint
      */
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
@@ -95,6 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Register OIDC {@link UserInfoInterceptor}, which makes UserInfo available in MVC views as a request attribute.
+     *
+     * @return WebMvcConfigurerAdapter
      */
     @Bean
     public WebMvcConfigurerAdapter mvcInterceptor() {
@@ -108,6 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * OIDC authentication provider with authorities mapper which assigns authorities (roles) to users when they log in.
+     *
+     * @return AuthenticationProvider
      */
     @Bean
     public AuthenticationProvider oidcAuthenticationProvider() {
@@ -132,6 +138,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * OIDC authentication filter which does the actual authentication. The OIDC server and this client are
      * registered through the respective services. We support only one OIDC issuer, hence the
      * {@link StaticSingleIssuerService}.
+     *
+     * @return OIDCAuthenticationFilter
      */
     @Bean
     public OIDCAuthenticationFilter oidcAuthenticationFilter() throws Exception {
@@ -158,6 +166,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * the application is restarted.
      * <p>
      * TODO: for production, we want a statically configured client
+     *
+     * @return ClientConfigurationService
      */
     @Bean
     public ClientConfigurationService clientConfigurationService() {
@@ -182,6 +192,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Dynamic server configuration service: the information at $issuerUri/.well-known/openid-configuration is used
      * to configure the OIDC server.
+     *
+     * @return ServerConfigurationService
      */
     @Bean
     public ServerConfigurationService serverConfigurationService() {
