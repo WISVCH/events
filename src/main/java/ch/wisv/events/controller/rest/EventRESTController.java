@@ -1,6 +1,7 @@
 package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.event.Event;
+import ch.wisv.events.exception.EventNotFound;
 import ch.wisv.events.response.event.EventDefaultResponse;
 import ch.wisv.events.response.product.ProductDefaultResponse;
 import ch.wisv.events.service.event.EventService;
@@ -76,7 +77,7 @@ public class EventRESTController {
             Event event = eventService.getEventByKey(key);
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
-        } catch (Exception e) {
+        } catch (EventNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -98,7 +99,7 @@ public class EventRESTController {
                              .forEach(x -> response.add(new ProductDefaultResponse(x)));
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
-        } catch (Exception e) {
+        } catch (EventNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
