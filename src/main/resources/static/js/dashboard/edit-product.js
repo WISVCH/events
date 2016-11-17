@@ -7,14 +7,18 @@ $(document).ready(function () {
         startTimer($("#productEdit"));
     }).keydown(function () {
         clearTimeout(timer);
+    }).blur(function () {
+        startTimer($("#productEdit"));
     });
 
     function startTimer(form) {
         clearTimeout(timer);
+        $(".spinner").addClass('active');
         timer = setTimeout(function () {
             if (form[0].checkValidity()) {
                 form.submit();
             }
-        }, 1000);
+            $(".spinner").removeClass('active');
+        }, 2000);
     }
 });

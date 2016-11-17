@@ -7,6 +7,7 @@ import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
+import ch.wisv.events.exception.EventNotFound;
 import ch.wisv.events.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,17 +82,19 @@ public class DashboardEventController {
      */
     @GetMapping("/edit/{key}")
     public String editEventView(Model model, @PathVariable String key) {
-        Event event = eventService.getEventByKey(key);
-        if (event == null) {
+        try {
+            Event event = eventService.getEventByKey(key);
+
+
+            model.addAttribute("event", EventRequestFactory.create(event));
+            model.addAttribute("products", event.getProducts());
+            model.addAttribute("options", EventOptionRequestFactory.create(event));
+            model.addAttribute("eventProduct", EventProductRequestFactory.create(event));
+
+            return "dashboard/events/edit";
+        } catch (EventNotFound e) {
             return "redirect:/dashboard/events/";
         }
-
-        model.addAttribute("event", EventRequestFactory.create(event));
-        model.addAttribute("products", event.getProducts());
-        model.addAttribute("options", EventOptionRequestFactory.create(event));
-        model.addAttribute("eventProduct", EventProductRequestFactory.create(event));
-
-        return "dashboard/events/edit";
     }
 
     /**
@@ -103,12 +106,18 @@ public class DashboardEventController {
      */
     @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
-        Event event = eventService.getEventByKey(key);
-        eventService.deleteEvent(event);
+        try {
+            Event event = eventService.getEventByKey(key);
+            eventService.deleteEvent(event);
 
-        redirectAttributes.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
+            redirectAttributes.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
 
-        return "redirect:/dashboard/events/";
+            return "redirect:/dashboard/events/";
+        } catch (EventNotFound e) {
+            redirectAttributes.addFlashAttribute("message", "Event has not been deleted, because it does not exists!");
+
+            return "redirect:/dashboard/events/";
+        }
     }
 
     /**

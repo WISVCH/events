@@ -4,10 +4,12 @@ import ch.wisv.events.data.factory.event.EventOptionRequestFactory;
 import ch.wisv.events.data.factory.event.EventRequestFactory;
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.event.EventOptions;
+import ch.wisv.events.data.model.event.EventStatus;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.event.EventOptionsRequest;
 import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
+import ch.wisv.events.exception.EventNotFound;
 import ch.wisv.events.exception.ProductInUseException;
 import ch.wisv.events.repository.event.EventRepository;
 import ch.wisv.events.repository.product.ProductRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * EventServiceImpl.
@@ -60,7 +63,19 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public Collection<Event> getUpcomingEvents() {
-        return eventRepository.findByEndAfter(LocalDateTime.now());
+        return eventRepository.findByEndAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
+                == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Get all available Events
+     *
+     * @return Collection of Events
+     */
+    @Override
+    public Collection<Event> getAvailableEvents() {
+        return eventRepository.findAll().stream().filter(x -> x.getOptions().getPublished() == EventStatus.PUBLISHED)
+                              .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -113,6 +128,7 @@ public class EventServiceImpl implements EventService {
      *
      * @param key key of an Event
      * @return Event or if not found null
+     * @throws ch.wisv.events.exception.EventNotFound when Event by Key is not found.
      */
     @Override
     public Event getEventByKey(String key) {
@@ -120,7 +136,7 @@ public class EventServiceImpl implements EventService {
         if (eventOptional.isPresent()) {
             return eventOptional.get();
         }
-        return null;
+        throw new EventNotFound("Event with key " + key + " not found.");
     }
 
     /**
