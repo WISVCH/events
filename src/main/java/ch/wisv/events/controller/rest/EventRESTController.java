@@ -47,7 +47,7 @@ public class EventRESTController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getAllEvents() {
         Collection<EventDefaultResponse> response = new ArrayList<>();
-        eventService.getAllEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
+        eventService.getAvailableEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
 
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
     }

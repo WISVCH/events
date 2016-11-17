@@ -34,8 +34,8 @@ public class TestDataRunner implements CommandLineRunner {
             product.setCost(10.0f);
             product.setDescription(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae lectus est. Nam ultrices sapien felis, hendrerit pulvinar tortor lobortis a. Nunc mauris est, fermentum in neque sed, consectetur aliquam justo. Etiam nec feugiat mi. Aliquam sed.");
-            product.setSellStart(LocalDateTime.of(2020, Month.DECEMBER, Math.floorMod(i, 11) + 1, 12, 45));
-            product.setSellEnd(LocalDateTime.of(2020, Month.DECEMBER, Math.floorMod(i, 11) + 1, 13, 30));
+            product.setSellStart(LocalDateTime.of(2015, Month.DECEMBER, Math.floorMod(i, 11) + 1, 12, 45));
+            product.setSellEnd(LocalDateTime.of(2017, Month.DECEMBER, Math.floorMod(i, 11) + 1, 13, 30));
             product.setMaxSold(100);
             productRepository.save(product);
         }
@@ -48,8 +48,9 @@ public class TestDataRunner implements CommandLineRunner {
                     "Lecture hall A",
                     80,
                     100,
-                    "http://placehold.it/300x300", LocalDateTime.of(2020, Month.DECEMBER, i, 12, 45),
-                    LocalDateTime.of(2020, Month.DECEMBER, i, 13, 30)
+                    "http://placehold.it/300x300",
+                    LocalDateTime.of(2015, Month.DECEMBER, i, 12, 45),
+                    LocalDateTime.of(2017, Month.DECEMBER, i, 13, 30)
             );
 
             event.addProduct(productRepository.findById((long) i));
