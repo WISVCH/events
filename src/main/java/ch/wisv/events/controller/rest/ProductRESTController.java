@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,10 +51,8 @@ public class ProductRESTController {
     @GetMapping(value = "")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getAllProducts() {
-        Collection<ProductDefaultResponse> responses = new ArrayList<>();
-        productService.getAvailableProducts().forEach(x -> responses.add(new ProductDefaultResponse(x)));
-
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", responses);
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+                productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
     }
 
     @GetMapping(value = "/{key}")

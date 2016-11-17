@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * EventRESTController.
@@ -46,10 +44,8 @@ public class EventRESTController {
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getAllEvents() {
-        Collection<EventDefaultResponse> response = new ArrayList<>();
-        eventService.getAvailableEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
-
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+                eventService.getAvailableEvents().stream().map(EventDefaultResponse::new));
     }
 
     /**
@@ -59,10 +55,8 @@ public class EventRESTController {
      */
     @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public ResponseEntity<?> getUpcomingEvents() {
-        Collection<EventDefaultResponse> response = new ArrayList<>();
-        eventService.getUpcomingEvents().forEach(x -> response.add(new EventDefaultResponse(x)));
-
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+                eventService.getUpcomingEvents().stream().map(EventDefaultResponse::new));
     }
 
     /**
@@ -91,14 +85,11 @@ public class EventRESTController {
     @RequestMapping(value = "/{key}/products", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProductByEvent(@PathVariable String key) {
-        Collection<ProductDefaultResponse> response = new ArrayList<>();
         try {
-            eventService.getEventByKey(key).getProducts().stream()
-                             .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) &&
-                                     x.getSellEnd().isAfter(LocalDateTime.now()))
-                             .forEach(x -> response.add(new ProductDefaultResponse(x)));
-
-            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", response);
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+                    eventService.getEventByKey(key).getProducts().stream()
+                                .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) && x.getSellEnd().isAfter(
+                                        LocalDateTime.now())).map(ProductDefaultResponse::new));
         } catch (EventNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
