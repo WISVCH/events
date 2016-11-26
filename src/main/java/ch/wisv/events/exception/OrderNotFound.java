@@ -16,9 +16,9 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public class OrderNotFound extends RuntimeException {
 
-    public EventNotFound(String message) {
+    public OrderNotFound(String message) {
         super(message);
     }
 

@@ -1,4 +1,9 @@
-package ch.wisv.events.exception;
+package ch.wisv.events.repository.sales;
+
+import ch.wisv.events.data.model.sales.SellAccess;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +21,8 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public interface SellAccessRepository extends JpaRepository<SellAccess, Integer> {
 
-    public EventNotFound(String message) {
-        super(message);
-    }
+    List<SellAccess> findByLdapGroup(String username);
 
 }

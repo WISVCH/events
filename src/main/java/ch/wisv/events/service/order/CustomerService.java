@@ -1,4 +1,7 @@
-package ch.wisv.events.exception;
+package ch.wisv.events.service.order;
+
+import ch.wisv.events.data.model.order.Customer;
+import ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +19,10 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public interface CustomerService {
 
-    public EventNotFound(String message) {
-        super(message);
-    }
+    Customer getByRFIDToken(String token);
+
+    Customer createCustomer(SalesOrderCustomerCreateRequest salesOrderCustomerCreateRequest);
 
 }

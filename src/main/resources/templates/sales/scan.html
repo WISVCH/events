@@ -9,16 +9,17 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{../../favicon.ico}">
 
-    <title>Event - Dashboard</title>
+    <title>Events - Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 
     <!-- Custom styles for this template -->
-    <link th:href="@{/css/signin.css}" rel="stylesheet">
+    <link th:href="@{/css/chales.css}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -27,46 +28,38 @@
     <![endif]-->
 </head>
 
-<body>
+<body id="scanPage">
+<!--<div th:replace="dashboard/fragments/header :: header">-->
+<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
+<!--</div>-->
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/dashboard/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
-        </div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#"><samp>CH events sell app</samp></a>
+                </div>
+            </div>
+        </nav>
     </div>
 
-    <div class="row login-block">
-        <div class="col-md-12">
-            <!--<div th:replace="fragments/messages :: messages"></div>-->
-            <img th:src="@{/img/logo.svg}" alt="" width="450" height="120" class="center-block">
-            <form class="form-signin" th:action="@{/dashboard/login/}" method="post">
-                <div class="form-group">
-                    <label for="inputUsername" class="sr-only">Username</label>
-                    <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username"
-                           required
-                           autofocus>
-                </div>
-                <div class="form-group">
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" id="inputPassword" name="password" class="form-control"
-                           placeholder="Password"
-                           required>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Remember me
-                    </label>
-                </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <div class="row content-wrapper">
+        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
+            <h3>Scan RFID- or NFC card</h3>
+            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.data.request.sales.SalesOrderUserRequest"*/-->
+            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
+                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
+                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+                <input type="submit" style="display: none;">
             </form>
         </div>
     </div>
-
-</div> <!-- /container -->
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/sales/sales.min.js}"></script>
 </body>
 </html>

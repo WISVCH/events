@@ -1,4 +1,10 @@
-package ch.wisv.events.exception;
+package ch.wisv.events.data.request.sales;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +22,13 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public class SalesOrderRequest {
 
-    public EventNotFound(String message) {
-        super(message);
+    @Getter
+    @Setter
+    public Map<String, Integer> products;
+
+    public SalesOrderRequest() {
+        this.products = new HashMap<>();
     }
-
 }

@@ -18,7 +18,7 @@ public class ResponseEntityBuilder {
      * @param httpStatus  The HTTP Status of the response
      * @param httpHeaders Optional Http Headers for the response.
      * @param message     The message in human readable String format
-     * @param object      Optional object related to the request (like a created User)
+     * @param object      Optional object related to the request (like a created Customer)
      * @return The ResponseEntity in standard CH Events format.
      */
     private static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,

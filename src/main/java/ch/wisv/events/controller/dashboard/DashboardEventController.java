@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collection;
-import java.util.Random;
 
 /**
  * DashboardEventController.
@@ -51,10 +50,8 @@ public class DashboardEventController {
      */
     @GetMapping("/")
     public String eventsOverview(Model model) {
-        // TODO: For testing
-        Random random = new Random();
         Collection<Event> events = eventService.getAllEvents();
-        events.forEach(e -> e.setSold(random.nextInt(100)));
+        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
 
         model.addAttribute("events", events);
         return "dashboard/events/index";
@@ -130,7 +127,7 @@ public class DashboardEventController {
     @PostMapping("/add")
     public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, @ModelAttribute @Validated
             EventOptionsRequest eventOptionsRequest, RedirectAttributes
-            redirectAttributes) {
+                                      redirectAttributes) {
         try {
             Event event = eventService.addEvent(eventRequest);
             eventOptionsRequest.setKey(event.getKey());

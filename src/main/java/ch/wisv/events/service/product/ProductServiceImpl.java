@@ -62,8 +62,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Collection<Product> getAvailableProducts() {
         return productRepository.findAllBySellStartBeforeAndSellEndAfter(LocalDateTime.now(), LocalDateTime.now())
-                .stream().filter(x -> x.getSold() < x.getMaxSold())
-                .collect(Collectors.toCollection(ArrayList::new));
+                                .stream().filter(x -> x.getSold() < x.getMaxSold())
+                                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

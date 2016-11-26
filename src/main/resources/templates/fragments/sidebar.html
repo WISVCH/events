@@ -29,15 +29,31 @@
 
         <div class="col-sm-3 col-md-2 sidebar" th:fragment="sidebar">
             <ul class="nav nav-sidebar">
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/api/v1/dashboard/' ? 'active':''}"><a
-                        th:href="@{/dashboard/}">Overview
-                    <span class="sr-only">(current)</span></a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/api/v1/dashboard/events/' ? 'active':''}">
-                    <a
-                            th:href="@{/dashboard/events/}">Events</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/api/v1/dashboard/products/') ? 'active':''}">
-                    <a
-                            th:href="@{/dashboard/products/}" href="#">Products</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/dashboard/' ? 'active':''}">
+                    <a th:href="@{/dashboard/}">
+                        <i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Overview
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/dashboard/events/' ? 'active':''}">
+                    <a th:href="@{/dashboard/events/}">
+                        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Events
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/products/') ? 'active':''}">
+                    <a th:href="@{/dashboard/products/}" href="#">
+                        <i class="fa fa-ticket fa-fw" aria-hidden="true"></i> Products
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/orders/') ? 'active':''}">
+                    <a th:href="@{/dashboard/orders/}" href="#">
+                        <i class="fa fa-shopping-cart fa-fw" aria-hidden="true"></i> Orders
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/sell_access/') ? 'active':''}">
+                    <a th:href="@{/dashboard/sell_access/}" href="#">
+                        <i class="fa fa-mobile fa-fw" aria-hidden="true"></i> Sell access
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

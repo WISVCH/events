@@ -18,9 +18,8 @@
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 
-
     <!-- Custom styles for this template -->
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/chales.css}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -36,31 +35,18 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
-        </div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#"><samp>CH events sell app</samp></a>
+                </div>
+            </div>
+        </nav>
     </div>
+
     <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
-            <div class="page-header">
-                <h1><samp>Edit product</samp></h1>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <div th:replace="/fragments/message :: messages"></div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div th:replace="/dashboard/products/fragments/product-edit-panel-information :: edit-information"></div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <h3>consumables</h3>
-                </div>
-            </div>
+        <div class="col-xs-12 main">
+            <h1>Access denied!</h1>
         </div>
     </div>
 </div>
@@ -68,10 +54,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<!-- jQuery CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
-<script th:src="@{/js/dashboard/edit-product.min.js}"></script>
+<script th:src="@{/js/sales/sales.min.js}"></script>
 </body>
 </html>

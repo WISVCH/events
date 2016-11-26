@@ -45,17 +45,19 @@ import java.util.Set;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
+     * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
+     */
+    private final String loginPath = "/openid_connect_login";
+    /**
      * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration
      */
     @Value("${connect.issuerUri}")
     private String issuerUri;
-
     /**
      * URI of this application, without trailing slash
      */
     @Value("${connect.clientUri}")
     private String clientUri;
-
     /**
      * Groups that are admin in the system
      */
@@ -63,18 +65,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Set<String> adminGroups;
 
     /**
-     * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
-     */
-    private final String loginPath = "/openid_connect_login";
-
-    /**
      * Configure the {@link HttpSecurity} object.
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-            .and().logout().logoutSuccessUrl("/");
+        http
+                .addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+        ;
     }
 
     /**

@@ -46,6 +46,7 @@ body {
         background-color: #f5f5f5;
         border-right: 1px solid #eee;
         min-height: calc(100vh - 51px);
+        font-size: 14px;
     }
 }
 

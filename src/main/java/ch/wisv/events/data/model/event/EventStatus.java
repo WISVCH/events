@@ -26,7 +26,8 @@ public enum EventStatus {
 
     /**
      * Default constructor
-     * @param id ID of the status
+     *
+     * @param id          ID of the status
      * @param displayName Display name of the status
      */
     EventStatus(int id, String displayName) {
@@ -36,6 +37,7 @@ public enum EventStatus {
 
     /**
      * Get status by status ID
+     *
      * @param index Status ID
      * @return EventStatus corresponding to the ID
      */
@@ -45,6 +47,7 @@ public enum EventStatus {
 
     /**
      * Get display name of the EventStatus
+     *
      * @return display name
      */
     public String getDisplayName() {
@@ -53,6 +56,7 @@ public enum EventStatus {
 
     /**
      * Get id of the EventStatus
+     *
      * @return id
      */
     public int getId() {

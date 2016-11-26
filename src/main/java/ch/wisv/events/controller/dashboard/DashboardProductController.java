@@ -118,7 +118,7 @@ public class DashboardProductController {
 
         return "redirect:/dashboard/products/";
     }
-    
+
     /**
      * Post request to update a Product
      *

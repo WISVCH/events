@@ -16,10 +16,9 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public class ProductLimitExceededException extends RuntimeException {
 
-    public EventNotFound(String message) {
+    public ProductLimitExceededException(String message) {
         super(message);
     }
-
 }

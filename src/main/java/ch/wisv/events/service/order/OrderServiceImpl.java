@@ -1,0 +1,113 @@
+package ch.wisv.events.service.order;
+
+import ch.wisv.events.data.model.order.Customer;
+import ch.wisv.events.data.model.order.Order;
+import ch.wisv.events.data.model.order.OrderStatus;
+import ch.wisv.events.data.model.product.Product;
+import ch.wisv.events.data.request.sales.SalesOrderRequest;
+import ch.wisv.events.exception.OrderNotFound;
+import ch.wisv.events.exception.ProductLimitExceededException;
+import ch.wisv.events.repository.order.OrderRepository;
+import ch.wisv.events.repository.product.ProductRepository;
+import ch.wisv.events.service.product.ProductService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+
+    private final ProductService productService;
+
+    private final ProductRepository productRepository;
+
+    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService,
+                            ProductRepository productRepository) {
+        this.orderRepository = orderRepository;
+        this.productService = productService;
+        this.productRepository = productRepository;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll().stream().filter(x -> x.getCustomer() != null).collect(Collectors.toList());
+    }
+
+    @Override
+    public Order getByReference(String reference) {
+        Optional<Order> orderOption = orderRepository.findByPublicReference(reference);
+        if (orderOption.isPresent()) {
+            return orderOption.get();
+        }
+        throw new OrderNotFound("Order with reference " + reference + " not found!");
+    }
+
+    @Override
+    public Order createOrder(SalesOrderRequest orderRequest) {
+        Order order = new Order();
+        for (Map.Entry<String, Integer> product : orderRequest.getProducts().entrySet()) {
+            Product product1 = productService.getProductByKey(product.getKey());
+
+            if (product1.getSold() + product.getValue() > product1.getMaxSold()) {
+                throw new ProductLimitExceededException("Products left: "
+                        + (product1.getMaxSold() - product1.getSold()));
+            }
+
+            for (Integer i = 0; i < product.getValue(); i++) {
+                order.addProduct(product1);
+            }
+        }
+
+        orderRepository.saveAndFlush(order);
+
+        return order;
+    }
+
+    @Override
+    public void addCustomerToOrder(Order order, Customer customer) {
+        order.setCustomer(customer);
+
+        orderRepository.save(order);
+    }
+
+    /**
+     * @param order
+     * @param orderStatus
+     */
+    @Override
+    public void updateOrderStatus(Order order, OrderStatus orderStatus) {
+        order.setStatus(orderStatus);
+
+        if (order.getStatus().toString().contains("PAID")) {
+            order.getProducts().forEach(x -> {
+                x.setSold(x.getSold() + 1);
+            });
+        }
+
+        orderRepository.save(order);
+    }
+}

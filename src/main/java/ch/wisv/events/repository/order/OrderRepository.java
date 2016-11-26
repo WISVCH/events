@@ -1,4 +1,9 @@
-package ch.wisv.events.exception;
+package ch.wisv.events.repository.order;
+
+import ch.wisv.events.data.model.order.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +21,8 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    public EventNotFound(String message) {
-        super(message);
-    }
+    Optional<Order> findByPublicReference(String publicReference);
 
 }

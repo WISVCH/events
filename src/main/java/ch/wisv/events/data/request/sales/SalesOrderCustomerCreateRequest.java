@@ -1,4 +1,8 @@
-package ch.wisv.events.exception;
+package ch.wisv.events.data.request.sales;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +20,30 @@ package ch.wisv.events.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+@NoArgsConstructor
+public class SalesOrderCustomerCreateRequest {
 
-    public EventNotFound(String message) {
-        super(message);
+    @Getter
+    @Setter
+    private String orderReference;
+
+    @Getter
+    @Setter
+    private String customerName;
+
+    @Getter
+    @Setter
+    private String customerEmail;
+
+    @Getter
+    @Setter
+    private String customerCHUsername;
+
+    @Getter
+    @Setter
+    private String customerRFIDToken;
+
+    public SalesOrderCustomerCreateRequest(String orderReference) {
+        this.orderReference = orderReference;
     }
-
 }

@@ -61,6 +61,7 @@
                 <thead>
                 <tr>
                     <th>Product</th>
+                    <th>Sold/Available</th>
                     <th>Start selling</th>
                     <th>End selling</th>
                     <th></th>
@@ -69,6 +70,10 @@
                 <tbody>
                 <tr th:each="product : ${products}">
                     <td th:text="${product.title}">Data</td>
+                    <td>
+                        <span class="label label-success" th:text="'Sold: ' + ${product.sold}"></span>
+                        <span class="label label-default" th:text="'Available: ' + ${product.maxSold}"></span>
+                    </td>
                     <td th:text="${product.sellStart}">Data</td>
                     <td th:text="${product.sellEnd}">Data</td>
                     <td>

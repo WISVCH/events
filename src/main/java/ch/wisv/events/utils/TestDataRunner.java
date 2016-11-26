@@ -2,9 +2,13 @@ package ch.wisv.events.utils;
 
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.event.EventStatus;
+import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.product.Product;
+import ch.wisv.events.data.model.sales.SellAccess;
 import ch.wisv.events.repository.event.EventRepository;
+import ch.wisv.events.repository.order.CustomerRepository;
 import ch.wisv.events.repository.product.ProductRepository;
+import ch.wisv.events.repository.sales.SellAccessRepository;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
@@ -19,10 +23,15 @@ public class TestDataRunner implements CommandLineRunner {
 
     private final EventRepository eventRepository;
     private final ProductRepository productRepository;
+    private final SellAccessRepository sellAccessRepository;
+    private final CustomerRepository customerRepository;
 
-    public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository) {
+    public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
+                          SellAccessRepository sellAccessRepository, CustomerRepository customerRepository) {
         this.eventRepository = eventRepository;
         this.productRepository = productRepository;
+        this.sellAccessRepository = sellAccessRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -40,7 +49,7 @@ public class TestDataRunner implements CommandLineRunner {
             productRepository.save(product);
         }
 
-        Event event;
+        Event event = null;
         for (int i = 1; i < 3; i++) {
             event = new Event("Event " + i,
                     "Phasellus eget mauris fringilla, tincidunt enim eget, luctus massa. Suspendisse ultricies in neque " +
@@ -57,5 +66,21 @@ public class TestDataRunner implements CommandLineRunner {
             event.getOptions().setPublished(EventStatus.PUBLISHED);
             eventRepository.save(event);
         }
+
+        SellAccess sellAccess = new SellAccess();
+        sellAccess.setLdapGroup("w3cie");
+        sellAccess.addEvent(event);
+        sellAccess.setStartingTime(LocalDateTime.of(2015, Month.DECEMBER, 1, 12, 45));
+        sellAccess.setEndingTime(LocalDateTime.of(2017, Month.DECEMBER, 1, 13, 30));
+
+        Customer customer = new Customer();
+        customer.setRfidToken("0001809788");
+        customer.setChUsername("svenp");
+        customer.setEmail("svenp@ch.tudelft.nl");
+        customer.setName("Sven Popping");
+
+        sellAccessRepository.saveAndFlush(sellAccess);
+        customerRepository.saveAndFlush(customer);
     }
+
 }
