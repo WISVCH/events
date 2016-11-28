@@ -44,8 +44,12 @@
         </nav>
     </div>
 
-    <div class="row content-wrapper">
-        <div class="col-xs-12 main">
+    <div class="row content-wrapper main">
+        <div class="col-sm-12">
+            <div th:replace="/fragments/message :: messages"></div>
+        </div>
+
+        <div class="col-xs-12">
             <!--/*@thymesVar id="customerCreate" type="ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest"*/-->
             <form th:action="@{/sales/customer/create}" th:object="${customerCreate}" method="POST">
                 <input type="hidden" th:value="*{orderReference}" th:field="*{orderReference}" title="">

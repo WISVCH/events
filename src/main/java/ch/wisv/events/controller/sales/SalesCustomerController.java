@@ -4,6 +4,7 @@ import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.order.Order;
 import ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest;
 import ch.wisv.events.data.request.sales.SalesOrderUserRequest;
+import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.RFIDTokenAlreadyUsedException;
 import ch.wisv.events.service.order.CustomerService;
@@ -52,11 +53,11 @@ public class SalesCustomerController {
     public String createCustomer(Model model, RedirectAttributes redirectAttributes) {
         Object object = model.asMap().get("orderUser");
         if (object instanceof SalesOrderUserRequest) {
-            SalesOrderUserRequest user = (SalesOrderUserRequest) object;
+            SalesOrderUserRequest customer = (SalesOrderUserRequest) object;
 
             SalesOrderCustomerCreateRequest request = new SalesOrderCustomerCreateRequest();
-            request.setOrderReference(user.getOrderReference());
-            request.setCustomerRFIDToken(user.getRfidToken());
+            request.setOrderReference(customer.getOrderReference());
+            request.setCustomerRFIDToken(customer.getRfidToken());
 
             model.addAttribute("customerCreate", request);
 
@@ -69,10 +70,10 @@ public class SalesCustomerController {
 
     @PostMapping("/create")
     public String createCustomer(RedirectAttributes redirectAttributes,
-            @ModelAttribute @Validated SalesOrderCustomerCreateRequest salesOrderCustomerCreateRequest) {
+            @ModelAttribute @Validated SalesOrderCustomerCreateRequest request) {
         try {
-            Order order = orderService.getByReference(salesOrderCustomerCreateRequest.getOrderReference());
-            Customer customer = customerService.createCustomer(salesOrderCustomerCreateRequest);
+            Order order = orderService.getByReference(request.getOrderReference());
+            Customer customer = customerService.createCustomer(request);
 
             orderService.addCustomerToOrder(order, customer);
             redirectAttributes.addFlashAttribute("reference", order.getPublicReference());
@@ -83,9 +84,18 @@ public class SalesCustomerController {
 
             return "redirect:/sales/overview/";
         } catch (RFIDTokenAlreadyUsedException e) {
-            redirectAttributes.addFlashAttribute("reference", salesOrderCustomerCreateRequest.getOrderReference());
+            redirectAttributes.addFlashAttribute("reference", request.getOrderReference());
 
-            return "redirect:/create/customer/";
+            return "redirect:/sales/customer/create/";
+        } catch (InvalidCustomerException e) {
+            SalesOrderUserRequest customer = new SalesOrderUserRequest();
+            customer.setOrderReference(request.getOrderReference());
+            customer.setRfidToken(request.getCustomerRFIDToken());
+
+            redirectAttributes.addFlashAttribute("orderUser", customer);
+            redirectAttributes.addFlashAttribute("error", "Please fill in all the required fields!");
+
+            return "redirect:/sales/customer/create/";
         }
     }
 

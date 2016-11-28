@@ -3,6 +3,7 @@ package ch.wisv.events.service.order;
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest;
 import ch.wisv.events.exception.CustomerNotFound;
+import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.exception.RFIDTokenAlreadyUsedException;
 import ch.wisv.events.repository.order.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer createCustomer(SalesOrderCustomerCreateRequest salesOrderCustomerCreateRequest) {
+    public Customer createCustomer(SalesOrderCustomerCreateRequest request) {
+        if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
+            throw new InvalidCustomerException("Customer name or email is empty");
+        }
+
         if (customerRepository.findAll().stream().anyMatch(x -> Objects
-                .equals(x.getRfidToken(), salesOrderCustomerCreateRequest.getCustomerRFIDToken()))) {
+                .equals(x.getRfidToken(), request.getCustomerRFIDToken()))) {
             throw new RFIDTokenAlreadyUsedException("RFID is already used");
         }
 
         Customer customer = new Customer(
-                salesOrderCustomerCreateRequest.getCustomerName(),
-                salesOrderCustomerCreateRequest.getCustomerEmail(),
-                salesOrderCustomerCreateRequest.getCustomerCHUsername(),
-                salesOrderCustomerCreateRequest.getCustomerRFIDToken()
+                request.getCustomerName(),
+                request.getCustomerEmail(),
+                request.getCustomerCHUsername(),
+                request.getCustomerRFIDToken()
         );
 
         customerRepository.saveAndFlush(customer);
