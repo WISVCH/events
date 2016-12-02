@@ -3,10 +3,10 @@ package ch.wisv.events.data.model.product;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 /**
- * ProductSearchItem Object
+ * SearchItem Object
  */
 @JsonAutoDetect
-public class ProductSearchItem {
+public class SearchItem {
 
     /**
      * Title of the Product, for API purpose called value.
@@ -24,7 +24,7 @@ public class ProductSearchItem {
      * @param title Title of the Product
      * @param key   Key of the Product
      */
-    public ProductSearchItem(String title, Long key) {
+    public SearchItem(String title, Long key) {
         this.value = title;
         this.data = key;
     }

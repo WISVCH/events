@@ -44,6 +44,7 @@ public class DashboardProductController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("products", productService.getAllProducts());
+
         return "dashboard/products/index";
     }
 
@@ -56,6 +57,7 @@ public class DashboardProductController {
     @GetMapping("/create/")
     public String createProductView(Model model) {
         model.addAttribute("product", new ProductRequest());
+
         return "dashboard/products/create";
     }
 

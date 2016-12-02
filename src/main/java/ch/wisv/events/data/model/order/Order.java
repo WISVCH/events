@@ -22,7 +22,6 @@ public class Order {
     private Long id;
 
     @Getter
-    @Setter
     private OrderStatus status;
 
     @Getter
@@ -63,6 +62,22 @@ public class Order {
     public void addProduct(Product product) {
         this.products.add(product);
         this.amount += product.getCost();
+    }
+
+    /**
+     * Set order status and update the sold foreach product
+     *
+     * @param status
+     */
+    public void setStatus(OrderStatus status) {
+        OrderStatus old = this.status;
+        if (!old.toString().contains("PAID") && status.toString().contains("PAID")) {
+            this.getProducts().forEach(x -> x.setSold(x.getSold() + 1));
+        } else if (old.toString().contains("PAID") && !status.toString().contains("PAID")) {
+            this.getProducts().forEach(x -> x.setSold(x.getSold() - 1));
+        }
+
+        this.status = status;
     }
 
 }

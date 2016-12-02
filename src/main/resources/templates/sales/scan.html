@@ -47,7 +47,7 @@
     <div class="row content-wrapper">
         <div class="col-xs-12 main text-center" style="margin-top: 60px;">
             <h3>Scan RFID- or NFC card</h3>
-            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.data.request.sales.SalesOrderUserRequest"*/-->
+            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.data.request.sales.SalesCustomerAddRequest"*/-->
             <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
                 <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
                 <input type="hidden" th:field="*{rfidToken}" id="rfidToken">

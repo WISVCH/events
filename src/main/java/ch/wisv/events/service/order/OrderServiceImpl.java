@@ -69,18 +69,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(SalesOrderRequest orderRequest) {
         Order order = new Order();
-        for (Map.Entry<String, Integer> product : orderRequest.getProducts().entrySet()) {
-            Product product1 = productService.getProductByKey(product.getKey());
+        for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
+            Product product = productService.getProductByKey(entry.getKey());
 
-            if (product1.getSold() + product.getValue() > product1.getMaxSold()) {
-                throw new ProductLimitExceededException("Products left: "
-                        + (product1.getMaxSold() - product1.getSold()));
+            if (product.getSold() + entry.getValue() > product.getMaxSold()) {
+                throw new ProductLimitExceededException(
+                        "Not enough products of " + product.getTitle() + ", only " + (product
+                                .getMaxSold() - product.getSold()) + " items left. ");
             }
 
-            for (Integer i = 0; i < product.getValue(); i++) {
-                order.addProduct(product1);
+            for (Integer i = 0; i < entry.getValue(); i++) {
+                order.addProduct(product);
             }
         }
+
+        // TODO: check iff there are products in the order
 
         orderRepository.saveAndFlush(order);
 
@@ -101,12 +104,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrderStatus(Order order, OrderStatus orderStatus) {
         order.setStatus(orderStatus);
-
-        if (order.getStatus().toString().contains("PAID")) {
-            order.getProducts().forEach(x -> {
-                x.setSold(x.getSold() + 1);
-            });
-        }
 
         orderRepository.save(order);
     }

@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductRequest productRequest) {
         Product product = ProductRequestFactory.create(productRequest);
 
-        productRepository.saveAndFlush(product);
+        productRepository.save(product);
     }
 
     /**
@@ -121,4 +121,5 @@ public class ProductServiceImpl implements ProductService {
         }
         productRepository.delete(product);
     }
+
 }

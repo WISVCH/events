@@ -1,7 +1,4 @@
-package ch.wisv.events.service.order;
-
-import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.request.sales.SalesCustomerRequest;
+package ch.wisv.events.data.model;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -19,10 +16,5 @@ import ch.wisv.events.data.request.sales.SalesCustomerRequest;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface CustomerService {
-
-    Customer getByRFIDToken(String token);
-
-    Customer createCustomer(SalesCustomerRequest salesCustomerRequest);
-
+public interface DataModel {
 }

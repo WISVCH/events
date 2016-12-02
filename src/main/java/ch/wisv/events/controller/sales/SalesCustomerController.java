@@ -2,8 +2,8 @@ package ch.wisv.events.controller.sales;
 
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.order.Order;
-import ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest;
-import ch.wisv.events.data.request.sales.SalesOrderUserRequest;
+import ch.wisv.events.data.request.sales.SalesCustomerRequest;
+import ch.wisv.events.data.request.sales.SalesCustomerAddRequest;
 import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.RFIDTokenAlreadyUsedException;
@@ -52,10 +52,10 @@ public class SalesCustomerController {
     @GetMapping("/create/")
     public String createCustomer(Model model, RedirectAttributes redirectAttributes) {
         Object object = model.asMap().get("orderUser");
-        if (object instanceof SalesOrderUserRequest) {
-            SalesOrderUserRequest customer = (SalesOrderUserRequest) object;
+        if (object instanceof SalesCustomerAddRequest) {
+            SalesCustomerAddRequest customer = (SalesCustomerAddRequest) object;
 
-            SalesOrderCustomerCreateRequest request = new SalesOrderCustomerCreateRequest();
+            SalesCustomerRequest request = new SalesCustomerRequest();
             request.setOrderReference(customer.getOrderReference());
             request.setCustomerRFIDToken(customer.getRfidToken());
 
@@ -70,7 +70,7 @@ public class SalesCustomerController {
 
     @PostMapping("/create")
     public String createCustomer(RedirectAttributes redirectAttributes,
-            @ModelAttribute @Validated SalesOrderCustomerCreateRequest request) {
+            @ModelAttribute @Validated SalesCustomerRequest request) {
         try {
             Order order = orderService.getByReference(request.getOrderReference());
             Customer customer = customerService.createCustomer(request);
@@ -88,7 +88,7 @@ public class SalesCustomerController {
 
             return "redirect:/sales/customer/create/";
         } catch (InvalidCustomerException e) {
-            SalesOrderUserRequest customer = new SalesOrderUserRequest();
+            SalesCustomerAddRequest customer = new SalesCustomerAddRequest();
             customer.setOrderReference(request.getOrderReference());
             customer.setRfidToken(request.getCustomerRFIDToken());
 

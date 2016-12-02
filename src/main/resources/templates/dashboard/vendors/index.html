@@ -44,8 +44,8 @@
         <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
         <div class="col-xs-10 main">
             <div class="page-header">
-                <h1><samp>Sellers</samp> <a class="btn btn-primary btn-dashboard-header" href="create/">Create new
-                    sellAccess</a></h1>
+                <h1><samp>Vendors</samp>
+                    <a class="btn btn-primary btn-dashboard-header" href="create/">Create new vendor</a></h1>
             </div>
 
             <div class="row">
@@ -55,29 +55,35 @@
             </div>
 
             <div class="table-responsive">
-                <table id="ticketTable" class="table table-hover">
+                <table id="dataTable" class="table table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Username</th>
+                        <th>LDAP Group</th>
+                        <th>Event(s)</th>
                         <th>Begin date</th>
                         <th>Ending date</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="sellAccess : ${sellAccesses}">
-                        <td th:text="${sellAccess.id}">Row 1 Data 1</td>
-                        <td th:text="${sellAccess.ldapGroup}">Row 1 Data 1</td>
-                        <td th:text="${sellAccess.startingTime}"></td>
-                        <td th:text="${sellAccess.endingTime}"></td>
+                    <tr th:each="vendor : ${vendors}">
+                        <td th:text="${vendor.id}">Row 1 Data 1</td>
+                        <td th:text="${vendor.ldapGroup.getName()}">Row 1 Data 1</td>
+                        <td>
+                            <ul style="padding-left: 16px;">
+                                <li th:each="event : ${vendor.events}" th:text="${event.title}"></li>
+                            </ul>
+                        </td>
+                        <td th:text="${vendor.startingTime}"></td>
+                        <td th:text="${vendor.endingTime}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${sellAccess.key}" class="btn btn-info">
+                                <a th:href="'edit/' + ${vendor.key} + '/'" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${sellAccess.key}"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${sellAccess.ldapGroup} + '?\');'"
+                                <a th:href="'delete/' + ${vendor.key}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${vendor.ldapGroup} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
@@ -98,12 +104,13 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <script>
     $(document).ready(function () {
-        $('#ticketTable').DataTable({
+        $('#dataTable').DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
-                {width: "120px", targets: 2},
+                {width: "240px", targets: 1},
                 {width: "120px", targets: 3},
-                {width: "80px", targets: 4}
+                {width: "120px", targets: 4},
+                {width: "80px", targets: 5}
             ]
         });
     });

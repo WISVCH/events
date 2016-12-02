@@ -18,7 +18,7 @@ public interface EventService {
      *
      * @return Collection of Events
      */
-    Collection<Event> getAllEvents();
+    List<Event> getAllEvents();
 
     /**
      * Get all upcoming Events

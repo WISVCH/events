@@ -1,8 +1,4 @@
-package ch.wisv.events.data.request.sales;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package ch.wisv.events.exception;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,18 +16,8 @@ import lombok.Setter;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NoArgsConstructor
-public class SalesOrderUserRequest {
-
-    @Getter
-    @Setter
-    private String orderReference;
-
-    @Getter
-    @Setter
-    private String rfidToken;
-
-    public SalesOrderUserRequest(String orderReference) {
-        this.orderReference = orderReference;
+public class VendorNotFoundException extends RuntimeException {
+    public VendorNotFoundException(String s) {
+        super(s);
     }
 }

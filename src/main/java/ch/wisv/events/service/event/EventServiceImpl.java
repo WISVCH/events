@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
      * @return Collection of Events
      */
     @Override
-    public Collection<Event> getAllEvents() {
+    public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 

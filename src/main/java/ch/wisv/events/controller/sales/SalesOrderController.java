@@ -3,7 +3,7 @@ package ch.wisv.events.controller.sales;
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.order.Order;
 import ch.wisv.events.data.request.sales.SalesOrderRequest;
-import ch.wisv.events.data.request.sales.SalesOrderUserRequest;
+import ch.wisv.events.data.request.sales.SalesCustomerAddRequest;
 import ch.wisv.events.exception.CustomerNotFound;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.ProductLimitExceededException;
@@ -56,7 +56,7 @@ public class SalesOrderController {
 
             return "redirect:/sales/scan/";
         } catch (ProductLimitExceededException e) {
-            redirectAttributes.addFlashAttribute("error", e.toString());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/overview/";
         }
@@ -64,10 +64,10 @@ public class SalesOrderController {
 
     @PostMapping("/customer/add")
     public String addUserToOrder(RedirectAttributes redirectAttributes, @ModelAttribute @Validated
-            SalesOrderUserRequest salesOrderUserRequest) {
+            SalesCustomerAddRequest salesCustomerAddRequest) {
         try {
-            Order order = orderService.getByReference(salesOrderUserRequest.getOrderReference());
-            Customer customer = customerService.getByRFIDToken(salesOrderUserRequest.getRfidToken());
+            Order order = orderService.getByReference(salesCustomerAddRequest.getOrderReference());
+            Customer customer = customerService.getByRFIDToken(salesCustomerAddRequest.getRfidToken());
             orderService.addCustomerToOrder(order, customer);
             redirectAttributes.addFlashAttribute("reference", order.getPublicReference());
 
@@ -77,7 +77,7 @@ public class SalesOrderController {
 
             return "redirect:/sales/overview/";
         } catch (CustomerNotFound e) {
-            redirectAttributes.addFlashAttribute("orderUser", salesOrderUserRequest);
+            redirectAttributes.addFlashAttribute("orderUser", salesCustomerAddRequest);
 
             return "redirect:/sales/customer/create/";
         }

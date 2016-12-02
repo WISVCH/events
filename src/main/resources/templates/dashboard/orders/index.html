@@ -44,8 +44,7 @@
         <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
         <div class="col-xs-10 main">
             <div class="page-header">
-                <h1><samp>Products</samp> <a class="btn btn-primary btn-dashboard-header" href="create/">Create new
-                    product</a></h1>
+                <h1><samp>Orders</samp></h1>
             </div>
 
             <div class="row">
@@ -55,14 +54,16 @@
             </div>
 
             <div class="table-responsive">
-                <table id="ticketTable" class="table table-hover">
+                <table id="dataTable" class="table table-hover">
                     <thead>
                     <tr>
                         <th></th>
-                        <th>Reference</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Product(s)</th>
+                        <th>Reference</th>
                         <th>Status</th>
+                        <th>Amount</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -70,11 +71,24 @@
                     <!--/*@thymesVar id="order" type="ch.wisv.events.data.model.order.Order"*/-->
                     <tr th:each="order : ${orders}">
                         <td></td>
-                        <td th:text="${order.getPublicReference()}"></td>
                         <td th:text="${order.getCustomer().getName()}"></td>
                         <td th:text="${order.getCustomer().getEmail()}"></td>
+                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}"></span></td>
+                        <td><samp th:text="${order.getPublicReference()}"></samp></td>
                         <td th:text="${order.getStatus().toString()}"></td>
-                        <td></td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a th:href="'edit/' + ${order.getId()}" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                                <a th:href="'delete/' + ${order.getId()}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${order.getPublicReference()} + '?\');'"
+                                   class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -90,14 +104,7 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <script>
     $(document).ready(function () {
-        $('#ticketTable').DataTable({
-            columnDefs: [
-                {width: "20px", targets: 0},
-                {width: "120px", targets: 2},
-                {width: "120px", targets: 3},
-                {width: "80px", targets: 4}
-            ]
-        });
+        $('#dataTable').DataTable({});
     });
 </script>
 </body>

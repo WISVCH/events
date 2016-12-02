@@ -67,8 +67,8 @@
                     <th class="text-right" style="width: 80px;">Price</th>
                 </tr>
                 </thead>
-                <tbody th:each="product : ${order.getProducts()}">
-                <tr>
+                <tbody>
+                <tr th:each="product : ${order.getProducts()}">
                     <td th:text="${product.getTitle()}"></td>
                     <td class="text-right"
                         th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 0, 'POINT', 2, 'COMMA')}"></td>

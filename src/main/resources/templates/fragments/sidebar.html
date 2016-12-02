@@ -49,9 +49,9 @@
                         <i class="fa fa-shopping-cart fa-fw" aria-hidden="true"></i> Orders
                     </a>
                 </li>
-                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/sell_access/') ? 'active':''}">
-                    <a th:href="@{/dashboard/sell_access/}" href="#">
-                        <i class="fa fa-mobile fa-fw" aria-hidden="true"></i> Sell access
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/vendors/') ? 'active':''}">
+                    <a th:href="@{/dashboard/vendors/}" href="#">
+                        <i class="fa fa-mobile fa-fw" aria-hidden="true"></i> Vendors
                     </a>
                 </li>
             </ul>

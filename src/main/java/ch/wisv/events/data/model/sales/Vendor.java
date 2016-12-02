@@ -1,18 +1,21 @@
 package ch.wisv.events.data.model.sales;
 
+import ch.wisv.events.data.model.DataModel;
 import ch.wisv.events.data.model.event.Event;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.format.annotation.DateTimeFormat.*;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -31,7 +34,12 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-public class SellAccess implements Serializable {
+public class Vendor implements DataModel {
+
+    /**
+     * Date format
+     */
+    private final static String TIME_FORMAT = "yyyy-MM-dd'T'HH:ss";
 
     @Id
     @GeneratedValue
@@ -39,16 +47,19 @@ public class SellAccess implements Serializable {
     private Long id;
 
     @Getter
+    @Setter
     private String key;
 
     @Getter
     @Setter
-    private String ldapGroup;
+    private LDAPGroupEnum ldapGroup;
 
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime startingTime;
 
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime endingTime;
@@ -58,7 +69,7 @@ public class SellAccess implements Serializable {
     @Setter
     private List<Event> events;
 
-    public SellAccess() {
+    public Vendor() {
         this.key = UUID.randomUUID().toString();
         this.events = new ArrayList<>();
     }

@@ -1,7 +1,10 @@
-package ch.wisv.events.service.order;
+package ch.wisv.events.repository.sales;
 
-import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.request.sales.SalesCustomerRequest;
+import ch.wisv.events.data.model.sales.Vendor;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -19,10 +22,12 @@ import ch.wisv.events.data.request.sales.SalesCustomerRequest;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface CustomerService {
+public interface VendorRepository extends JpaRepository<Vendor, Integer> {
 
-    Customer getByRFIDToken(String token);
+    List<Vendor> findByLdapGroup(String username);
 
-    Customer createCustomer(SalesCustomerRequest salesCustomerRequest);
+    Optional<Vendor> findByKey(String key);
+
+    Optional<Vendor> findById(Long id);
 
 }

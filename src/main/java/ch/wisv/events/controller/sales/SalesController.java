@@ -3,12 +3,12 @@ package ch.wisv.events.controller.sales;
 import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.data.model.order.Order;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.model.sales.SellAccess;
+import ch.wisv.events.data.model.sales.Vendor;
+import ch.wisv.events.data.request.sales.SalesCustomerAddRequest;
 import ch.wisv.events.data.request.sales.SalesOrderRequest;
-import ch.wisv.events.data.request.sales.SalesOrderUserRequest;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.service.order.OrderService;
-import ch.wisv.events.service.sales.SellAccessService;
+import ch.wisv.events.service.sales.VendorService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -45,12 +44,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/sales")
 public class SalesController {
 
-    private final SellAccessService sellAccessService;
+    private final VendorService vendorService;
 
     private final OrderService orderService;
 
-    public SalesController(SellAccessService sellAccessService, OrderService orderService) {
-        this.sellAccessService = sellAccessService;
+    public SalesController(VendorService vendorService, OrderService orderService) {
+        this.vendorService = vendorService;
         this.orderService = orderService;
     }
 
@@ -67,6 +66,8 @@ public class SalesController {
 
         if (products.size() == 0) return "redirect:/sales/";
 
+        products = products.stream().filter(x -> x.getSold() < x.getMaxSold()).collect(Collectors.toList());
+
         model.addAttribute("products", products);
         model.addAttribute("orderRequest", new SalesOrderRequest());
 
@@ -78,7 +79,7 @@ public class SalesController {
         try {
             Order order = orderService.getByReference((String) model.asMap().get("reference"));
             model.addAttribute("order", order);
-            model.addAttribute("orderUserRequest", new SalesOrderUserRequest(order.getPublicReference()));
+            model.addAttribute("orderUserRequest", new SalesCustomerAddRequest(order.getPublicReference()));
 
             return "sales/scan";
         } catch (OrderNotFound e) {
@@ -98,14 +99,17 @@ public class SalesController {
         UserInfo userInfo = auth.getUserInfo();
         if (userInfo instanceof CHUserInfo) {
             CHUserInfo info = (CHUserInfo) userInfo;
-            List<SellAccess> sellAccesses = sellAccessService.getAllSellAccess().stream()
-                                                             .filter(x -> x.getStartingTime().isBefore(LocalDateTime.now()))
-                                                             .filter(x -> x.getEndingTime().isAfter(LocalDateTime.now()))
-                                                             .filter(x -> info.getLdapGroups().stream()
-                                                                 .anyMatch(g -> Objects.equals(x.getLdapGroup(), g)))
-                                                             .collect(Collectors.toCollection(ArrayList::new));
+            List<Vendor> vendors = vendorService.getAllSellAccess().stream()
+                                                .filter(x -> x.getStartingTime()
+                                                                           .isBefore(LocalDateTime.now()))
+                                                .filter(x -> x.getEndingTime()
+                                                                           .isAfter(LocalDateTime.now()))
+                                                .filter(x -> info.getLdapGroups().stream()
+                                                                              .anyMatch(g -> g.equals(x.getLdapGroup
+                                                                                      ().getName())))
+                                                .collect(Collectors.toCollection(ArrayList::new));
             ArrayList<Product> products = new ArrayList<>();
-            sellAccesses.forEach(x -> x.getEvents().forEach(y -> products.addAll(y.getProducts())));
+            vendors.forEach(x -> x.getEvents().forEach(y -> products.addAll(y.getProducts())));
 
             return products;
         }

@@ -62,10 +62,12 @@
                         <th>Title</th>
                         <th>Cost</th>
                         <th>Sold/Available</th>
+                        <th>Progress max sold</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
                     <tr th:each="product : ${products}">
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
@@ -73,6 +75,17 @@
                         <td>
                             <span class="label label-success" th:text="'Sold: ' + ${product.sold}"></span>
                             <span class="label label-default" th:text="'Available: ' + ${product.maxSold}"></span>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${product.sold}"
+                                     aria-valuemin="0"
+                                     th:aria-valuemax="${product.maxSold}"
+                                     th:style="'width: ' + ${product.calcProgress()} + '%;'"
+                                     th:text="${product.calcProgress()} + '%'">
+                                    59%
+                                </div>
+                            </div>
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
@@ -106,7 +119,8 @@
                 {width: "20px", targets: 0},
                 {width: "120px", targets: 2},
                 {width: "120px", targets: 3},
-                {width: "80px", targets: 4}
+                {width: "360px", targets: 4},
+                {width: "80px", targets: 5}
             ]
         });
     });

@@ -50,9 +50,11 @@
         </div>
 
         <div class="col-xs-12">
+            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.data.model.product.Product>"*/-->
             <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
             <!--/*@thymesVar id="orderRequest" type="ch.wisv.events.data.request.sales.SalesOrderRequest"*/-->
-            <form th:action="@{/sales/order/create}" th:object="${orderRequest}" method="POST">
+            <form th:if="${products.size() > 0}" th:action="@{/sales/order/create}" th:object="${orderRequest}"
+                  method="POST">
                 <div class="row sell-product-block" th:each="product : ${products}">
                     <div class="col-xs-12">
                         <div class="well well-sm">
@@ -82,6 +84,8 @@
                     Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
                 </button>
             </form>
+
+            <h3 class="text-center" style="margin-top: 60px;" th:if="${products.size() == 0}">Sold out.</h3>
         </div>
     </div>
 </div>

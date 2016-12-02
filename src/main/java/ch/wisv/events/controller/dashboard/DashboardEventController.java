@@ -49,7 +49,7 @@ public class DashboardEventController {
      * @return path to Thymeleaf themplate
      */
     @GetMapping("/")
-    public String eventsOverview(Model model) {
+    public String index(Model model) {
         Collection<Event> events = eventService.getAllEvents();
         events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
 
@@ -64,7 +64,7 @@ public class DashboardEventController {
      * @return path to Thymeleaf template
      */
     @GetMapping("/create/")
-    public String createEventView(Model model) {
+    public String create(Model model) {
         model.addAttribute("event", new EventRequest());
         model.addAttribute("eventStatus", new EventOptionsRequest());
 
@@ -78,7 +78,7 @@ public class DashboardEventController {
      * @return path to Thymeleaf template
      */
     @GetMapping("/edit/{key}")
-    public String editEventView(Model model, @PathVariable String key) {
+    public String edit(Model model, @PathVariable String key) {
         try {
             Event event = eventService.getEventByKey(key);
 
@@ -207,6 +207,6 @@ public class DashboardEventController {
         eventService.updateEventOptions(request);
         redirectAttributes.addFlashAttribute("message", "Autosaved!");
 
-        return "redirect:/dashboard/events/edit/" + request.getKey();
+        return "redirect:/dashboard/events/edit/" + request.getKey() + "/";
     }
 }

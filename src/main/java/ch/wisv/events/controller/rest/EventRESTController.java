@@ -1,6 +1,7 @@
 package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.event.Event;
+import ch.wisv.events.data.model.product.Search;
 import ch.wisv.events.exception.EventNotFound;
 import ch.wisv.events.response.event.EventDefaultResponse;
 import ch.wisv.events.response.product.ProductDefaultResponse;
@@ -9,12 +10,10 @@ import ch.wisv.events.utils.ResponseEntityBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * EventRESTController.
@@ -94,4 +93,25 @@ public class EventRESTController {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    /**
+     * Get all unused products into search format.
+     *
+     * @param query query
+     * @return Search Object
+     */
+    @GetMapping(value = "/search")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Search getSearchEvents(@RequestParam(value = "query", required = false) String query) {
+        List<Event> eventList = eventService.getAllEvents();
+        Search search = new Search(query);
+
+        String finalQuery = (query != null) ? query : "";
+        eventList.stream()
+                   .filter(p -> p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                   .forEach(x -> search.addItem(x.getTitle(), x.getId()));
+
+        return search;
+    }
+
 }

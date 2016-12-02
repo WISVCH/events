@@ -1,8 +1,8 @@
-package ch.wisv.events.service.sales;
+package ch.wisv.events.data.request.sales;
 
-import ch.wisv.events.data.model.sales.SellAccess;
-
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,10 +20,30 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface SellAccessService {
+@NoArgsConstructor
+public class SalesCustomerRequest {
 
-    void addSellAccess(SellAccess sellAccess);
+    @Getter
+    @Setter
+    private String orderReference;
 
-    List<SellAccess> getAllSellAccess();
+    @Getter
+    @Setter
+    private String customerName;
 
+    @Getter
+    @Setter
+    private String customerEmail;
+
+    @Getter
+    @Setter
+    private String customerCHUsername;
+
+    @Getter
+    @Setter
+    private String customerRFIDToken;
+
+    public SalesCustomerRequest(String orderReference) {
+        this.orderReference = orderReference;
+    }
 }

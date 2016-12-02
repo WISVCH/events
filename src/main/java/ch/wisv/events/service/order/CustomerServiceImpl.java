@@ -1,7 +1,7 @@
 package ch.wisv.events.service.order;
 
 import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.request.sales.SalesOrderCustomerCreateRequest;
+import ch.wisv.events.data.request.sales.SalesCustomerRequest;
 import ch.wisv.events.exception.CustomerNotFound;
 import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.exception.RFIDTokenAlreadyUsedException;
@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer createCustomer(SalesOrderCustomerCreateRequest request) {
+    public Customer createCustomer(SalesCustomerRequest request) {
         if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
             throw new InvalidCustomerException("Customer name or email is empty");
         }

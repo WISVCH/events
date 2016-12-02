@@ -71,6 +71,7 @@ dependencies {
     compile("org.webjars:font-awesome:4.7.0")
     compile("org.webjars:jquery:2.1.4")
     compile("org.projectlombok:lombok:1.16.10")
+    compile("com.github.darrachequesne:spring-data-jpa-datatables:1.1")
 
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")

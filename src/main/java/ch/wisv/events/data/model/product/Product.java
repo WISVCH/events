@@ -109,4 +109,14 @@ public class Product {
         this.sellEnd = sellEnd;
     }
 
+    /**
+     * Calculate the progress of the products sold and the target of the event and round number to
+     * two decimals.
+     *
+     * @return progress of event
+     */
+    public double calcProgress() {
+        return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
+    }
+
 }

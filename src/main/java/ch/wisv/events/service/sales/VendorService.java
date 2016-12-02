@@ -1,7 +1,8 @@
-package ch.wisv.events.service.order;
+package ch.wisv.events.service.sales;
 
-import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.request.sales.SalesCustomerRequest;
+import ch.wisv.events.data.model.sales.Vendor;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -19,10 +20,18 @@ import ch.wisv.events.data.request.sales.SalesCustomerRequest;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface CustomerService {
+public interface VendorService {
 
-    Customer getByRFIDToken(String token);
+    void addVendor(Vendor vendor);
 
-    Customer createCustomer(SalesCustomerRequest salesCustomerRequest);
+    List<Vendor> getAllSellAccess();
+
+    Vendor getVendorByKey(String key);
+
+    Vendor getVendorById(Long id);
+
+    void updateVendor(Vendor model);
+
+    void deleteVendor(Vendor vendor);
 
 }
