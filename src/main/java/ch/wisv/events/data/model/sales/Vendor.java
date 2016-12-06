@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.format.annotation.DateTimeFormat.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -37,43 +37,64 @@ import static org.springframework.format.annotation.DateTimeFormat.*;
 public class Vendor implements DataModel {
 
     /**
-     * Date format
+     * Field id of the vendor.
      */
-    private final static String TIME_FORMAT = "yyyy-MM-dd'T'HH:ss";
-
     @Id
     @GeneratedValue
     @Getter
     private Long id;
 
+    /**
+     * Field key UUId of the vendor.
+     */
     @Getter
     @Setter
     private String key;
 
+    /**
+     * Field ldapGroup ldapGroup.
+     */
     @Getter
     @Setter
     private LDAPGroupEnum ldapGroup;
 
+    /**
+     * Field startingTime starting time of the sell access.
+     */
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime startingTime;
 
+    /**
+     * Field endingTime ending time of the sell access.
+     */
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime endingTime;
 
+    /**
+     * Field events events that is ldap group is allowed to sell.
+     */
     @ManyToMany(targetEntity = Event.class)
     @Getter
     @Setter
     private List<Event> events;
 
+    /**
+     * Constructor Vendor creates a new Vendor instance.
+     */
     public Vendor() {
         this.key = UUID.randomUUID().toString();
         this.events = new ArrayList<>();
     }
 
+    /**
+     * Method addEvent will add an Event to a Vendor.
+     *
+     * @param event of type Event
+     */
     public void addEvent(Event event) {
         this.events.add(event);
     }

@@ -99,14 +99,14 @@ public class SalesController {
         UserInfo userInfo = auth.getUserInfo();
         if (userInfo instanceof CHUserInfo) {
             CHUserInfo info = (CHUserInfo) userInfo;
-            List<Vendor> vendors = vendorService.getAllSellAccess().stream()
+            List<Vendor> vendors = vendorService.getAll().stream()
                                                 .filter(x -> x.getStartingTime()
-                                                                           .isBefore(LocalDateTime.now()))
+                                                              .isBefore(LocalDateTime.now()))
                                                 .filter(x -> x.getEndingTime()
-                                                                           .isAfter(LocalDateTime.now()))
+                                                              .isAfter(LocalDateTime.now()))
                                                 .filter(x -> info.getLdapGroups().stream()
-                                                                              .anyMatch(g -> g.equals(x.getLdapGroup
-                                                                                      ().getName())))
+                                                                 .anyMatch(g -> g.equals(x.getLdapGroup
+                                                                         ().getName())))
                                                 .collect(Collectors.toCollection(ArrayList::new));
             ArrayList<Product> products = new ArrayList<>();
             vendors.forEach(x -> x.getEvents().forEach(y -> products.addAll(y.getProducts())));

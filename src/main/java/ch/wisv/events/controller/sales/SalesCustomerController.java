@@ -2,8 +2,8 @@ package ch.wisv.events.controller.sales;
 
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.order.Order;
-import ch.wisv.events.data.request.sales.SalesCustomerRequest;
 import ch.wisv.events.data.request.sales.SalesCustomerAddRequest;
+import ch.wisv.events.data.request.sales.SalesCustomerRequest;
 import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.RFIDTokenAlreadyUsedException;
@@ -70,7 +70,7 @@ public class SalesCustomerController {
 
     @PostMapping("/create")
     public String createCustomer(RedirectAttributes redirectAttributes,
-            @ModelAttribute @Validated SalesCustomerRequest request) {
+                                 @ModelAttribute @Validated SalesCustomerRequest request) {
         try {
             Order order = orderService.getByReference(request.getOrderReference());
             Customer customer = customerService.create(request);

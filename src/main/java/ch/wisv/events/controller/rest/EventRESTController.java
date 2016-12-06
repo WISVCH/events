@@ -108,8 +108,8 @@ public class EventRESTController {
 
         String finalQuery = (query != null) ? query : "";
         eventList.stream()
-                   .filter(p -> p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
-                   .forEach(x -> search.addItem(x.getTitle(), x.getId()));
+                 .filter(p -> p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                 .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;
     }

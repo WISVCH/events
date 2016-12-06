@@ -129,23 +129,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Update a existing customer.
-     *
-     * @param model customer model
-     */
-    @Override
-    public void update(Customer model) {
-        checkRequiredFields(model);
-        Customer vendor = this.getByKey(model.getKey());
-
-        vendor.setChUsername(model.getChUsername());
-        vendor.setName(model.getName());
-        vendor.setEmail(model.getEmail());
-
-        customerRepository.save(vendor);
-    }
-
-    /**
      * Add a new customer.
      *
      * @param model customer model
@@ -154,6 +137,23 @@ public class CustomerServiceImpl implements CustomerService {
     public void add(Customer model) {
         checkRequiredFields(model);
         customerRepository.saveAndFlush(model);
+    }
+
+    /**
+     * Update a existing customer.
+     *
+     * @param customer customer model
+     */
+    @Override
+    public void update(Customer customer) {
+        this.checkRequiredFields(customer);
+        Customer model = this.getByKey(customer.getKey());
+
+        model.setChUsername(model.getChUsername());
+        model.setName(model.getName());
+        model.setEmail(model.getEmail());
+
+        customerRepository.save(model);
     }
 
     /**

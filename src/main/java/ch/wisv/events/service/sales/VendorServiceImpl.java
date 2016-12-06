@@ -1,9 +1,11 @@
 package ch.wisv.events.service.sales;
 
 import ch.wisv.events.data.model.sales.Vendor;
+import ch.wisv.events.exception.InvalidVendorException;
 import ch.wisv.events.exception.VendorNotFoundException;
 import ch.wisv.events.repository.sales.VendorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,30 +35,32 @@ public class VendorServiceImpl implements VendorService {
     private final VendorRepository vendorRepository;
 
     /**
-     * @param vendorRepository
+     * Constructor VendorServiceImpl creates a new VendorServiceImpl instance.
+     *
+     * @param vendorRepository of type VendorRepository
      */
     public VendorServiceImpl(VendorRepository vendorRepository) {
         this.vendorRepository = vendorRepository;
     }
 
     /**
-     * @param vendor
+     * Method getAll returns the all of this VendorService object.
+     *
+     * @return the all (type List<Vendor>) of this VendorService object.
      */
     @Override
-    public void addVendor(Vendor vendor) {
-        vendorRepository.saveAndFlush(vendor);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public List<Vendor> getAllSellAccess() {
+    public List<Vendor> getAll() {
         return vendorRepository.findAll();
     }
 
+    /**
+     * Method getByKey will return a Vendor by its key.
+     *
+     * @param key of type String
+     * @return Vendor
+     */
     @Override
-    public Vendor getVendorByKey(String key) {
+    public Vendor getByKey(String key) {
         Optional<Vendor> optional = vendorRepository.findByKey(key);
         if (optional.isPresent()) {
             return optional.get();
@@ -64,8 +68,14 @@ public class VendorServiceImpl implements VendorService {
         throw new VendorNotFoundException("Vendor with key " + key + " not found");
     }
 
+    /**
+     * Method getById will return a Vendor by its id.
+     *
+     * @param id of type Long
+     * @return Vendor
+     */
     @Override
-    public Vendor getVendorById(Long id) {
+    public Vendor getById(Long id) {
         Optional<Vendor> optional = vendorRepository.findById(id);
         if (optional.isPresent()) {
             return optional.get();
@@ -73,20 +83,75 @@ public class VendorServiceImpl implements VendorService {
         throw new VendorNotFoundException("Vendor with id " + id + " not found");
     }
 
+    /**
+     * Method add will add a new Vendor.
+     *
+     * @param vendor of type Vendor
+     */
     @Override
-    public void updateVendor(Vendor model) {
-        Vendor vendor = this.getVendorByKey(model.getKey());
+    public void add(Vendor vendor) {
+        this.checkRequiredFields(vendor);
 
-        vendor.setLdapGroup(model.getLdapGroup());
-        vendor.setStartingTime(model.getStartingTime());
-        vendor.setEndingTime(model.getEndingTime());
-        vendor.setEvents(model.getEvents());
-
-        vendorRepository.save(vendor);
+        vendorRepository.saveAndFlush(vendor);
     }
 
+    /**
+     * Method update will update an existing Vendor.
+     *
+     * @param vendor of type Vendor
+     */
     @Override
-    public void deleteVendor(Vendor vendor) {
+    public void update(Vendor vendor) {
+        this.checkRequiredFields(vendor);
+        Vendor model = this.getByKey(vendor.getKey());
+
+        model.setLdapGroup(vendor.getLdapGroup());
+        model.setStartingTime(vendor.getStartingTime());
+        model.setEndingTime(vendor.getEndingTime());
+        model.setEvents(vendor.getEvents());
+
+        vendorRepository.save(model);
+    }
+
+    /**
+     * Method delete will delete an existing Vendor.
+     *
+     * @param vendor of type Vendor
+     */
+    @Override
+    public void delete(Vendor vendor) {
         vendorRepository.delete(vendor);
     }
+
+    /**
+     * Will check all the required fields if they are valid.
+     *
+     * @param model of type Vendor
+     * @throws InvalidVendorException when one of the required fields is not valid
+     */
+    private void checkRequiredFields(Vendor model) throws InvalidVendorException {
+        Object[][] check = new Object[][]{
+                {model.getKey(), "key"},
+                {model.getLdapGroup(), "ldap group"},
+                {model.getStartingTime(), "starting time"},
+                {model.getEndingTime(), "ending time"},
+                };
+        this.checkFieldsEmpty(check);
+    }
+
+    /**
+     * Checks if the a field in the String[][] is empty. If so it will throw an exception
+     *
+     * @param fields of type Object[][]
+     * @throws InvalidVendorException when one of the fields in empty
+     */
+    private void checkFieldsEmpty(Object[][] fields) throws InvalidVendorException {
+        for (Object[] row : fields) {
+            if (row[0] == null || row[0].toString().equals("")) {
+                throw new InvalidVendorException(StringUtils.capitalize(row[1].toString()) + " is empty, but is a "
+                        + "required field, so please fill in this field!");
+            }
+        }
+    }
+
 }

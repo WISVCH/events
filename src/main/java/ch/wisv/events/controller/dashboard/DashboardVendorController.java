@@ -2,6 +2,7 @@ package ch.wisv.events.controller.dashboard;
 
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.sales.Vendor;
+import ch.wisv.events.exception.InvalidVendorException;
 import ch.wisv.events.exception.VendorNotFoundException;
 import ch.wisv.events.service.event.EventService;
 import ch.wisv.events.service.sales.VendorService;
@@ -38,15 +39,21 @@ import java.util.stream.Collectors;
 public class DashboardVendorController {
 
 
+    /**
+     * Field vendorService.
+     */
     private final VendorService vendorService;
 
+    /**
+     * Field eventService.
+     */
     private final EventService eventService;
 
     /**
-     * Default constructor
+     * Default constructor.
      *
-     * @param vendorService ProductService
-     * @param eventService
+     * @param vendorService VendorService
+     * @param eventService  EventService
      */
     @Autowired
     public DashboardVendorController(VendorService vendorService, EventService eventService) {
@@ -55,34 +62,36 @@ public class DashboardVendorController {
     }
 
     /**
-     * Index of vendor [GET "/"]
+     * Index of vendor [GET "/"].
      *
      * @param model String model
      * @return path to Thymeleaf template location
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("vendors", vendorService.getAllSellAccess());
+        model.addAttribute("vendors", vendorService.getAll());
 
         return "dashboard/vendors/index";
     }
 
     /**
-     * Create a new vendor [GET "/create/"]
+     * Create a new vendor [GET "/create/"].
      *
      * @param model Spring model
      * @return path to Thymeleaf template location
      */
     @GetMapping("/create/")
     public String create(Model model) {
-        model.addAttribute("vendor", new Vendor());
+        if (!model.containsAttribute("vendor")) {
+            model.addAttribute("vendor", new Vendor());
+        }
         model.addAttribute("upcomingEvents", eventService.getUpcomingEvents());
 
         return "dashboard/vendors/create";
     }
 
     /**
-     * Edit existing vendor [GET "/edit/{key}"]
+     * Edit existing vendor [GET "/edit/{key}"].
      *
      * @param model Spring model
      * @param key   key of the vendor
@@ -91,7 +100,7 @@ public class DashboardVendorController {
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Vendor vendor = vendorService.getVendorByKey(key);
+            Vendor vendor = vendorService.getByKey(key);
             Collection<Event> eventList = eventService.getUpcomingEvents();
             eventList.addAll(vendor.getEvents());
 
@@ -107,7 +116,7 @@ public class DashboardVendorController {
     }
 
     /**
-     * Add a new vendor
+     * Add a new vendor.
      *
      * @param redirect RedirectAttributes
      * @param model    RequestModel with the needed information
@@ -115,16 +124,21 @@ public class DashboardVendorController {
      */
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Vendor model) {
-        // TODO: error handling when not everything is set
+        try {
+            vendorService.add(model);
+            redirect.addFlashAttribute("message", "Vendor has been added!");
 
-        vendorService.addVendor(model);
-        redirect.addFlashAttribute("message", "Vendor has been added!");
+            return "redirect:/dashboard/vendors/";
+        } catch (InvalidVendorException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("vendor", model);
 
-        return "redirect:/dashboard/vendors/";
+            return "redirect:/dashboard/vendors/create/";
+        }
     }
 
     /**
-     * Update a existing vendor
+     * Update a existing vendor.
      *
      * @param redirect RedirectAttributes
      * @param model    Vendor model with the needed information
@@ -132,26 +146,28 @@ public class DashboardVendorController {
      */
     @PostMapping("/update")
     public String update(RedirectAttributes redirect, @ModelAttribute Vendor model) {
-        // TODO: error handling when not everything is set
-
-        vendorService.updateVendor(model);
-        redirect.addFlashAttribute("message", "Vendor changes saves!");
+        try {
+            vendorService.update(model);
+            redirect.addFlashAttribute("message", "Vendor changes saves!");
+        } catch (InvalidVendorException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
 
         return "redirect:/dashboard/vendors/edit/" + model.getKey() + "/";
     }
 
     /**
-     * Update a existing vendor
+     * Update a existing vendor.
      *
      * @param redirect RedirectAttributes
-     * @param key    Vendor model with the needed information
+     * @param key      Vendor model with the needed information
      * @return redirect to edit page
      */
     @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Vendor vendor = vendorService.getVendorByKey(key);
-            vendorService.deleteVendor(vendor);
+            Vendor vendor = vendorService.getByKey(key);
+            vendorService.delete(vendor);
 
             redirect.addFlashAttribute("message", "Vendor access for " + vendor.getLdapGroup() + " has been deleted!");
 

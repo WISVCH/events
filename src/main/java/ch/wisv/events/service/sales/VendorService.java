@@ -22,16 +22,48 @@ import java.util.List;
  */
 public interface VendorService {
 
-    void addVendor(Vendor vendor);
+    /**
+     * Method getAll returns the all of this VendorService object.
+     *
+     * @return the all (type List<Vendor>) of this VendorService object.
+     */
+    List<Vendor> getAll();
 
-    List<Vendor> getAllSellAccess();
+    /**
+     * Method getByKey will return a Vendor by its key.
+     *
+     * @param key of type String
+     * @return Vendor
+     */
+    Vendor getByKey(String key);
 
-    Vendor getVendorByKey(String key);
+    /**
+     * Method getById will return a Vendor by its id.
+     *
+     * @param id of type Long
+     * @return Vendor
+     */
+    Vendor getById(Long id);
 
-    Vendor getVendorById(Long id);
+    /**
+     * Method add will add a new Vendor.
+     *
+     * @param vendor of type Vendor
+     */
+    void add(Vendor vendor);
 
-    void updateVendor(Vendor model);
+    /**
+     * Method update will update an existing Vendor.
+     *
+     * @param vendor of type Vendor
+     */
+    void update(Vendor vendor);
 
-    void deleteVendor(Vendor vendor);
+    /**
+     * Method delete will delete an existing Vendor.
+     *
+     * @param vendor of type Vendor
+     */
+    void delete(Vendor vendor);
 
 }
