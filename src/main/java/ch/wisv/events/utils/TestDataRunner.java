@@ -104,9 +104,9 @@ public class TestDataRunner implements CommandLineRunner {
 
         Customer customer2 = new Customer();
         customer2.setRfidToken("123");
-        customer2.setChUsername("svenp");
-        customer2.setEmail("svenp@ch.tudelft.nl");
-        customer2.setName("Sven Popping");
+        customer2.setChUsername("svenh");
+        customer2.setEmail("svenh@ch.tudelft.nl");
+        customer2.setName("Sven van Hal");
         customerRepository.saveAndFlush(customer2);
 
         /*

@@ -30,10 +30,6 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <div th:replace="/fragments/header :: header">
@@ -45,7 +41,7 @@
         <div class="col-xs-10 main">
             <div class="page-header">
                 <h1><samp>Vendors</samp>
-                    <a class="btn btn-primary btn-dashboard-header" href="create/">Create new vendor</a></h1>
+                    <a class="btn btn-primary btn-dashboard-header" th:href="@{create/}">Create new vendor</a></h1>
             </div>
 
             <div class="row">
@@ -58,7 +54,7 @@
                 <table id="dataTable" class="table table-hover">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th></th>
                         <th>LDAP Group</th>
                         <th>Event(s)</th>
                         <th>Begin date</th>
@@ -67,23 +63,28 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <!--/*@thymesVar id="vendors" type="List<ch.wisv.events.data.model.sales.Vendor>"*/-->
+                    <!--/*@thymesVar id="vendor" type="ch.wisv.events.data.model.sales.Vendor"*/-->
                     <tr th:each="vendor : ${vendors}">
-                        <td th:text="${vendor.id}">Row 1 Data 1</td>
-                        <td th:text="${vendor.ldapGroup.getName()}">Row 1 Data 1</td>
+                        <td>
+                            <input type="checkbox" title="Select row">
+                        </td>
+                        <td th:text="${vendor.getLdapGroup().getName()}">Row 1 Data 1</td>
                         <td>
                             <ul style="padding-left: 16px;">
-                                <li th:each="event : ${vendor.events}" th:text="${event.title}"></li>
+                                <!--/*@thymesVar id="event" type="ch.wisv.events.data.model.event.Event"*/-->
+                                <li th:each="event : ${vendor.getEvents()}" th:text="${event.getTitle()}"></li>
                             </ul>
                         </td>
-                        <td th:text="${vendor.startingTime}"></td>
-                        <td th:text="${vendor.endingTime}"></td>
+                        <td th:text="${vendor.getStartingTime()}"></td>
+                        <td th:text="${vendor.getEndingTime()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${vendor.key} + '/'" class="btn btn-info">
+                                <a th:href="'edit/' + ${vendor.getKey()} + '/'" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${vendor.key}"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${vendor.ldapGroup} + '?\');'"
+                                <a th:href="'delete/' + ${vendor.getKey()}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${vendor.getLdapGroup()} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
@@ -97,16 +98,20 @@
     </div>
 </div>
 
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
         $('#dataTable').DataTable({
+            order: [
+                [3, "desc"],
+                [4, "desc"]
+            ],
             columnDefs: [
-                {width: "20px", targets: 0},
+                {width: "20px", targets: 0, sortable: false},
                 {width: "240px", targets: 1},
                 {width: "120px", targets: 3},
                 {width: "120px", targets: 4},

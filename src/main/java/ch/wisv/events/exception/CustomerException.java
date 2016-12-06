@@ -1,9 +1,4 @@
-package ch.wisv.events.repository.order;
-
-import ch.wisv.events.data.model.order.Customer;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
+package ch.wisv.events.exception;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -21,10 +16,8 @@ import java.util.Optional;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
-
-    Optional<Customer> findByRfidToken(String token);
-
-    Optional<Customer> findByKey(String key);
-
+public class CustomerException extends RuntimeException {
+    public CustomerException(String s) {
+        super(s);
+    }
 }

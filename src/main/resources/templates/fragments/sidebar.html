@@ -54,6 +54,11 @@
                         <i class="fa fa-mobile fa-fw" aria-hidden="true"></i> Vendors
                     </a>
                 </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/customers/') ? 'active':''}">
+                    <a th:href="@{/dashboard/customers/}" href="#">
+                        <i class="fa fa-users fa-fw" aria-hidden="true"></i> Customers
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

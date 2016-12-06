@@ -1,12 +1,12 @@
 package ch.wisv.events.data.model.order;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.UUID;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -25,13 +25,16 @@ import javax.persistence.Id;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-@NoArgsConstructor
 public class Customer {
 
     @Id
     @GeneratedValue
     @Getter
     private Long id;
+
+    @Getter
+    @Setter
+    private String key;
 
     @Getter
     @Setter
@@ -49,7 +52,12 @@ public class Customer {
     @Setter
     private String rfidToken;
 
+    public Customer() {
+        this.key = UUID.randomUUID().toString();
+    }
+
     public Customer(String name, String email, String chUsername, String rfidToken) {
+        this();
         this.name = name;
         this.email = email;
         this.chUsername = chUsername;

@@ -3,6 +3,8 @@ package ch.wisv.events.service.order;
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.request.sales.SalesCustomerRequest;
 
+import java.util.List;
+
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
  * <p>
@@ -24,5 +26,15 @@ public interface CustomerService {
     Customer getByRFIDToken(String token);
 
     Customer createCustomer(SalesCustomerRequest salesCustomerRequest);
+
+    List<Customer> getAllCustomers();
+
+    Customer getCustomerByKey(String key);
+
+    void updateCustomer(Customer model);
+
+    void addCustomer(Customer model);
+
+    void deleteVendor(Customer customer);
 
 }

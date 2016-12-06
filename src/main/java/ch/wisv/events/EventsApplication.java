@@ -13,12 +13,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 // Jsr310JpaConverters.class is necessary for correctly persisting e.g. LocalDateTime objects
 @EntityScan(basePackageClasses = {EventsApplication.class, Jsr310JpaConverters.class})
-@EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
 @SpringBootApplication
 public class EventsApplication {
 

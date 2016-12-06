@@ -1,8 +1,10 @@
 package ch.wisv.events.repository.order;
 
+import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,5 +26,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     Optional<Order> findByPublicReference(String publicReference);
+
+    List<Order> findByCustomer(Customer customer);
 
 }

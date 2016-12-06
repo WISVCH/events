@@ -30,10 +30,6 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <div th:replace="/fragments/header :: header">
@@ -58,32 +54,35 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th>#</th>
                         <th>Product(s)</th>
-                        <th>Reference</th>
-                        <th>Status</th>
+                        <th>Customer</th>
                         <th>Amount</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     <!--/*@thymesVar id="order" type="ch.wisv.events.data.model.order.Order"*/-->
                     <tr th:each="order : ${orders}">
-                        <td></td>
-                        <td th:text="${order.getCustomer().getName()}"></td>
-                        <td th:text="${order.getCustomer().getEmail()}"></td>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td th:text="'#' + ${order.getId()}"></td>
                         <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}"></span></td>
-                        <td><samp th:text="${order.getPublicReference()}"></samp></td>
-                        <td th:text="${order.getStatus().toString()}"></td>
+                        <td>
+                            <a th:href="'/dashboard/customers/edit/' + ${order.getCustomer().getKey()} + '/'"
+                               th:text="${order.getCustomer().getName()}"></a>
+                        </td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="${order.getStatus().toString()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${order.getId()}" class="btn btn-info">
+                                <a th:href="'edit/' + ${order.getPublicReference()} + '/'" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${order.getId()}"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${order.getPublicReference()} + '?\');'"
+                                <a th:href="'delete/' + ${order.getPublicReference()}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
@@ -97,14 +96,20 @@
     </div>
 </div>
 
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable({});
+        $('#dataTable').DataTable({
+            columnDefs: [
+                {width: "20px", targets: 0},
+                {width: "20px", targets: 1},
+                {width: "80px", targets: 6}
+            ]
+        });
     });
 </script>
 </body>
