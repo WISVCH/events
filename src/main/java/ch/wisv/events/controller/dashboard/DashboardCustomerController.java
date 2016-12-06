@@ -2,7 +2,6 @@ package ch.wisv.events.controller.dashboard;
 
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.exception.CustomerNotFound;
-import ch.wisv.events.exception.InvalidCustomerException;
 import ch.wisv.events.service.order.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,14 +31,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardCustomerController {
 
+    /**
+     * CustomerService.
+     */
     private final CustomerService customerService;
 
+    /**
+     * Autowired constructor.
+     *
+     * @param customerService CustomerService
+     */
     @Autowired
     public DashboardCustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
 
+    /**
+     * Index of customers pages.
+     *
+     * @param model String model
+     * @return path to customers index template
+     */
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("customers", customerService.getAllCustomers());
@@ -47,17 +60,33 @@ public class DashboardCustomerController {
         return "dashboard/customers/index";
     }
 
+    /**
+     * Create a new customer page.
+     *
+     * @param model String model
+     * @return path to customer create template
+     */
     @GetMapping("/create/")
     public String create(Model model) {
-        if (!model.containsAttribute("customer")) model.addAttribute("customer", new Customer());
+        if (!model.containsAttribute("customer")) {
+            model.addAttribute("customer", new Customer());
+        }
 
         return "dashboard/customers/create";
     }
 
+    /**
+     * Edit an existing customer page. It will redirect the user when the key provided does not belong to any of the
+     * customers available.
+     *
+     * @param model String model
+     * @param key   key of the customer some want to edit
+     * @return path to the customer edit template
+     */
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Customer customer = customerService.getCustomerByKey(key);
+            Customer customer = customerService.getByKey(key);
             model.addAttribute("customer", customer);
 
             return "dashboard/customers/edit";
@@ -66,14 +95,22 @@ public class DashboardCustomerController {
         }
     }
 
+    /**
+     * Creates a new customer using the Customer model. It will redirect the user back to the create page when not
+     * all the required field are filled in.
+     *
+     * @param redirect RedirectAttributes for the user feedback
+     * @param model    Customer model
+     * @return redirect
+     */
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
-            customerService.addCustomer(model);
-            redirect.addFlashAttribute("message", "Customer with name " + model.getName() +  "  had been added!");
+            customerService.add(model);
+            redirect.addFlashAttribute("message", "Customer with name " + model.getName() + "  had been added!");
 
             return "redirect:/dashboard/customers/";
-        } catch (InvalidCustomerException e) {
+        } catch (Exception e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("customer", model);
 
@@ -82,30 +119,39 @@ public class DashboardCustomerController {
 
     }
 
+    /**
+     * Updates an existing customer using the Customer model. It will show an error when not all the required fields
+     * are filled in.
+     *
+     * @param redirect RedirectAttributes for the user feedback
+     * @param model    Customer model
+     * @return redirect
+     */
     @PostMapping("/update")
     public String update(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
-            customerService.updateCustomer(model);
+            customerService.update(model);
             redirect.addFlashAttribute("message", "Customer changes have been saved!");
-        } catch (InvalidCustomerException e) {
+        } catch (Exception e) {
             redirect.addFlashAttribute("error", e.getMessage());
-
         }
         return "redirect:/dashboard/customers/edit/" + model.getKey() + "/";
     }
 
     /**
-     * Update a existing vendor
+     * Deletes a existing customer. It will show an error when the customer that would be deleted already ordered
+     * some products. Because in this case it is not possible to only delete the customer, without also deleting the
+     * orders.
      *
-     * @param redirect RedirectAttributes
-     * @param key    Vendor model with the needed information
-     * @return redirect to edit page
+     * @param redirect RedirectAttributes for the user feedback
+     * @param key      Vendor model
+     * @return redirect
      */
     @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Customer customer = customerService.getCustomerByKey(key);
-            customerService.deleteVendor(customer);
+            Customer customer = customerService.getByKey(key);
+            customerService.delete(customer);
 
             redirect.addFlashAttribute("message", "Customer with name " + customer.getName() + " has been deleted!");
 

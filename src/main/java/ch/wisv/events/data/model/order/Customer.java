@@ -27,35 +27,64 @@ import java.util.UUID;
 @Entity
 public class Customer {
 
+    /**
+     * Field id of the customer.
+     */
     @Id
     @GeneratedValue
     @Getter
     private Long id;
 
+    /**
+     * Field key UUID of the customer.
+     */
     @Getter
     @Setter
     private String key;
 
+    /**
+     * Field name of the customer.
+     */
     @Getter
     @Setter
     private String name;
 
+    /**
+     * Field email of the customer.
+     */
     @Getter
     @Setter
     private String email;
 
+    /**
+     * Field chUsername of the customer, this will be the ldap username.
+     */
     @Getter
     @Setter
     private String chUsername;
 
+    /**
+     * Field rfidToken of the customers pass.
+     */
     @Getter
     @Setter
     private String rfidToken;
 
+    /**
+     * Constructor Customer creates a new Customer instance.
+     */
     public Customer() {
         this.key = UUID.randomUUID().toString();
     }
 
+    /**
+     * Constructor Customer creates a new Customer instance.
+     *
+     * @param name       of type String
+     * @param email      of type String
+     * @param chUsername of type String
+     * @param rfidToken  of type String
+     */
     public Customer(String name, String email, String chUsername, String rfidToken) {
         this();
         this.name = name;

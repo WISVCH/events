@@ -36,16 +36,34 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    /**
+     * Field customerRepository.
+     */
     private final CustomerRepository customerRepository;
 
+    /**
+     * Field orderRepository.
+     */
     private final OrderRepository orderRepository;
 
+    /**
+     * Autowired constructor.
+     *
+     * @param customerRepository CustomerRepository
+     * @param orderRepository    OrderRepository
+     */
     @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
     }
 
+    /**
+     * Get a customer by rfidtoken.
+     *
+     * @param token rfidtoken
+     * @return Customer
+     */
     @Override
     public Customer getByRFIDToken(String token) {
         Optional<Customer> optional = customerRepository.findByRfidToken(token);
@@ -55,8 +73,15 @@ public class CustomerServiceImpl implements CustomerService {
         throw new CustomerNotFound("Customer with RFID token " + token + " not found!");
     }
 
+    /**
+     * Create a new customer by SalesCustomerRequest.
+     * TODO: should be replaces by add(Customer customer)
+     *
+     * @param request SalesCustomerRequest
+     * @return customer
+     */
     @Override
-    public Customer createCustomer(SalesCustomerRequest request) {
+    public Customer create(SalesCustomerRequest request) {
         if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
             throw new InvalidCustomerException("Customer name or email is empty");
         }
@@ -78,13 +103,24 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    /**
+     * Get all customers.
+     *
+     * @return list of all customers
+     */
     @Override
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
+    /**
+     * Get a customer by key.
+     *
+     * @param key key
+     * @return Customer
+     */
     @Override
-    public Customer getCustomerByKey(String key) {
+    public Customer getByKey(String key) {
         Optional<Customer> optional = customerRepository.findByKey(key);
         if (optional.isPresent()) {
             return optional.get();
@@ -92,10 +128,15 @@ public class CustomerServiceImpl implements CustomerService {
         throw new CustomerNotFound("Customer with key " + key + " not found!");
     }
 
+    /**
+     * Update a existing customer.
+     *
+     * @param model customer model
+     */
     @Override
-    public void updateCustomer(Customer model) {
+    public void update(Customer model) {
         checkRequiredFields(model);
-        Customer vendor = this.getCustomerByKey(model.getKey());
+        Customer vendor = this.getByKey(model.getKey());
 
         vendor.setChUsername(model.getChUsername());
         vendor.setName(model.getName());
@@ -104,14 +145,24 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(vendor);
     }
 
+    /**
+     * Add a new customer.
+     *
+     * @param model customer model
+     */
     @Override
-    public void addCustomer(Customer model) {
+    public void add(Customer model) {
         checkRequiredFields(model);
         customerRepository.saveAndFlush(model);
     }
 
+    /**
+     * Delete a customer.
+     *
+     * @param customer customer model
+     */
     @Override
-    public void deleteVendor(Customer customer) {
+    public void delete(Customer customer) {
         List<Order> orders = orderRepository.findByCustomer(customer);
         if (orders.size() > 0) {
             throw new CustomerException("Customer has already placed orders, so it can not be deleted!");
@@ -119,6 +170,13 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
     }
 
+    /**
+     * Will check all the required fields if they are valid.
+     *
+     * @param model of type Customer
+     * @throws InvalidCustomerException      when one of the required fields is not valid
+     * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
+     */
     private void checkRequiredFields(Customer model) throws InvalidCustomerException {
         String[][] check = new String[][]{
                 {model.getName(), "name"},
@@ -126,13 +184,24 @@ public class CustomerServiceImpl implements CustomerService {
                 {model.getRfidToken(), "RFID token"}
         };
         this.checkFieldsEmpty(check);
+
+        if (customerRepository.findAll().stream().anyMatch(x -> !x.getKey().equals(model.getKey())
+                && x.getRfidToken().equals(model.getRfidToken()))) {
+            throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
+        }
     }
 
+    /**
+     * Checks if the a field in the String[][] is empty. If so it will throw an exception
+     *
+     * @param fields of type String[][]
+     * @throws InvalidCustomerException when one of the fields in empty
+     */
     private void checkFieldsEmpty(String[][] fields) throws InvalidCustomerException {
         for (String[] field : fields) {
             if (field[0] == null || field[0].equals("")) {
-                throw new InvalidCustomerException(StringUtils.capitalize(field[1]) + " is empty, but a required " +
-                        "field, so please fill in this field!");
+                throw new InvalidCustomerException(StringUtils.capitalize(field[1]) + " is empty, but a required "
+                        + "field, so please fill in this field!");
             }
         }
     }

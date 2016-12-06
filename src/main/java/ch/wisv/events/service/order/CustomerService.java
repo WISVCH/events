@@ -23,18 +23,57 @@ import java.util.List;
  */
 public interface CustomerService {
 
-    Customer getByRFIDToken(String token);
-
-    Customer createCustomer(SalesCustomerRequest salesCustomerRequest);
-
+    /**
+     * Get all customers.
+     *
+     * @return list of all customers
+     */
     List<Customer> getAllCustomers();
 
-    Customer getCustomerByKey(String key);
+    /**
+     * Get a customer by rfidtoken.
+     *
+     * @param token rfidtoken
+     * @return Customer
+     */
+    Customer getByRFIDToken(String token);
 
-    void updateCustomer(Customer model);
+    /**
+     * Get a customer by key.
+     *
+     * @param key key
+     * @return Customer
+     */
+    Customer getByKey(String key);
 
-    void addCustomer(Customer model);
+    /**
+     * Create a new customer by SalesCustomerRequest.
+     * TODO: should be replaces by add(Customer customer)
+     *
+     * @param request SalesCustomerRequest
+     * @return customer
+     */
+    Customer create(SalesCustomerRequest request);
 
-    void deleteVendor(Customer customer);
+    /**
+     * Update a existing customer.
+     *
+     * @param model customer model
+     */
+    void update(Customer model);
+
+    /**
+     * Add a new customer.
+     *
+     * @param model customer model
+     */
+    void add(Customer model);
+
+    /**
+     * Delete a customer.
+     *
+     * @param customer customer model
+     */
+    void delete(Customer customer);
 
 }
