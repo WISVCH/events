@@ -1,14 +1,12 @@
 package ch.wisv.events.controller.dashboard;
 
-import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.request.product.ProductRequest;
+import ch.wisv.events.exception.ProductNotFound;
 import ch.wisv.events.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,8 +53,10 @@ public class DashboardProductController {
      * @return thymeleaf template path
      */
     @GetMapping("/create/")
-    public String createProductView(Model model) {
-        model.addAttribute("product", new ProductRequest());
+    public String create(Model model) {
+        if (!model.containsAttribute("product")) {
+            model.addAttribute("product", new Product());
+        }
 
         return "dashboard/products/create";
     }
@@ -68,16 +68,58 @@ public class DashboardProductController {
      * @param model SpringUI model
      * @return thymeleaf template path
      */
-    @GetMapping("/edit/{key}")
-    public String editProductView(Model model, @PathVariable String key) {
-        Product product = productService.getByKey(key);
-        if (product == null) {
-            return "redirect:/dashboard/events/";
+    @GetMapping("/edit/{key}/")
+    public String edit(Model model, @PathVariable String key) {
+        try {
+            Product product = productService.getByKey(key);
+            model.addAttribute("product", product);
+
+            return "dashboard/products/edit";
+        } catch (ProductNotFound e) {
+            return "redirect:/dashboard/products/";
+        }
+    }
+
+    /**
+     * Post request to add a Product
+     *
+     * @param model    Product model attr.
+     * @param redirect Spring RedirectAttributes
+     * @return redirect
+     */
+    @PostMapping("/add")
+    public String add(RedirectAttributes redirect, @ModelAttribute Product model) {
+        try {
+            productService.add(model);
+            redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");
+
+            return "redirect:/dashboard/products/";
+        } catch (RuntimeException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("product", model);
+
+            return "redirect:/dashboard/products/create/";
+        }
+    }
+
+
+    /**
+     * Method edit post request to update an existing Product
+     *
+     * @param redirect of type RedirectAttributes
+     * @param model    of type Product
+     * @return String
+     */
+    @PostMapping("/update")
+    public String update(RedirectAttributes redirect, @ModelAttribute Product model) {
+        try {
+            productService.update(model);
+            redirect.addFlashAttribute("message", "Changes have been saved!");
+        } catch (ProductNotFound e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
 
-        model.addAttribute("product", ProductRequestFactory.create(product));
-
-        return "dashboard/products/edit";
+        return "redirect:/dashboard/products/edit/" + model.getKey() + "/";
     }
 
     /**
@@ -88,7 +130,7 @@ public class DashboardProductController {
      * @return redirect
      */
     @GetMapping("/delete/{key}")
-    public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
+    public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
         Product product = productService.getByKey(key);
         try {
             productService.delete(product);
@@ -98,43 +140,6 @@ public class DashboardProductController {
         }
 
         return "redirect:/dashboard/products/";
-    }
-
-    /**
-     * Post request to add a Product
-     *
-     * @param productRequest     ProductRequest model attr.
-     * @param redirectAttributes Spring RedirectAttributes
-     * @return redirect
-     */
-    @PostMapping("/add")
-    public String createEvent(@ModelAttribute @Validated ProductRequest productRequest, RedirectAttributes
-            redirectAttributes) {
-        try {
-            productService.add(productRequest);
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-
-        redirectAttributes.addFlashAttribute("message", productRequest.getTitle() + " successfully created!");
-
-        return "redirect:/dashboard/products/";
-    }
-
-    /**
-     * Post request to update a Product
-     *
-     * @param productRequest     ProductRequest model attr.
-     * @param redirectAttributes Spring RedirectAttributes
-     * @return redirect
-     */
-    @PostMapping("/update")
-    public String editEvent(@ModelAttribute @Validated ProductRequest productRequest,
-                            RedirectAttributes redirectAttributes) {
-        productService.update(productRequest);
-        redirectAttributes.addFlashAttribute("message", "Auto saved!");
-
-        return "redirect:/dashboard/products/edit/" + productRequest.getKey();
     }
 
 }

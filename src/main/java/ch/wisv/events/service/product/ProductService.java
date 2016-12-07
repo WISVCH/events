@@ -1,9 +1,7 @@
 package ch.wisv.events.service.product;
 
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.request.product.ProductRequest;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,18 +32,18 @@ public interface ProductService {
     Product getByKey(String key);
 
     /**
-     * Update Product using a ProductRequest
+     * Add a new Product using a Product
      *
-     * @param productRequest ProductRequest containing the new product information
+     * @param product of type Product
      */
-    void update(ProductRequest productRequest);
+    void add(Product product);
 
     /**
-     * Add a new Product using a ProductRequest
+     * Update Product using a Product
      *
-     * @param productRequest ProductRequest containing the product information
+     * @param product Product containing the new product information
      */
-    void add(ProductRequest productRequest);
+    void update(Product product);
 
     /**
      * Remove a Product

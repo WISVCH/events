@@ -1,9 +1,7 @@
 package ch.wisv.events.service.product;
 
-import ch.wisv.events.data.factory.product.ProductRequestFactory;
 import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.exception.ProductInUseException;
 import ch.wisv.events.exception.ProductNotFound;
 import ch.wisv.events.repository.product.ProductRepository;
@@ -81,28 +79,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Update Product using a ProductRequest
+     * Update Product using a Product
      *
-     * @param productRequest ProductRequest containing the new product information
+     * @param product Product containing the new product information
      */
     @Override
-    public void update(ProductRequest productRequest) {
-        Product product = productRepository.findById(productRequest.getId());
-        product = ProductRequestFactory.update(product, productRequest);
-
+    public void update(Product product) {
         productRepository.save(product);
     }
 
     /**
-     * Add a new Product using a ProductRequest
+     * Add a new Product using a Product
      *
-     * @param productRequest ProductRequest containing the product information
+     * @param product of type Product
      */
     @Override
-    public void add(ProductRequest productRequest) {
-        Product product = ProductRequestFactory.create(productRequest);
-
-        productRepository.save(product);
+    public void add(Product product) {
+        productRepository.saveAndFlush(product);
     }
 
     /**

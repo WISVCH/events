@@ -52,14 +52,13 @@
                 </div>
             </div>
 
-            <!--/*@thymesVar id="product" type="ch.wisv.events.data.request.product.ProductRequest"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
             <form th:action="@{/dashboard/products/add}" th:object="${product}"
                   method="POST">
 
                 <div class="row">
                     <div class="col-sm-6">
-                        <div
-                                th:replace="dashboard/products/fragments/product-create-panel-information :: create-information"></div>
+                        <div th:replace="dashboard/products/fragments/product-create-panel-information :: create-information"></div>
                     </div>
                     <div class="col-sm-6">
 

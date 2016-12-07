@@ -53,14 +53,23 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div th:replace="/dashboard/products/fragments/product-edit-panel-information :: edit-information"></div>
+            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
+            <form th:action="@{/dashboard/products/update}" th:object="${product}" method="POST">
+                <input type="hidden" th:field="*{key}" th:value="*{key}">
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div th:replace="/dashboard/products/fragments/product-edit-panel-information :: edit-information"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <h3>consumables</h3>
+                    </div>
                 </div>
-                <div class="col-sm-12 col-md-6">
-                    <h3>consumables</h3>
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Update">
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -73,6 +82,5 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
-<script th:src="@{/js/dashboard/edit-product.min.js}"></script>
 </body>
 </html>

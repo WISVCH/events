@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,11 +20,6 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 public class Product {
-
-    /**
-     * Field TIME_FORMAT format of the standard date time.
-     */
-    private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**
      * ID of the product, getter only so it can not be changed.
@@ -78,7 +74,7 @@ public class Product {
     /**
      * Start DateTime for selling this product.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     public LocalDateTime sellStart;
@@ -86,7 +82,7 @@ public class Product {
     /**
      * End DateTime for selling this product.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     public LocalDateTime sellEnd;
@@ -126,6 +122,9 @@ public class Product {
      * @return progress of event
      */
     public double calcProgress() {
+        if (this.maxSold == null) {
+            return 100.d;
+        }
         return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
     }
 
