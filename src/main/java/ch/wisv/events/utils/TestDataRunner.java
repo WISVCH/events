@@ -18,6 +18,7 @@ import java.time.Month;
 public class TestDataRunner implements CommandLineRunner {
 
     private final EventRepository eventRepository;
+
     private final ProductRepository productRepository;
 
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository) {
@@ -48,6 +49,7 @@ public class TestDataRunner implements CommandLineRunner {
                     "Lecture hall A",
                     80,
                     100,
+
                     "http://placehold.it/300x300",
                     LocalDateTime.of(2015, Month.DECEMBER, i, 12, 45),
                     LocalDateTime.of(2017, Month.DECEMBER, i, 13, 30)
