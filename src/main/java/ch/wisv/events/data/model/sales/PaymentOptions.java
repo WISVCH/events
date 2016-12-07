@@ -1,6 +1,7 @@
 package ch.wisv.events.data.model.sales;
 
 import ch.wisv.events.data.model.order.OrderStatus;
+import lombok.Getter;
 
 import java.util.Objects;
 
@@ -30,26 +31,31 @@ public enum PaymentOptions {
     /**
      * Field id
      */
+    @Getter
     private final int id;
 
     /**
      * Field displayName
      */
+    @Getter
     private final String displayName;
 
     /**
      * Field value the value of the POST, used for the redirect of the payment method.
      */
+    @Getter
     private final String value;
 
     /**
      * Field displayClass display class of the button
      */
+    @Getter
     private final String displayClass;
 
     /**
      * Field orderStatus status of the Order
      */
+    @Getter
     private final OrderStatus orderStatus;
 
     /**
@@ -80,24 +86,6 @@ public enum PaymentOptions {
         PaymentOptions tmp = stream(PaymentOptions.values()).filter(option -> Objects
                 .equals(option.getValue(), payment)).findFirst().orElse(null);
         return (tmp != null) ? tmp.getOrderStatus() : OrderStatus.REJECTED;
-    }
-
-    /**
-     * Method getValue returns the value of this PaymentOptions object.
-     *
-     * @return the value (type String) of this PaymentOptions object.
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Method getOrderStatus returns the orderStatus of this PaymentOptions object.
-     *
-     * @return the orderStatus (type OrderStatus) of this PaymentOptions object.
-     */
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
     }
 
 }
