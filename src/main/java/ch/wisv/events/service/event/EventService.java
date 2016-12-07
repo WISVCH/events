@@ -28,6 +28,13 @@ public interface EventService {
     Collection<Event> getUpcomingEvents();
 
     /**
+     * Get all available events
+     *
+     * @return Collection of Events
+     */
+    Collection<Event> getAvailableEvents();
+
+    /**
      * Get Event by ID
      *
      * @param id id of an Event

@@ -5,11 +5,17 @@ import ch.wisv.events.data.model.event.Event;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.exception.ProductInUseException;
+import ch.wisv.events.exception.ProductNotFound;
 import ch.wisv.events.repository.product.ProductRepository;
 import ch.wisv.events.service.event.EventService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * ProductServiceImpl.
@@ -49,6 +55,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Get all available products, so which products are ready for sales.
+     *
+     * @return Collection of Products
+     */
+    @Override
+    public Collection<Product> getAvailableProducts() {
+        return productRepository.findAllBySellStartBeforeAndSellEndAfter(LocalDateTime.now(), LocalDateTime.now())
+                .stream().filter(x -> x.getSold() < x.getMaxSold())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
      * Get Product by key
      *
      * @param key key of an Product
@@ -56,7 +74,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductByKey(String key) {
-        return productRepository.findByKey(key);
+        Optional<Product> product = productRepository.findByKey(key);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        throw new ProductNotFound("Product with key " + key + " not found!");
     }
 
     /**

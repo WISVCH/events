@@ -2,21 +2,23 @@ package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.model.product.ProductSearch;
+import ch.wisv.events.exception.ProductNotFound;
+import ch.wisv.events.response.product.ProductDefaultResponse;
 import ch.wisv.events.service.event.EventService;
 import ch.wisv.events.service.product.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import ch.wisv.events.utils.ResponseEntityBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * ProductRESTController.
  */
 @RestController
-@RequestMapping(value = "/products")
+@RequestMapping("/api/v1/products")
 public class ProductRESTController {
 
 
@@ -47,8 +49,22 @@ public class ProductRESTController {
      * @return List of all Products
      */
     @GetMapping(value = "")
-    public Collection<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getAllProducts() {
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+                productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
+    }
+
+    @GetMapping(value = "/{key}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getProductByKey(@PathVariable String key) {
+        try {
+            Product product = productService.getProductByKey(key);
+
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
+        } catch (ProductNotFound e) {
+            return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     /**
@@ -58,6 +74,7 @@ public class ProductRESTController {
      * @return ProductSearch Object
      */
     @GetMapping(value = "/unused/search")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductSearch getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();
         ProductSearch search = new ProductSearch(query);

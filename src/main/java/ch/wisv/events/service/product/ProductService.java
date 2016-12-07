@@ -3,6 +3,7 @@ package ch.wisv.events.service.product;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,6 +17,13 @@ public interface ProductService {
      * @return List of Products
      */
     List<Product> getAllProducts();
+
+    /**
+     * Get all available products
+     *
+     * @return Collection of Products
+     */
+    Collection<Product> getAvailableProducts();
 
     /**
      * Get Product by Key

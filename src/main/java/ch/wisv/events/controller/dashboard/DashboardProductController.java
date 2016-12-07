@@ -5,6 +5,7 @@ import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.product.ProductRequest;
 import ch.wisv.events.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/dashboard/products")
+@PreAuthorize("hasRole('ADMIN')")
 public class DashboardProductController {
 
     /**

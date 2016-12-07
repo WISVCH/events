@@ -3,6 +3,10 @@ package ch.wisv.events.repository.product;
 import ch.wisv.events.data.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Optional;
+
 /**
  * ProductRepository
  */
@@ -22,6 +26,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param key key of a Product
      * @return Product
      */
-    Product findByKey(String key);
+    Optional<Product> findByKey(String key);
+
+    /**
+     * Find Products by after selling date and before
+     */
+    Collection<Product> findAllBySellStartBeforeAndSellEndAfter(LocalDateTime sellStart, LocalDateTime sellEnd);
 
 }
