@@ -1,6 +1,5 @@
 package ch.wisv.events.data.model.sales;
 
-import ch.wisv.events.data.model.DataModel;
 import ch.wisv.events.data.model.event.Event;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-public class Vendor implements DataModel {
+public class Vendor {
 
     /**
      * Field id of the vendor.
