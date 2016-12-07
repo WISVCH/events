@@ -1,8 +1,10 @@
-package ch.wisv.events.repository.order;
+package ch.wisv.events.repository;
 
 import ch.wisv.events.data.model.order.Customer;
+import ch.wisv.events.data.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,22 +23,22 @@ import java.util.Optional;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     /**
-     * Find a customer by its rfidToken.
+     * Method findByPublicReference find Order by public reference.
      *
-     * @param token of type String
-     * @return optional
+     * @param publicReference of type String
+     * @return Optional<Order>
      */
-    Optional<Customer> findByRfidToken(String token);
+    Optional<Order> findByPublicReference(String publicReference);
 
     /**
-     * Find a customer by its key.
+     * Method findByCustomer find Order by Customer.
      *
-     * @param key key
-     * @return optional
+     * @param customer of type Customer
+     * @return List<Order>
      */
-    Optional<Customer> findByKey(String key);
+    List<Order> findByCustomer(Customer customer);
 
 }

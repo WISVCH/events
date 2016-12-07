@@ -1,4 +1,4 @@
-package ch.wisv.events.service.order;
+package ch.wisv.events.service.customer;
 
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.data.request.sales.SalesCustomerRequest;

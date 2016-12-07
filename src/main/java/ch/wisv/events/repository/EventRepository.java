@@ -1,4 +1,4 @@
-package ch.wisv.events.repository.event;
+package ch.wisv.events.repository;
 
 import ch.wisv.events.data.model.event.Event;
 import org.springframework.data.jpa.repository.JpaRepository;

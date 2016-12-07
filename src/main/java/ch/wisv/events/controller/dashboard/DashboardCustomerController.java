@@ -2,7 +2,7 @@ package ch.wisv.events.controller.dashboard;
 
 import ch.wisv.events.data.model.order.Customer;
 import ch.wisv.events.exception.CustomerNotFound;
-import ch.wisv.events.service.order.CustomerService;
+import ch.wisv.events.service.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

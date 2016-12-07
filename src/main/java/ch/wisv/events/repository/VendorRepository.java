@@ -1,10 +1,8 @@
-package ch.wisv.events.repository.order;
+package ch.wisv.events.repository;
 
-import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.model.order.Order;
+import ch.wisv.events.data.model.sales.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,10 +21,22 @@ import java.util.Optional;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface VendorRepository extends JpaRepository<Vendor, Integer> {
 
-    Optional<Order> findByPublicReference(String publicReference);
+    /**
+     * Method findByKey find Vendor by Key.
+     *
+     * @param key of type String
+     * @return Optional<Vendor>
+     */
+    Optional<Vendor> findByKey(String key);
 
-    List<Order> findByCustomer(Customer customer);
+    /**
+     * Method findById find Vendor by ID.
+     *
+     * @param id of type Long
+     * @return Optional<Vendor>
+     */
+    Optional<Vendor> findById(Long id);
 
 }

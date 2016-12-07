@@ -7,7 +7,7 @@ import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.request.sales.SalesOrderRequest;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.ProductLimitExceededException;
-import ch.wisv.events.repository.order.OrderRepository;
+import ch.wisv.events.repository.OrderRepository;
 import ch.wisv.events.service.product.ProductService;
 import org.springframework.stereotype.Service;
 

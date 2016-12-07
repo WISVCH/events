@@ -7,7 +7,7 @@ import ch.wisv.events.data.request.sales.SalesOrderRequest;
 import ch.wisv.events.exception.CustomerNotFound;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.ProductLimitExceededException;
-import ch.wisv.events.service.order.CustomerService;
+import ch.wisv.events.service.customer.CustomerService;
 import ch.wisv.events.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -8,11 +8,11 @@ import ch.wisv.events.data.model.order.OrderStatus;
 import ch.wisv.events.data.model.product.Product;
 import ch.wisv.events.data.model.sales.LDAPGroupEnum;
 import ch.wisv.events.data.model.sales.Vendor;
-import ch.wisv.events.repository.event.EventRepository;
-import ch.wisv.events.repository.order.CustomerRepository;
-import ch.wisv.events.repository.order.OrderRepository;
-import ch.wisv.events.repository.product.ProductRepository;
-import ch.wisv.events.repository.sales.VendorRepository;
+import ch.wisv.events.repository.EventRepository;
+import ch.wisv.events.repository.CustomerRepository;
+import ch.wisv.events.repository.OrderRepository;
+import ch.wisv.events.repository.ProductRepository;
+import ch.wisv.events.repository.VendorRepository;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;

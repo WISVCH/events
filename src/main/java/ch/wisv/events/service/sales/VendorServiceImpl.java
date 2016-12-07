@@ -3,7 +3,7 @@ package ch.wisv.events.service.sales;
 import ch.wisv.events.data.model.sales.Vendor;
 import ch.wisv.events.exception.InvalidVendorException;
 import ch.wisv.events.exception.VendorNotFoundException;
-import ch.wisv.events.repository.sales.VendorRepository;
+import ch.wisv.events.repository.VendorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

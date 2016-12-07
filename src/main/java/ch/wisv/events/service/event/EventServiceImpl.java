@@ -11,8 +11,8 @@ import ch.wisv.events.data.request.event.EventProductRequest;
 import ch.wisv.events.data.request.event.EventRequest;
 import ch.wisv.events.exception.EventNotFound;
 import ch.wisv.events.exception.ProductInUseException;
-import ch.wisv.events.repository.event.EventRepository;
-import ch.wisv.events.repository.product.ProductRepository;
+import ch.wisv.events.repository.EventRepository;
+import ch.wisv.events.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
