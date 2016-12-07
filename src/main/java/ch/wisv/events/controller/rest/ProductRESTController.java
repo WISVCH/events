@@ -44,7 +44,7 @@ public class ProductRESTController {
     }
 
     /**
-     * Get request to get all all products
+     * Get request to get all all products.
      *
      * @return List of all Products
      */
@@ -55,6 +55,12 @@ public class ProductRESTController {
                 productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
     }
 
+    /**
+     * Method getProductByKey get product by key.
+     *
+     * @param key of type String
+     * @return ResponseEntity<?>
+     */
     @GetMapping(value = "/{key}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProductByKey(@PathVariable String key) {
