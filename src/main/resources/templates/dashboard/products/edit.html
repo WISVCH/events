@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
             <form th:action="@{/dashboard/products/update}" th:object="${product}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 

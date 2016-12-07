@@ -1,18 +1,19 @@
 package ch.wisv.events.utils;
 
-import ch.wisv.events.data.model.event.Event;
-import ch.wisv.events.data.model.event.EventStatus;
-import ch.wisv.events.data.model.order.Customer;
-import ch.wisv.events.data.model.order.Order;
-import ch.wisv.events.data.model.order.OrderStatus;
-import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.model.sales.LDAPGroupEnum;
-import ch.wisv.events.data.model.sales.Vendor;
-import ch.wisv.events.repository.EventRepository;
-import ch.wisv.events.repository.CustomerRepository;
-import ch.wisv.events.repository.OrderRepository;
-import ch.wisv.events.repository.ProductRepository;
-import ch.wisv.events.repository.VendorRepository;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.sales.LDAPGroupEnum;
+import ch.wisv.events.core.model.sales.Vendor;
+import ch.wisv.events.core.repository.EventRepository;
+import ch.wisv.events.core.repository.CustomerRepository;
+import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.repository.ProductRepository;
+import ch.wisv.events.core.repository.VendorRepository;
+import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
@@ -30,21 +31,23 @@ public class TestDataRunner implements CommandLineRunner {
     private final VendorRepository vendorRepository;
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
                           VendorRepository vendorRepository, CustomerRepository customerRepository,
-                          OrderRepository orderRepository) {
+                          OrderRepository orderRepository, OrderService orderService) {
         this.eventRepository = eventRepository;
         this.productRepository = productRepository;
         this.vendorRepository = vendorRepository;
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     @Override
     public void run(String... args) throws Exception {
         Product product = null;
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 15; i++) {
             product = new Product();
             product.setTitle("Product " + i);
             product.setCost(10.0f);
@@ -114,27 +117,27 @@ public class TestDataRunner implements CommandLineRunner {
          */
         Order order1 = new Order();
         order1.setCustomer(customer1);
-        order1.addProduct(product);
-        order1.setStatus(OrderStatus.PAID_CASH);
+        order1.addProduct(productRepository.findById(1L));
         orderRepository.saveAndFlush(order1);
+        orderService.updateOrderStatus(order1, OrderStatus.PAID_CASH);
 
         Order order2 = new Order();
         order2.setCustomer(customer1);
-        order2.addProduct(product);
-        order2.setStatus(OrderStatus.CANCELLED);
+        order2.addProduct(productRepository.findById(1L));
         orderRepository.saveAndFlush(order2);
+        orderService.updateOrderStatus(order2, OrderStatus.CANCELLED);
 
         Order order3 = new Order();
         order3.setCustomer(customer2);
-        order3.addProduct(product);
-        order3.setStatus(OrderStatus.REJECTED);
+        order3.addProduct(productRepository.findById(1L));
         orderRepository.saveAndFlush(order3);
+        orderService.updateOrderStatus(order3, OrderStatus.REJECTED);
 
         Order order4 = new Order();
         order4.setCustomer(customer2);
-        order4.addProduct(product);
-        order4.setStatus(OrderStatus.PAID_CASH);
+        order4.addProduct(productRepository.findById(1L));
         orderRepository.saveAndFlush(order4);
+        orderService.updateOrderStatus(order4, OrderStatus.PAID_CASH);
     }
 
 }

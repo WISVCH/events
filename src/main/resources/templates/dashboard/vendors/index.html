@@ -63,8 +63,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="vendors" type="List<ch.wisv.events.data.model.sales.Vendor>"*/-->
-                    <!--/*@thymesVar id="vendor" type="ch.wisv.events.data.model.sales.Vendor"*/-->
+                    <!--/*@thymesVar id="vendors" type="List<ch.wisv.events.core.model.sales.Vendor>"*/-->
+                    <!--/*@thymesVar id="vendor" type="ch.wisv.events.core.model.sales.Vendor"*/-->
                     <tr th:each="vendor : ${vendors}">
                         <td>
                             <input type="checkbox" title="Select row">
@@ -72,7 +72,7 @@
                         <td th:text="${vendor.getLdapGroup().getName()}">Row 1 Data 1</td>
                         <td>
                             <ul style="padding-left: 16px;">
-                                <!--/*@thymesVar id="event" type="ch.wisv.events.data.model.event.Event"*/-->
+                                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
                                 <li th:each="event : ${vendor.getEvents()}" th:text="${event.getTitle()}"></li>
                             </ul>
                         </td>

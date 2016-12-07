@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
             <form th:action="@{/dashboard/products/add}" th:object="${product}"
                   method="POST">
 
@@ -67,7 +67,7 @@
 
 
                 <div class="form-group">
-                    <input type="submit" class="btn btn-block btn-lg btn-primary" value="Create">
+                    <input type="submit" class="btn btn-primary" value="Create">
                 </div>
             </form>
         </div>
