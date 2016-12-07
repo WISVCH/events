@@ -38,7 +38,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#"><samp>CH events sell app</samp></a>
+                    <a class="navbar-brand" href="/"><samp>CH events sell app</samp></a>
                 </div>
             </div>
         </nav>
@@ -46,7 +46,7 @@
 
     <div class="row content-wrapper">
         <div class="col-xs-12 main">
-            <!--/*@thymesVar id="order" type="ch.wisv.events.data.model.order.Order"*/-->
+            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
 
             <table class="table table-bordered">
                 <tbody>
@@ -87,7 +87,7 @@
                 <input type="hidden" name="publicReference" th:value="${order.getPublicReference()}">
                 <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
                         name="payment"
-                        th:each="payment : ${T(ch.wisv.events.data.model.sales.PaymentOptions).values()}"
+                        th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOptions).values()}"
                         th:value="${payment.getValue()}"
                         th:text="${payment.getDisplayName()}">
                 </button>

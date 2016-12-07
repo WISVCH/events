@@ -46,8 +46,8 @@
                 <h1><samp>Create event</samp></h1>
             </div>
 
-            <!--/*@thymesVar id="event" type="ch.wisv.events.data.request.event.EventRequest"*/-->
-            <!--/*@thymesVar id="eventStatus" type="ch.wisv.events.data.request.event.EventOptionsRequest"*/-->
+            <!--/*@thymesVar id="event" type="ch.wisv.events.api.request.EventRequest"*/-->
+            <!--/*@thymesVar id="eventStatus" type="ch.wisv.events.api.request.EventOptionsRequest"*/-->
             <form th:action="@{/dashboard/events/add}" th:object="${event}"
                   method="POST">
 

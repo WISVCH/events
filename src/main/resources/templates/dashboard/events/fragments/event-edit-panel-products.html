@@ -30,7 +30,7 @@
             <h3 class="panel-title">Products</h3>
         </div>
         <div class="panel-body">
-            <!--/*@thymesVar id="eventProduct" type="ch.wisv.events.data.request.event.EventProductRequest"*/-->
+            <!--/*@thymesVar id="eventProduct" type="ch.wisv.events.api.request.EventProductRequest"*/-->
             <form th:action="@{/dashboard/events/add/product}" th:object="${eventProduct}"
                   class="form-horizontal"
                   id="addProduct" method="POST">

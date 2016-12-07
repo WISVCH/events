@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <!--/*@thymesVar id="customer" type="ch.wisv.events.data.model.order.Customer"*/-->
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
             <form th:action="@{/dashboard/customers/update}" th:object="${customer}"
                   method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">

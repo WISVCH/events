@@ -1,10 +1,7 @@
 package ch.wisv.events;
 
-import ch.wisv.events.repository.event.EventRepository;
-import ch.wisv.events.repository.order.CustomerRepository;
-import ch.wisv.events.repository.order.OrderRepository;
-import ch.wisv.events.repository.product.ProductRepository;
-import ch.wisv.events.repository.sales.VendorRepository;
+import ch.wisv.events.core.repository.*;
+import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.utils.TestDataRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,8 +36,8 @@ public class EventsApplication {
     @Profile("dev")
     CommandLineRunner init(EventRepository eventRepository, ProductRepository productRepository,
                            VendorRepository vendorRepository, CustomerRepository customerRepository,
-                           OrderRepository orderRepository) {
+                           OrderRepository orderRepository, OrderService orderService) {
         return new TestDataRunner(eventRepository, productRepository, vendorRepository, customerRepository,
-                orderRepository);
+                orderRepository, orderService);
     }
 }

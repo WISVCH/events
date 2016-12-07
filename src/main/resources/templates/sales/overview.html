@@ -38,7 +38,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#"><samp>CH events sell app</samp></a>
+                    <a class="navbar-brand" href="/"><samp>CH events sell app</samp></a>
                 </div>
             </div>
         </nav>
@@ -50,9 +50,9 @@
         </div>
 
         <div class="col-xs-12">
-            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.data.model.product.Product>"*/-->
-            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
-            <!--/*@thymesVar id="orderRequest" type="ch.wisv.events.data.request.sales.SalesOrderRequest"*/-->
+            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.core.model.product.Product>"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <!--/*@thymesVar id="orderRequest" type="ch.wisv.events.app.request.SalesOrderRequest"*/-->
             <form th:if="${products.size() > 0}" th:action="@{/sales/order/create}" th:object="${orderRequest}"
                   method="POST">
                 <div class="row sell-product-block" th:each="product : ${products}">
