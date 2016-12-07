@@ -25,18 +25,42 @@ import static java.util.Arrays.stream;
 public enum PaymentOptions {
 
     CASH(1, "Cash", "cash", "success", OrderStatus.PAID_CASH),
-    CANCEL(1, "Cancel", "cancel", "danger", OrderStatus.CANCELLED);
+    CANCEL(2, "Cancel", "cancel", "danger", OrderStatus.CANCELLED);
 
+    /**
+     * Field id
+     */
     private final int id;
 
+    /**
+     * Field displayName
+     */
     private final String displayName;
 
+    /**
+     * Field value the value of the POST, used for the redirect of the payment method.
+     */
     private final String value;
 
+    /**
+     * Field displayClass display class of the button
+     */
     private final String displayClass;
 
+    /**
+     * Field orderStatus status of the Order
+     */
     private final OrderStatus orderStatus;
 
+    /**
+     * Constructor PaymentOptions creates a new PaymentOptions instance.
+     *
+     * @param id           of type int
+     * @param displayName  of type String
+     * @param value        of type String
+     * @param displayClass of type String
+     * @param orderStatus  of type OrderStatus
+     */
     PaymentOptions(int id, String displayName, String value, String displayClass, OrderStatus orderStatus) {
         this.id = id;
         this.displayName = displayName;
@@ -45,29 +69,35 @@ public enum PaymentOptions {
         this.orderStatus = orderStatus;
     }
 
+    /**
+     * Method getStatusByValue returns a order status by payment name. If order status not found it will return a
+     * Rejected order status.
+     *
+     * @param payment of type String
+     * @return OrderStatus
+     */
     public static OrderStatus getStatusByValue(String payment) {
         PaymentOptions tmp = stream(PaymentOptions.values()).filter(option -> Objects
                 .equals(option.getValue(), payment)).findFirst().orElse(null);
         return (tmp != null) ? tmp.getOrderStatus() : OrderStatus.REJECTED;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
+    /**
+     * Method getValue returns the value of this PaymentOptions object.
+     *
+     * @return the value (type String) of this PaymentOptions object.
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Method getOrderStatus returns the orderStatus of this PaymentOptions object.
+     *
+     * @return the orderStatus (type OrderStatus) of this PaymentOptions object.
+     */
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
-    public String getDisplayClass() {
-        return displayClass;
-    }
 }

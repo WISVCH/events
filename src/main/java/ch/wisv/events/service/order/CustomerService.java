@@ -31,9 +31,9 @@ public interface CustomerService {
     List<Customer> getAllCustomers();
 
     /**
-     * Get a customer by rfidtoken.
+     * Get a customer by rfidToken.
      *
-     * @param token rfidtoken
+     * @param token of type String
      * @return Customer
      */
     Customer getByRFIDToken(String token);
@@ -58,16 +58,16 @@ public interface CustomerService {
     /**
      * Update a existing customer.
      *
-     * @param model customer model
+     * @param customer customer model
      */
-    void update(Customer model);
+    void update(Customer customer);
 
     /**
      * Add a new customer.
      *
-     * @param model customer model
+     * @param customer customer model
      */
-    void add(Customer model);
+    void add(Customer customer);
 
     /**
      * Delete a customer.

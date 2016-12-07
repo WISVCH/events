@@ -35,12 +35,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/sales/payment")
 public class SalesPaymentController {
 
+    /**
+     * Field orderService
+     */
     private final OrderService orderService;
 
+    /**
+     * Constructor SalesPaymentController creates a new SalesPaymentController instance.
+     *
+     * @param orderService of type OrderService
+     */
     public SalesPaymentController(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    /**
+     * Method paymentOrder shows view with order overview and the button how to pay.
+     *
+     * @param model              of type Model
+     * @param redirectAttributes of type RedirectAttributes
+     * @return String
+     */
     @GetMapping("/")
     public String paymentOrder(Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -57,10 +72,19 @@ public class SalesPaymentController {
         return "sales/payment";
     }
 
+    /**
+     * Method orderPayment will process the orders and the payment method and will the redirect to the method to the
+     * given payment method.
+     *
+     * @param redirectAttributes of type RedirectAttributes
+     * @param payment            of type String
+     * @param publicReference    of type String
+     * @return String
+     */
     @PostMapping("")
     public String orderPayment(RedirectAttributes redirectAttributes,
-                               @RequestParam(value = "payment", required = true) String payment,
-                               @RequestParam(value = "publicReference", required = true) String publicReference) {
+                               @RequestParam(value = "payment") String payment,
+                               @RequestParam(value = "publicReference") String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
             if (PaymentOptions.getStatusByValue(payment) != OrderStatus.REJECTED) {
@@ -79,6 +103,13 @@ public class SalesPaymentController {
         }
     }
 
+    /**
+     * Method paymentCash will handle cash payment.
+     *
+     * @param model              of type Model
+     * @param redirectAttributes of type RedirectAttributes
+     * @return String
+     */
     @GetMapping("/cash/")
     public String paymentCash(Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -95,6 +126,13 @@ public class SalesPaymentController {
         }
     }
 
+    /**
+     * Method paymentCancel will handle cancel payment, so the order will be cancelled.
+     *
+     * @param model              of type Model
+     * @param redirectAttributes of type RedirectAttributes
+     * @return String
+     */
     @GetMapping("/cancel/")
     public String paymentCancel(Model model, RedirectAttributes redirectAttributes) {
         try {

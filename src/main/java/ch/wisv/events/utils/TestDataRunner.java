@@ -56,7 +56,7 @@ public class TestDataRunner implements CommandLineRunner {
             productRepository.save(product);
         }
 
-        Event event = null;
+        Event event;
         for (int i = 1; i < 10; i++) {
             event = new Event("Event " + i,
                     "Phasellus eget mauris fringilla, tincidunt enim eget, luctus massa. Suspendisse ultricies in neque " +

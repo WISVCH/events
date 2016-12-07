@@ -38,20 +38,39 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/sales/order")
 public class SalesOrderController {
 
+    /**
+     * Field orderService
+     */
     private final OrderService orderService;
 
+    /**
+     * Field customerService
+     */
     private final CustomerService customerService;
 
+    /**
+     * Constructor SalesOrderController creates a new SalesOrderController instance.
+     *
+     * @param orderService    of type OrderService
+     * @param customerService of type CustomerService
+     */
     public SalesOrderController(OrderService orderService, CustomerService customerService) {
         this.orderService = orderService;
         this.customerService = customerService;
     }
 
+    /**
+     * Method createOrder creates an new order using the SalesOrderRequest.
+     *
+     * @param redirectAttributes of type RedirectAttributes
+     * @param salesOrderRequest  of type SalesOrderRequest
+     * @return String
+     */
     @PostMapping("/create")
     public String createOrder(RedirectAttributes redirectAttributes,
                               @ModelAttribute @Validated SalesOrderRequest salesOrderRequest) {
         try {
-            Order order = orderService.createOrder(salesOrderRequest);
+            Order order = orderService.create(salesOrderRequest);
             redirectAttributes.addFlashAttribute("reference", order.getPublicReference());
 
             return "redirect:/sales/scan/";
@@ -62,6 +81,13 @@ public class SalesOrderController {
         }
     }
 
+    /**
+     * Method addUserToOrder adds a customer to an Order.
+     *
+     * @param redirectAttributes      of type RedirectAttributes
+     * @param salesCustomerAddRequest of type SalesCustomerAddRequest
+     * @return String
+     */
     @PostMapping("/customer/add")
     public String addUserToOrder(RedirectAttributes redirectAttributes, @ModelAttribute @Validated
             SalesCustomerAddRequest salesCustomerAddRequest) {

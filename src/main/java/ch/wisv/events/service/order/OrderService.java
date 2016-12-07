@@ -25,30 +25,47 @@ import java.util.List;
  */
 public interface OrderService {
 
+
     /**
-     * @return
+     * Method getAllOrders returns the allOrders of this OrderService object.
+     *
+     * @return the allOrders (type List<Order>) of this OrderService object.
      */
     List<Order> getAllOrders();
 
+
     /**
-     * @param reference
-     * @return
+     * Method getByReference returns Order with the given Reference.
+     *
+     * @param reference of type String
+     * @return Order
      */
     Order getByReference(String reference);
 
-    /**
-     * @param orderRequest
-     */
-    Order createOrder(SalesOrderRequest orderRequest);
 
     /**
-     * @param order
-     * @param customer
+     * Method create creates a new order by SalesOrderRequest.
+     *
+     * @param orderRequest of type SalesOrderRequest
+     * @return Order
+     */
+    Order create(SalesOrderRequest orderRequest);
+
+
+    /**
+     * Method addCustomerToOrder will add a customer to an order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
      */
     void addCustomerToOrder(Order order, Customer customer);
 
+
     /**
-     * @param orderStatus
+     * Method updateOrderStatus will update the order status and update the product count.
+     *
+     * @param order       of type Order
+     * @param orderStatus of type OrderStatus
      */
     void updateOrderStatus(Order order, OrderStatus orderStatus);
 

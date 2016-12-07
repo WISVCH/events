@@ -59,7 +59,7 @@ public class ProductRESTController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProductByKey(@PathVariable String key) {
         try {
-            Product product = productService.getProductByKey(key);
+            Product product = productService.getByKey(key);
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
         } catch (ProductNotFound e) {

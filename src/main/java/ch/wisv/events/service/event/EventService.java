@@ -35,14 +35,6 @@ public interface EventService {
     Collection<Event> getAvailableEvents();
 
     /**
-     * Get Event by ID
-     *
-     * @param id id of an Event
-     * @return Event
-     */
-    Event getEventById(Long id);
-
-    /**
      * Get Event by key
      *
      * @param key key of an Event

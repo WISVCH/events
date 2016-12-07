@@ -23,6 +23,6 @@ public enum OrderStatus {
     PAID_PIN,
     REJECTED,
     CANCELLED,
-    CLOSED;
+    CLOSED
 
 }

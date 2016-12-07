@@ -70,7 +70,7 @@ public class DashboardProductController {
      */
     @GetMapping("/edit/{key}")
     public String editProductView(Model model, @PathVariable String key) {
-        Product product = productService.getProductByKey(key);
+        Product product = productService.getByKey(key);
         if (product == null) {
             return "redirect:/dashboard/events/";
         }
@@ -89,9 +89,9 @@ public class DashboardProductController {
      */
     @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirectAttributes, @PathVariable String key) {
-        Product product = productService.getProductByKey(key);
+        Product product = productService.getByKey(key);
         try {
-            productService.deleteProduct(product);
+            productService.delete(product);
             redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -111,7 +111,7 @@ public class DashboardProductController {
     public String createEvent(@ModelAttribute @Validated ProductRequest productRequest, RedirectAttributes
             redirectAttributes) {
         try {
-            productService.addProduct(productRequest);
+            productService.add(productRequest);
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -131,8 +131,8 @@ public class DashboardProductController {
     @PostMapping("/update")
     public String editEvent(@ModelAttribute @Validated ProductRequest productRequest,
                             RedirectAttributes redirectAttributes) {
-        productService.updateProduct(productRequest);
-        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+        productService.update(productRequest);
+        redirectAttributes.addFlashAttribute("message", "Auto saved!");
 
         return "redirect:/dashboard/products/edit/" + productRequest.getKey();
     }

@@ -69,21 +69,6 @@ public class VendorServiceImpl implements VendorService {
     }
 
     /**
-     * Method getById will return a Vendor by its id.
-     *
-     * @param id of type Long
-     * @return Vendor
-     */
-    @Override
-    public Vendor getById(Long id) {
-        Optional<Vendor> optional = vendorRepository.findById(id);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new VendorNotFoundException("Vendor with id " + id + " not found");
-    }
-
-    /**
      * Method add will add a new Vendor.
      *
      * @param vendor of type Vendor

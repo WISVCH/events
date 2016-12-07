@@ -40,15 +40,34 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("hasRole('USER')")
 public class SalesCustomerController {
 
+    /**
+     * Field orderService
+     */
     private final OrderService orderService;
 
+    /**
+     * Field customerService
+     */
     private final CustomerService customerService;
 
+    /**
+     * Constructor SalesCustomerController creates a new SalesCustomerController instance.
+     *
+     * @param orderService    of type OrderService
+     * @param customerService of type CustomerService
+     */
     public SalesCustomerController(OrderService orderService, CustomerService customerService) {
         this.orderService = orderService;
         this.customerService = customerService;
     }
 
+    /**
+     * Method createCustomer shows view to create a new customer.
+     *
+     * @param model              of type Model
+     * @param redirectAttributes of type RedirectAttributes
+     * @return String
+     */
     @GetMapping("/create/")
     public String createCustomer(Model model, RedirectAttributes redirectAttributes) {
         Object object = model.asMap().get("orderUser");
@@ -68,6 +87,13 @@ public class SalesCustomerController {
         return "redirect:/sales/overview/";
     }
 
+    /**
+     * Method createCustomer creates a new customer.
+     *
+     * @param redirectAttributes of type RedirectAttributes
+     * @param request            of type SalesCustomerRequest
+     * @return String
+     */
     @PostMapping("/create")
     public String createCustomer(RedirectAttributes redirectAttributes,
                                  @ModelAttribute @Validated SalesCustomerRequest request) {

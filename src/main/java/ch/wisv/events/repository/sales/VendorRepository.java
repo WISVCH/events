@@ -3,7 +3,6 @@ package ch.wisv.events.repository.sales;
 import ch.wisv.events.data.model.sales.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,8 +22,6 @@ import java.util.Optional;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public interface VendorRepository extends JpaRepository<Vendor, Integer> {
-
-    List<Vendor> findByLdapGroup(String username);
 
     Optional<Vendor> findByKey(String key);
 

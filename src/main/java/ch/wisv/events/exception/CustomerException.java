@@ -17,7 +17,12 @@ package ch.wisv.events.exception;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class CustomerException extends RuntimeException {
-    public CustomerException(String s) {
-        super(s);
+    /**
+     * Constructor CustomerException creates a new CustomerException instance.
+     *
+     * @param message of type String
+     */
+    public CustomerException(String message) {
+        super(message);
     }
 }

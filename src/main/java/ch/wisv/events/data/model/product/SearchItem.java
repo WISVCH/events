@@ -1,6 +1,8 @@
 package ch.wisv.events.data.model.product;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * SearchItem Object
@@ -11,11 +13,15 @@ public class SearchItem {
     /**
      * Title of the Product, for API purpose called value.
      */
-    public String value;
+    @Getter
+    @Setter
+    private String value;
 
     /**
      * Key of the Product, for API purpose called data.
      */
+    @Getter
+    @Setter
     public Long data;
 
     /**
@@ -24,7 +30,7 @@ public class SearchItem {
      * @param title Title of the Product
      * @param key   Key of the Product
      */
-    public SearchItem(String title, Long key) {
+    SearchItem(String title, Long key) {
         this.value = title;
         this.data = key;
     }

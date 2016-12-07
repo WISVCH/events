@@ -59,9 +59,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Get a customer by rfidtoken.
+     * Get a customer by rfidToken.
      *
-     * @param token rfidtoken
+     * @param token of type String
      * @return Customer
      */
     @Override
@@ -131,12 +131,12 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Add a new customer.
      *
-     * @param model customer model
+     * @param customer customer model
      */
     @Override
-    public void add(Customer model) {
-        checkRequiredFields(model);
-        customerRepository.saveAndFlush(model);
+    public void add(Customer customer) {
+        this.checkRequiredFields(customer);
+        customerRepository.saveAndFlush(customer);
     }
 
     /**

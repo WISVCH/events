@@ -44,15 +44,33 @@ import java.util.stream.Collectors;
 @RequestMapping("/sales")
 public class SalesController {
 
+    /**
+     * Field vendorService
+     */
     private final VendorService vendorService;
 
+    /**
+     * Field orderService
+     */
     private final OrderService orderService;
 
+    /**
+     * Constructor SalesController creates a new SalesController instance.
+     *
+     * @param vendorService of type VendorService
+     * @param orderService  of type OrderService
+     */
     public SalesController(VendorService vendorService, OrderService orderService) {
         this.vendorService = vendorService;
         this.orderService = orderService;
     }
 
+    /**
+     * Method index shows the index and check if the user has granted products.
+     *
+     * @param auth of type OIDCAuthenticationToken
+     * @return String
+     */
     @GetMapping("/")
     public String index(OIDCAuthenticationToken auth) {
         if (this.getGrantedProducts(auth).size() > 0) return "redirect:/sales/overview/";
@@ -60,6 +78,13 @@ public class SalesController {
         return "sales/index";
     }
 
+    /**
+     * Method overviewIndex shows the products that the user is allowed to sell.
+     *
+     * @param auth  of type OIDCAuthenticationToken
+     * @param model of type Model
+     * @return String
+     */
     @GetMapping("/overview/")
     public String overviewIndex(OIDCAuthenticationToken auth, Model model) {
         List<Product> products = this.getGrantedProducts(auth);
@@ -74,6 +99,13 @@ public class SalesController {
         return "sales/overview";
     }
 
+    /**
+     * Method scanRFID shows view to scan the RFID.
+     *
+     * @param redirectAttributes of type RedirectAttributes
+     * @param model              of type Model
+     * @return String
+     */
     @GetMapping("/scan/")
     public String scanRFID(RedirectAttributes redirectAttributes, Model model) {
         try {

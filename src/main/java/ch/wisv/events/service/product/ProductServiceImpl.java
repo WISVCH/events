@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +44,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all Products
+     * Get all products
      *
-     * @return list of Products
+     * @return List of Products
      */
     @Override
     public List<Product> getAllProducts() {
@@ -55,25 +54,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all available products, so which products are ready for sales.
+     * Get all available products
      *
      * @return Collection of Products
      */
     @Override
-    public Collection<Product> getAvailableProducts() {
+    public List<Product> getAvailableProducts() {
         return productRepository.findAllBySellStartBeforeAndSellEndAfter(LocalDateTime.now(), LocalDateTime.now())
                                 .stream().filter(x -> x.getSold() < x.getMaxSold())
                                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * Get Product by key
+     * Get Product by Key
      *
-     * @param key key of an Product
+     * @param key key of a Product
      * @return Product
      */
     @Override
-    public Product getProductByKey(String key) {
+    public Product getByKey(String key) {
         Optional<Product> product = productRepository.findByKey(key);
         if (product.isPresent()) {
             return product.get();
@@ -87,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
      * @param productRequest ProductRequest containing the new product information
      */
     @Override
-    public void updateProduct(ProductRequest productRequest) {
+    public void update(ProductRequest productRequest) {
         Product product = productRepository.findById(productRequest.getId());
         product = ProductRequestFactory.update(product, productRequest);
 
@@ -95,26 +94,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Add a new Product by ProductRequest
+     * Add a new Product using a ProductRequest
      *
      * @param productRequest ProductRequest containing the product information
      */
     @Override
-    public void addProduct(ProductRequest productRequest) {
+    public void add(ProductRequest productRequest) {
         Product product = ProductRequestFactory.create(productRequest);
 
         productRepository.save(product);
     }
 
     /**
-     * Delete a product.
+     * Remove a Product
      *
      * @param product Product to be deleted.
-     * @throws ch.wisv.events.exception.ProductInUseException when a Produdct is already added to an
-     *                                                        Event it can not be deleted.
      */
     @Override
-    public void deleteProduct(Product product) {
+    public void delete(Product product) {
         List<Event> events = eventService.getEventByProductKey(product.getKey());
         if (events.size() > 0) {
             throw new ProductInUseException("Product is already added to an Event");

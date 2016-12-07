@@ -24,9 +24,9 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     /**
-     * Find a customer by its rfidtoken.
+     * Find a customer by its rfidToken.
      *
-     * @param token rfid token
+     * @param token of type String
      * @return optional
      */
     Optional<Customer> findByRfidToken(String token);

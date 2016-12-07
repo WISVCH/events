@@ -44,15 +44,29 @@ public enum LDAPGroupEnum {
     VERDIEPCIE("verdiepcie"),
     W3CIE("w3cie"),
     WIFI("wifi"),
+    WOCKY("wocky"),
     BESTUUR("bestuur");
 
 
+    /**
+     * Field name
+     */
     private final String name;
 
+    /**
+     * Constructor LDAPGroupEnum creates a new LDAPGroupEnum instance.
+     *
+     * @param name of type String
+     */
     LDAPGroupEnum(String name) {
         this.name = name;
     }
 
+    /**
+     * Method getName returns the name of this LDAPGroupEnum object.
+     *
+     * @return the name (type String) of this LDAPGroupEnum object.
+     */
     public String getName() {
         return name;
     }

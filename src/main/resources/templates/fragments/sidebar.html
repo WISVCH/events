@@ -34,6 +34,7 @@
                         <i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Overview
                     </a>
                 </li>
+                <li class="divider"></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI() == '/dashboard/events/' ? 'active':''}">
                     <a th:href="@{/dashboard/events/}">
                         <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Events
@@ -44,6 +45,7 @@
                         <i class="fa fa-ticket fa-fw" aria-hidden="true"></i> Products
                     </a>
                 </li>
+                <li class="divider"></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/orders/') ? 'active':''}">
                     <a th:href="@{/dashboard/orders/}" href="#">
                         <i class="fa fa-shopping-cart fa-fw" aria-hidden="true"></i> Orders

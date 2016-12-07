@@ -5,11 +5,9 @@ import static java.util.Arrays.stream;
 /**
  * Enum EventStatus
  */
+
 public enum EventStatus {
 
-    /**
-     * Possible event status
-     */
     PUBLISHED(1, "Published"),
     CONCEPT(2, "Concept"),
     NOT_PUBLISHED(3, "Not published");

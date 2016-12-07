@@ -46,7 +46,7 @@ public class DashboardEventController {
      * Get request on "/dashboard/events/" will show overview of all Events
      *
      * @param model SpringUI model
-     * @return path to Thymeleaf themplate
+     * @return path to Thymeleaf template
      */
     @GetMapping("/")
     public String index(Model model) {
@@ -189,7 +189,7 @@ public class DashboardEventController {
     public String editEvent(@ModelAttribute @Validated EventRequest eventRequest,
                             RedirectAttributes redirectAttributes) {
         eventService.updateEvent(eventRequest);
-        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+        redirectAttributes.addFlashAttribute("message", "Auto saved!");
 
         return "redirect:/dashboard/events/edit/" + eventRequest.getKey();
     }
@@ -205,7 +205,7 @@ public class DashboardEventController {
     public String updateEventOptions(@ModelAttribute @Validated EventOptionsRequest request,
                                      RedirectAttributes redirectAttributes) {
         eventService.updateEventOptions(request);
-        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+        redirectAttributes.addFlashAttribute("message", "Auto saved!");
 
         return "redirect:/dashboard/events/edit/" + request.getKey() + "/";
     }

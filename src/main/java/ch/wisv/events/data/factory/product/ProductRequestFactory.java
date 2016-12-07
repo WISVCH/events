@@ -9,6 +9,8 @@ import java.util.Objects;
 
 /**
  * ProductRequestFactory.
+ *
+ * TODO: replace
  */
 public class ProductRequestFactory {
 

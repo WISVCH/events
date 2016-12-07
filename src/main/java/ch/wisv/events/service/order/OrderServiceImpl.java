@@ -8,7 +8,6 @@ import ch.wisv.events.data.request.sales.SalesOrderRequest;
 import ch.wisv.events.exception.OrderNotFound;
 import ch.wisv.events.exception.ProductLimitExceededException;
 import ch.wisv.events.repository.order.OrderRepository;
-import ch.wisv.events.repository.product.ProductRepository;
 import ch.wisv.events.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
@@ -36,27 +35,43 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    /**
+     * Field orderRepository
+     */
     private final OrderRepository orderRepository;
 
+    /**
+     * Field productService
+     */
     private final ProductService productService;
 
-    private final ProductRepository productRepository;
-
-    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService,
-                            ProductRepository productRepository) {
+    /**
+     * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
+     *
+     * @param orderRepository   of type OrderRepository
+     * @param productService    of type ProductService
+     */
+    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService) {
         this.orderRepository = orderRepository;
         this.productService = productService;
-        this.productRepository = productRepository;
     }
 
     /**
-     * @return
+     * Method getAllOrders returns the allOrders of this OrderService object.
+     *
+     * @return the allOrders (type List<Order>) of this OrderService object.
      */
     @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll().stream().filter(x -> x.getCustomer() != null).collect(Collectors.toList());
     }
 
+    /**
+     * Method getByReference returns Order with the given Reference.
+     *
+     * @param reference of type String
+     * @return Order
+     */
     @Override
     public Order getByReference(String reference) {
         Optional<Order> orderOption = orderRepository.findByPublicReference(reference);
@@ -66,11 +81,17 @@ public class OrderServiceImpl implements OrderService {
         throw new OrderNotFound("Order with reference " + reference + " not found!");
     }
 
+    /**
+     * Method create creates a new order by SalesOrderRequest.
+     *
+     * @param orderRequest of type SalesOrderRequest
+     * @return Order
+     */
     @Override
-    public Order createOrder(SalesOrderRequest orderRequest) {
+    public Order create(SalesOrderRequest orderRequest) {
         Order order = new Order();
         for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
-            Product product = productService.getProductByKey(entry.getKey());
+            Product product = productService.getByKey(entry.getKey());
 
             if (product.getSold() + entry.getValue() > product.getMaxSold()) {
                 throw new ProductLimitExceededException(
@@ -90,6 +111,12 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    /**
+     * Method addCustomerToOrder will add a customer to an order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     */
     @Override
     public void addCustomerToOrder(Order order, Customer customer) {
         order.setCustomer(customer);
@@ -98,8 +125,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * @param order
-     * @param orderStatus
+     * Method updateOrderStatus will update the order status and update the product count.
+     *
+     * @param order       of type Order
+     * @param orderStatus of type OrderStatus
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus orderStatus) {

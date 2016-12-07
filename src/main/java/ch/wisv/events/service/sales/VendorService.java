@@ -38,14 +38,6 @@ public interface VendorService {
     Vendor getByKey(String key);
 
     /**
-     * Method getById will return a Vendor by its id.
-     *
-     * @param id of type Long
-     * @return Vendor
-     */
-    Vendor getById(Long id);
-
-    /**
      * Method add will add a new Vendor.
      *
      * @param vendor of type Vendor
