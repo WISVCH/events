@@ -20,10 +20,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Product {
 
+    /**
+     * Field TIME_FORMAT format of the standard date time.
+     */
     private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**
-     * ID of the product, getter only so it can not be changed
+     * ID of the product, getter only so it can not be changed.
      */
     @Id
     @GeneratedValue
@@ -31,20 +34,20 @@ public class Product {
     public Long id;
 
     /**
-     * Key of the product, getter only so it can not be changed
+     * Key of the product, getter only so it can not be changed.
      */
     @Getter
     public String key;
 
     /**
-     * Title of the product
+     * Title of the product.
      */
     @Getter
     @Setter
     public String title;
 
     /**
-     * Description of the product
+     * Description of the product.
      */
     @Lob
     @Getter
@@ -52,44 +55,51 @@ public class Product {
     public String description;
 
     /**
-     * Price/Cost of the product
+     * Price/Cost of the product.
      */
     @Getter
     @Setter
     public float cost;
 
     /**
-     * Products sold
+     * Products sold.
      */
     @Getter
     @Setter
     public int sold;
 
     /**
-     * Maximum number of sold for the product. It is an
-     * Integer so it can be NULL.
+     * Maximum number of sold for the product. It is an Integer so it can be NULL.
      */
     @Getter
     @Setter
     public Integer maxSold;
 
     /**
-     * Start en End selling DateTime for the product.
+     * Start DateTime for selling this product.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
     @Getter
     @Setter
-    public LocalDateTime sellStart, sellEnd;
+    public LocalDateTime sellStart;
 
     /**
-     * Default constructor
+     * End DateTime for selling this product.
+     */
+    @DateTimeFormat(pattern = TIME_FORMAT)
+    @Getter
+    @Setter
+    public LocalDateTime sellEnd;
+
+    /**
+     * Default constructor.
      */
     public Product() {
         this.key = UUID.randomUUID().toString();
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param title       Title of the product
      * @param description Description of the product
@@ -107,6 +117,16 @@ public class Product {
         this.maxSold = maxSold;
         this.sellStart = sellStart;
         this.sellEnd = sellEnd;
+    }
+
+    /**
+     * Calculate the progress of the products sold and the target of the event and round number to
+     * two decimals.
+     *
+     * @return progress of event
+     */
+    public double calcProgress() {
+        return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
     }
 
 }

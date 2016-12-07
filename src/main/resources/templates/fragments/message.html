@@ -31,6 +31,12 @@
         <span th:text="${error}"></span>
     </div>
 
+    <div th:if="${warning}" class="alert alert-warning" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Warning:</span>
+        <span th:text="${warning}"></span>
+    </div>
+
     <div th:if="${message}" class="alert alert-info" role="alert">
         <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
         <span class="sr-only">Message:</span>

@@ -1,45 +1,51 @@
 package ch.wisv.events.data.model.product;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * ProductSearch Object.
+ * Search Object.
  * Object for search API.
  */
 @JsonAutoDetect
-public class ProductSearch {
+public class Search {
 
     /**
      * Query used for searching.
      */
-    public String query;
+    @Getter
+    @Setter
+    private String query;
 
     /**
      * Collection of suggested items.
      */
-    public Collection<ProductSearchItem> suggestions;
+    @Getter
+    @Setter
+    private Collection<SearchItem> suggestions;
 
     /**
      * Default Constructor.
      *
      * @param query Search query
      */
-    public ProductSearch(String query) {
+    public Search(String query) {
         this.query = query;
         this.suggestions = new ArrayList<>();
     }
 
     /**
-     * Add suggestion item to ProductSearch.
+     * Add suggestion item to Search.
      *
      * @param title Title of the Product
      * @param key   Key of the Product
      */
     public void addItem(String title, Long key) {
-        ProductSearchItem temp = new ProductSearchItem(title, key);
+        SearchItem temp = new SearchItem(title, key);
         this.suggestions.add(temp);
     }
 }

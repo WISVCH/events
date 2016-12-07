@@ -17,6 +17,7 @@
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 
     <!-- Custom styles for this template -->
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
@@ -35,12 +36,12 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/dashboard/fragments/header :: header">
+        <div th:replace="/fragments/header :: header">
             <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
         </div>
     </div>
     <div class="row content-wrapper">
-        <div th:replace="/dashboard/fragments/sidebar :: sidebar" class="col-xs-2"></div>
+        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
         <div class="col-xs-10 main">
             <div class="page-header">
                 <h1><samp>Edit event</samp></h1>
@@ -48,7 +49,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div th:replace="/dashboard/fragments/message :: messages"></div>
+                    <div th:replace="/fragments/message :: messages"></div>
                 </div>
             </div>
 
@@ -73,7 +74,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-<script src="https://use.fontawesome.com/359d25f9da.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>

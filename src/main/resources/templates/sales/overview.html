@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{../../favicon.ico}">
+
+    <title>Events - Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
+          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/chales.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<!--<div th:replace="dashboard/fragments/header :: header">-->
+<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
+<!--</div>-->
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#"><samp>CH events sell app</samp></a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="row content-wrapper main">
+        <div class="col-sm-12">
+            <div th:replace="/fragments/message :: messages"></div>
+        </div>
+
+        <div class="col-xs-12">
+            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.data.model.product.Product>"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.data.model.product.Product"*/-->
+            <!--/*@thymesVar id="orderRequest" type="ch.wisv.events.data.request.sales.SalesOrderRequest"*/-->
+            <form th:if="${products.size() > 0}" th:action="@{/sales/order/create}" th:object="${orderRequest}"
+                  method="POST">
+                <div class="row sell-product-block" th:each="product : ${products}">
+                    <div class="col-xs-12">
+                        <div class="well well-sm">
+                            <div class="row">
+                                <div class="col-xs-12 section-box">
+                                    <h3 th:text="${product.title}"></h3>
+                                    <div class="form-group amount-block">
+                                        <div class="input-group">
+                                            <div class="input-group-addon decrease">
+                                                <i class="fa fa-minus fa-fw"></i>
+                                            </div>
+                                            <input type="number" class="form-control"
+                                                   placeholder="Amount" step="1"
+                                                   min="0" max="1"
+                                                   th:field="*{products[__${product.key}__]}">
+                                            <div class="input-group-addon increase">
+                                                <i class="fa fa-plus fa-fw"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">
+                    Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <h3 class="text-center" style="margin-top: 60px;" th:if="${products.size() == 0}">Sold out.</h3>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/sales/sales.min.js}"></script>
+</body>
+</html>

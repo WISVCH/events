@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../favicon.ico">
+    <link rel="icon" th:href="@{../../favicon.ico}">
 
     <title>Events - Dashboard</title>
 
@@ -17,6 +17,7 @@
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 
     <!-- Custom styles for this template -->
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
@@ -31,12 +32,12 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/dashboard/fragments/header :: header">
+        <div th:replace="/fragments/header :: header">
             <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
         </div>
     </div>
     <div class="row content-wrapper">
-        <div th:replace="/dashboard/fragments/sidebar :: sidebar" class="col-xs-2"></div>
+        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
         <div class="col-xs-10 main">
             <div class="page-header">
                 <h1><samp>Events</samp><a class="btn btn-primary btn-dashboard-header" href="create/">Create new
@@ -45,12 +46,12 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div th:replace="/dashboard/fragments/message :: messages"></div>
+                    <div th:replace="/fragments/message :: messages"></div>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table id="eventsTable" class="table table-hover">
+                <table id="dataTable" class="table table-hover">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -62,10 +63,11 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <!--/*@thymesVar id="events" type="List<ch.wisv.events.data.model.event.Event>"*/-->
                     <!--/*@thymesVar id="event" type="ch.wisv.events.data.model.event.Event"*/-->
                     <tr th:each="event : ${events}">
                         <td>
-                            <input type="checkbox"/>
+                            <input class="form-control" type="checkbox"/>
                         </td>
                         <td th:text="${event.title}">Row 1 Data 1</td>
                         <td th:text="${event.options.published}"></td>
@@ -87,10 +89,10 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${event.key}" class="btn btn-info">
+                                <a th:href="'edit/' + ${event.getKey()} + '/'" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${event.key}"
+                                <a th:href="'delete/' + ${event.getKey()}"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
@@ -103,17 +105,16 @@
             </div>
         </div>
     </div>
-
 </div>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
-        $('#eventsTable').DataTable({
+        $('#dataTable').DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "60px", targets: 2},

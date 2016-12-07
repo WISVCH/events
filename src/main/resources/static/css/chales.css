@@ -1,0 +1,45 @@
+.btn-lock {
+    padding: 15px;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+    padding-top: 60px;
+}
+
+.fa-check {
+    color: #cccccc;
+}
+
+.checked .fa-check {
+    color: #5cb85c;
+}
+
+.section-box h3 {
+    margin-top: 0;
+}
+
+.sell-product-block .amount-block {
+    margin-bottom: 0;
+}
+
+.amount-block input {
+    text-align: center;
+}
+
+.amount-block .decrease {
+    border-color: #a94442;
+    color: #a94442;
+    background-color: #f2dede;
+    cursor: pointer;
+}
+
+.amount-block .increase {
+    color: #3c763d;
+    border-color: #3c763d;
+    background: #dff0d8;
+    cursor: pointer;
+}

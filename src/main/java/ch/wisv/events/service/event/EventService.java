@@ -18,7 +18,7 @@ public interface EventService {
      *
      * @return Collection of Events
      */
-    Collection<Event> getAllEvents();
+    List<Event> getAllEvents();
 
     /**
      * Get all upcoming Events
@@ -33,14 +33,6 @@ public interface EventService {
      * @return Collection of Events
      */
     Collection<Event> getAvailableEvents();
-
-    /**
-     * Get Event by ID
-     *
-     * @param id id of an Event
-     * @return Event
-     */
-    Event getEventById(Long id);
 
     /**
      * Get Event by key

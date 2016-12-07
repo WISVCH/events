@@ -21,14 +21,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Event findById(Long id);
 
     /**
-     * Find an Event by the Title of an Event
-     *
-     * @param title title of Event
-     * @return list of Events
-     */
-    List<Event> findByTitle(String title);
-
-    /**
      * Find Events that end after a certain dateTime, so all upcoming events
      *
      * @param dateTime DateTime an event should end after

@@ -13,19 +13,19 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Event entity
+ * Event entity.
  */
 @Entity
 @AllArgsConstructor
 public class Event {
 
     /**
-     * Date format
+     * Date format.
      */
-    private final static String TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    private final String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**
-     * ID of the event, getter only so it can not be changed
+     * ID of the event, getter only so it can not be changed.
      */
     @Id
     @GeneratedValue
@@ -33,63 +33,98 @@ public class Event {
     private long id;
 
     /**
-     * Key of the event, getter only so it can not be changed
+     * Key of the event, getter only so it can not be changed.
      */
     @Getter
     private String key;
 
+
     /**
-     * Title of the event,
-     * Description of the event,
-     * Location of the event,
-     * ImageURL of the event (path to the image);
+     * Field title title of the Event.
      */
     @Getter
     @Setter
-    private String title, description, location, imageURL;
+    private String title;
 
     /**
-     * Product that are related to this event and can be sold.
-     * OneToMany so one Product can be used by one Event, but an Event
-     * can contain multiple Products.
+     * Field description description of the Event.
+     */
+    @Getter
+    @Setter
+    private String description;
+
+    /**
+     * Field location location of the Event.
+     */
+    @Getter
+    @Setter
+    private String location;
+
+    /**
+     * Field imageURL imageUrl to an image of the Event.
+     */
+    @Getter
+    @Setter
+    private String imageURL;
+
+    /**
+     * Product that are related to this event and can be sold. OneToMany so one Product can be used by one Event, but
+     * an Event can contain multiple Products.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     @Getter
     @Setter
     private Set<Product> products;
 
+
     /**
-     * Start and ending time of the Event.
+     * Field start starting time of the Event.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
     @Getter
     @Setter
-    private LocalDateTime start, end;
+    private LocalDateTime start;
 
     /**
-     * Amount of products sold and the target of the event.
+     * Field end ending time of the Event.
+     */
+    @DateTimeFormat(pattern = TIME_FORMAT)
+    @Getter
+    @Setter
+    private LocalDateTime end;
+
+
+    /**
+     * Field sold amount of tickets sold by this Event.
      */
     @Getter
     @Setter
-    private int sold, target;
+    private int sold;
+
 
     /**
-     * Maximum number of products sold for the event. Its an Integer instead of
-     * an int, so the value can be null.
+     * Field target target of the amount of tickets sold by this Event.
+     */
+    @Getter
+    @Setter
+    private int target;
+
+    /**
+     * Maximum number of products sold for the event. Its an Integer instead of an int, so the value can be null.
      */
     @Getter
     @Setter
     private Integer limit;
 
     /**
-     * Options for the event;
+     * Options for the event.
      */
     @Getter
     @Setter
     private EventOptions options;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public Event() {
         this.key = UUID.randomUUID().toString();
@@ -98,7 +133,7 @@ public class Event {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param title       Title of the Event
      * @param description Description of the Event

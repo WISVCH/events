@@ -23,7 +23,7 @@ public interface ProductService {
      *
      * @return Collection of Products
      */
-    Collection<Product> getAvailableProducts();
+    List<Product> getAvailableProducts();
 
     /**
      * Get Product by Key
@@ -31,27 +31,27 @@ public interface ProductService {
      * @param key key of a Product
      * @return Product
      */
-    Product getProductByKey(String key);
+    Product getByKey(String key);
 
     /**
      * Update Product using a ProductRequest
      *
      * @param productRequest ProductRequest containing the new product information
      */
-    void updateProduct(ProductRequest productRequest);
+    void update(ProductRequest productRequest);
 
     /**
      * Add a new Product using a ProductRequest
      *
      * @param productRequest ProductRequest containing the product information
      */
-    void addProduct(ProductRequest productRequest);
+    void add(ProductRequest productRequest);
 
     /**
      * Remove a Product
      *
      * @param product Product to be deleted.
      */
-    void deleteProduct(Product product);
+    void delete(Product product);
 
 }

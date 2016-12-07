@@ -1,7 +1,7 @@
 package ch.wisv.events.controller.rest;
 
 import ch.wisv.events.data.model.product.Product;
-import ch.wisv.events.data.model.product.ProductSearch;
+import ch.wisv.events.data.model.product.Search;
 import ch.wisv.events.exception.ProductNotFound;
 import ch.wisv.events.response.product.ProductDefaultResponse;
 import ch.wisv.events.service.event.EventService;
@@ -44,7 +44,7 @@ public class ProductRESTController {
     }
 
     /**
-     * Get request to get all all products
+     * Get request to get all all products.
      *
      * @return List of all Products
      */
@@ -55,11 +55,17 @@ public class ProductRESTController {
                 productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
     }
 
+    /**
+     * Method getProductByKey get product by key.
+     *
+     * @param key of type String
+     * @return ResponseEntity<?>
+     */
     @GetMapping(value = "/{key}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProductByKey(@PathVariable String key) {
         try {
-            Product product = productService.getProductByKey(key);
+            Product product = productService.getByKey(key);
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
         } catch (ProductNotFound e) {
@@ -71,13 +77,13 @@ public class ProductRESTController {
      * Get all unused products into search format.
      *
      * @param query query
-     * @return ProductSearch Object
+     * @return Search Object
      */
     @GetMapping(value = "/unused/search")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductSearch getSearchProducts(@RequestParam(value = "query", required = false) String query) {
+    public Search getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();
-        ProductSearch search = new ProductSearch(query);
+        Search search = new Search(query);
 
         String finalQuery = (query != null) ? query : "";
         productList.stream()

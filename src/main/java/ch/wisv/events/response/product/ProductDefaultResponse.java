@@ -25,19 +25,36 @@ import javax.persistence.Lob;
 @AllArgsConstructor
 public class ProductDefaultResponse {
 
+    /**
+     * Field key of the Product
+     */
     @Getter
     private String key;
 
+    /**
+     * Field title of the Product
+     */
     @Getter
     private String title;
 
+    /**
+     * Field description of the Product
+     */
     @Lob
     @Getter
     private String description;
 
+    /**
+     * Field cost of the Product
+     */
     @Getter
     private float cost;
 
+    /**
+     * Constructor ProductDefaultResponse creates a new ProductDefaultResponse instance.
+     *
+     * @param product of type Product
+     */
     public ProductDefaultResponse(Product product) {
         this.key = product.getKey();
         this.title = product.getTitle();

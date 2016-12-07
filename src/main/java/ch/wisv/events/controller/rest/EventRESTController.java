@@ -94,4 +94,5 @@ public class EventRESTController {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
 }

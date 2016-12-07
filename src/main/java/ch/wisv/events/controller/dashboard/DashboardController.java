@@ -31,15 +31,4 @@ public class DashboardController {
         return "dashboard/index";
     }
 
-    /**
-     * Get request on "/dashboard/login/" will show login-page.
-     *
-     * @param model SpringUI Model
-     * @return path to Thymeleaf template
-     */
-    @GetMapping("/login/")
-    public String login(Model model) {
-        return "dashboard/login";
-    }
-
 }

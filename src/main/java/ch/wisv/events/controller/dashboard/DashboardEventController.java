@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collection;
-import java.util.Random;
 
 /**
  * DashboardEventController.
@@ -47,14 +46,12 @@ public class DashboardEventController {
      * Get request on "/dashboard/events/" will show overview of all Events
      *
      * @param model SpringUI model
-     * @return path to Thymeleaf themplate
+     * @return path to Thymeleaf template
      */
     @GetMapping("/")
-    public String eventsOverview(Model model) {
-        // TODO: For testing
-        Random random = new Random();
+    public String index(Model model) {
         Collection<Event> events = eventService.getAllEvents();
-        events.forEach(e -> e.setSold(random.nextInt(100)));
+        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
 
         model.addAttribute("events", events);
         return "dashboard/events/index";
@@ -67,7 +64,7 @@ public class DashboardEventController {
      * @return path to Thymeleaf template
      */
     @GetMapping("/create/")
-    public String createEventView(Model model) {
+    public String create(Model model) {
         model.addAttribute("event", new EventRequest());
         model.addAttribute("eventStatus", new EventOptionsRequest());
 
@@ -81,7 +78,7 @@ public class DashboardEventController {
      * @return path to Thymeleaf template
      */
     @GetMapping("/edit/{key}")
-    public String editEventView(Model model, @PathVariable String key) {
+    public String edit(Model model, @PathVariable String key) {
         try {
             Event event = eventService.getEventByKey(key);
 
@@ -130,7 +127,7 @@ public class DashboardEventController {
     @PostMapping("/add")
     public String createEvent(@ModelAttribute @Validated EventRequest eventRequest, @ModelAttribute @Validated
             EventOptionsRequest eventOptionsRequest, RedirectAttributes
-            redirectAttributes) {
+                                      redirectAttributes) {
         try {
             Event event = eventService.addEvent(eventRequest);
             eventOptionsRequest.setKey(event.getKey());
@@ -192,7 +189,7 @@ public class DashboardEventController {
     public String editEvent(@ModelAttribute @Validated EventRequest eventRequest,
                             RedirectAttributes redirectAttributes) {
         eventService.updateEvent(eventRequest);
-        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+        redirectAttributes.addFlashAttribute("message", "Auto saved!");
 
         return "redirect:/dashboard/events/edit/" + eventRequest.getKey();
     }
@@ -208,8 +205,8 @@ public class DashboardEventController {
     public String updateEventOptions(@ModelAttribute @Validated EventOptionsRequest request,
                                      RedirectAttributes redirectAttributes) {
         eventService.updateEventOptions(request);
-        redirectAttributes.addFlashAttribute("message", "Autosaved!");
+        redirectAttributes.addFlashAttribute("message", "Auto saved!");
 
-        return "redirect:/dashboard/events/edit/" + request.getKey();
+        return "redirect:/dashboard/events/edit/" + request.getKey() + "/";
     }
 }

@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
      * @return Collection of Events
      */
     @Override
-    public Collection<Event> getAllEvents() {
+    public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
@@ -68,7 +68,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all available Events
+     * Get all available events
      *
      * @return Collection of Events
      */
@@ -79,18 +79,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get event by id
-     *
-     * @param id id of an Event
-     * @return Event
-     */
-    @Override
-    public Event getEventById(Long id) {
-        return eventRepository.findById(id);
-    }
-
-    /**
-     * Save and flush new event create by EventRequest and the EventRequestFactory.
+     * Add a new Event by a EventRequest
      *
      * @param eventRequest EventRequest
      */
@@ -103,11 +92,9 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Add Product to an Event
+     * Add a product to an Event
      *
      * @param eventProductRequest EventProductRequest
-     * @throws ch.wisv.events.exception.ProductInUseException when product is already added to an other Event,
-     *                                                        because of the OneToMany relation
      */
     @Override
     public void addProductToEvent(EventProductRequest eventProductRequest) {
@@ -124,11 +111,10 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get an Event by key
+     * Get Event by key
      *
      * @param key key of an Event
-     * @return Event or if not found null
-     * @throws ch.wisv.events.exception.EventNotFound when Event by Key is not found.
+     * @return Event
      */
     @Override
     public Event getEventByKey(String key) {
@@ -140,7 +126,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Delete Product from Event
+     * Delete a product from an Event
      *
      * @param eventId   eventId
      * @param productId productId
@@ -155,7 +141,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update an Event by EventRequest
+     * Update an Event by an EventRequest
      *
      * @param eventRequest EventRequest
      */
@@ -178,7 +164,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update the EventOptions of and Event
+     * Update the EventOptions of an Event
      *
      * @param request EventOptionsRequest
      */
@@ -193,7 +179,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get Event by Product key.
+     * Get all Events that are connected to the same Product
      *
      * @param key key of an Product
      * @return List of Events
