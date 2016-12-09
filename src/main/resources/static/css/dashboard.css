@@ -156,3 +156,15 @@ body {
 .spinner.active {
     display: inline-block;
 }
+
+#dataTable tbody tr {
+    cursor: pointer;
+}
+
+.main-button {
+    font-size: 20px;
+}
+
+.main-button:hover a {
+    text-decoration: none;
+}

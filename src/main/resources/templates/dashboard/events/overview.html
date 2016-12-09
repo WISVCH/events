@@ -73,7 +73,7 @@
                                th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
                         </td>
                         <td>
-                            <a th:href="'/dashboard/products/edit/' + ${soldProduct.getProduct().getKey()} + '/'"
+                            <a th:href="'/dashboard/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'"
                                th:text="${soldProduct.getProduct().getTitle()}"></a>
                         </td>
                         <td>

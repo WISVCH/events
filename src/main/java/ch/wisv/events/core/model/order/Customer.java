@@ -33,7 +33,7 @@ public class Customer {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field key UUID of the customer.

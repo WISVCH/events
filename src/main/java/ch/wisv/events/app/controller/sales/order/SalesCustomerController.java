@@ -1,9 +1,9 @@
-package ch.wisv.events.app.controller.sales;
+package ch.wisv.events.app.controller.sales.order;
 
+import ch.wisv.events.app.request.CustomerAddRequest;
+import ch.wisv.events.app.request.CustomerCreateRequest;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.app.request.SalesCustomerAddRequest;
-import ch.wisv.events.app.request.SalesCustomerRequest;
 import ch.wisv.events.core.exception.InvalidCustomerException;
 import ch.wisv.events.core.exception.OrderNotFound;
 import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
@@ -36,7 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Controller
-@RequestMapping("/sales/customer")
+@RequestMapping("/sales/order/customer")
 @PreAuthorize("hasRole('USER')")
 public class SalesCustomerController {
 
@@ -71,32 +71,32 @@ public class SalesCustomerController {
     @GetMapping("/create/")
     public String createCustomer(Model model, RedirectAttributes redirectAttributes) {
         Object object = model.asMap().get("orderUser");
-        if (object instanceof SalesCustomerAddRequest) {
-            SalesCustomerAddRequest customer = (SalesCustomerAddRequest) object;
+        if (object instanceof CustomerAddRequest) {
+            CustomerAddRequest customer = (CustomerAddRequest) object;
 
-            SalesCustomerRequest request = new SalesCustomerRequest();
+            CustomerCreateRequest request = new CustomerCreateRequest();
             request.setOrderReference(customer.getOrderReference());
             request.setCustomerRFIDToken(customer.getRfidToken());
 
             model.addAttribute("customerCreate", request);
 
-            return "sales/create-customer";
+            return "sales/order/create-customer";
         }
         redirectAttributes.addFlashAttribute("error", "Order does not exists!");
 
-        return "redirect:/sales/overview/";
+        return "redirect:/sales/order/";
     }
 
     /**
      * Method createCustomer creates a new customer.
      *
      * @param redirectAttributes of type RedirectAttributes
-     * @param request            of type SalesCustomerRequest
+     * @param request            of type CustomerCreateRequest
      * @return String
      */
     @PostMapping("/create")
     public String createCustomer(RedirectAttributes redirectAttributes,
-                                 @ModelAttribute @Validated SalesCustomerRequest request) {
+                                 @ModelAttribute @Validated CustomerCreateRequest request) {
         try {
             Order order = orderService.getByReference(request.getOrderReference());
             Customer customer = customerService.create(request);
@@ -104,24 +104,24 @@ public class SalesCustomerController {
             orderService.addCustomerToOrder(order, customer);
             redirectAttributes.addFlashAttribute("reference", order.getPublicReference());
 
-            return "redirect:/sales/payment/";
+            return "redirect:/sales/order/payment/";
         } catch (OrderNotFound e) {
             redirectAttributes.addFlashAttribute("error", "Order does not exists!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         } catch (RFIDTokenAlreadyUsedException e) {
             redirectAttributes.addFlashAttribute("reference", request.getOrderReference());
 
-            return "redirect:/sales/customer/create/";
+            return "redirect:/sales/order/customer/create/";
         } catch (InvalidCustomerException e) {
-            SalesCustomerAddRequest customer = new SalesCustomerAddRequest();
+            CustomerAddRequest customer = new CustomerAddRequest();
             customer.setOrderReference(request.getOrderReference());
             customer.setRfidToken(request.getCustomerRFIDToken());
 
             redirectAttributes.addFlashAttribute("orderUser", customer);
             redirectAttributes.addFlashAttribute("error", "Please fill in all the required fields!");
 
-            return "redirect:/sales/customer/create/";
+            return "redirect:/sales/order/customer/create/";
         }
     }
 

@@ -45,9 +45,9 @@
         <div th:classappend="'col-md-12 col-md-offset-' + ${(12 - 2 * locations.size()) / 2}">
             <div class="row">
                 <!--/*@thymesVar id="location" type="ch.wisv.events.app.utils.AppLocationEnum"*/-->
-                <div class="col-md-2 text-center" th:each="location : ${locations}">
+                <div class="col-md-2 text-center main-button" th:each="location : ${locations}">
                     <a th:href="${location.getUrl()}">
-                        <i th:classappend="'fa ' + ${location.getIcon()}" style="font-size: 7em;"></i> <br>
+                        <i th:classappend="'fa fa-5x ' + ${location.getIcon()}"></i> <br>
                         <span th:text="${location.getName()}"></span>
                     </a>
                 </div>

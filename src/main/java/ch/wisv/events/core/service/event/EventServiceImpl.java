@@ -127,12 +127,11 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Delete a product from an Event
-     *
-     * @param eventId   eventId
+     *  @param eventId   eventId
      * @param productId productId
      */
     @Override
-    public void deleteProductFromEvent(Long eventId, Long productId) {
+    public void deleteProductFromEvent(Integer eventId, Integer productId) {
         Event event = eventRepository.findOne(eventId);
 
         Product product = productRepository.findOne(productId);
@@ -192,6 +191,32 @@ public class EventServiceImpl implements EventService {
                 events.add(x);
             }
         }));
+
+        return events;
+    }
+
+    /**
+     * Method soldFivePrevious returns the fivePrevious of this EventService object.
+     *
+     * @return the fivePrevious (type List<Event>) of this EventService object.
+     */
+    @Override
+    public List<Event> soldFivePrevious() {
+        List<Event> events = eventRepository.findTop5ByEndBeforeOrderByEndDesc(LocalDateTime.now());
+        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
+
+        return events;
+    }
+
+    /**
+     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
+     *
+     * @return the fiveUpcoming (type List<Event>) of this EventService object.
+     */
+    @Override
+    public List<Event> soldFiveUpcoming() {
+        List<Event> events = eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
+        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
 
         return events;
     }

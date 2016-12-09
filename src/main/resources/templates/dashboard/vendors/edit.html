@@ -71,7 +71,7 @@
                                             <label for="vendorGroup">LDAPGroup*</label>
                                             <select id="vendorGroup" class="form-control" th:field="*{ldapGroup}">
                                                 <option
-                                                        th:each="ldapgroup : ${T(ch.wisv.events.data.model.sales.LDAPGroupEnum).values()}"
+                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroupEnum).values()}"
                                                         th:value="${ldapgroup}"
                                                         th:selected="${ldapgroup == vendor.ldapGroup}"
                                                         th:text="${ldapgroup.getName()}">
@@ -83,13 +83,12 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="productStart">Starting selling*</label>
+                                            <label for="productStart">Starting selling</label>
 
                                             <input type="datetime-local" id="productStart"
                                                    th:field="*{startingTime}"
                                                    th:value="*{startingTime}"
-                                                   class="form-control"
-                                                   required>
+                                                   class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -122,6 +121,7 @@
                                                     th:text="${event.getTitle()}">
                                             </option>
                                         </select>
+                                        <p class="help-block">Use CRTL (Windows + Linux) or CMD (Mac) so select multiple events.</p>
                                     </div>
                                 </div>
                             </div>

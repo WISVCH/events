@@ -1,13 +1,10 @@
 package ch.wisv.events.app.controller.sales;
 
 import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.app.request.OrderRequest;
+import ch.wisv.events.app.request.ScanProductRequest;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.sales.Vendor;
-import ch.wisv.events.app.request.SalesCustomerAddRequest;
-import ch.wisv.events.app.request.SalesOrderRequest;
-import ch.wisv.events.core.exception.OrderNotFound;
-import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.vendor.VendorService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,33 +46,24 @@ public class SalesController {
     private final VendorService vendorService;
 
     /**
-     * Field orderService
-     */
-    private final OrderService orderService;
-
-    /**
      * Constructor SalesController creates a new SalesController instance.
      *
      * @param vendorService of type VendorService
-     * @param orderService  of type OrderService
      */
-    public SalesController(VendorService vendorService, OrderService orderService) {
+    public SalesController(VendorService vendorService) {
         this.vendorService = vendorService;
-        this.orderService = orderService;
     }
 
     /**
      * Method index shows the index and check if the user has granted products.
      *
-     * @param auth of type OIDCAuthenticationToken
      * @return String
      */
     @GetMapping("/")
-    public String index(OIDCAuthenticationToken auth) {
-        if (this.getGrantedProducts(auth).size() > 0) return "redirect:/sales/overview/";
-
+    public String index() {
         return "sales/index";
     }
+
 
     /**
      * Method overviewIndex shows the products that the user is allowed to sell.
@@ -85,40 +72,38 @@ public class SalesController {
      * @param model of type Model
      * @return String
      */
-    @GetMapping("/overview/")
-    public String overviewIndex(OIDCAuthenticationToken auth, Model model) {
+    @GetMapping("/order/")
+    public String orderIndex(OIDCAuthenticationToken auth, Model model) {
         List<Product> products = this.getGrantedProducts(auth);
 
         if (products.size() == 0) return "redirect:/sales/";
 
-        products = products.stream().filter(x -> x.getSold() < x.getMaxSold()).collect(Collectors.toList());
+        products = products.stream().filter(x -> x.getMaxSold() == null || x.getSold() < x.getMaxSold()).collect
+                (Collectors.toList());
 
         model.addAttribute("products", products);
-        model.addAttribute("orderRequest", new SalesOrderRequest());
+        model.addAttribute("orderRequest", new OrderRequest());
 
-        return "sales/overview";
+        return "sales/order/index";
     }
 
     /**
-     * Method scanRFID shows view to scan the RFID.
+     * Method scanIndex shows the event your are allowed to scan.
      *
-     * @param redirectAttributes of type RedirectAttributes
-     * @param model              of type Model
+     * @param auth of type OIDCAuthenticationToken
+     * @param model of type Model
      * @return String
      */
     @GetMapping("/scan/")
-    public String scanRFID(RedirectAttributes redirectAttributes, Model model) {
-        try {
-            Order order = orderService.getByReference((String) model.asMap().get("reference"));
-            model.addAttribute("order", order);
-            model.addAttribute("orderUserRequest", new SalesCustomerAddRequest(order.getPublicReference()));
+    public String scanIndex(OIDCAuthenticationToken auth, Model model) {
+        List<Product> products = this.getGrantedProducts(auth);
 
-            return "sales/scan";
-        } catch (OrderNotFound e) {
-            redirectAttributes.addFlashAttribute("error", "Order does not exists!");
+        if (products.size() == 0) return "redirect:/sales/";
 
-            return "redirect:/sales/overview/";
-        }
+        model.addAttribute("products", products);
+        model.addAttribute("scanProduct", new ScanProductRequest());
+
+        return "sales/scan/index";
     }
 
     /**
@@ -132,19 +117,16 @@ public class SalesController {
         if (userInfo instanceof CHUserInfo) {
             CHUserInfo info = (CHUserInfo) userInfo;
             List<Vendor> vendors = vendorService.getAll().stream()
-                                                .filter(x -> x.getStartingTime()
-                                                              .isBefore(LocalDateTime.now()))
-                                                .filter(x -> x.getEndingTime()
-                                                              .isAfter(LocalDateTime.now()))
-                                                .filter(x -> info.getLdapGroups().stream()
-                                                                 .anyMatch(g -> g.equals(x.getLdapGroup
-                                                                         ().getName())))
-                                                .collect(Collectors.toCollection(ArrayList::new));
+                    .filter(x -> info.getLdapGroups().stream().anyMatch(g -> g.equals(x.getLdapGroup().getName())))
+                    .filter(x -> x.getStartingTime() == null || x.getStartingTime().isBefore(LocalDateTime.now()))
+                    .filter(x -> x.getEndingTime() == null || x.getEndingTime().isAfter(LocalDateTime.now()))
+                    .collect(Collectors.toCollection(ArrayList::new));
             ArrayList<Product> products = new ArrayList<>();
-            vendors.forEach(x -> x.getEvents().forEach(y -> products.addAll(y.getProducts())));
+            vendors.forEach(x -> x.getEvents().forEach(p -> products.addAll(p.getProducts())));
 
             return products;
         }
         return new ArrayList<>();
     }
+
 }

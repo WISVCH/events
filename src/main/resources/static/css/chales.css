@@ -43,3 +43,21 @@
     background: #dff0d8;
     cursor: pointer;
 }
+
+.scan-page {
+    height: calc(100vh);
+    padding-top: calc(40vh - 32px);
+    text-align: center;
+}
+
+.scan-page.error {
+    background: #a94442;
+}
+
+.scan-page.correct {
+    background: #3c763d;
+}
+
+.scan-page.already {
+    background: #a9a42b;
+}

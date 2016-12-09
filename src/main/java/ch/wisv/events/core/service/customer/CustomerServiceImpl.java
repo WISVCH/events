@@ -2,7 +2,7 @@ package ch.wisv.events.core.service.customer;
 
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.app.request.SalesCustomerRequest;
+import ch.wisv.events.app.request.CustomerCreateRequest;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
@@ -74,14 +74,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Create a new customer by SalesCustomerRequest.
+     * Create a new customer by CustomerCreateRequest.
      * TODO: should be replaces by add(Customer customer)
      *
-     * @param request SalesCustomerRequest
+     * @param request CustomerCreateRequest
      * @return customer
      */
     @Override
-    public Customer create(SalesCustomerRequest request) {
+    public Customer create(CustomerCreateRequest request) {
         if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
             throw new InvalidCustomerException("Customer name or email is empty");
         }

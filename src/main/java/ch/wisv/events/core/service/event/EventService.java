@@ -57,11 +57,10 @@ public interface EventService {
 
     /**
      * Delete a product from an Event
-     *
-     * @param eventId   eventId
+     *  @param eventId   eventId
      * @param productId productId
      */
-    void deleteProductFromEvent(Long eventId, Long productId);
+    void deleteProductFromEvent(Integer eventId, Integer productId);
 
     /**
      * Update an Event by an EventRequest
@@ -91,5 +90,20 @@ public interface EventService {
      * @return List of Events
      */
     List<Event> getEventByProductKey(String key);
+
+
+    /**
+     * Method soldFivePrevious returns the fivePrevious of this EventService object.
+     *
+     * @return the fivePrevious (type List<Event>) of this EventService object.
+     */
+    List<Event> soldFivePrevious();
+
+    /**
+     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
+     *
+     * @return the fiveUpcoming (type List<Event>) of this EventService object.
+     */
+    List<Event> soldFiveUpcoming();
 
 }

@@ -3,9 +3,6 @@ package ch.wisv.events.app.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
  * <p>
@@ -22,13 +19,16 @@ import java.util.Map;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SalesOrderRequest {
+public class ScanProductRequest {
 
+    /** Field productKey  */
     @Getter
     @Setter
-    public Map<String, Integer> products;
+    private String productKey;
 
-    public SalesOrderRequest() {
-        this.products = new HashMap<>();
-    }
+    /** Field rfidToken  */
+    @Getter
+    @Setter
+    private String rfidToken;
+
 }

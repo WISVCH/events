@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -61,6 +62,18 @@ public class SoldProductServiceImpl implements SoldProductService {
     }
 
     /**
+     * Method getByCustomerAndProduct find sold products by customer.
+     *
+     * @param customer of type Customer
+     * @param product  of type Product
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product) {
+        return soldProductRepository.findAllByCustomerAndProduct(customer, product);
+    }
+
+    /**
      * Method create ...
      *
      * @param order of type Order
@@ -90,5 +103,15 @@ public class SoldProductServiceImpl implements SoldProductService {
         for (SoldProduct soldProduct : soldProducts) {
             soldProductRepository.delete(soldProduct);
         }
+    }
+
+    /**
+     * Update sold product
+     *
+     * @param soldProduct
+     */
+    @Override
+    public void update(SoldProduct soldProduct) {
+        soldProductRepository.save(soldProduct);
     }
 }

@@ -40,11 +40,10 @@ public class Search {
 
     /**
      * Add suggestion item to Search.
-     *
-     * @param title Title of the Product
+     *  @param title Title of the Product
      * @param key   Key of the Product
      */
-    public void addItem(String title, Long key) {
+    public void addItem(String title, Integer key) {
         SearchItem temp = new SearchItem(title, key);
         this.suggestions.add(temp);
     }

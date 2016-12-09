@@ -9,7 +9,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
-import ch.wisv.events.app.request.SalesOrderRequest;
+import ch.wisv.events.app.request.OrderRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -105,18 +105,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Method create creates a new order by SalesOrderRequest.
+     * Method create creates a new order by OrderRequest.
      *
-     * @param orderRequest of type SalesOrderRequest
+     * @param orderRequest of type OrderRequest
      * @return Order
      */
     @Override
-    public Order create(SalesOrderRequest orderRequest) {
+    public Order create(OrderRequest orderRequest) {
         Order order = new Order();
         for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
             Product product = productService.getByKey(entry.getKey());
 
-            if (product.getSold() + entry.getValue() > product.getMaxSold()) {
+            if (product.getMaxSold() != null && product.getSold() + entry.getValue() > product.getMaxSold()) {
                 throw new ProductLimitExceededException(
                         "Not enough products of " + product.getTitle() + ", only " + (product
                                 .getMaxSold() - product.getSold()) + " items left. ");

@@ -30,7 +30,7 @@ public class Event {
     @Id
     @GeneratedValue
     @Getter
-    private long id;
+    private Integer id;
 
     /**
      * Key of the event, getter only so it can not be changed.

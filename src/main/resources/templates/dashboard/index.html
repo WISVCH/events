@@ -42,7 +42,37 @@
     <div class="row content-wrapper">
         <div th:replace="/fragments/sidebar :: sidebar"></div>
         <div class="col-sm-9 col-md-10 main">
-            <h1><samp>Dashboard</samp></h1>
+            <div class="page-header">
+                <h1><samp>Dashboard</samp></h1>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Statistics upcoming Events</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div style="width: 100%;">
+                                <canvas id="comingEvents"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Statistics previous Events</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div style="width: 100%;">
+                                <canvas id="previousEvents"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -52,5 +82,149 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script>
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(231,233,237)'
+    };
+
+    window.randomScalingFactor = function () {
+        return Math.round(Math.random() * 100);
+    };
+
+    var color = Chart.helpers.color;
+    var previousBarData = {
+        labels: [
+            "[[${previous[0]}]]",
+            "[[${previous[1]}]]",
+            "[[${previous[2]}]]",
+            "[[${previous[3]}]]",
+            "[[${previous[4]}]]"
+        ],
+        datasets: [{
+            label: 'Target',
+            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+                [[${previousTarget[0]}]],
+                [[${previousTarget[1]}]],
+                [[${previousTarget[2]}]],
+                [[${previousTarget[3]}]],
+                [[${previousTarget[4]}]]
+            ]
+        }, {
+            label: 'Sold',
+            backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.green,
+            borderWidth: 1,
+            data: [
+                [[${previousSold[0]}]],
+                [[${previousSold[1]}]],
+                [[${previousSold[2]}]],
+                [[${previousSold[3]}]],
+                [[${previousSold[4]}]]
+            ]
+        }, {
+            label: 'Scanned',
+            backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.red,
+            borderWidth: 1,
+            data: [
+                [[${previousScanned[0]}]],
+                [[${previousScanned[1]}]],
+                [[${previousScanned[2]}]],
+                [[${previousScanned[3]}]],
+                [[${previousScanned[4]}]]
+            ]
+        }]
+    };
+
+    var comingBarData = {
+        labels: [
+            "[[${upcoming[0]}]]",
+            "[[${upcoming[1]}]]",
+            "[[${upcoming[2]}]]",
+            "[[${upcoming[3]}]]",
+            "[[${upcoming[4]}]]"
+        ],
+        datasets: [{
+            label: 'Target',
+            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+                [[${upcomingTarget[0]}]],
+                [[${upcomingTarget[1]}]],
+                [[${upcomingTarget[2]}]],
+                [[${upcomingTarget[3]}]],
+                [[${upcomingTarget[4]}]]
+            ]
+        }, {
+            label: 'Sold',
+            backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.green,
+            borderWidth: 1,
+            data: [
+                [[${upcomingSold[0]}]],
+                [[${upcomingSold[1]}]],
+                [[${upcomingSold[2]}]],
+                [[${upcomingSold[3]}]],
+                [[${upcomingSold[4]}]]
+            ]
+        }]
+
+    };
+
+    window.onload = function () {
+        var previous = document.getElementById("previousEvents").getContext("2d");
+        window.myBar = new Chart(previous, {
+            type: 'bar',
+            data: previousBarData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var coming = document.getElementById("comingEvents").getContext("2d");
+        window.myBar = new Chart(coming, {
+            type: 'bar',
+            data: comingBarData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    };
+</script>
 </body>
 </html>

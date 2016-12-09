@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.sales;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.utils.LDAPGroupEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,7 +42,7 @@ public class Vendor {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field key UUId of the vendor.

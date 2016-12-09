@@ -37,6 +37,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
      * @param id of type Long
      * @return Optional<Vendor>
      */
-    Optional<Vendor> findById(Long id);
+    Optional<Vendor> findById(Integer id);
 
 }

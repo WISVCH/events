@@ -1,11 +1,10 @@
-package ch.wisv.events.core.model.order;
+package ch.wisv.events.app.request;
 
-import ch.wisv.events.core.model.product.Product;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -23,41 +22,13 @@ import java.util.UUID;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Entity
-public class SoldProduct
-{
-
-    @Id
-    @GeneratedValue
-    @Getter
-    private Integer id;
+public class OrderRequest {
 
     @Getter
     @Setter
-    private String key;
+    public Map<String, Integer> products;
 
-    @Getter
-    @Setter
-    @ManyToOne
-    private Product product;
-
-    @Getter
-    @Setter
-    @ManyToOne
-    private Order order;
-
-    @Getter
-    @Setter
-    @ManyToOne
-    private Customer customer;
-
-    @Getter
-    @Setter
-    private SoldProductStatus status;
-
-    public SoldProduct() {
-        this.key = UUID.randomUUID().toString();
-        this.status = SoldProductStatus.OPEN;
+    public OrderRequest() {
+        this.products = new HashMap<>();
     }
-
 }

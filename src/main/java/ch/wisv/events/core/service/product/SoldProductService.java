@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -39,6 +40,16 @@ public interface SoldProductService {
      */
     List<SoldProduct> getByProduct(Product product);
 
+
+    /**
+     * Method getByCustomerAndProduct find sold products by customer.
+     *
+     * @param customer of type Customer
+     * @param product  of type Product
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product);
+
     /**
      * Method create ...
      *
@@ -53,4 +64,10 @@ public interface SoldProductService {
      */
     void remove(Order order);
 
+    /**
+     * Update sold product
+     *
+     * @param soldProduct
+     */
+    void update(SoldProduct soldProduct);
 }

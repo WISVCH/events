@@ -28,11 +28,7 @@
     <![endif]-->
 </head>
 
-<body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
+<body id="scanPage">
 <div class="container-fluid">
     <div class="row">
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
@@ -45,57 +41,17 @@
     </div>
 
     <div class="row content-wrapper">
-        <div class="col-xs-12 main">
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-
-            <table class="table table-bordered">
-                <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td th:text="${order.getCustomer().getName()}"></td>
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    <td th:text="${order.getCustomer().getEmail()}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Item</th>
-                    <th class="text-right" style="width: 80px;">Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="product : ${order.getProducts()}">
-                    <td th:text="${product.getTitle()}"></td>
-                    <td class="text-right"
-                        th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 0, 'POINT', 2, 'COMMA')}"></td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th>Totaal</th>
-                    <th class="text-right"
-                        th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></th>
-                </tr>
-                </tfoot>
-            </table>
-
-            <form th:action="@{/sales/payment}" method="POST">
-                <input type="hidden" name="publicReference" th:value="${order.getPublicReference()}">
-                <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
-                        name="payment"
-                        th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOptions).values()}"
-                        th:value="${payment.getValue()}"
-                        th:text="${payment.getDisplayName()}">
-                </button>
+        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
+            <h3>Scan RFID- or NFC card</h3>
+            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.app.request.CustomerAddRequest"*/-->
+            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
+                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
+                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+                <input type="submit" style="display: none;">
             </form>
         </div>
     </div>
 </div>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>

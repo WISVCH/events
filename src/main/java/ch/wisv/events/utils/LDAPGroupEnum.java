@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.sales;
+package ch.wisv.events.utils;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'

@@ -28,11 +28,7 @@
     <![endif]-->
 </head>
 
-<body id="scanPage">
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
+<body id="scanProduct">
 <div class="container-fluid">
     <div class="row">
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
@@ -44,14 +40,29 @@
         </nav>
     </div>
 
-    <div class="row content-wrapper">
-        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
-            <h3>Scan RFID- or NFC card</h3>
-            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.app.request.SalesCustomerAddRequest"*/-->
-            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
-                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
-                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
-                <input type="submit" style="display: none;">
+    <div class="row content-wrapper main">
+        <div class="col-sm-12">
+            <div th:replace="/fragments/message :: messages"></div>
+        </div>
+
+        <div class="col-xs-12">
+            <!--/*@thymesVar id="scanProduct" type="ch.wisv.events.app.request.ScanProductRequest"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <form th:action="@{/sales/scan/check}" method="post" th:field="${scanProduct}" id="formScanProduct">
+                <legend>Scan ticket</legend>
+
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <select id="product" class="form-control" th:field="*{scanProduct.productKey}">
+                        <option th:each="product : ${products}" th:value="${product.getKey()}" th:text="${product.getTitle()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerRFID"></label>
+                    <input type="hidden" class="form-control" th:field="*{scanProduct.rfidToken}" id="customerRFID" placeholder="Input...">
+                </div>
             </form>
         </div>
     </div>

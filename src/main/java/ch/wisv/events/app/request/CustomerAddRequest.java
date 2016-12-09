@@ -21,7 +21,7 @@ import lombok.Setter;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @NoArgsConstructor
-public class SalesCustomerAddRequest {
+public class CustomerAddRequest {
 
     @Getter
     @Setter
@@ -31,7 +31,7 @@ public class SalesCustomerAddRequest {
     @Setter
     private String rfidToken;
 
-    public SalesCustomerAddRequest(String orderReference) {
+    public CustomerAddRequest(String orderReference) {
         this.orderReference = orderReference;
     }
 }

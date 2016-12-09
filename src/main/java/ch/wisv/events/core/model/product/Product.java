@@ -27,7 +27,7 @@ public class Product {
     @Id
     @GeneratedValue
     @Getter
-    public Long id;
+    public Integer id;
 
     /**
      * Key of the product, getter only so it can not be changed.

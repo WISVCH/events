@@ -1,5 +1,6 @@
 package ch.wisv.events.core.repository;
 
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -26,7 +27,7 @@ import java.util.List;
 public interface SoldProductRepository extends JpaRepository<SoldProduct, Integer> {
 
     /**
-     * Method findAllByOrder find list of sold product by order
+     * Method findAllByOrder find list of sold product by order.
      *
      * @param order of type Order
      * @return List<SoldProduct>
@@ -34,11 +35,21 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
     List<SoldProduct> findAllByOrder(Order order);
 
     /**
-     * Method findAllByProduct find list of sold products by product
+     * Method findAllByProduct find list of sold products by product.
      *
      * @param product of type Product
      * @return List<SoldProduct>
      */
     List<SoldProduct> findAllByProduct(Product product);
+
+
+    /**
+     * Method findAllByCustomerAndProduct find list of sold products by customer and product.
+     *
+     * @param customer of type Customer
+     * @param product  of type Product
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> findAllByCustomerAndProduct(Customer customer, Product product);
 
 }

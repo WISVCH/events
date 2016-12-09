@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * ProductRepository
  */
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     /**
      * Find a Product by id
@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param id id of a Product
      * @return Product
      */
-    Product findById(Long id);
+    Product findById(Integer id);
 
     /**
      * Find a Product by key

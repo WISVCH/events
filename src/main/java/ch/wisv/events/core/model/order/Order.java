@@ -41,7 +41,7 @@ public class Order {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field status status of the Order.

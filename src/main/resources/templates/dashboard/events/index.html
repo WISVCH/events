@@ -65,7 +65,7 @@
                     <tbody>
                     <!--/*@thymesVar id="events" type="List<ch.wisv.events.core.model.event.Event>"*/-->
                     <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-                    <tr th:each="event : ${events}">
+                    <tr th:each="event : ${events}" th:attr="data-key=${event.getKey()}">
                         <td>
                             <input class="form-control" type="checkbox"/>
                         </td>
@@ -117,7 +117,7 @@
 <!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable({
+        var table = $('#dataTable').DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "60px", targets: 2},
@@ -125,6 +125,10 @@
                 {width: "360px", targets: 4},
                 {width: "120px", targets: 5}
             ]
+        });
+
+        $('#dataTable tbody').on('click', 'tr', function () {
+            document.location = "/dashboard/events/overview/" + $(this).data('key') + "/";
         });
     });
 </script>

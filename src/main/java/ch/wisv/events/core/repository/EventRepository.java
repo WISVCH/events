@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Event repository.
  */
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
      * Find an Event by ID.
@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param id id of Event
      * @return Event
      */
-    Event findById(Long id);
+    Event findById(Integer id);
 
     /**
      * Find Events that end after a certain dateTime, so all upcoming events
@@ -42,6 +42,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param id id of a Product
      * @return list of Events
      */
-    List<Event> findAllByProductsId(Long id);
+    List<Event> findAllByProductsId(Integer id);
+
+
+    List<Event> findTop5ByEndAfterOrderByEnd(LocalDateTime dateTime);
+
+
+    List<Event> findTop5ByEndBeforeOrderByEndDesc(LocalDateTime dateTime);
 
 }

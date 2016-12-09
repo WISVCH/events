@@ -64,7 +64,7 @@
                     </thead>
                     <tbody>
                     <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-                    <tr th:each="product : ${products}">
+                    <tr th:each="product : ${products}" th:attr="data-key=${product.getKey()}">
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 0, 'POINT', 2, 'COMMA')}"></td>
@@ -121,6 +121,10 @@
                 {width: "360px", targets: 4},
                 {width: "120px", targets: 5}
             ]
+        });
+
+        $('#dataTable tbody').on('click', 'tr', function () {
+            document.location = "/dashboard/products/overview/" + $(this).data('key') + "/";
         });
     });
 </script>
