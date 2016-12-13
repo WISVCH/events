@@ -17,6 +17,7 @@ package ch.wisv.events.core.exception;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class InvalidVendorException extends RuntimeException {
+
     public InvalidVendorException(String s) {
         super(s);
     }

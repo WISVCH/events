@@ -1,9 +1,9 @@
 package ch.wisv.events.api.controller;
 
+import ch.wisv.events.api.response.ProductDefaultResponse;
+import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.product.Search;
-import ch.wisv.events.core.exception.ProductNotFound;
-import ch.wisv.events.api.response.ProductDefaultResponse;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
@@ -88,7 +88,7 @@ public class ProductRESTController {
         String finalQuery = (query != null) ? query : "";
         productList.stream()
                    .filter(p -> eventService.getEventByProductKey(p.getKey()).size() < 1
-                          && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                           && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
                    .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;

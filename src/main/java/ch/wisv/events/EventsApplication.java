@@ -29,8 +29,8 @@ public class EventsApplication {
     /**
      * Profile "dev" for adding data to the Repositories for development purpose.
      *
-     * @param eventRepository   EventRepository
-     * @param productRepository ProductRepository
+     * @param eventRepository       EventRepository
+     * @param productRepository     ProductRepository
      * @param soldProductService
      * @param soldProductRepository
      * @return TestData
