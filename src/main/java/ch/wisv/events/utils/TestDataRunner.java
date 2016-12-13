@@ -9,11 +9,12 @@ import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.*;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import org.fluttercode.datafactory.impl.DataFactory;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -24,16 +25,35 @@ import java.util.Random;
  */
 public class TestDataRunner implements CommandLineRunner {
 
-    private static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private final DataFactory df;
 
     private final EventRepository eventRepository;
+
     private final ProductRepository productRepository;
+
     private final VendorRepository vendorRepository;
+
     private final CustomerRepository customerRepository;
+
     private final OrderRepository orderRepository;
+
     private final OrderService orderService;
+
     private final SoldProductService soldProductService;
+
     private final SoldProductRepository soldProductRepository;
+
+
+    private final LocalDateTime today;
+
+    private final int
+            events = 15,
+            products = 15,
+            orders = 250,
+            maxProductsPerOrder = 5,
+            scanned = 800,
+            customer = 25;
+
 
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
                           VendorRepository vendorRepository, CustomerRepository customerRepository,
@@ -47,43 +67,15 @@ public class TestDataRunner implements CommandLineRunner {
         this.orderService = orderService;
         this.soldProductService = soldProductService;
         this.soldProductRepository = soldProductRepository;
+        df = new DataFactory();
+        LocalDateTime tm = LocalDateTime.now();
+        this.today = tm.withSecond(0).withNano(0);
     }
 
     @Override
     public void run(String... args) throws Exception {
-        LocalDateTime today = LocalDateTime.now();
-        today = today.withSecond(0).withNano(0);
-
-        Product product;
-        for (int i = 1; i < 16; i++) {
-            product = new Product();
-            product.setTitle("Product " + i);
-            product.setCost(10.0f);
-            product.setDescription(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae lectus est. Nam ultrices sapien felis, hendrerit pulvinar tortor lobortis a. Nunc mauris est, fermentum in neque sed, consectetur aliquam justo. Etiam nec feugiat mi. Aliquam sed.");
-            product.setSellStart(today.minusDays(i - 7).minusHours(1));
-            product.setSellEnd(today.minusDays(i - 7).plusMinutes(1));
-            product.setMaxSold(null);
-            productRepository.save(product);
-        }
-
-        Event event;
-        for (int i = 1; i < 16; i++) {
-            event = new Event("Event " + i,
-                    "Phasellus eget mauris fringilla, tincidunt enim eget, luctus massa. Suspendisse ultricies in neque " +
-                            "at cursus. Duis viverra nunc in volutpat pellentesque. Ut eu finibus urna, a posuere nulla. Fusce vel nulla nibh. Curabitur gravida ante sed tellus posuere.",
-                    "Lecture hall A",
-                    randomNumber(50, 100),
-                    null,
-                    "http://placehold.it/300x300",
-                    today.minusDays(i - 7).minusHours(1),
-                    today.minusDays(i - 7).plusMinutes(1)
-            );
-
-            event.addProduct(productRepository.findById(i));
-            event.getOptions().setPublished(EventStatus.PUBLISHED);
-            eventRepository.save(event);
-        }
+        this.createProducts(today);
+        this.createEvents(today);
 
         /*
           Sell access
@@ -103,30 +95,51 @@ public class TestDataRunner implements CommandLineRunner {
         vendor2.setEndingTime(today.plusDays(1));
         vendorRepository.saveAndFlush(vendor2);
 
-
-        /*
-          Customers
-         */
-        Customer customer1 = new Customer();
-        customer1.setRfidToken("0001809788");
-        customer1.setChUsername("svenp");
-        customer1.setEmail("svenp@ch.tudelft.nl");
-        customer1.setName("Sven Popping");
-        customerRepository.saveAndFlush(customer1);
-
-        Customer customer2 = new Customer();
-        customer2.setRfidToken("123");
-        customer2.setChUsername("svenh");
-        customer2.setEmail("svenh@ch.tudelft.nl");
-        customer2.setName("Sven van Hal");
-        customerRepository.saveAndFlush(customer2);
-
+        this.createRandomCustomers();
         this.createSalesOrders();
         this.scanRandomOrders();
     }
 
+    private void createProducts(LocalDateTime today) throws Exception {
+        Product product;
+        for (int i = 1; i < this.products + 1; i++) {
+            String first = this.df.getRandomWord(5, 12);
+
+            product = new Product();
+            product.setTitle(first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord(5, 12));
+            product.setCost(this.df.getNumberUpTo(10));
+            product.setDescription(this.df.getRandomText(30, 150));
+            product.setSellStart(today.minusDays(i - 7).minusHours(1));
+            product.setSellEnd(today.minusDays(i - 7).plusMinutes(1));
+            product.setMaxSold(null);
+            productRepository.save(product);
+        }
+    }
+
+    private void createEvents(LocalDateTime today) throws Exception {
+        Event event;
+        for (int i = 1; i < this.events + 1; i++) {
+            String first = this.df.getRandomWord(5, 12);
+            event = new Event(first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord
+                    (5, 12),
+                    this.df.getRandomText(30, 50),
+                    "Lecture hall " + df.getRandomChars(1).toUpperCase(),
+                    randomNumber(20, 80),
+                    null,
+                    "http://placehold.it/300x300",
+                    today.minusDays(i - 7).minusHours(1),
+                    today.minusDays(i - 7).plusMinutes(1)
+            );
+
+            event.addProduct(productRepository.findById(i));
+            event.getOptions().setPublished(EventStatus.PUBLISHED);
+            eventRepository.save(event);
+        }
+    }
+
     /**
      * Method createSalesOrders creates random sales orders
+     *
      * @throws Exception when
      */
     private void createSalesOrders() throws Exception {
@@ -134,11 +147,13 @@ public class TestDataRunner implements CommandLineRunner {
         Customer customer;
         Order order;
         // Create 100 random orders
-        for (int i = 0; i < 1001; i++) {
+        for (int i = 0; i < this.orders; i++) {
             // Add random product to order
             Map<String, Integer> products = new HashMap<>();
 
-            products.put(productRepository.findOne(randomNumber(1 , (int) productRepository.count())).getKey(), 1);
+            for (Integer integer = 0; integer < randomNumber(1, this.maxProductsPerOrder); integer++) {
+                products.put(productRepository.findOne(randomNumber(1, (int) productRepository.count())).getKey(), 1);
+            }
             orderRequest.setProducts(products);
             order = orderService.create(orderRequest);
 
@@ -153,18 +168,28 @@ public class TestDataRunner implements CommandLineRunner {
                 product1.setSold(product1.getSold() + 1);
                 productRepository.save(product1);
             }
+            order.getProducts().forEach(x -> {
+                List<Event> events = eventRepository.findAllByProductsId(x.getId());
+                events.forEach(y -> {
+                    y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
+                    eventRepository.save(y);
+                });
+            });
+
+            order.setCreationDate(today.minusDays(df.getNumberBetween(0, 20)));
+
             soldProductService.create(order);
         }
     }
 
     /**
      * Method scanRandomOrders set of 25 order the status to scanned
+     *
      * @throws Exception when
      */
     private void scanRandomOrders() throws Exception {
-        // Scan 25 random tickets
         SoldProduct soldProduct;
-        for (int i = 0; i < 1001; i++) {
+        for (int i = 0; i < this.scanned; i++) {
             soldProduct = soldProductRepository.findOne(randomNumber(1, (int) soldProductRepository.count()));
             soldProduct.setStatus(SoldProductStatus.SCANNED);
 
@@ -173,10 +198,29 @@ public class TestDataRunner implements CommandLineRunner {
     }
 
     /**
+     * Method createRandomCustomers ...
+     *
+     * @throws Exception when
+     */
+    private void createRandomCustomers() throws Exception {
+        for (int i = 0; i < this.customer; i++) {
+            Customer customer = new Customer();
+            String firstName = this.df.getFirstName();
+            String lastName = this.df.getLastName();
+            customer.setName(firstName + " " + lastName);
+            customer.setEmail(this.df.getEmailAddress());
+            customer.setChUsername(firstName.toLowerCase() + String.valueOf(lastName.charAt(0)).toLowerCase());
+            customer.setRfidToken(this.df.getNumberText(10));
+
+            customerRepository.save(customer);
+        }
+    }
+
+    /**
      * Method randomNumber generates random number between bounds.
      *
      * @param start of type int
-     * @param end of type int
+     * @param end   of type int
      * @return Integer
      */
     private Integer randomNumber(int start, int end) {
