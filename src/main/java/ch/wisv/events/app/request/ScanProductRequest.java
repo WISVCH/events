@@ -21,12 +21,16 @@ import lombok.Setter;
  */
 public class ScanProductRequest {
 
-    /** Field productKey  */
+    /**
+     * Field productKey
+     */
     @Getter
     @Setter
     private String productKey;
 
-    /** Field rfidToken  */
+    /**
+     * Field rfidToken
+     */
     @Getter
     @Setter
     private String rfidToken;

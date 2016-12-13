@@ -26,7 +26,8 @@ public class SearchItem {
 
     /**
      * Default constructor.
-     *  @param title Title of the Product
+     *
+     * @param title Title of the Product
      * @param key   Key of the Product
      */
     SearchItem(String title, Integer key) {

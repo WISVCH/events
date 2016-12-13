@@ -2,11 +2,11 @@ package ch.wisv.events.app.controller.sales.order;
 
 import ch.wisv.events.app.request.CustomerAddRequest;
 import ch.wisv.events.app.request.CustomerCreateRequest;
-import ch.wisv.events.core.model.order.Customer;
-import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.exception.InvalidCustomerException;
 import ch.wisv.events.core.exception.OrderNotFound;
 import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;

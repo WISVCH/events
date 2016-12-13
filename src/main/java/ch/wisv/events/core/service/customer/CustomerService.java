@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.app.request.CustomerCreateRequest;
+import ch.wisv.events.core.model.order.Customer;
 
 import java.util.List;
 

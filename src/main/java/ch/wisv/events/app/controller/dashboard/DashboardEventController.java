@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -61,10 +60,7 @@ public class DashboardEventController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        Collection<Event> events = eventService.getAllEvents();
-        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
-
-        model.addAttribute("events", events);
+        model.addAttribute("events", eventService.getAllEvents());
         return "dashboard/events/index";
     }
 

@@ -40,7 +40,8 @@ public class Search {
 
     /**
      * Add suggestion item to Search.
-     *  @param title Title of the Product
+     *
+     * @param title Title of the Product
      * @param key   Key of the Product
      */
     public void addItem(String title, Integer key) {

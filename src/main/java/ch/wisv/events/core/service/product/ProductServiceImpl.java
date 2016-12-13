@@ -1,9 +1,9 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
 import org.springframework.stereotype.Service;

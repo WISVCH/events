@@ -98,7 +98,7 @@ public class SalesScannerController {
             Product product = productService.getByKey(request.getProductKey());
 
             List<SoldProduct> list = soldProductService.getByCustomerAndProduct(customer, product);
-            if (list.size() == 0)  {
+            if (list.size() == 0) {
                 redirect.addFlashAttribute("scanned", "error");
             } else {
                 boolean correctScanned = false;

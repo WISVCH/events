@@ -1,12 +1,12 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.events.core.model.order.Customer;
-import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.app.request.CustomerCreateRequest;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
 import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;

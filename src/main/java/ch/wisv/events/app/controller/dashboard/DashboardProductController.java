@@ -2,8 +2,8 @@ package ch.wisv.events.app.controller.dashboard;
 
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.service.product.SoldProductService;
 import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

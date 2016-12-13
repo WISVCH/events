@@ -28,7 +28,9 @@ import java.util.List;
 @Service
 public class SoldProductServiceImpl implements SoldProductService {
 
-    /** Field soldProductRepository  */
+    /**
+     * Field soldProductRepository
+     */
     private final SoldProductRepository soldProductRepository;
 
     /**

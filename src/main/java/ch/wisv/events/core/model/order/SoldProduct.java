@@ -4,7 +4,10 @@ import ch.wisv.events.core.model.product.Product;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 /**
@@ -24,8 +27,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-public class SoldProduct
-{
+public class SoldProduct {
 
     @Id
     @GeneratedValue

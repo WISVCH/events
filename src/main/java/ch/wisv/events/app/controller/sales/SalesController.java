@@ -90,7 +90,7 @@ public class SalesController {
     /**
      * Method scanIndex shows the event your are allowed to scan.
      *
-     * @param auth of type OIDCAuthenticationToken
+     * @param auth  of type OIDCAuthenticationToken
      * @param model of type Model
      * @return String
      */
@@ -117,10 +117,14 @@ public class SalesController {
         if (userInfo instanceof CHUserInfo) {
             CHUserInfo info = (CHUserInfo) userInfo;
             List<Vendor> vendors = vendorService.getAll().stream()
-                    .filter(x -> info.getLdapGroups().stream().anyMatch(g -> g.equals(x.getLdapGroup().getName())))
-                    .filter(x -> x.getStartingTime() == null || x.getStartingTime().isBefore(LocalDateTime.now()))
-                    .filter(x -> x.getEndingTime() == null || x.getEndingTime().isAfter(LocalDateTime.now()))
-                    .collect(Collectors.toCollection(ArrayList::new));
+                                                .filter(x -> info.getLdapGroups().stream()
+                                                                 .anyMatch(g -> g.equals(x.getLdapGroup().getName())))
+                                                .filter(x -> x.getStartingTime() == null || x.getStartingTime()
+                                                                                             .isBefore(LocalDateTime
+                                                                                                     .now()))
+                                                .filter(x -> x.getEndingTime() == null || x.getEndingTime().isAfter(
+                                                        LocalDateTime.now()))
+                                                .collect(Collectors.toCollection(ArrayList::new));
             ArrayList<Product> products = new ArrayList<>();
             vendors.forEach(x -> x.getEvents().forEach(p -> products.addAll(p.getProducts())));
 

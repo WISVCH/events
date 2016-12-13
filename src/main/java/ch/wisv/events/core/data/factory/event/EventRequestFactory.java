@@ -1,14 +1,14 @@
 package ch.wisv.events.core.data.factory.event;
 
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.api.request.EventRequest;
+import ch.wisv.events.core.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * EventRequestFactory
- *
+ * <p>
  * TODO: replace
  */
 public class EventRequestFactory {
