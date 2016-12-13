@@ -1,15 +1,17 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.app.request.OrderRequest;
 import ch.wisv.events.core.exception.OrderNotFound;
 import ch.wisv.events.core.exception.ProductLimitExceededException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
-import ch.wisv.events.app.request.OrderRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,12 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+
+    /**
+     * Field eventService
+     */
+    private final EventService eventService;
+
     /**
      * Field orderRepository
      */
@@ -55,12 +63,14 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
      *
+     * @param eventService       of type EventService
      * @param orderRepository    of type OrderRepository
      * @param productService     of type ProductService
-     * @param soldProductService
+     * @param soldProductService of type SoldProductService
      */
-    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService,
+    public OrderServiceImpl(EventService eventService, OrderRepository orderRepository, ProductService productService,
                             SoldProductService soldProductService) {
+        this.eventService = eventService;
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.soldProductService = soldProductService;
@@ -163,6 +173,15 @@ public class OrderServiceImpl implements OrderService {
             order.getProducts().forEach(x -> x.setSold(x.getSold() - 1));
             soldProductService.remove(order);
         }
+
+        order.getProducts().forEach(x -> {
+            List<Event> events = eventService.getEventByProductKey(x.getKey());
+            events.forEach(y -> {
+                y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
+                eventService.update(y);
+            });
+        });
+
 
         order.setStatus(orderStatus);
         orderRepository.save(order);

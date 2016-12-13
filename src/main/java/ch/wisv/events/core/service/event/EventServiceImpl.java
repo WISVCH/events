@@ -1,22 +1,25 @@
 package ch.wisv.events.core.service.event;
 
+import ch.wisv.events.api.request.EventOptionsRequest;
+import ch.wisv.events.api.request.EventProductRequest;
+import ch.wisv.events.api.request.EventRequest;
 import ch.wisv.events.core.data.factory.event.EventOptionRequestFactory;
 import ch.wisv.events.core.data.factory.event.EventRequestFactory;
+import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventOptions;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.api.request.EventOptionsRequest;
-import ch.wisv.events.api.request.EventProductRequest;
-import ch.wisv.events.api.request.EventRequest;
-import ch.wisv.events.core.exception.EventNotFound;
-import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -127,7 +130,8 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Delete a product from an Event
-     *  @param eventId   eventId
+     *
+     * @param eventId   eventId
      * @param productId productId
      */
     @Override
@@ -148,6 +152,28 @@ public class EventServiceImpl implements EventService {
     public void update(EventRequest eventRequest) {
         Event event = eventRepository.findById(eventRequest.getId());
         event = EventRequestFactory.update(event, eventRequest);
+
+        eventRepository.save(event);
+    }
+
+    /**
+     * Update event by Event
+     *
+     * @param event
+     */
+    @Override
+    public void update(Event event) {
+        Event update = this.getByKey(event.getKey());
+
+        update.setTitle(event.getTitle());
+        update.setDescription(event.getDescription());
+        update.setImageURL(event.getImageURL());
+        update.setLocation(event.getLocation());
+        update.setStart(event.getStart());
+        update.setEnd(event.getEnd());
+        update.setTarget(event.getTarget());
+        update.setLimit(event.getLimit());
+        update.setSold(event.getSold());
 
         eventRepository.save(event);
     }
@@ -202,10 +228,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> soldFivePrevious() {
-        List<Event> events = eventRepository.findTop5ByEndBeforeOrderByEndDesc(LocalDateTime.now());
-        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
-
-        return events;
+        return eventRepository.findTop5ByEndBeforeOrderByEndDesc(LocalDateTime.now());
     }
 
     /**
@@ -215,9 +238,6 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> soldFiveUpcoming() {
-        List<Event> events = eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
-        events.forEach(x -> x.getProducts().forEach(y -> x.setSold(x.getSold() + y.getSold())));
-
-        return events;
+        return eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
     }
 }

@@ -1,9 +1,9 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.api.request.EventOptionsRequest;
 import ch.wisv.events.api.request.EventProductRequest;
 import ch.wisv.events.api.request.EventRequest;
+import ch.wisv.events.core.model.event.Event;
 
 import java.util.List;
 
@@ -57,7 +57,8 @@ public interface EventService {
 
     /**
      * Delete a product from an Event
-     *  @param eventId   eventId
+     *
+     * @param eventId   eventId
      * @param productId productId
      */
     void deleteProductFromEvent(Integer eventId, Integer productId);
@@ -68,6 +69,12 @@ public interface EventService {
      * @param eventRequest EventRequest
      */
     void update(EventRequest eventRequest);
+
+    /**
+     * Update event by Event
+     * @param event
+     */
+    void update(Event event);
 
     /**
      * Delete an Event
