@@ -1,9 +1,8 @@
 package ch.wisv.events.app.controller.dashboard;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
-import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.repository.*;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DashboardController.
@@ -26,14 +30,38 @@ public class DashboardController {
 
     private final SoldProductService soldProductService;
 
+    private final EventRepository eventRepository;
+
+    private final ProductRepository productRepository;
+
+    private final SoldProductRepository soldProductRepository;
+
+    private final OrderRepository orderRepository;
+
+    private final CustomerRepository customerRepository;
+
     /**
      * Default constructor
+     *
      * @param eventService
      * @param soldProductService
+     * @param eventRepository
+     * @param productRepository
+     * @param soldProductRepository
+     * @param orderRepository
+     * @param customerRepository
      */
-    public DashboardController(EventService eventService, SoldProductService soldProductService) {
+    public DashboardController(EventService eventService, SoldProductService soldProductService,
+                               EventRepository eventRepository, ProductRepository productRepository,
+                               SoldProductRepository soldProductRepository, OrderRepository orderRepository,
+                               CustomerRepository customerRepository) {
         this.eventService = eventService;
         this.soldProductService = soldProductService;
+        this.eventRepository = eventRepository;
+        this.productRepository = productRepository;
+        this.soldProductRepository = soldProductRepository;
+        this.orderRepository = orderRepository;
+        this.customerRepository = customerRepository;
     }
 
     /**
@@ -44,63 +72,45 @@ public class DashboardController {
      */
     @GetMapping("/")
     public String index(Model model) {
+        List<Event> events = eventService.getAllEvents();
         List<Event> upcoming = eventService.soldFiveUpcoming();
-        model.addAttribute("upcoming", new String[] {
-                upcoming.get(0).getTitle(),
-                upcoming.get(1).getTitle(),
-                upcoming.get(2).getTitle(),
-                upcoming.get(3).getTitle(),
-                upcoming.get(4).getTitle()
-        });
-        model.addAttribute("upcomingTarget", new int[] {
-                upcoming.get(0).getTarget(),
-                upcoming.get(1).getTarget(),
-                upcoming.get(2).getTarget(),
-                upcoming.get(3).getTarget(),
-                upcoming.get(4).getTarget()
-        });
-        model.addAttribute("upcomingSold", new int[] {
-                upcoming.get(0).getSold(),
-                upcoming.get(1).getSold(),
-                upcoming.get(2).getSold(),
-                upcoming.get(3).getSold(),
-                upcoming.get(4).getSold()
-        });
-
         List<Event> previous = eventService.soldFivePrevious();
-        model.addAttribute("previous", new String[] {
-                previous.get(0).getTitle(),
-                previous.get(1).getTitle(),
-                previous.get(2).getTitle(),
-                previous.get(3).getTitle(),
-                previous.get(4).getTitle()
-        });
-        model.addAttribute("previousTarget", new int[] {
-                previous.get(0).getTarget(),
-                previous.get(1).getTarget(),
-                previous.get(2).getTarget(),
-                previous.get(3).getTarget(),
-                previous.get(4).getTarget()
-        });
-        model.addAttribute("previousSold", new int[] {
-                previous.get(0).getSold(),
-                previous.get(1).getSold(),
-                previous.get(2).getSold(),
-                previous.get(3).getSold(),
-                previous.get(4).getSold()
-        });
-        int[] scanned = new int[5];
-        for (int i = 0; i < previous.size(); i++) {
-            int sum = 0;
-            for (Product product : previous.get(i).getProducts()) {
-                for (SoldProduct soldProduct : soldProductService.getByProduct(product)) {
-                    if (soldProduct.getStatus() == SoldProductStatus.SCANNED) sum++;
-                }
-            }
-            scanned[i] = sum;
-        }
-        model.addAttribute("previousScanned", scanned);
 
+        // Needed info for the count stuff;
+        model.addAttribute("countEvent", eventRepository.count());
+        model.addAttribute("countProduct", productRepository.count());
+        model.addAttribute("countOrder", orderRepository.count());
+        model.addAttribute("countCustomer", customerRepository.count());
+        model.addAttribute("countSold", soldProductRepository.count());
+        model.addAttribute("countSoldScanned", soldProductRepository.findAll().stream().filter(x -> x.getStatus() ==
+                SoldProductStatus.SCANNED).count());
+
+        // Needed info for the upcoming events chart.
+        model.addAttribute("upcoming", upcoming.stream().map(Event::getTitle).collect(Collectors.toList()));
+        model.addAttribute("upcomingTarget", upcoming.stream().map(Event::getTarget).collect(Collectors.toList()));
+        model.addAttribute("upcomingSold", upcoming.stream().map(Event::getSold).collect(Collectors.toList()));
+
+        // Needed info for the previous events chart.
+        model.addAttribute("previous", previous.stream().map(Event::getTitle).collect(Collectors.toList()));
+        model.addAttribute("previousTarget", previous.stream().map(Event::getTarget).collect(Collectors.toList()));
+        model.addAttribute("previousSold", previous.stream().map(Event::getSold).collect(Collectors.toList()));
+        model.addAttribute("previousScanned", previous.stream().mapToInt(event -> event.getProducts().stream().mapToInt(
+                product -> (int) soldProductService.getByProduct(product).stream().filter(soldProduct -> soldProduct
+                        .getStatus() == SoldProductStatus.SCANNED).count()).sum()).boxed()
+                                                      .collect(Collectors.toCollection(ArrayList::new)));
+
+
+        // Need info for all the things
+        List<String> dates = new ArrayList<>();
+        LocalDateTime today = LocalDateTime.now();
+        today = today.truncatedTo(ChronoUnit.DAYS);
+        for (int i = 20; i >= 1; i--) {
+            dates.add(today.minusDays(i).format(DateTimeFormatter.ISO_DATE));
+        }
+        model.addAttribute("events", dates);
+//        model.addAttribute("events", events.stream().map(Event::getTitle).collect(Collectors.toList()));
+        model.addAttribute("eventsTarget", events.stream().map(Event::getTarget).collect(Collectors.toList()));
+        model.addAttribute("eventsSold", events.stream().map(Event::getSold).collect(Collectors.toList()));
 
         return "dashboard/index";
     }
