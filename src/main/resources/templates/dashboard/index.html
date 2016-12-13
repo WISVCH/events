@@ -35,15 +35,155 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
-    </div>
-    <div class="row content-wrapper">
         <div th:replace="/fragments/sidebar :: sidebar"></div>
-        <div class="col-sm-9 col-md-10 main">
+    </div>
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-9 col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
-                <h1><samp>Dashboard</samp></h1>
+                <h1><samp>Dashboard</samp>
+                    <small>Statistics Overview</small>
+                </h1>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-calendar fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countEvent}"></div>
+                                    <div>Events created!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a th:href="@{/dashboard/events/}">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-ticket fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countProduct}"></div>
+                                    <div>Products created!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-shopping-cart fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countOrder}"></div>
+                                    <div>Orders created!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-money fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countSold}">26</div>
+                                    <div>Sold tickets!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-barcode fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countSoldScanned}"></div>
+                                    <div>Products scanned!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-users fa-4x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge" th:text="${countCustomer}"></div>
+                                    <div>Customers!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -70,7 +210,21 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Statistics</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div style="width: 100%;">
+                                <canvas id="events" width="800" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,7 +238,8 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
     window.chartColors = {
         red: 'rgb(255, 99, 132)',
         orange: 'rgb(255, 159, 64)',
@@ -101,86 +256,65 @@
 
     var color = Chart.helpers.color;
     var previousBarData = {
-        labels: [
-            "[[${previous[0]}]]",
-            "[[${previous[1]}]]",
-            "[[${previous[2]}]]",
-            "[[${previous[3]}]]",
-            "[[${previous[4]}]]"
-        ],
+        labels: [[${previous}]],
         datasets: [{
             label: 'Target',
             backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.blue,
             borderWidth: 1,
-            data: [
-                [[${previousTarget[0]}]],
-                [[${previousTarget[1]}]],
-                [[${previousTarget[2]}]],
-                [[${previousTarget[3]}]],
-                [[${previousTarget[4]}]]
-            ]
+            data: [[${previousTarget}]]
         }, {
             label: 'Sold',
             backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
             borderColor: window.chartColors.green,
             borderWidth: 1,
-            data: [
-                [[${previousSold[0]}]],
-                [[${previousSold[1]}]],
-                [[${previousSold[2]}]],
-                [[${previousSold[3]}]],
-                [[${previousSold[4]}]]
-            ]
+            data: [[${previousSold}]]
         }, {
             label: 'Scanned',
             backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
             borderColor: window.chartColors.red,
             borderWidth: 1,
-            data: [
-                [[${previousScanned[0]}]],
-                [[${previousScanned[1]}]],
-                [[${previousScanned[2]}]],
-                [[${previousScanned[3]}]],
-                [[${previousScanned[4]}]]
-            ]
+            data: [[${previousScanned}]]
         }]
     };
 
     var comingBarData = {
-        labels: [
-            "[[${upcoming[0]}]]",
-            "[[${upcoming[1]}]]",
-            "[[${upcoming[2]}]]",
-            "[[${upcoming[3]}]]",
-            "[[${upcoming[4]}]]"
-        ],
+        labels: [[${upcoming}]],
         datasets: [{
             label: 'Target',
             backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.blue,
             borderWidth: 1,
-            data: [
-                [[${upcomingTarget[0]}]],
-                [[${upcomingTarget[1]}]],
-                [[${upcomingTarget[2]}]],
-                [[${upcomingTarget[3]}]],
-                [[${upcomingTarget[4]}]]
-            ]
+            data: [[${upcomingTarget}]]
         }, {
             label: 'Sold',
             backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
             borderColor: window.chartColors.green,
             borderWidth: 1,
-            data: [
-                [[${upcomingSold[0]}]],
-                [[${upcomingSold[1]}]],
-                [[${upcomingSold[2]}]],
-                [[${upcomingSold[3]}]],
-                [[${upcomingSold[4]}]]
-            ]
+            data: [[${upcomingSold}]]
         }]
+    };
 
+    var otherData = {
+        labels: [[${events}]],
+        datasets: [
+            {
+                label: 'Sold',
+                backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.green,
+                borderWidth: 1,
+                fill: false,
+                data: [[${eventsSold}]]
+            },
+            {
+                label: 'Target',
+                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.blue,
+                borderWidth: 1,
+                fill: false,
+                data: [[${eventsTarget}]]
+            }
+        ]
     };
 
     window.onload = function () {
@@ -198,6 +332,11 @@
                         ticks: {
                             min: 0,
                             beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 9
                         }
                     }]
                 }
@@ -219,12 +358,44 @@
                             min: 0,
                             beginAtZero: true
                         }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 9
+                        }
+                    }]
+                }
+            },
+            fontSize: "8px"
+        });
+
+        var stats = document.getElementById("events").getContext("2d");
+        window.myLine = new Chart(stats, {
+            type: 'line',
+            data: otherData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 9
+                        }
                     }]
                 }
             }
-        });
+        })
 
     };
+    /*]]>*/
 </script>
 </body>
 </html>

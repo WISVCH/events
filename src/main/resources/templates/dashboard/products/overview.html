@@ -32,14 +32,17 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
+    <div class="row">
         <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp th:text="'Sold products for ' + ${product.getTitle()}"></samp></h1>
             </div>
@@ -92,7 +95,9 @@
 <!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable();
+        $('#dataTable').DataTable({
+            pageLength: 50
+        });
     });
 </script>
 </body>

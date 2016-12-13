@@ -32,13 +32,16 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Events</samp><a class="btn btn-primary btn-dashboard-header" href="create/">Create new
                     event</a></h1>
@@ -56,6 +59,7 @@
                     <tr>
                         <th>#</th>
                         <th>Title</th>
+                        <th>Starting date</th>
                         <th>Status</th>
                         <th>Sold/Target/Limit</th>
                         <th>Progress target</th>
@@ -70,6 +74,7 @@
                             <input class="form-control" type="checkbox"/>
                         </td>
                         <td th:text="${event.title}">Row 1 Data 1</td>
+                        <td th:text="${event.start}"></td>
                         <td th:text="${event.options.published}"></td>
                         <td>
                             <span class="label label-success" th:text="'Sold: ' + ${event.sold}"></span>
@@ -118,12 +123,17 @@
 <script>
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
+            pageLength: 25,
+            order: [
+                [2, "desc"]
+            ],
             columnDefs: [
                 {width: "20px", targets: 0},
-                {width: "60px", targets: 2},
-                {width: "180px", targets: 3},
-                {width: "360px", targets: 4},
-                {width: "120px", targets: 5}
+                {width: "120px", targets: 2},
+                {width: "60px", targets: 3},
+                {width: "180px", targets: 4},
+                {width: "360px", targets: 5},
+                {width: "120px", targets: 6}
             ]
         });
 
