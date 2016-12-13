@@ -74,6 +74,8 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.10")
     compile("com.github.darrachequesne:spring-data-jpa-datatables:1.1")
 
+    compile("org.fluttercode.datafactory:datafactory:0.8")
+
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")
 
