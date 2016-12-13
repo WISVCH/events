@@ -45,8 +45,14 @@ public enum LDAPGroupEnum {
     W3CIE("w3cie"),
     WIFI("wifi"),
     WOCKY("wocky"),
-    BESTUUR("bestuur");
-
+    BESTUUR("bestuur"),
+    VOORZITTER("voorzitter"),
+    SECRETARIS("secretaris"),
+    PENNINGMEESTER("penningmeester"),
+    COW("cow"),
+    COI("coi"),
+    CPR("cpr"),
+    CC("cc");
 
     /**
      * Field name
