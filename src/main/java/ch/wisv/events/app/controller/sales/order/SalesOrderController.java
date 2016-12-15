@@ -127,7 +127,7 @@ public class SalesOrderController {
     public String addUserToOrder(RedirectAttributes redirect, @ModelAttribute @Validated CustomerAddRequest request) {
         try {
             Order order = orderService.getByReference(request.getOrderReference());
-            Customer customer = customerService.getByRFIDToken(request.getRfidToken());
+            Customer customer = customerService.findByRFIDToken(request.getRfidToken());
 
             for (Product product : order.getProducts()) {
                 if (soldProductService.getByCustomerAndProduct(customer, product).size() > 0) {

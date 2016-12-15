@@ -36,7 +36,7 @@ public interface CustomerService {
      * @param token of type String
      * @return Customer
      */
-    Customer getByRFIDToken(String token);
+    Customer findByRFIDToken(String token);
 
     /**
      * Get a customer by key.

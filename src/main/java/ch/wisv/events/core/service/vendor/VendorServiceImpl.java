@@ -115,6 +115,8 @@ public class VendorServiceImpl implements VendorService {
      * @throws InvalidVendorException when one of the required fields is not valid
      */
     private void checkRequiredFields(Vendor model) throws InvalidVendorException {
+        if (model == null) throw new InvalidVendorException("Vendor can not be null!");
+
         Object[][] check = new Object[][]{
                 {model.getKey(), "key"},
                 {model.getLdapGroup(), "ldap group"},

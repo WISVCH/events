@@ -65,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return Customer
      */
     @Override
-    public Customer getByRFIDToken(String token) {
+    public Customer findByRFIDToken(String token) {
         Optional<Customer> optional = customerRepository.findByRfidToken(token);
         if (optional.isPresent()) {
             return optional.get();
@@ -82,7 +82,12 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer create(CustomerCreateRequest request) {
-        if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
+        if (request == null) throw new InvalidCustomerException("Customer can not be null");
+
+        if (request.getCustomerName() == null
+                || request.getCustomerEmail() == null
+                || request.getCustomerName() .equals("")
+                || request.getCustomerEmail().equals("")) {
             throw new InvalidCustomerException("Customer name or email is empty");
         }
 
@@ -178,6 +183,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
      */
     private void checkRequiredFields(Customer model) throws InvalidCustomerException {
+        if (model == null) throw new InvalidCustomerException("Customer can not be null!");
+
         String[][] check = new String[][]{
                 {model.getName(), "name"},
                 {model.getEmail(), "email"},

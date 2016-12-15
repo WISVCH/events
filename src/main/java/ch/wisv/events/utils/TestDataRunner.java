@@ -11,18 +11,21 @@ import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.fluttercode.datafactory.impl.DataFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * TestDataRunner.
  * <p>
  * Adds some data into the Repositories.
  */
+@Component
+@Profile("dev")
 public class TestDataRunner implements CommandLineRunner {
 
     private final DataFactory df;
@@ -47,12 +50,12 @@ public class TestDataRunner implements CommandLineRunner {
     private final LocalDateTime today;
 
     private final int
-            events = 15,
-            products = 15,
-            orders = 250,
-            maxProductsPerOrder = 5,
+            events = 20,
+            products = 20,
+            orders = 1000,
+            maxProductsPerOrder = 4,
             scanned = 800,
-            customer = 25;
+            customer = 200;
 
 
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
@@ -124,7 +127,7 @@ public class TestDataRunner implements CommandLineRunner {
                     (5, 12),
                     this.df.getRandomText(30, 50),
                     "Lecture hall " + df.getRandomChars(1).toUpperCase(),
-                    randomNumber(20, 80),
+                    df.getNumberBetween(20, 80),
                     null,
                     "http://placehold.it/300x300",
                     today.minusDays(i - 7).minusHours(1),
@@ -151,14 +154,15 @@ public class TestDataRunner implements CommandLineRunner {
             // Add random product to order
             Map<String, Integer> products = new HashMap<>();
 
-            for (Integer integer = 0; integer < randomNumber(1, this.maxProductsPerOrder); integer++) {
-                products.put(productRepository.findOne(randomNumber(1, (int) productRepository.count())).getKey(), 1);
+            for (Integer integer = 0; integer < df.getNumberBetween(1, this.maxProductsPerOrder); integer++) {
+                products.put(productRepository.findOne(df.getNumberBetween(1, (int) productRepository.count() - 1)).getKey(),
+                        1);
             }
             orderRequest.setProducts(products);
             order = orderService.create(orderRequest);
 
             // Add customer to order
-            customer = customerRepository.findOne(randomNumber(1, (int) customerRepository.count()));
+            customer = customerRepository.findOne(df.getNumberBetween(1, (int) customerRepository.count()));
             orderService.addCustomerToOrder(order, customer);
 
             // Set order status to paid.
@@ -190,7 +194,7 @@ public class TestDataRunner implements CommandLineRunner {
     private void scanRandomOrders() throws Exception {
         SoldProduct soldProduct;
         for (int i = 0; i < this.scanned; i++) {
-            soldProduct = soldProductRepository.findOne(randomNumber(1, (int) soldProductRepository.count()));
+            soldProduct = soldProductRepository.findOne(df.getNumberBetween(1, (int) soldProductRepository.count()));
             soldProduct.setStatus(SoldProductStatus.SCANNED);
 
             soldProductService.update(soldProduct);
@@ -202,7 +206,7 @@ public class TestDataRunner implements CommandLineRunner {
      *
      * @throws Exception when
      */
-    private void createRandomCustomers() throws Exception {
+    private void  createRandomCustomers() throws Exception {
         for (int i = 0; i < this.customer; i++) {
             Customer customer = new Customer();
             String firstName = this.df.getFirstName();
@@ -214,18 +218,16 @@ public class TestDataRunner implements CommandLineRunner {
 
             customerRepository.save(customer);
         }
+
+
+        Customer customer = new Customer();
+        customer.setName("Sven Popping");
+        customer.setEmail("svenp@ch.tudelft.nl");
+        customer.setChUsername("svenp");
+        customer.setRfidToken("04ed6ddad94980");
+
+        customerRepository.saveAndFlush(customer);
+
     }
 
-    /**
-     * Method randomNumber generates random number between bounds.
-     *
-     * @param start of type int
-     * @param end   of type int
-     * @return Integer
-     */
-    private Integer randomNumber(int start, int end) {
-        Random randomGenerator = new Random();
-
-        return randomGenerator.nextInt(end - start + 1) + start;
-    }
 }

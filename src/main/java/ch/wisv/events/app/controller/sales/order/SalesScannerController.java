@@ -94,7 +94,7 @@ public class SalesScannerController {
     @PostMapping("/check")
     public String check(RedirectAttributes redirect, @ModelAttribute @Validated ScanProductRequest request) {
         try {
-            Customer customer = customerService.getByRFIDToken(request.getRfidToken());
+            Customer customer = customerService.findByRFIDToken(request.getRfidToken());
             Product product = productService.getByKey(request.getProductKey());
 
             List<SoldProduct> list = soldProductService.getByCustomerAndProduct(customer, product);

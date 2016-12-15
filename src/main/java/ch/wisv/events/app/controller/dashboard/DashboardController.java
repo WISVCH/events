@@ -94,7 +94,8 @@ public class DashboardController {
         model.addAttribute("previous", previous.stream().map(Event::getTitle).collect(Collectors.toList()));
         model.addAttribute("previousTarget", previous.stream().map(Event::getTarget).collect(Collectors.toList()));
         model.addAttribute("previousSold", previous.stream().map(Event::getSold).collect(Collectors.toList()));
-        model.addAttribute("previousScanned", previous.stream().mapToInt(event -> event.getProducts().stream().mapToInt(
+        model.addAttribute("previousScanned",
+                previous.stream().mapToInt(event -> event.getProducts().stream().mapToInt(
                 product -> (int) soldProductService.getByProduct(product).stream().filter(soldProduct -> soldProduct
                         .getStatus() == SoldProductStatus.SCANNED).count()).sum()).boxed()
                                                       .collect(Collectors.toCollection(ArrayList::new)));

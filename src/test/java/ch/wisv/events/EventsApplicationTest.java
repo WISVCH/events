@@ -1,13 +1,12 @@
 package ch.wisv.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -25,28 +24,15 @@ import org.springframework.test.context.ActiveProfiles;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Configuration
+@RunWith(SpringRunner.class)
 @ComponentScan
 @EnableAutoConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class EventsApplicationTest {
 
-    public static void main(String[] args) {
-        SpringApplication.run(EventsApplicationTest.class, args);
+    @Test
+    public void contextLoads() {
     }
 
-
-    @Component
-    public class TestRunner implements CommandLineRunner {
-
-        @Autowired
-        public TestRunner() {
-
-        }
-
-        @Override
-        public void run(String... evt) throws Exception {
-
-        }
-    }
 }

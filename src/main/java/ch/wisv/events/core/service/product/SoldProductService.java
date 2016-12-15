@@ -42,13 +42,21 @@ public interface SoldProductService {
 
 
     /**
-     * Method getByCustomerAndProduct find sold products by customer.
+     * Method getByCustomerAndProduct find sold products by customer and products.
      *
      * @param customer of type Customer
      * @param product  of type Product
      * @return List<SoldProduct>
      */
     List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product);
+
+    /**
+     * Method getByCustomer find sold products by customer
+     *
+     * @param customer of type Customer
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> getByCustomer(Customer customer);
 
     /**
      * Method create ...

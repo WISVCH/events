@@ -29,10 +29,6 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <div class="row">
@@ -46,7 +42,7 @@
 
         <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
-                <h1><samp>Edit customer</samp></h1>
+                <h1><samp th:text="${customer.name}"></samp></h1>
             </div>
 
             <div class="row">
@@ -56,13 +52,14 @@
             </div>
 
             <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
             <form th:action="@{/dashboard/customers/update}" th:object="${customer}"
                   method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
 
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Information</h3>
@@ -104,14 +101,46 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <input type="submit" class="btn     btn-primary" value="Update">
-                </div>
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Bought products</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover" id="dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="product : ${products}">
+                                        <td th:text="${product.getProduct().getTitle()}">Data</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a th:href="@{/dashboard/products/edit/} + ${product.key}"
+                                                   class="btn btn-info">
+                                                    <i class="glyphicon glyphicon-edit"></i>
+                                                </a>
+                                                <a class="btn btn-danger remove-product" th:data-id="${product.id}">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>re
             </form>
         </div>
     </div>
@@ -122,5 +151,10 @@
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
 </body>
 </html>
