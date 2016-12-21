@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Method addCustomerToOrder will add a customer to an order.
+     * Method addCustomerToOrder will create a customer to an order.
      *
      * @param order    of type Order
      * @param customer of type Customer

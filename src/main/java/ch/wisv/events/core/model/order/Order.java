@@ -106,7 +106,7 @@ public class Order {
     }
 
     /**
-     * Add product to Order and add cost to product.
+     * Add product to Order and create cost to product.
      *
      * @param product Product
      */

@@ -110,7 +110,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Post request to add a Product
+     * Post request to create a Product
      *
      * @param model    Product model attr.
      * @param redirect Spring RedirectAttributes

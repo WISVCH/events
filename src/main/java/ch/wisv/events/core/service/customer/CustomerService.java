@@ -36,7 +36,7 @@ public interface CustomerService {
      * @param token of type String
      * @return Customer
      */
-    Customer getByRFIDToken(String token);
+    Customer findByRFIDToken(String token);
 
     /**
      * Get a customer by key.
@@ -48,7 +48,7 @@ public interface CustomerService {
 
     /**
      * Create a new customer by CustomerCreateRequest.
-     * TODO: should be replaces by add(Customer customer)
+     * TODO: should be replaces by create(Customer customer)
      *
      * @param request CustomerCreateRequest
      * @return customer

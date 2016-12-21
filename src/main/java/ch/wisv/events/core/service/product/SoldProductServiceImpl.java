@@ -5,6 +5,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,16 +32,8 @@ public class SoldProductServiceImpl implements SoldProductService {
     /**
      * Field soldProductRepository
      */
-    private final SoldProductRepository soldProductRepository;
-
-    /**
-     * Constructor SoldProductServiceImpl creates a new SoldProductServiceImpl instance.
-     *
-     * @param soldProductRepository of type SoldProductRepository
-     */
-    public SoldProductServiceImpl(SoldProductRepository soldProductRepository) {
-        this.soldProductRepository = soldProductRepository;
-    }
+    @Autowired
+    private SoldProductRepository soldProductRepository;
 
     /**
      * Method getAll returns the all of this SoldProductService object.
@@ -64,7 +57,7 @@ public class SoldProductServiceImpl implements SoldProductService {
     }
 
     /**
-     * Method getByCustomerAndProduct find sold products by customer.
+     * Method getByCustomerAndProduct find sold products by customer and products.
      *
      * @param customer of type Customer
      * @param product  of type Product
@@ -73,6 +66,17 @@ public class SoldProductServiceImpl implements SoldProductService {
     @Override
     public List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product) {
         return soldProductRepository.findAllByCustomerAndProduct(customer, product);
+    }
+
+    /**
+     * Method getByCustomer find sold products by customer
+     *
+     * @param customer of type Customer
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getByCustomer(Customer customer) {
+        return soldProductRepository.findAllByCustomer(customer);
     }
 
     /**

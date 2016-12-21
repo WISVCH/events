@@ -125,7 +125,7 @@ public class DashboardVendorController {
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Vendor model) {
         try {
-            vendorService.add(model);
+            vendorService.create(model);
             redirect.addFlashAttribute("message", "Vendor has been added!");
 
             return "redirect:/dashboard/vendors/";

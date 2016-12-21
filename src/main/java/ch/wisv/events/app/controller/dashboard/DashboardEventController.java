@@ -166,7 +166,7 @@ public class DashboardEventController {
     }
 
     /**
-     * Post request to add a Product to an Event
+     * Post request to create a Product to an Event
      *
      * @param eventProductRequest EventProductRequest model attr.
      * @param redirectAttributes  Spring RedirectAttributes

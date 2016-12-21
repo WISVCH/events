@@ -38,11 +38,11 @@ public interface VendorService {
     Vendor getByKey(String key);
 
     /**
-     * Method add will add a new Vendor.
+     * Method create will create a new Vendor.
      *
      * @param vendor of type Vendor
      */
-    void add(Vendor vendor);
+    void create(Vendor vendor);
 
     /**
      * Method update will update an existing Vendor.

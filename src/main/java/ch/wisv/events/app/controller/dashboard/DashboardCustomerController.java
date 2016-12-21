@@ -3,6 +3,7 @@ package ch.wisv.events.app.controller.dashboard;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,14 +37,19 @@ public class DashboardCustomerController {
      */
     private final CustomerService customerService;
 
+
+    private final SoldProductService soldProductService;
+
     /**
      * Autowired constructor.
      *
      * @param customerService CustomerService
+     * @param soldProductService
      */
     @Autowired
-    public DashboardCustomerController(CustomerService customerService) {
+    public DashboardCustomerController(CustomerService customerService, SoldProductService soldProductService) {
         this.customerService = customerService;
+        this.soldProductService = soldProductService;
     }
 
 
@@ -88,6 +94,7 @@ public class DashboardCustomerController {
         try {
             Customer customer = customerService.getByKey(key);
             model.addAttribute("customer", customer);
+            model.addAttribute("products", soldProductService.getByCustomer(customer));
 
             return "dashboard/customers/edit";
         } catch (CustomerNotFound e) {
