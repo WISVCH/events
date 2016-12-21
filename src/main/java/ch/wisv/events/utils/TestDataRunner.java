@@ -109,7 +109,8 @@ public class TestDataRunner implements CommandLineRunner {
             String first = this.df.getRandomWord(5, 12);
 
             product = new Product();
-            product.setTitle(first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord(5, 12));
+            product.setTitle(
+                    first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord(5, 12));
             product.setCost(this.df.getNumberUpTo(10));
             product.setDescription(this.df.getRandomText(30, 150));
             product.setSellStart(today.minusDays(i - 7).minusHours(1));
@@ -155,7 +156,8 @@ public class TestDataRunner implements CommandLineRunner {
             Map<String, Integer> products = new HashMap<>();
 
             for (Integer integer = 0; integer < df.getNumberBetween(1, this.maxProductsPerOrder); integer++) {
-                products.put(productRepository.findOne(df.getNumberBetween(1, (int) productRepository.count() - 1)).getKey(),
+                products.put(
+                        productRepository.findOne(df.getNumberBetween(1, (int) productRepository.count() - 1)).getKey(),
                         1);
             }
             orderRequest.setProducts(products);
@@ -206,7 +208,7 @@ public class TestDataRunner implements CommandLineRunner {
      *
      * @throws Exception when
      */
-    private void  createRandomCustomers() throws Exception {
+    private void createRandomCustomers() throws Exception {
         for (int i = 0; i < this.customer; i++) {
             Customer customer = new Customer();
             String firstName = this.df.getFirstName();

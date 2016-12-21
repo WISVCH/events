@@ -95,6 +95,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getAll ...
+     *
      * @throws Exception when
      */
     @Test
@@ -106,6 +107,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByProduct ...
+     *
      * @throws Exception when
      */
     @Test
@@ -120,6 +122,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByProductNull ...
+     *
      * @throws Exception when
      */
     @Test
@@ -131,6 +134,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByProductNullProductDoesntExists ...
+     *
      * @throws Exception when
      */
     @Test
@@ -142,6 +146,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByCustomerAndProduct ...
+     *
      * @throws Exception when
      */
     @Test
@@ -157,6 +162,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByCustomerAndProductNull ...
+     *
      * @throws Exception when
      */
     @Test
@@ -168,6 +174,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByCustomer ...
+     *
      * @throws Exception when
      */
     @Test
@@ -181,6 +188,7 @@ public class SoldProductServiceTest {
 
     /**
      * Method getByCustomerNull ...
+     *
      * @throws Exception when
      */
     @Test

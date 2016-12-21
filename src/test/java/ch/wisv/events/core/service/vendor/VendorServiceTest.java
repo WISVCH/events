@@ -132,6 +132,7 @@ public class VendorServiceTest {
     @Test
     public void getByKeyNotFound() throws Exception {
         when(repository.findByKey(Mockito.anyString())).thenReturn(Optional.empty());
+
         String key = "123";
         thrown.expect(VendorNotFoundException.class);
         thrown.expectMessage("Vendor with key " + key + " not found");
