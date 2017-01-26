@@ -34,8 +34,9 @@ public class ICalController {
      * Get request on "/events/iCal" will show ical.
      *
      */
-    @RequestMapping(value = "/iCal", method = RequestMethod.GET)
+    @RequestMapping(value = "/iCal", method = RequestMethod.GET, produces = "text/calendar; charset=utf-8")
     public void getAllEvents(HttpServletResponse response) {
+        response.setContentType("text/calendar");
         // Getting the iCal with the current available events
         ICalendar ical = ICalendarFactory.createEventList(eventService.getAvailableEvents());
 
