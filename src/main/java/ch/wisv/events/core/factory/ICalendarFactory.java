@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by janwillemm on 26/01/2017.
@@ -20,7 +21,7 @@ public class ICalendarFactory {
      * @param events
      * @return
      */
-    public static ICalendar createEventList(ArrayList<Event> events){
+    public static ICalendar createEventList(List<Event> events){
         ICalendar iCal = new ICalendar();
         events.forEach(event -> {iCal.addEvent(createICalEvent(event));});
 
