@@ -7,6 +7,7 @@ import ch.wisv.events.utils.ICalendarBuilder;
 import ch.wisv.events.core.service.event.EventService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -47,7 +48,7 @@ public class ICalController {
      * Get request on "/events/iCal" will present the ical with the events
      *
      */
-    @RequestMapping(value = "/iCal", method = RequestMethod.GET, produces = "text/calendar; charset=utf-8")
+    @GetMapping(value = "/iCal", produces = "text/calendar; charset=utf-8")
     public void getAllEvents(HttpServletResponse response) {
         response.setContentType("text/calendar");
         // Getting the iCal with the current available events
@@ -59,7 +60,7 @@ public class ICalController {
      * Get request on /iCal/upcoming will present the ical with the upcoming events
      * @param response
      */
-    @RequestMapping(value = "/iCal/upcoming", method = RequestMethod.GET, produces = "text/calendar; charset=utf-8")
+    @GetMapping(value = "/iCal/upcoming", produces = "text/calendar; charset=utf-8")
     public void getUpcomingEvents(HttpServletResponse response) {
         response.setContentType("text/calendar");
         ICalendar ical = ICalendarBuilder.createIcalEventList(eventService.getUpcomingEvents());

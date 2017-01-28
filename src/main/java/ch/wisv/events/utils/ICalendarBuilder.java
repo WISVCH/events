@@ -40,8 +40,6 @@ public class ICalendarBuilder {
         events.forEach(event -> iCal.addEvent(createICalEvent(event)));
 
         iCal.addName("CH Event Calendar");
-        iCal.setColor("turquoise");
-
         return iCal;
     }
 
