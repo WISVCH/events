@@ -68,8 +68,6 @@ public class ICalController {
 
     /**
      * Attaches the ICal to the HttpServletResponse, providing the user with an iCal file.
-     * The library can only write iCals to a file, so we use a temporary file to store the ical in.
-     * Then we copy the contentstream of the file to the output stream of the response.
      * @param ical
      * @param response
      * @throws IOException
@@ -77,18 +75,13 @@ public class ICalController {
     private void presentIcalFile(ICalendar ical, HttpServletResponse response){
         try{
             // Create a temporary file to for the iCalWriter to write to.
-            File file = File.createTempFile("ical", ".ics");
-            ICalWriter writer = new ICalWriter(file, ICalVersion.V2_0);
+            ICalWriter writer = new ICalWriter(response.getOutputStream(), ICalVersion.V2_0);
             writer.write(ical);
             writer.close();
-
-            // Make the outputstream the same as our temporary file
-            IOUtils.copy(new FileInputStream(file), response.getOutputStream());
-
             // Attaches the file to the response
             response.flushBuffer();
         } catch (IOException e) {
-            throw new RuntimeException("IOError writing ICalendar to response output stream");
+            throw new RuntimeException("IOError writing ICalendar to response output stream", e);
         }
     }
 
