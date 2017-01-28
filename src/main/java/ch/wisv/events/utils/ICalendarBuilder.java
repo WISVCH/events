@@ -37,7 +37,7 @@ public class ICalendarBuilder {
      */
     public static ICalendar createIcalEventList(List<Event> events){
         ICalendar iCal = new ICalendar();
-        events.forEach(event -> {iCal.addEvent(createICalEvent(event));});
+        events.forEach(event -> iCal.addEvent(createICalEvent(event)));
 
         iCal.addName("CH Event Calendar");
         iCal.setColor("turquoise");
