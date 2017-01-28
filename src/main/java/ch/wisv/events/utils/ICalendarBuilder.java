@@ -1,4 +1,4 @@
-package ch.wisv.events.core.factory;
+package ch.wisv.events.utils;
 
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -12,16 +12,30 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by janwillemm on 26/01/2017.
+ * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class ICalendarFactory {
+
+public class ICalendarBuilder {
 
     /**
      * Generates a iCal object for a list of events
      * @param events
      * @return
      */
-    public static ICalendar createEventList(List<Event> events){
+    public static ICalendar createIcalEventList(List<Event> events){
         ICalendar iCal = new ICalendar();
         events.forEach(event -> {iCal.addEvent(createICalEvent(event));});
 
@@ -36,16 +50,14 @@ public class ICalendarFactory {
      * @param event
      * @return
      */
-    public static VEvent createICalEvent(Event event){
+    private static VEvent createICalEvent(Event event){
         VEvent vEvent = new VEvent();
-        Summary summary = vEvent.setSummary(event.getTitle());
-        summary.setLanguage("nl-nl");
 
+        vEvent.setSummary(event.getTitle());
         vEvent.setDescription(event.getDescription());
+        vEvent.setLocation(event.getLocation());
 
-        Date start = dateFromLocalDateTime(event.getStart());
-        vEvent.setDateStart(start);
-
+        vEvent.setDateStart(dateFromLocalDateTime(event.getStart()));
         vEvent.setDateEnd(dateFromLocalDateTime(event.getEnd()));
 
         return vEvent;
