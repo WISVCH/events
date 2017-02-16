@@ -67,7 +67,6 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         this.product = new Product(
                 "Product",
                 "Description",
@@ -83,7 +82,6 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         this.product = null;
     }
 

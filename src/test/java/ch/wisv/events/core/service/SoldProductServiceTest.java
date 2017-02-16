@@ -61,7 +61,6 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         soldProduct = new SoldProduct();
 
         soldProduct.setCustomer(mock(Customer.class));
@@ -74,7 +73,6 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         soldProduct = null;
     }
 

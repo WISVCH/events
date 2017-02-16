@@ -75,7 +75,6 @@ public class VendorServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         vendor = new Vendor();
 
         vendor.setLdapGroup(LDAPGroupEnum.BEHEER);
@@ -91,7 +90,6 @@ public class VendorServiceTest extends ServiceTest {
      */
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         vendor = null;
     }
 

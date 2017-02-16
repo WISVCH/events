@@ -67,7 +67,6 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         this.customer = new Customer("Christiaan Huygens", "events@ch.tudelft.nl", "christiaanh", "12345678");
     }
 
