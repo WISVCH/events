@@ -119,7 +119,7 @@ public class DashboardProductController {
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Product model) {
         try {
-            productService.add(model);
+            productService.create(model);
             redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");
 
             return "redirect:/dashboard/products/";

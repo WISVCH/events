@@ -29,37 +29,72 @@ import java.util.UUID;
 @Entity
 public class SoldProduct {
 
+    /**
+     * ID of the sold product
+     */
     @Id
     @GeneratedValue
     @Getter
     private Integer id;
 
+    /**
+     * Key of the sold product
+     */
     @Getter
     @Setter
     private String key;
 
+    /**
+     * Product that is sold
+     */
     @Getter
     @Setter
     @ManyToOne
     private Product product;
 
+    /**
+     * Order of the sold product
+     */
     @Getter
     @Setter
     @ManyToOne
     private Order order;
 
+    /**
+     * Customer who bought the product
+     */
     @Getter
     @Setter
     @ManyToOne
     private Customer customer;
 
+    /**
+     * Status of the sold product
+     */
     @Getter
     @Setter
     private SoldProductStatus status;
 
+    /**
+     * Default constructor
+     */
     public SoldProduct() {
         this.key = UUID.randomUUID().toString();
         this.status = SoldProductStatus.OPEN;
+    }
+
+    /**
+     * Constructor with Customer, Product and Order
+     *
+     * @param customer Customer
+     * @param product  Product
+     * @param order    Order
+     */
+    public SoldProduct(Customer customer, Product product, Order order) {
+        this();
+        this.customer = customer;
+        this.product = product;
+        this.order = order;
     }
 
 }

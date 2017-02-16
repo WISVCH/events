@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.exception.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -34,6 +36,20 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Autowired
     private SoldProductRepository soldProductRepository;
+
+    /**
+     * Get SoldProduct by key
+     *
+     * @return SoldProduct
+     */
+    @Override
+    public SoldProduct getByKey(String key) {
+        Optional<SoldProduct> optional = this.soldProductRepository.findByKey(key);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new SoldProductNotFoundException("Sold Product with key " + key + " is not found!");
+    }
 
     /**
      * Method getAll returns the all of this SoldProductService object.
@@ -118,6 +134,13 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public void update(SoldProduct soldProduct) {
+        SoldProduct model = this.getByKey(soldProduct.getKey());
+        model.setOrder(soldProduct.getOrder());
+        model.setStatus(soldProduct.getStatus());
+        model.setProduct(soldProduct.getProduct());
+        model.setCustomer(soldProduct.getCustomer());
+
         soldProductRepository.save(soldProduct);
     }
+
 }

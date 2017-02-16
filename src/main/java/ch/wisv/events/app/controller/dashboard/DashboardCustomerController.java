@@ -113,7 +113,7 @@ public class DashboardCustomerController {
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
-            customerService.add(model);
+            customerService.create(model);
             redirect.addFlashAttribute("message", "Customer with name " + model.getName() + "  had been added!");
 
             return "redirect:/dashboard/customers/";

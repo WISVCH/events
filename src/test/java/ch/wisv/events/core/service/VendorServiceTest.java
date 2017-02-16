@@ -1,4 +1,4 @@
-package ch.wisv.events.core.service.vendor;
+package ch.wisv.events.core.service;
 
 import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.exception.InvalidVendorException;
@@ -6,12 +6,12 @@ import ch.wisv.events.core.exception.VendorNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
+import ch.wisv.events.core.service.vendor.VendorService;
+import ch.wisv.events.core.service.vendor.VendorServiceImpl;
 import ch.wisv.events.utils.LDAPGroupEnum;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = EventsApplicationTest.class)
 @ActiveProfiles("test")
 @DataJpaTest
-public class VendorServiceTest {
+public class VendorServiceTest extends ServiceTest {
 
     /**
      * Mock of the VendorRepository
@@ -64,12 +64,6 @@ public class VendorServiceTest {
     private VendorService vendorService = new VendorServiceImpl();
 
     /**
-     * ExpectedException Object
-     */
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    /**
      * Default instance of the Vendor class
      */
     private Vendor vendor;
@@ -81,6 +75,7 @@ public class VendorServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         vendor = new Vendor();
 
         vendor.setLdapGroup(LDAPGroupEnum.BEHEER);
@@ -96,6 +91,7 @@ public class VendorServiceTest {
      */
     @After
     public void tearDown() throws Exception {
+        super.tearDown();
         vendor = null;
     }
 

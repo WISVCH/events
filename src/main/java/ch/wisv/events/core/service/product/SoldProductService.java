@@ -26,6 +26,13 @@ import java.util.List;
 public interface SoldProductService {
 
     /**
+     * Get SoldProduct by key
+     *
+     * @return SoldProduct
+     */
+    SoldProduct getByKey(String key);
+
+    /**
      * Method getAll returns the all of this SoldProductService object.
      *
      * @return the all (type List<SoldProduct>) of this SoldProductService object.

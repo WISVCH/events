@@ -36,7 +36,7 @@ public interface ProductService {
      *
      * @param product of type Product
      */
-    void add(Product product);
+    void create(Product product);
 
     /**
      * Update Product using a Product

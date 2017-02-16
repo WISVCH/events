@@ -45,9 +45,21 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByProductsId(Integer id);
 
 
+    /**
+     * Method findTop5ByEndAfterOrderByEnd ...
+     *
+     * @param dateTime of type LocalDateTime
+     * @return List<Event>
+     */
     List<Event> findTop5ByEndAfterOrderByEnd(LocalDateTime dateTime);
 
 
+    /**
+     * Method findTop5ByEndBeforeOrderByEndDesc ...
+     *
+     * @param dateTime of type LocalDateTime
+     * @return List<Event>
+     */
     List<Event> findTop5ByEndBeforeOrderByEndDesc(LocalDateTime dateTime);
 
 }

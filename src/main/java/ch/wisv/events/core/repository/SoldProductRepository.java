@@ -7,6 +7,7 @@ import ch.wisv.events.core.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -42,7 +43,6 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
      */
     List<SoldProduct> findAllByProduct(Product product);
 
-
     /**
      * Method findAllByCustomerAndProduct find list of sold products by customer and product.
      *
@@ -59,4 +59,13 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
      * @return List<SoldProduct>
      */
     List<SoldProduct> findAllByCustomer(Customer customer);
+
+    /**
+     * Method findByKey find a sold product by key
+     *
+     * @param key key of a SoldProduct
+     * @return SoldProduct
+     */
+    Optional<SoldProduct> findByKey(String key);
+
 }

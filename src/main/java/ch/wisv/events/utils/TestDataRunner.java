@@ -223,10 +223,10 @@ public class TestDataRunner implements CommandLineRunner {
 
 
         Customer customer = new Customer();
-        customer.setName("Sven Popping");
-        customer.setEmail("svenp@ch.tudelft.nl");
-        customer.setChUsername("svenp");
-        customer.setRfidToken("04ed6ddad94980");
+        customer.setName("Thomas Oomens");
+        customer.setEmail("thomaso@ch.tudelft.nl");
+        customer.setChUsername("thomaso");
+        customer.setRfidToken("123"); 
 
         customerRepository.saveAndFlush(customer);
 

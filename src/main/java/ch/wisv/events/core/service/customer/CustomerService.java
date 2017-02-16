@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.events.app.request.CustomerCreateRequest;
 import ch.wisv.events.core.model.order.Customer;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public interface CustomerService {
      * @param token of type String
      * @return Customer
      */
-    Customer findByRFIDToken(String token);
+    Customer getByRFIDToken(String token);
 
     /**
      * Get a customer by key.
@@ -45,15 +44,6 @@ public interface CustomerService {
      * @return Customer
      */
     Customer getByKey(String key);
-
-    /**
-     * Create a new customer by CustomerCreateRequest.
-     * TODO: should be replaces by create(Customer customer)
-     *
-     * @param request CustomerCreateRequest
-     * @return customer
-     */
-    Customer create(CustomerCreateRequest request);
 
     /**
      * Update a existing customer.
@@ -67,7 +57,7 @@ public interface CustomerService {
      *
      * @param customer customer model
      */
-    void add(Customer customer);
+    void create(Customer customer);
 
     /**
      * Delete a customer.

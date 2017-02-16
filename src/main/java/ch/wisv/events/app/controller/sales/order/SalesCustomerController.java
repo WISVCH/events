@@ -99,7 +99,13 @@ public class SalesCustomerController {
                                  @ModelAttribute @Validated CustomerCreateRequest request) {
         try {
             Order order = orderService.getByReference(request.getOrderReference());
-            Customer customer = customerService.create(request);
+            Customer customer = new Customer(
+                    request.getCustomerName(),
+                    request.getCustomerEmail(),
+                    request.getCustomerCHUsername(),
+                    request.getCustomerRFIDToken()
+            );
+            customerService.create(customer);
 
             orderService.addCustomerToOrder(order, customer);
             redirectAttributes.addFlashAttribute("reference", order.getPublicReference());
