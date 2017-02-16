@@ -134,7 +134,7 @@ public class ProductServiceImplTest extends ServiceTest {
     @Test
     public void testGetAvailableProductsEmpty() throws Exception {
         this.product.setSold(100);
-        this.product.setMaxSold(100g);
+        this.product.setMaxSold(100);
         when(repository.findAllBySellStartBeforeAndSellEndAfter(
                 any(LocalDateTime.class),
                 any(LocalDateTime.class))).thenReturn(Collections.singletonList(this.product));
