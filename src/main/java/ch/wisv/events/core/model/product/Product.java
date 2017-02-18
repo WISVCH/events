@@ -2,6 +2,7 @@ package ch.wisv.events.core.model.product;
 
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,7 @@ import java.util.UUID;
  */
 @Entity
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Product {
 
     /**

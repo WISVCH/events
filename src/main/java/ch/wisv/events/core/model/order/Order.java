@@ -105,6 +105,11 @@ public class Order {
         this.publicReference = UUID.randomUUID().toString();
     }
 
+    public Order(Customer customer) {
+        this();
+        this.customer = customer;
+    }
+
     /**
      * Add product to Order and create cost to product.
      *

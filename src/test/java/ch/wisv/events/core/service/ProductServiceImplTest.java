@@ -1,12 +1,13 @@
-package ch.wisv.events.core.service.product;
+package ch.wisv.events.core.service;
 
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.service.ServiceTest;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.service.product.ProductServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

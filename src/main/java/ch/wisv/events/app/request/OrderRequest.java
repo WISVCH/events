@@ -1,5 +1,6 @@
 package ch.wisv.events.app.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@AllArgsConstructor
 public class OrderRequest {
 
     @Getter

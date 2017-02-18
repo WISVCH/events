@@ -12,6 +12,7 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,41 +41,28 @@ public class OrderServiceImpl implements OrderService {
 
 
     /**
-     * Field eventService
-     */
-    private final EventService eventService;
-
-    /**
      * Field orderRepository
      */
-    private final OrderRepository orderRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+
+    /**
+     * Field eventService
+     */
+    @Autowired
+    private EventService eventService;
 
     /**
      * Field productService
      */
-    private final ProductService productService;
-
+    @Autowired
+    private ProductService productService;
 
     /**
      * Field soldProductService
      */
-    private final SoldProductService soldProductService;
-
-    /**
-     * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
-     *
-     * @param eventService       of type EventService
-     * @param orderRepository    of type OrderRepository
-     * @param productService     of type ProductService
-     * @param soldProductService of type SoldProductService
-     */
-    public OrderServiceImpl(EventService eventService, OrderRepository orderRepository, ProductService productService,
-                            SoldProductService soldProductService) {
-        this.eventService = eventService;
-        this.orderRepository = orderRepository;
-        this.productService = productService;
-        this.soldProductService = soldProductService;
-    }
+    @Autowired
+    private SoldProductService soldProductService;
 
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
@@ -110,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrdersByProduct(Product product) {
         List<Order> orders = this.getAllOrders();
-        return orders.stream().filter(x -> x.getProducts().stream().anyMatch(p -> p == product))
+        return orders.stream().filter(x -> x.getProducts().stream().anyMatch(p -> p.equals(product)))
                      .collect(Collectors.toList());
     }
 
@@ -174,6 +162,7 @@ public class OrderServiceImpl implements OrderService {
             soldProductService.remove(order);
         }
 
+        // Update event sold count
         order.getProducts().forEach(x -> {
             List<Event> events = eventService.getEventByProductKey(x.getKey());
             events.forEach(y -> {
@@ -181,7 +170,6 @@ public class OrderServiceImpl implements OrderService {
                 eventService.update(y);
             });
         });
-
 
         order.setStatus(orderStatus);
         orderRepository.save(order);
