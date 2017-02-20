@@ -135,7 +135,7 @@ public class TestDataRunner implements CommandLineRunner {
                     today.minusDays(i - 7).plusMinutes(1)
             );
 
-            event.addProduct(productRepository.findById(i));
+            event.addProduct(productRepository.findById(i).get());
             event.getOptions().setPublished(EventStatus.PUBLISHED);
             eventRepository.save(event);
         }

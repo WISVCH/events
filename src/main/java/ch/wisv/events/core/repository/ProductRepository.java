@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
      * @param id id of a Product
      * @return Product
      */
-    Product findById(Integer id);
+    Optional<Product> findById(Integer id);
 
     /**
      * Find a Product by key

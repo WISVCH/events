@@ -323,4 +323,5 @@ public class OrderServiceImplTest extends ServiceTest {
         service.updateOrderStatus(this.order, OrderStatus.REJECTED);
         verify(soldProductService, times(0)).remove(this.order);
     }
+
 }

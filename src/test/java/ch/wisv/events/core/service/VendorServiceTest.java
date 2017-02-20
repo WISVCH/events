@@ -45,10 +45,6 @@ import static org.mockito.Mockito.*;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = EventsApplicationTest.class)
-@ActiveProfiles("test")
-@DataJpaTest
 public class VendorServiceTest extends ServiceTest {
 
     /**

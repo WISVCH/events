@@ -168,6 +168,32 @@ public class ProductServiceImplTest extends ServiceTest {
     }
 
     /**
+     * Test get product by key
+     *
+     * @throws Exception when..
+     */
+    @Test
+    public void testGetById() throws Exception {
+        when(repository.findById(this.product.getId())).thenReturn(Optional.of(this.product));
+
+        assertEquals(this.product, service.getByID(this.product.getId()));
+    }
+
+    /**
+     * Test get product by key empty
+     *
+     * @throws Exception when..
+     */
+    @Test
+    public void testGetByIdEmpty() throws Exception {
+        thrown.expect(ProductNotFound.class);
+        thrown.expectMessage("Product with id " + this.product.getId() + " not found!");
+
+        when(repository.findById(this.product.getId())).thenReturn(Optional.empty());
+        service.getByID(this.product.getId());
+    }
+
+    /**
      * Test update
      *
      * @throws Exception when..

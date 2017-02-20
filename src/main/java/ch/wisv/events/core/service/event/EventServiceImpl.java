@@ -12,7 +12,8 @@ import ch.wisv.events.core.model.event.EventOptions;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
-import ch.wisv.events.core.repository.ProductRepository;
+import ch.wisv.events.core.service.product.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * EventServiceImpl.
+ * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
 public class EventServiceImpl implements EventService {
@@ -31,23 +45,14 @@ public class EventServiceImpl implements EventService {
     /**
      * EventRepository
      */
-    private final EventRepository eventRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     /**
      * ProductRepository
      */
-    private final ProductRepository productRepository;
-
-    /**
-     * Default constructor
-     *
-     * @param eventRepository   EventRepository
-     * @param productRepository ProductRepository
-     */
-    public EventServiceImpl(EventRepository eventRepository, ProductRepository productRepository) {
-        this.eventRepository = eventRepository;
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private ProductService productService;
 
     /**
      * Get all Events
@@ -107,7 +112,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event event = eventRepository.findOne(eventProductRequest.getEventID());
-        Product product = productRepository.findOne(eventProductRequest.getProductID());
+        Product product = productService.getByID(eventProductRequest.getProductID());
 
         event.addProduct(product);
         eventRepository.save(event);
@@ -138,7 +143,7 @@ public class EventServiceImpl implements EventService {
     public void deleteProductFromEvent(Integer eventId, Integer productId) {
         Event event = eventRepository.findOne(eventId);
 
-        Product product = productRepository.findOne(productId);
+        Product product = productService.getByID(productId);
         event.getProducts().remove(product);
         eventRepository.save(event);
     }
@@ -212,7 +217,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getEventByProductKey(String key) {
         List<Event> events = new ArrayList<>();
-        getAllEvents().forEach(x -> x.getProducts().forEach(y -> {
+        this.getAllEvents().forEach(x -> x.getProducts().forEach(y -> {
             if (Objects.equals(y.getKey(), key)) {
                 events.add(x);
             }
@@ -240,4 +245,5 @@ public class EventServiceImpl implements EventService {
     public List<Event> soldFiveUpcoming() {
         return eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
     }
+
 }

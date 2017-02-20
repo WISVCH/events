@@ -84,6 +84,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Get Product by ID
+     *
+     * @param productID id of a Product
+     * @return Product
+     */
+    @Override
+    public Product getByID(Integer productID) {
+        Optional<Product> product = productRepository.findById(productID);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        throw new ProductNotFound("Product with id " + productID + " not found!");
+    }
+
+    /**
      * Update Product using a Product
      *
      * @param product Product containing the new product information

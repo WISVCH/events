@@ -5,6 +5,7 @@ import ch.wisv.events.core.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 /**
  * EventRequestFactory
@@ -32,8 +33,8 @@ public class EventRequestFactory {
                 event.getLocation(),
                 event.getTarget(),
                 event.getLimit(),
-                event.getStart().toString(),
-                event.getEnd().toString(),
+                event.getStart().truncatedTo(ChronoUnit.MINUTES).toString(),
+                event.getEnd().truncatedTo(ChronoUnit.MINUTES).toString(),
                 event.getImageURL(),
                 event.getKey(),
                 event.getOptions()
@@ -48,13 +49,19 @@ public class EventRequestFactory {
      */
     public static Event create(EventRequest request) {
         return new Event(
+                request.getId(),
+                request.getKey(),
                 request.getTitle(),
                 request.getDescription(),
                 request.getLocation(),
+                request.getImage(),
+                null,
+                LocalDateTime.parse(request.getEventStart(), format),
+                LocalDateTime.parse(request.getEventEnd(), format),
+                0,
                 request.getTarget(),
                 request.getLimit(),
-                request.getImage(), LocalDateTime.parse(request.getEventStart(), format),
-                LocalDateTime.parse(request.getEventEnd(), format)
+                request.getOptions()
         );
     }
 
