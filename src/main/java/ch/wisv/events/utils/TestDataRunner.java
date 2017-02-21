@@ -1,9 +1,10 @@
 package ch.wisv.events.utils;
 
-import ch.wisv.events.app.request.OrderRequest;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
-import ch.wisv.events.core.model.order.*;
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.*;
@@ -15,9 +16,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * TestDataRunner.
@@ -46,16 +44,13 @@ public class TestDataRunner implements CommandLineRunner {
 
     private final SoldProductRepository soldProductRepository;
 
-
-    private final LocalDateTime today;
-
     private final int
-            events = 20,
-            products = 20,
-            orders = 250,
-            maxProductsPerOrder = 4,
-            scanned = 400,
-            customer = 25;
+            events = 1,
+            products = 3,
+            orders = 1,
+            maxProductsPerOrder = 2,
+            scanned = 1,
+            customer = 1;
 
 
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
@@ -71,14 +66,12 @@ public class TestDataRunner implements CommandLineRunner {
         this.soldProductService = soldProductService;
         this.soldProductRepository = soldProductRepository;
         df = new DataFactory();
-        LocalDateTime tm = LocalDateTime.now();
-        this.today = tm.withSecond(0).withNano(0);
     }
 
     @Override
     public void run(String... args) throws Exception {
-        this.createProducts(today);
-        this.createEvents(today);
+        this.createProducts();
+        this.createEvents();
 
         /*
           Sell access
@@ -86,106 +79,51 @@ public class TestDataRunner implements CommandLineRunner {
         Vendor vendor = new Vendor();
         vendor.setLdapGroup(LDAPGroupEnum.W3CIE);
         vendor.addEvent(eventRepository.findById(1));
-        vendor.addEvent(eventRepository.findById(9));
-        vendor.setStartingTime(today.minusDays(1));
-        vendor.setEndingTime(today.plusDays(1));
+        vendor.setStartingTime(LocalDateTime.now());
+        vendor.setEndingTime(LocalDateTime.of(2017, 3, 7, 12, 30));
         vendorRepository.saveAndFlush(vendor);
 
-        Vendor vendor2 = new Vendor();
-        vendor2.setLdapGroup(LDAPGroupEnum.AKCIE);
-        vendor2.addEvent(eventRepository.findById(3));
-        vendor2.setStartingTime(today.minusDays(1));
-        vendor2.setEndingTime(today.plusDays(1));
-        vendorRepository.saveAndFlush(vendor2);
-
         this.createRandomCustomers();
-        this.createSalesOrders();
-        this.scanRandomOrders();
     }
 
-    private void createProducts(LocalDateTime today) throws Exception {
-        Product product;
-        for (int i = 1; i < this.products + 1; i++) {
-            String first = this.df.getRandomWord(5, 12);
+    private void createProducts() throws Exception {
+        Product product = new Product(
+                "T.U.E.S.Day: Gamerendinging with too many players",
+                "Ticket for T.U.E.S.Day: Gamerendinging with too many players 7 maart",
+                0.f,
+                100,
+                LocalDateTime.of(2017, 2, 28, 13, 30),
+                LocalDateTime.of(2017, 3, 6, 16, 0)
+        );
 
-            product = new Product();
-            product.setTitle(
-                    first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord(5, 12));
-            product.setCost(this.df.getNumberUpTo(10));
-            product.setDescription(this.df.getRandomText(30, 150));
-            product.setSellStart(today.minusDays(i - 7).minusHours(1));
-            product.setSellEnd(today.minusDays(i - 7).plusMinutes(1));
-            product.setMaxSold(null);
-            productRepository.save(product);
-        }
+        productRepository.saveAndFlush(product);
+
+        Product product2 = new Product(
+                "Broodje",
+                "Broodje",
+                0.f,
+                100,
+                LocalDateTime.of(2017, 2, 28, 13, 30),
+                LocalDateTime.of(2017, 3, 6, 16, 0)
+        );
+
+        productRepository.saveAndFlush(product2);
     }
 
-    private void createEvents(LocalDateTime today) throws Exception {
-        Event event;
-        for (int i = 1; i < this.events + 1; i++) {
-            String first = this.df.getRandomWord(5, 12);
-            event = new Event(first.substring(0, 1).toUpperCase() + first.substring(1) + " " + this.df.getRandomWord
-                    (5, 12),
-                    this.df.getRandomText(30, 50),
-                    "Lecture hall " + df.getRandomChars(1).toUpperCase(),
-                    df.getNumberBetween(20, 80),
-                    null,
-                    "http://placehold.it/300x300",
-                    today.minusDays(i - 7).minusHours(1),
-                    today.minusDays(i - 7).plusMinutes(1)
-            );
-
-            event.addProduct(productRepository.findById(i).get());
-            event.getOptions().setPublished(EventStatus.PUBLISHED);
-            eventRepository.save(event);
-        }
-    }
-
-    /**
-     * Method createSalesOrders creates random sales orders
-     *
-     * @throws Exception when
-     */
-    private void createSalesOrders() throws Exception {
-        OrderRequest orderRequest = new OrderRequest();
-        Customer customer;
-        Order order;
-        // Create 100 random orders
-        for (int i = 0; i < this.orders; i++) {
-            // Add random product to order
-            Map<String, Integer> products = new HashMap<>();
-
-            for (Integer integer = 0; integer < df.getNumberBetween(1, this.maxProductsPerOrder); integer++) {
-                products.put(
-                        productRepository.findOne(df.getNumberBetween(1, (int) productRepository.count() - 1)).getKey(),
-                        1);
-            }
-            orderRequest.setProducts(products);
-            order = orderService.create(orderRequest);
-
-            // Add customer to order
-            customer = customerRepository.findOne(df.getNumberBetween(1, (int) customerRepository.count()));
-            orderService.addCustomerToOrder(order, customer);
-
-            // Set order status to paid.
-            order.setStatus(OrderStatus.PAID_CASH);
-            orderRepository.save(order);
-            for (Product product1 : order.getProducts()) {
-                product1.setSold(product1.getSold() + 1);
-                productRepository.save(product1);
-            }
-            order.getProducts().forEach(x -> {
-                List<Event> events = eventRepository.findAllByProductsId(x.getId());
-                events.forEach(y -> {
-                    y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
-                    eventRepository.save(y);
-                });
-            });
-
-            order.setCreationDate(today.minusDays(df.getNumberBetween(0, 20)));
-
-            soldProductService.create(order);
-        }
+    private void createEvents() throws Exception {
+        Event event = new Event(
+                "T.U.E.S.Day: Gamerendinging with too many players",
+                "Something about the lunchlecture",
+                "Lecture hall Boole",
+                200,
+                null,
+                "http://placehold.it/300x300",
+                LocalDateTime.of(2017, 3, 7, 12, 30),
+                LocalDateTime.of(2017, 3, 7, 13, 30)
+        );
+        event.addProduct(productRepository.findById(1).get());
+        event.getOptions().setPublished(EventStatus.PUBLISHED);
+        eventRepository.save(event);
     }
 
     /**
@@ -209,27 +147,13 @@ public class TestDataRunner implements CommandLineRunner {
      * @throws Exception when
      */
     private void createRandomCustomers() throws Exception {
-        for (int i = 0; i < this.customer; i++) {
-            Customer customer = new Customer();
-            String firstName = this.df.getFirstName();
-            String lastName = this.df.getLastName();
-            customer.setName(firstName + " " + lastName);
-            customer.setEmail(this.df.getEmailAddress());
-            customer.setChUsername(firstName.toLowerCase() + String.valueOf(lastName.charAt(0)).toLowerCase());
-            customer.setRfidToken(this.df.getNumberText(10));
-
-            customerRepository.save(customer);
-        }
-
-
         Customer customer = new Customer();
-        customer.setName("Thomas Oomens");
-        customer.setEmail("thomaso@ch.tudelft.nl");
-        customer.setChUsername("thomaso");
-        customer.setRfidToken("123"); 
+        customer.setName("Christiaan Huygens");
+        customer.setEmail("christiaanh@ch.tudelft.nl");
+        customer.setChUsername("christiaanh");
+        customer.setRfidToken("123");
 
         customerRepository.saveAndFlush(customer);
-
     }
 
 }

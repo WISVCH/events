@@ -17,7 +17,12 @@ apply plugin: 'spring-boot'
 
 jar {
     baseName = 'events'
-    version = '0.0.1-SNAPSHOT'
+    if (project.hasProperty('buildNumber')) {
+        version = "${buildNumber}"
+    } else {
+        version = 'SNAPSHOT'
+    }
+    archiveName = "${baseName}.${extension}"
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

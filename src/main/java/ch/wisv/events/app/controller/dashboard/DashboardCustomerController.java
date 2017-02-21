@@ -37,14 +37,16 @@ public class DashboardCustomerController {
      */
     private final CustomerService customerService;
 
-
+    /**
+     * SoldProductService
+     */
     private final SoldProductService soldProductService;
 
     /**
      * Autowired constructor.
      *
-     * @param customerService CustomerService
-     * @param soldProductService
+     * @param customerService    CustomerService
+     * @param soldProductService SoldProductService
      */
     @Autowired
     public DashboardCustomerController(CustomerService customerService, SoldProductService soldProductService) {

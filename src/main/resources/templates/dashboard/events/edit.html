@@ -57,17 +57,24 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <!--/*@thymesVar id="event" type="ch.wisv.events.api.request.EventRequest"*/-->
-                    <form th:action="@{/dashboard/events/update}" th:object="${event}"
-                          method="POST" id="editEvent">
+                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                <form th:action="@{/dashboard/events/update}" th:object="${event}" method="POST">
+                    <input type="hidden" th:value="*{key}" th:field="*{key}">
+
+                    <div class="col-sm-12 col-md-6">
+                        <!--/*@thymesVar id="event" type="ch.wisv.events.api.request.EventRequest"*/-->
                         <div th:replace="dashboard/events/fragments/event-edit-panel-information :: edit-information"></div>
-                    </form>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div th:replace="dashboard/events/fragments/event-edit-panel-options :: edit-options"></div>
-                    <div th:replace="dashboard/events/fragments/event-edit-panel-products :: edit-products"></div>
-                </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div th:replace="dashboard/events/fragments/event-edit-panel-options :: edit-options"></div>
+                        <div th:replace="dashboard/events/fragments/event-edit-panel-products :: edit-products"></div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Update">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -1,11 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.api.request.EventOptionsRequest;
-import ch.wisv.events.api.request.EventProductRequest;
-import ch.wisv.events.api.request.EventRequest;
-import ch.wisv.events.core.data.factory.event.EventRequestFactory;
 import ch.wisv.events.core.exception.EventNotFound;
-import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -139,34 +134,9 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testAdd() throws Exception {
-        EventRequest request = EventRequestFactory.create(this.event);
+        service.create(this.event);
 
-        assertEquals(this.event.getKey(), service.add(request).getKey());
-        Mockito.verify(repository, times(1)).saveAndFlush(any(Event.class));
-    }
-
-    @Test
-    public void testAddProductToEvent() throws Exception {
-        Product product = new Product();
-        EventProductRequest request = new EventProductRequest(this.event.getKey(), this.event.getId(), product.getId());
-
-        when(repository.findAllByProductsId(product.getId())).thenReturn(ImmutableList.of());
-        when(repository.findOne(this.event.getId())).thenReturn(this.event);
-        when(productService.getByID(product.getId())).thenReturn(product);
-
-        service.addProductToEvent(request);
-        verify(repository, times(1)).save(this.event);
-    }
-
-    @Test
-    public void testAddProductToEventException() throws Exception {
-        Product product = new Product();
-        EventProductRequest request = new EventProductRequest(this.event.getKey(), this.event.getId(), product.getId());
-
-        thrown.expect(ProductInUseException.class);
-
-        when(repository.findAllByProductsId(product.getId())).thenReturn(ImmutableList.of(this.event));
-        service.addProductToEvent(request);
+        Mockito.verify(repository, times(1)).saveAndFlush(this.event);
     }
 
     @Test
@@ -196,15 +166,6 @@ public class EventServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void testUpdateEventRequest() throws Exception {
-        EventRequest eventRequest = EventRequestFactory.create(this.event);
-        when(repository.findById(this.event.getId())).thenReturn(this.event);
-
-        service.update(eventRequest);
-        verify(repository, times(1)).save(any(Event.class));
-    }
-
-    @Test
     public void testUpdateEvent() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.of(this.event));
 
@@ -216,15 +177,6 @@ public class EventServiceImplTest extends ServiceTest {
     public void testDelete() throws Exception {
         service.delete(this.event);
         verify(repository, times(1)).delete(this.event);
-    }
-
-    @Test
-    public void testUpdateEventOptions() throws Exception {
-        when(repository.findByKey(this.event.getKey())).thenReturn(Optional.of(this.event));
-        EventOptionsRequest request = new EventOptionsRequest(this.event.getKey(), 1);
-
-        service.updateEventOptions(request);
-        verify(repository, times(1)).save(this.event);
     }
 
     @Test

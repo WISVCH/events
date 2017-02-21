@@ -1,14 +1,7 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.api.request.EventOptionsRequest;
-import ch.wisv.events.api.request.EventProductRequest;
-import ch.wisv.events.api.request.EventRequest;
-import ch.wisv.events.core.data.factory.event.EventOptionRequestFactory;
-import ch.wisv.events.core.data.factory.event.EventRequestFactory;
 import ch.wisv.events.core.exception.EventNotFound;
-import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.event.EventOptions;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
@@ -89,33 +82,11 @@ public class EventServiceImpl implements EventService {
     /**
      * Add a new Event by a EventRequest
      *
-     * @param eventRequest EventRequest
+     * @param event Event
      */
     @Override
-    public Event add(EventRequest eventRequest) {
-        Event event = EventRequestFactory.create(eventRequest);
-
+    public void create(Event event) {
         eventRepository.saveAndFlush(event);
-        return event;
-    }
-
-    /**
-     * Add a product to an Event
-     *
-     * @param eventProductRequest EventProductRequest
-     */
-    @Override
-    public void addProductToEvent(EventProductRequest eventProductRequest) {
-        List<Event> eventList = eventRepository.findAllByProductsId(eventProductRequest.getProductID());
-        if (eventList.size() > 0) {
-            throw new ProductInUseException("This Product is already used for other Event");
-        }
-
-        Event event = eventRepository.findOne(eventProductRequest.getEventID());
-        Product product = productService.getByID(eventProductRequest.getProductID());
-
-        event.addProduct(product);
-        eventRepository.save(event);
     }
 
     /**
@@ -149,19 +120,6 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update an Event by an EventRequest
-     *
-     * @param eventRequest EventRequest
-     */
-    @Override
-    public void update(EventRequest eventRequest) {
-        Event event = eventRepository.findById(eventRequest.getId());
-        event = EventRequestFactory.update(event, eventRequest);
-
-        eventRepository.save(event);
-    }
-
-    /**
      * Update event by Event
      *
      * @param event
@@ -179,8 +137,10 @@ public class EventServiceImpl implements EventService {
         update.setTarget(event.getTarget());
         update.setLimit(event.getLimit());
         update.setSold(event.getSold());
+        update.setOptions(event.getOptions());
+        update.setProducts(event.getProducts());
 
-        eventRepository.save(event);
+        eventRepository.save(update);
     }
 
     /**
@@ -191,21 +151,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Event event) {
         eventRepository.delete(event);
-    }
-
-    /**
-     * Update the EventOptions of an Event
-     *
-     * @param request EventOptionsRequest
-     */
-    @Override
-    public void updateEventOptions(EventOptionsRequest request) {
-        Event event = this.getByKey(request.getKey());
-        EventOptions options = EventOptionRequestFactory.create(request);
-
-        event.setOptions(options);
-
-        eventRepository.save(event);
     }
 
     /**

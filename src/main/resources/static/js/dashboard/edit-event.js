@@ -4,27 +4,26 @@ $(document).ready(function () {
         showNoSuggestionNotice: true,
         noSuggestionNotice: "<div class=\"autocomplete-suggestion\" data-index=\"1\">No product found.</div>",
         lookupLimit: 3,
-        minChars: 3,
+        minChars: 1,
         onSelect: function (suggestion) {
-            $("#addProductKey").val(suggestion.data);
-            $("#addProduct").submit();
+            var products = $("#products");
+            var size = products.children().length;
+            products.append('<input type="hidden" id="products' + size + '" name="products[' + size + ']" value="' + suggestion.data + '">')
+
+            $("#productsTable").append("<tr><td><span class='label label-danger'>N.S.Y.</span> " + suggestion.value + "</td><td></td></tr>")
         }
     });
 
     $(".remove-product").click(function () {
-        $("#deleteProductKey").val($(this).data('id'));
-        $("#deleteProduct").submit();
-    });
+        var products = $("#products").children();
+        var productID = $(this).attr('data-product-id');
 
-    var timer;
-    $("#editEvent .form-control").not(".no-trigger").keyup(function () {
-        startTimer($("#editEvent"));
-    }).keydown(function () {
-        clearTimeout(timer);
-    });
-
-    $("#editEventOptions .form-control").change(function () {
-        startTimer($("#editEventOptions"));
+        $(this).parent().parent().parent().remove();
+        for (var i = 0; i < products.length; i++) {
+            if (productID == products[i].value) {
+                products[i].remove();
+            }
+        }
     });
 
     $("#productDatatable").DataTable({
@@ -39,15 +38,4 @@ $(document).ready(function () {
             }
         ]
     });
-
-    function startTimer(form) {
-        clearTimeout(timer);
-        $(".spinner").addClass('active');
-        timer = setTimeout(function () {
-            if (form[0].checkValidity()) {
-                form.submit();
-            }
-            $(".spinner").removeClass('active');
-        }, 1000);
-    }
 });

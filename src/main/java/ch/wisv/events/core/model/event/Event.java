@@ -6,11 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,14 +33,15 @@ public class Event {
     @Id
     @GeneratedValue
     @Getter
+    @Setter
     private Integer id;
 
     /**
      * Key of the event, getter only so it can not be changed.
      */
     @Getter
+    @Setter
     private String key;
-
 
     /**
      * Field title title of the Event.
@@ -76,13 +78,12 @@ public class Event {
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     @Getter
     @Setter
-    private Set<Product> products;
-
+    private List<Product> products;
 
     /**
      * Field start starting time of the Event.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime start;
@@ -90,11 +91,10 @@ public class Event {
     /**
      * Field end ending time of the Event.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
     private LocalDateTime end;
-
 
     /**
      * Field sold amount of tickets sold by this Event.
@@ -102,7 +102,6 @@ public class Event {
     @Getter
     @Setter
     private int sold;
-
 
     /**
      * Field target target of the amount of tickets sold by this Event.
@@ -130,7 +129,7 @@ public class Event {
      */
     public Event() {
         this.key = UUID.randomUUID().toString();
-        this.products = new HashSet<>();
+        this.products = new ArrayList<>();
         this.options = new EventOptions();
     }
 

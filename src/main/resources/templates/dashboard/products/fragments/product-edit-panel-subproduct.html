@@ -24,28 +24,13 @@
 </head>
 
 <body>
-<div th:fragment="edit-options">
+<div th:fragment="edit-subproduct">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Options
-                <small class="spinner">
-                    <i class="fa fa-refresh fa-spin fa-fw"></i>
-                    <span>Saving ...</span>
-                </small>
-            </h3>
+            <h3 class="panel-title">Sub product</h3>
         </div>
         <div class="panel-body">
-            <!--/*@thymesVar id="options" type="ch.wisv.events.core.model.event.EventOptions"*/-->
-            <div class="form-group">
-                <label for="eventStatus">Status</label>
-                <select name="" id="eventStatus" class="form-control" th:field="*{options.published}">
-                    <option th:each="state : ${T(ch.wisv.events.core.model.event.EventStatus).values()}"
-                            th:selected="${event.options.published.getId() == state.getId()}"
-                            th:value="${state}"
-                            th:text="${state.getDisplayName()}">
-                    </option>
-                </select>
-            </div>
+
         </div>
     </div>
 </div>
