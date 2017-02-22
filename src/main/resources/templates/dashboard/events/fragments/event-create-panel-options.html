@@ -32,9 +32,9 @@
         <div class="panel-body">
             <div class="form-group">
                 <label for="eventStatus">Status</label>
-                <select name="" id="eventStatus" class="form-control" th:field="*{options.published}">
+                <select name="" id="eventStatus" class="form-control" th:field="${eventStatus.status}">
                     <option th:each="state : ${T(ch.wisv.events.core.model.event.EventStatus).values()}"
-                            th:value="${state}"
+                            th:value="${state.getId()}"
                             th:text="${state.getDisplayName()}">
                     </option>
                 </select>
