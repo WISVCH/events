@@ -8,11 +8,10 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -90,10 +89,19 @@ public class Product {
     public LocalDateTime sellEnd;
 
     /**
+     * Field productList
+     */
+    @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
+    @Getter
+    @Setter
+    public List<Product> products;
+
+    /**
      * Default constructor.
      */
     public Product() {
         this.key = UUID.randomUUID().toString();
+        this.products = new ArrayList<>();
     }
 
     /**

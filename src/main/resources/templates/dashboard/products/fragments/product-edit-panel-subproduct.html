@@ -30,7 +30,44 @@
             <h3 class="panel-title">Sub product</h3>
         </div>
         <div class="panel-body">
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <div class="input-group" style="width: 100%">
+                <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
+                       placeholder="Add product">
+                <span class="input-group-addon" style="width: 39px;">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
+            </div>
+            <!--<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>-->
+            <p class="help-block">Start typing to look for a product.</p>
 
+            <div id="products">
+                <input type="hidden" th:field="*{products[__${stat.index}__]}" th:value="${product.id}" th:each="product, stat : ${product.products}">
+            </div>
+
+            <table class="table table-hover" id="productDatatable">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="productsTable">
+                <tr th:each="product : ${product.products}">
+                    <td th:text="${product.title}"></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a th:href="@{/dashboard/products/edit/} + ${product.key} + '/'" class="btn btn-info">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a class="btn btn-danger remove-product" th:data-product-id="${product.id}">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

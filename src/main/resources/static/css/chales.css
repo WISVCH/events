@@ -13,8 +13,8 @@ body {
     color: #cccccc;
 }
 
-.content-wrapper {
-    padding-top: 16px;
+.container-fluid > .row:first-child {
+    margin-top: 16px;
 }
 
 .checked .fa-check {

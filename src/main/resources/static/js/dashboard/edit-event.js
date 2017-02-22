@@ -8,9 +8,10 @@ $(document).ready(function () {
         onSelect: function (suggestion) {
             var products = $("#products");
             var size = products.children().length;
-            products.append('<input type="hidden" id="products' + size + '" name="products[' + size + ']" value="' + suggestion.data + '">')
+            products.append('<input type="hidden" id="products' + size + '" name="products[' + size + ']" value="' + suggestion.data + '">');
 
-            $("#productsTable").append("<tr><td><span class='label label-danger'>N.S.Y.</span> " + suggestion.value + "</td><td></td></tr>")
+            $("#productsTable").append("<tr><td><span class='label label-danger'>N.S.Y.</span> " + suggestion.value + "</td><td></td></tr>");
+            $("#q").val("");
         }
     });
 
@@ -33,7 +34,7 @@ $(document).ready(function () {
         columnDefs: [
             {
                 width: "81px",
-                targets: 3,
+                targets: 1,
                 orderable: false
             }
         ]
