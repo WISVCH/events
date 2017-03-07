@@ -80,6 +80,7 @@ dependencies {
     compile("com.github.darrachequesne:spring-data-jpa-datatables:1.1")
 
     compile("org.fluttercode.datafactory:datafactory:0.8")
+    compile('net.sf.biweekly:biweekly:0.6.0')
 
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")
