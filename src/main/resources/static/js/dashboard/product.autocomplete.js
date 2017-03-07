@@ -33,7 +33,7 @@ $(document).ready(function () {
         info: false,
         columnDefs: [
             {
-                width: "81px",
+                width: "120px",
                 targets: 1,
                 orderable: false
             }

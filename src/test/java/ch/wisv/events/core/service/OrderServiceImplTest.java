@@ -180,7 +180,8 @@ public class OrderServiceImplTest extends ServiceTest {
                 product.getMaxSold(),
                 product.getSellStart(),
                 product.getSellEnd(),
-                product.getProducts()
+                product.getProducts(),
+                true
         );
         this.order.addProduct(product);
         when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));

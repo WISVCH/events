@@ -106,6 +106,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void update(Product product) {
         Product model = this.getByKey(product.getKey());
+        this.updateLinkedProducts(model.getProducts(), false);
+
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
         model.setSold(product.getSold());
@@ -113,7 +115,9 @@ public class ProductServiceImpl implements ProductService {
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());
         model.setSellEnd(product.getSellEnd());
+        model.setProducts(product.getProducts());
 
+        this.updateLinkedProducts(model.getProducts(), true);
         productRepository.save(model);
     }
 
@@ -139,6 +143,19 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInUseException("Product is already added to an Event");
         }
         productRepository.delete(product);
+    }
+
+    /**
+     * Update the linked status of Products
+     *
+     * @param products List of Products
+     * @param linked   linked status
+     */
+    private void updateLinkedProducts(List<Product> products, boolean linked) {
+        products.forEach(p -> {
+            p.setLinked(linked);
+            productRepository.save(p);
+        });
     }
 
 }

@@ -28,12 +28,14 @@ public class Product {
     @Id
     @GeneratedValue
     @Getter
+    @Setter
     public Integer id;
 
     /**
      * Key of the product, getter only so it can not be changed.
      */
     @Getter
+    @Setter
     public String key;
 
     /**
@@ -95,6 +97,13 @@ public class Product {
     @Getter
     @Setter
     public List<Product> products;
+
+    /**
+     * Flag if product is linked
+     */
+    @Getter
+    @Setter
+    public boolean linked;
 
     /**
      * Default constructor.
