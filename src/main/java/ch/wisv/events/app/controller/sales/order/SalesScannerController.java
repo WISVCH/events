@@ -72,12 +72,16 @@ public class SalesScannerController {
     }
 
     /**
-     * Method checkView ...
+     * Method checkView displays the status of the scanned ticket.
+     *
+     * Green: person x has a ticket is valid
+     * Orange: ticket of person x is already scanned
+     * Red: person x has no ticket
      *
      * @return String
      */
     @GetMapping("/check/")
-    public String checkView(RedirectAttributes redirect, Model model) {
+    public String checkView(Model model) {
         if (model.containsAttribute("scanned")) {
             return "sales/scan/check";
         }
