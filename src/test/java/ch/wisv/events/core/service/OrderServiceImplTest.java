@@ -181,7 +181,7 @@ public class OrderServiceImplTest extends ServiceTest {
                 product.getSellStart(),
                 product.getSellEnd(),
                 product.getProducts(),
-                true
+                product.isLinked()
         );
         this.order.addProduct(product);
         when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
