@@ -1,4 +1,4 @@
-package ch.wisv.events.app.controller;
+package ch.wisv.events.api.controller;
 
 import biweekly.ICalVersion;
 import biweekly.ICalendar;
@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 
 @Controller
-@RequestMapping(value = "/events")
+@RequestMapping(value = "/api/v1/events")
 public class ICalController {
 
     private final EventService eventService;
@@ -45,7 +45,7 @@ public class ICalController {
     /**
      * Get request on "/events/iCal" will present the ical with the events
      */
-    @GetMapping(value = "/iCal", produces = "text/calendar; charset=utf-8")
+    @GetMapping(value = "/ical", produces = "text/calendar; charset=utf-8")
     public void getAllEvents(HttpServletResponse response) {
         response.setContentType("text/calendar");
         // Getting the iCal with the current available events
@@ -54,11 +54,11 @@ public class ICalController {
     }
 
     /**
-     * Get request on /iCal/upcoming will present the ical with the upcoming events
+     * Get request on /ical/upcoming will present the ical with the upcoming events
      *
-     * @param response
+     * @param response HttpServletResponse
      */
-    @GetMapping(value = "/iCal/upcoming", produces = "text/calendar; charset=utf-8")
+    @GetMapping(value = "/ical/upcoming", produces = "text/calendar; charset=utf-8")
     public void getUpcomingEvents(HttpServletResponse response) {
         response.setContentType("text/calendar");
         ICalendar ical = ICalendarBuilder.createIcalEventList(eventService.getUpcomingEvents());
@@ -68,9 +68,8 @@ public class ICalController {
     /**
      * Attaches the ICal to the HttpServletResponse, providing the user with an iCal file.
      *
-     * @param ical
-     * @param response
-     * @throws IOException
+     * @param ical     ICalendar
+     * @param response HttpServletResponse
      */
     private void presentIcalFile(ICalendar ical, HttpServletResponse response) {
         try {
@@ -84,6 +83,4 @@ public class ICalController {
             throw new RuntimeException("IOError writing ICalendar to response output stream", e);
         }
     }
-
-
 }

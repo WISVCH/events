@@ -11,6 +11,10 @@ import ch.wisv.events.utils.LDAPGroup;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+<<<<<<< HEAD
+=======
+import org.mockito.InjectMocks;
+>>>>>>> Remove factory and request models
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
