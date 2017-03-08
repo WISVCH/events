@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,7 +63,6 @@ public class SalesController {
         return "sales/index";
     }
 
-
     /**
      * Method overviewIndex shows the products that the user is allowed to sell.
      *
@@ -74,7 +72,7 @@ public class SalesController {
      */
     @GetMapping("/order/")
     public String orderIndex(OIDCAuthenticationToken auth, Model model) {
-        List<Product> products = this.getGrantedProducts(auth);
+        List<Product> products = this.getGrantedProducts(auth, false);
 
         if (products.size() == 0) return "redirect:/sales/";
 
@@ -96,7 +94,7 @@ public class SalesController {
      */
     @GetMapping("/scan/")
     public String scanIndex(OIDCAuthenticationToken auth, Model model) {
-        List<Product> products = this.getGrantedProducts(auth);
+        List<Product> products = this.getGrantedProducts(auth, true);
 
         if (products.size() == 0) return "redirect:/sales/";
 
@@ -107,30 +105,45 @@ public class SalesController {
     }
 
     /**
-     * Return list of granted products to sell for LDAP group
+     * Return list of granted products to sell for LDAP group.
      *
      * @param auth OIDCAuthenticationToken
      * @return List of Products
      */
-    private List<Product> getGrantedProducts(OIDCAuthenticationToken auth) {
+    private List<Product> getGrantedProducts(OIDCAuthenticationToken auth, boolean subproducts) {
         UserInfo userInfo = auth.getUserInfo();
         if (userInfo instanceof CHUserInfo) {
             CHUserInfo info = (CHUserInfo) userInfo;
-            List<Vendor> vendors = vendorService.getAll().stream()
-                                                .filter(x -> info.getLdapGroups().stream()
-                                                                 .anyMatch(g -> g.equals(x.getLdapGroup().getName())))
-                                                .filter(x -> x.getStartingTime() == null || x.getStartingTime()
-                                                                                             .isBefore(LocalDateTime
-                                                                                                     .now()))
-                                                .filter(x -> x.getEndingTime() == null || x.getEndingTime().isAfter(
-                                                        LocalDateTime.now()))
-                                                .collect(Collectors.toCollection(ArrayList::new));
-            ArrayList<Product> products = new ArrayList<>();
-            vendors.forEach(x -> x.getEvents().forEach(p -> products.addAll(p.getProducts())));
+
+            List<Vendor> vendors = new ArrayList<>();
+            info.getLdapGroups().forEach(group -> vendors.addAll(vendorService.getAllByLDAPGroup(group)));
+
+            List<Product> products = new ArrayList<>();
+            vendors.forEach(x -> x.getEvents().forEach(e -> {
+                if (subproducts) {
+                    e.getProducts().forEach(p -> products.addAll(getProducts(p)));
+                } else {
+                    products.addAll(e.getProducts());
+                }
+            }));
 
             return products;
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * Method getProducts get sub products of products.
+     *
+     * @param product of type Product
+     * @return List<Product>
+     */
+    private List<Product> getProducts(Product product) {
+        List<Product> temp = new ArrayList<>();
+        product.getProducts().forEach(p -> temp.addAll(getProducts(p)));
+        temp.add(product);
+
+        return temp;
     }
 
 }

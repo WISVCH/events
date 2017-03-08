@@ -87,8 +87,7 @@ public class ProductRESTController {
 
         String finalQuery = (query != null) ? query : "";
         productList.stream()
-                   .filter(p -> eventService.getEventByProductKey(p.getKey()).size() < 1
-                           && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                   .filter(p -> !p.isLinked() && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
                    .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;

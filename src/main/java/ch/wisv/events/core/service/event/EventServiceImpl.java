@@ -127,6 +127,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void update(Event event) {
         Event update = this.getByKey(event.getKey());
+        this.updateLinkedProducts(update.getProducts(), false);
 
         update.setTitle(event.getTitle());
         update.setDescription(event.getDescription());
@@ -140,6 +141,7 @@ public class EventServiceImpl implements EventService {
         update.setOptions(event.getOptions());
         update.setProducts(event.getProducts());
 
+        this.updateLinkedProducts(update.getProducts(), true);
         eventRepository.save(update);
     }
 
@@ -189,6 +191,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> soldFiveUpcoming() {
         return eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
+    }
+
+    /**
+     * Update the linked status of Products
+     *
+     * @param products List of Products
+     * @param linked   linked status
+     */
+    private void updateLinkedProducts(List<Product> products, boolean linked) {
+        products.forEach(p -> {
+            p.setLinked(linked);
+            productService.update(p);
+        });
     }
 
 }

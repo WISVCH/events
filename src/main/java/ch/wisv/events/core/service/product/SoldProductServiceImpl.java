@@ -96,7 +96,7 @@ public class SoldProductServiceImpl implements SoldProductService {
     }
 
     /**
-     * Method create ...
+     * Method create sold products out of an Order
      *
      * @param order of type Order
      */
@@ -110,11 +110,34 @@ public class SoldProductServiceImpl implements SoldProductService {
             sold.setOrder(order);
 
             soldProductRepository.saveAndFlush(sold);
+
+            this.createSubProduct(order, product);
         }
     }
 
     /**
-     * Method remove ...
+     * Method createSubProduct create a soldproduct item for the sub products of a product
+     *
+     * @param order of type Order
+     * @param product of type Product
+     */
+    private void createSubProduct(Order order, Product product) {
+        product.getProducts().forEach(p -> {
+            SoldProduct soldProduct = new SoldProduct();
+
+            soldProduct.setProduct(p);
+            soldProduct.setCustomer(order.getCustomer());
+            soldProduct.setOrder(order);
+
+            soldProductRepository.saveAndFlush(soldProduct);
+            createSubProduct(order, p);
+        });
+    }
+
+    /**
+     * Method remove SoldProduct of an certain order
+     *
+     * // TODO: also remove sold sub Products
      *
      * @param order of type Order
      */
@@ -130,7 +153,7 @@ public class SoldProductServiceImpl implements SoldProductService {
     /**
      * Update sold product
      *
-     * @param soldProduct
+     * @param soldProduct of type SoldProduct
      */
     @Override
     public void update(SoldProduct soldProduct) {

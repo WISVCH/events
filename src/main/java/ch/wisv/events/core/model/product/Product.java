@@ -2,9 +2,7 @@ package ch.wisv.events.core.model.product;
 
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -19,7 +17,7 @@ import java.util.UUID;
  */
 @Entity
 @AllArgsConstructor
-@EqualsAndHashCode
+@Data
 public class Product {
 
     /**
@@ -27,74 +25,61 @@ public class Product {
      */
     @Id
     @GeneratedValue
-    @Getter
     public Integer id;
 
     /**
      * Key of the product, getter only so it can not be changed.
      */
-    @Getter
     public String key;
 
     /**
      * Title of the product.
      */
-    @Getter
-    @Setter
     public String title;
 
     /**
      * Description of the product.
      */
     @Lob
-    @Getter
-    @Setter
     public String description;
 
     /**
      * Price/Cost of the product.
      */
-    @Getter
-    @Setter
     public float cost;
 
     /**
      * Products sold.
      */
-    @Getter
-    @Setter
     public int sold;
 
     /**
      * Maximum number of sold for the product. It is an Integer so it can be NULL.
      */
-    @Getter
-    @Setter
     public Integer maxSold;
 
     /**
      * Start DateTime for selling this product.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    @Getter
-    @Setter
     public LocalDateTime sellStart;
 
     /**
      * End DateTime for selling this product.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    @Getter
-    @Setter
     public LocalDateTime sellEnd;
 
     /**
      * Field productList
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
-    @Getter
-    @Setter
     public List<Product> products;
+
+    /**
+     * Flag if product is linked
+     */
+    public boolean linked;
 
     /**
      * Default constructor.

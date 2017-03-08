@@ -10,12 +10,14 @@ import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.*;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import com.google.common.collect.ImmutableList;
 import org.fluttercode.datafactory.impl.DataFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * TestDataRunner.
@@ -79,23 +81,27 @@ public class TestDataRunner implements CommandLineRunner {
         Vendor vendor = new Vendor();
         vendor.setLdapGroup(LDAPGroupEnum.W3CIE);
         vendor.addEvent(eventRepository.findById(1));
-        vendor.setStartingTime(LocalDateTime.now());
-        vendor.setEndingTime(LocalDateTime.of(2017, 3, 7, 12, 30));
+        vendor.setStartingTime(LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES));
+        vendor.setEndingTime(LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES));
         vendorRepository.saveAndFlush(vendor);
 
         this.createRandomCustomers();
     }
 
+    /**
+     * Method createProducts create a product with a sub product
+     *
+     * @throws Exception when
+     */
     private void createProducts() throws Exception {
         Product product = new Product(
                 "T.U.E.S.Day: Gamerendinging with too many players",
                 "Ticket for T.U.E.S.Day: Gamerendinging with too many players 7 maart",
                 0.f,
                 100,
-                LocalDateTime.of(2017, 2, 28, 13, 30),
-                LocalDateTime.of(2017, 3, 6, 16, 0)
+                LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES)
         );
-
         productRepository.saveAndFlush(product);
 
         Product product2 = new Product(
@@ -103,13 +109,20 @@ public class TestDataRunner implements CommandLineRunner {
                 "Broodje",
                 0.f,
                 100,
-                LocalDateTime.of(2017, 2, 28, 13, 30),
-                LocalDateTime.of(2017, 3, 6, 16, 0)
+                LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES)
         );
-
         productRepository.saveAndFlush(product2);
+
+        product.setProducts(ImmutableList.of(product2));
+        productRepository.save(product);
     }
 
+    /**
+     * Method createEvents create a test event
+     *
+     * @throws Exception when
+     */
     private void createEvents() throws Exception {
         Event event = new Event(
                 "T.U.E.S.Day: Gamerendinging with too many players",
@@ -118,8 +131,8 @@ public class TestDataRunner implements CommandLineRunner {
                 200,
                 null,
                 "http://placehold.it/300x300",
-                LocalDateTime.of(2017, 3, 7, 12, 30),
-                LocalDateTime.of(2017, 3, 7, 13, 30)
+                LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES)
         );
         event.addProduct(productRepository.findById(1).get());
         event.getOptions().setPublished(EventStatus.PUBLISHED);
@@ -127,7 +140,7 @@ public class TestDataRunner implements CommandLineRunner {
     }
 
     /**
-     * Method scanRandomOrders set of 25 order the status to scanned
+     * Method scanRandomOrders sets products status to scanned of an Order
      *
      * @throws Exception when
      */
@@ -142,7 +155,7 @@ public class TestDataRunner implements CommandLineRunner {
     }
 
     /**
-     * Method createRandomCustomers ...
+     * Method createRandomCustomers create a Customer
      *
      * @throws Exception when
      */
