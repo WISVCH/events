@@ -41,7 +41,7 @@ public class Order {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field status status of the Order.
@@ -106,7 +106,17 @@ public class Order {
     }
 
     /**
-     * Add product to Order and add cost to product.
+     * Constructor Order creates a new Order instance.
+     *
+     * @param customer of type Customer
+     */
+    public Order(Customer customer) {
+        this();
+        this.customer = customer;
+    }
+
+    /**
+     * Add product to Order and create cost to product.
      *
      * @param product Product
      */

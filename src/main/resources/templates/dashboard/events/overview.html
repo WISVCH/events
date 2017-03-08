@@ -32,14 +32,17 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
+    <div class="row">
         <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp th:text="'Sold products for ' + ${event.getTitle()}"></samp></h1>
             </div>
@@ -73,7 +76,7 @@
                                th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
                         </td>
                         <td>
-                            <a th:href="'/dashboard/products/edit/' + ${soldProduct.getProduct().getKey()} + '/'"
+                            <a th:href="'/dashboard/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'"
                                th:text="${soldProduct.getProduct().getTitle()}"></a>
                         </td>
                         <td>
@@ -97,7 +100,12 @@
 <!--suppress JSUnresolvedFunction -->
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable();
+        $('#dataTable').DataTable({
+            pageLength: 50,
+            columnDefs: [
+                {width: "20px", targets: 0}
+            ]
+        });
     });
 </script>
 </body>

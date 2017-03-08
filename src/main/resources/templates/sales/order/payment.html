@@ -29,23 +29,19 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/"><samp>CH events sell app</samp></a>
+                    <a class="navbar-brand" href="/"><samp>events.ch.tudelft.nl</samp></a>
                 </div>
             </div>
         </nav>
     </div>
 
-    <div class="row content-wrapper">
-        <div class="col-xs-12 main">
+    <div class="row">
+        <div class="col-xs-12 content-wrapper">
             <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
 
             <table class="table table-bordered">
@@ -83,7 +79,7 @@
                 </tfoot>
             </table>
 
-            <form th:action="@{/sales/payment}" method="POST">
+            <form th:action="@{/sales/order/payment}" method="POST">
                 <input type="hidden" name="publicReference" th:value="${order.getPublicReference()}">
                 <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
                         name="payment"

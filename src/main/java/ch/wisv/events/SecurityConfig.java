@@ -45,6 +45,11 @@ import java.util.Set;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
+     * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
+     */
+    private final String loginPath = "/openid_connect_login";
+
+    /**
      * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration
      */
     @Value("${connect.issuerUri}")
@@ -61,11 +66,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Value("#{'${events.admin.groups}'.split(',')}")
     private Set<String> adminGroups;
-
-    /**
-     * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
-     */
-    private final String loginPath = "/openid_connect_login";
 
     /**
      * Configure the {@link HttpSecurity} object.

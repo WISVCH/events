@@ -1,12 +1,11 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.events.core.model.order.Customer;
-import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.app.request.SalesCustomerRequest;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
 import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,24 +37,14 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Field customerRepository.
      */
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     /**
      * Field orderRepository.
      */
-    private final OrderRepository orderRepository;
-
-    /**
-     * Autowired constructor.
-     *
-     * @param customerRepository CustomerRepository
-     * @param orderRepository    OrderRepository
-     */
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
-        this.customerRepository = customerRepository;
-        this.orderRepository = orderRepository;
-    }
+    private OrderRepository orderRepository;
 
     /**
      * Get a customer by rfidToken.
@@ -71,36 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
             return optional.get();
         }
         throw new CustomerNotFound("Customer with RFID token " + token + " not found!");
-    }
-
-    /**
-     * Create a new customer by SalesCustomerRequest.
-     * TODO: should be replaces by add(Customer customer)
-     *
-     * @param request SalesCustomerRequest
-     * @return customer
-     */
-    @Override
-    public Customer create(SalesCustomerRequest request) {
-        if (request.getCustomerName().equals("") || request.getCustomerEmail().equals("")) {
-            throw new InvalidCustomerException("Customer name or email is empty");
-        }
-
-        if (customerRepository.findAll().stream().anyMatch(x -> Objects
-                .equals(x.getRfidToken(), request.getCustomerRFIDToken()))) {
-            throw new RFIDTokenAlreadyUsedException("RFID is already used");
-        }
-
-        Customer customer = new Customer(
-                request.getCustomerName(),
-                request.getCustomerEmail(),
-                request.getCustomerCHUsername(),
-                request.getCustomerRFIDToken()
-        );
-
-        customerRepository.saveAndFlush(customer);
-
-        return customer;
     }
 
     /**
@@ -134,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer customer model
      */
     @Override
-    public void add(Customer customer) {
+    public void create(Customer customer) {
         this.checkRequiredFields(customer);
         customerRepository.saveAndFlush(customer);
     }
@@ -178,6 +136,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
      */
     private void checkRequiredFields(Customer model) throws InvalidCustomerException {
+        if (model == null) throw new InvalidCustomerException("Customer can not be null!");
+
         String[][] check = new String[][]{
                 {model.getName(), "name"},
                 {model.getEmail(), "email"},

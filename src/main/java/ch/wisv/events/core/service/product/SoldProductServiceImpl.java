@@ -1,12 +1,16 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.exception.SoldProductNotFoundException;
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -27,16 +31,24 @@ import java.util.List;
 @Service
 public class SoldProductServiceImpl implements SoldProductService {
 
-    /** Field soldProductRepository  */
-    private final SoldProductRepository soldProductRepository;
+    /**
+     * Field soldProductRepository
+     */
+    @Autowired
+    private SoldProductRepository soldProductRepository;
 
     /**
-     * Constructor SoldProductServiceImpl creates a new SoldProductServiceImpl instance.
+     * Get SoldProduct by key
      *
-     * @param soldProductRepository of type SoldProductRepository
+     * @return SoldProduct
      */
-    public SoldProductServiceImpl(SoldProductRepository soldProductRepository) {
-        this.soldProductRepository = soldProductRepository;
+    @Override
+    public SoldProduct getByKey(String key) {
+        Optional<SoldProduct> optional = this.soldProductRepository.findByKey(key);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new SoldProductNotFoundException("Sold Product with key " + key + " is not found!");
     }
 
     /**
@@ -61,7 +73,30 @@ public class SoldProductServiceImpl implements SoldProductService {
     }
 
     /**
-     * Method create ...
+     * Method getByCustomerAndProduct find sold products by customer and products.
+     *
+     * @param customer of type Customer
+     * @param product  of type Product
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product) {
+        return soldProductRepository.findAllByCustomerAndProduct(customer, product);
+    }
+
+    /**
+     * Method getByCustomer find sold products by customer
+     *
+     * @param customer of type Customer
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getByCustomer(Customer customer) {
+        return soldProductRepository.findAllByCustomer(customer);
+    }
+
+    /**
+     * Method create sold products out of an Order
      *
      * @param order of type Order
      */
@@ -75,11 +110,34 @@ public class SoldProductServiceImpl implements SoldProductService {
             sold.setOrder(order);
 
             soldProductRepository.saveAndFlush(sold);
+
+            this.createSubProduct(order, product);
         }
     }
 
     /**
-     * Method remove ...
+     * Method createSubProduct create a soldproduct item for the sub products of a product
+     *
+     * @param order of type Order
+     * @param product of type Product
+     */
+    private void createSubProduct(Order order, Product product) {
+        product.getProducts().forEach(p -> {
+            SoldProduct soldProduct = new SoldProduct();
+
+            soldProduct.setProduct(p);
+            soldProduct.setCustomer(order.getCustomer());
+            soldProduct.setOrder(order);
+
+            soldProductRepository.saveAndFlush(soldProduct);
+            createSubProduct(order, p);
+        });
+    }
+
+    /**
+     * Method remove SoldProduct of an certain order
+     *
+     * // TODO: also remove sold sub Products
      *
      * @param order of type Order
      */
@@ -91,4 +149,21 @@ public class SoldProductServiceImpl implements SoldProductService {
             soldProductRepository.delete(soldProduct);
         }
     }
+
+    /**
+     * Update sold product
+     *
+     * @param soldProduct of type SoldProduct
+     */
+    @Override
+    public void update(SoldProduct soldProduct) {
+        SoldProduct model = this.getByKey(soldProduct.getKey());
+        model.setOrder(soldProduct.getOrder());
+        model.setStatus(soldProduct.getStatus());
+        model.setProduct(soldProduct.getProduct());
+        model.setCustomer(soldProduct.getCustomer());
+
+        soldProductRepository.save(soldProduct);
+    }
+
 }

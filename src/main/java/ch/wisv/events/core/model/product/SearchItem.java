@@ -22,7 +22,7 @@ public class SearchItem {
      */
     @Getter
     @Setter
-    public Long data;
+    public Integer data;
 
     /**
      * Default constructor.
@@ -30,7 +30,7 @@ public class SearchItem {
      * @param title Title of the Product
      * @param key   Key of the Product
      */
-    SearchItem(String title, Long key) {
+    SearchItem(String title, Integer key) {
         this.value = title;
         this.data = key;
     }

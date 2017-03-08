@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.sales;
+package ch.wisv.events.utils;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -45,8 +45,14 @@ public enum LDAPGroupEnum {
     W3CIE("w3cie"),
     WIFI("wifi"),
     WOCKY("wocky"),
-    BESTUUR("bestuur");
-
+    BESTUUR("bestuur"),
+    VOORZITTER("voorzitter"),
+    SECRETARIS("secretaris"),
+    PENNINGMEESTER("penningmeester"),
+    COW("cow"),
+    COI("coi"),
+    CPR("cpr"),
+    CC("cc");
 
     /**
      * Field name

@@ -1,7 +1,6 @@
 package ch.wisv.events.core.service.customer;
 
 import ch.wisv.events.core.model.order.Customer;
-import ch.wisv.events.app.request.SalesCustomerRequest;
 
 import java.util.List;
 
@@ -47,15 +46,6 @@ public interface CustomerService {
     Customer getByKey(String key);
 
     /**
-     * Create a new customer by SalesCustomerRequest.
-     * TODO: should be replaces by add(Customer customer)
-     *
-     * @param request SalesCustomerRequest
-     * @return customer
-     */
-    Customer create(SalesCustomerRequest request);
-
-    /**
      * Update a existing customer.
      *
      * @param customer customer model
@@ -67,7 +57,7 @@ public interface CustomerService {
      *
      * @param customer customer model
      */
-    void add(Customer customer);
+    void create(Customer customer);
 
     /**
      * Delete a customer.

@@ -1,9 +1,6 @@
 package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.api.request.EventOptionsRequest;
-import ch.wisv.events.api.request.EventProductRequest;
-import ch.wisv.events.api.request.EventRequest;
 
 import java.util.List;
 
@@ -44,16 +41,9 @@ public interface EventService {
     /**
      * Add a new Event by a EventRequest
      *
-     * @param eventRequest EventRequest
+     * @param event Event
      */
-    Event add(EventRequest eventRequest);
-
-    /**
-     * Add a product to an Event
-     *
-     * @param eventProductRequest EventProductRequest
-     */
-    void addProductToEvent(EventProductRequest eventProductRequest);
+    void create(Event event);
 
     /**
      * Delete a product from an Event
@@ -61,14 +51,14 @@ public interface EventService {
      * @param eventId   eventId
      * @param productId productId
      */
-    void deleteProductFromEvent(Long eventId, Long productId);
+    void deleteProductFromEvent(Integer eventId, Integer productId);
 
     /**
-     * Update an Event by an EventRequest
+     * Update event by Event
      *
-     * @param eventRequest EventRequest
+     * @param event Event
      */
-    void update(EventRequest eventRequest);
+    void update(Event event);
 
     /**
      * Delete an Event
@@ -78,18 +68,25 @@ public interface EventService {
     void delete(Event event);
 
     /**
-     * Update the EventOptions of an Event
-     *
-     * @param request EventOptionsRequest
-     */
-    void updateEventOptions(EventOptionsRequest request);
-
-    /**
      * Get all Events that are connected to the same Product
      *
      * @param key key of an Product
      * @return List of Events
      */
     List<Event> getEventByProductKey(String key);
+
+    /**
+     * Method soldFivePrevious returns the fivePrevious of this EventService object.
+     *
+     * @return the fivePrevious (type List<Event>) of this EventService object.
+     */
+    List<Event> soldFivePrevious();
+
+    /**
+     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
+     *
+     * @return the fiveUpcoming (type List<Event>) of this EventService object.
+     */
+    List<Event> soldFiveUpcoming();
 
 }

@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.order;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
+@EqualsAndHashCode
 public class Customer {
 
     /**
@@ -33,7 +35,7 @@ public class Customer {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field key UUID of the customer.
@@ -92,5 +94,4 @@ public class Customer {
         this.chUsername = chUsername;
         this.rfidToken = rfidToken;
     }
-
 }

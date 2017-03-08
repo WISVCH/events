@@ -1,11 +1,13 @@
 package ch.wisv.events.core.repository;
 
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -26,7 +28,7 @@ import java.util.List;
 public interface SoldProductRepository extends JpaRepository<SoldProduct, Integer> {
 
     /**
-     * Method findAllByOrder find list of sold product by order
+     * Method findAllByOrder find list of sold product by order.
      *
      * @param order of type Order
      * @return List<SoldProduct>
@@ -34,11 +36,36 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
     List<SoldProduct> findAllByOrder(Order order);
 
     /**
-     * Method findAllByProduct find list of sold products by product
+     * Method findAllByProduct find list of sold products by product.
      *
      * @param product of type Product
      * @return List<SoldProduct>
      */
     List<SoldProduct> findAllByProduct(Product product);
+
+    /**
+     * Method findAllByCustomerAndProduct find list of sold products by customer and product.
+     *
+     * @param customer of type Customer
+     * @param product  of type Product
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> findAllByCustomerAndProduct(Customer customer, Product product);
+
+    /**
+     * Method findAllByCustomer find list of sold products by customer.
+     *
+     * @param customer of type Customer
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> findAllByCustomer(Customer customer);
+
+    /**
+     * Method findByKey find a sold product by key
+     *
+     * @param key key of a SoldProduct
+     * @return SoldProduct
+     */
+    Optional<SoldProduct> findByKey(String key);
 
 }

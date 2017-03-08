@@ -32,24 +32,30 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
-        </div>
-    </div>
-    <div class="row content-wrapper">
-        <div class="row main">
-            <div class="col-md-4 col-md-offset-4">
-                <img th:src="@{/img/logo.svg}" alt="" style="width: 100%;">
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
             </div>
         </div>
-        <div th:classappend="'col-md-12 col-md-offset-' + ${(12 - 2 * locations.size()) / 2}">
+    </div>
+    <div class="row">
+        <div class="content-wrapper">
             <div class="row">
-                <!--/*@thymesVar id="location" type="ch.wisv.events.app.utils.AppLocationEnum"*/-->
-                <div class="col-md-2 text-center" th:each="location : ${locations}">
-                    <a th:href="${location.getUrl()}">
-                        <i th:classappend="'fa ' + ${location.getIcon()}" style="font-size: 7em;"></i> <br>
-                        <span th:text="${location.getName()}"></span>
-                    </a>
+                <div class="col-md-4 col-md-offset-4">
+                    <img th:src="@{/img/logo.svg}" alt="" style="width: 100%;">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 24px;">
+                <div th:classappend="'col-md-12 col-md-offset-' + ${(12 - 2 * locations.size()) / 2}">
+                    <div class="row">
+                        <!--/*@thymesVar id="location" type="ch.wisv.events.app.utils.AppLocationEnum"*/-->
+                        <div class="col-md-2 text-center main-button" th:each="location : ${locations}">
+                            <a th:href="${location.getUrl()}">
+                                <i th:classappend="'fa fa-5x ' + ${location.getIcon()}"></i> <br>
+                                <span th:text="${location.getName()}"></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

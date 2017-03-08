@@ -1,11 +1,12 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * ProductServiceImpl.
+ * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,23 +37,14 @@ public class ProductServiceImpl implements ProductService {
     /**
      * ProductRepository
      */
-    private final ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     /**
      * EventService
      */
-    private final EventService eventService;
-
-    /**
-     * Default constructor
-     *
-     * @param productRepository ProductRepository
-     * @param eventService      EventService
-     */
-    public ProductServiceImpl(ProductRepository productRepository, EventService eventService) {
-        this.productRepository = productRepository;
-        this.eventService = eventService;
-    }
+    @Autowired
+    private EventService eventService;
 
     /**
      * Get all products
@@ -79,13 +84,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Get Product by ID
+     *
+     * @param productID id of a Product
+     * @return Product
+     */
+    @Override
+    public Product getByID(Integer productID) {
+        Optional<Product> product = productRepository.findById(productID);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        throw new ProductNotFound("Product with id " + productID + " not found!");
+    }
+
+    /**
      * Update Product using a Product
      *
      * @param product Product containing the new product information
      */
     @Override
     public void update(Product product) {
-        productRepository.save(product);
+        Product model = this.getByKey(product.getKey());
+        this.updateLinkedProducts(model.getProducts(), false);
+
+        model.setTitle(product.getTitle());
+        model.setDescription(product.getDescription());
+        model.setSold(product.getSold());
+        model.setCost(product.getCost());
+        model.setMaxSold(product.getMaxSold());
+        model.setSellStart(product.getSellStart());
+        model.setSellEnd(product.getSellEnd());
+        model.setProducts(product.getProducts());
+
+        this.updateLinkedProducts(model.getProducts(), true);
+        productRepository.save(model);
     }
 
     /**
@@ -94,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
      * @param product of type Product
      */
     @Override
-    public void add(Product product) {
+    public void create(Product product) {
         productRepository.saveAndFlush(product);
     }
 
@@ -110,6 +143,19 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInUseException("Product is already added to an Event");
         }
         productRepository.delete(product);
+    }
+
+    /**
+     * Update the linked status of Products
+     *
+     * @param products List of Products
+     * @param linked   linked status
+     */
+    private void updateLinkedProducts(List<Product> products, boolean linked) {
+        products.forEach(p -> {
+            p.setLinked(linked);
+            productRepository.save(p);
+        });
     }
 
 }

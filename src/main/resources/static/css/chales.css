@@ -1,3 +1,7 @@
+body {
+    padding-top: 50px;
+}
+
 .btn-lock {
     padding: 15px;
 }
@@ -5,13 +9,12 @@
 /*
  * Main content
  */
-
-.main {
-    padding-top: 60px;
-}
-
 .fa-check {
     color: #cccccc;
+}
+
+.container-fluid > .row:first-child {
+    margin-top: 16px;
 }
 
 .checked .fa-check {
@@ -42,4 +45,30 @@
     border-color: #3c763d;
     background: #dff0d8;
     cursor: pointer;
+}
+
+.scan-page {
+    height: calc(100vh);
+    padding-top: calc(25vh - 32px);
+    text-align: center;
+}
+
+.next-button {
+    position: fixed;
+
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+}
+
+.scan-page.error {
+    background: #D92727;
+}
+
+.scan-page.correct {
+    background: #6FCC43;
+}
+
+.scan-page.already {
+    background: #FFE433;
 }

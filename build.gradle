@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.0.RELEASE'
+        springBootVersion = '1.4.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -17,7 +17,12 @@ apply plugin: 'spring-boot'
 
 jar {
     baseName = 'events'
-    version = '0.0.1-SNAPSHOT'
+    if (project.hasProperty('buildNumber')) {
+        version = "${buildNumber}"
+    } else {
+        version = 'SNAPSHOT'
+    }
+    archiveName = "${baseName}.${extension}"
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -70,9 +75,11 @@ dependencies {
     compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
     compile("org.webjars:font-awesome:4.7.0")
     compile("org.webjars:jquery:2.1.4")
+    compile("org.webjars:chartjs:26962ce")
     compile("org.projectlombok:lombok:1.16.10")
     compile("com.github.darrachequesne:spring-data-jpa-datatables:1.1")
 
+    compile("org.fluttercode.datafactory:datafactory:0.8")
     compile('net.sf.biweekly:biweekly:0.6.0')
 
     runtime("org.hsqldb:hsqldb")

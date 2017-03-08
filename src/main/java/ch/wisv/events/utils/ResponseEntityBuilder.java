@@ -12,6 +12,7 @@ import java.util.Map;
  * ResponseEntityBuilder.
  */
 public class ResponseEntityBuilder {
+
     /**
      * Create a standard response for all requests to the API
      *

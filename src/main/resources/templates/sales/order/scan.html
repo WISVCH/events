@@ -28,50 +28,26 @@
     <![endif]-->
 </head>
 
-<body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
+<body id="scanPage">
 <div class="container-fluid">
     <div class="row">
         <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/"><samp>CH events sell app</samp></a>
+                    <a class="navbar-brand" href="/"><samp>events.ch.tudelft.nl</samp></a>
                 </div>
             </div>
         </nav>
     </div>
 
-    <div class="row content-wrapper main">
-        <div class="col-sm-12">
-            <div th:replace="/fragments/message :: messages"></div>
-        </div>
-
-        <div class="col-xs-12">
-            <!--/*@thymesVar id="customerCreate" type="ch.wisv.events.app.request.SalesCustomerRequest"*/-->
-            <form th:action="@{/sales/customer/create}" th:object="${customerCreate}" method="POST">
-                <input type="hidden" th:value="*{orderReference}" th:field="*{orderReference}" title="">
-                <input type="hidden" th:value="*{customerRFIDToken}" th:field="*{customerRFIDToken}" title="">
-
-                <div class="form-group">
-                    <label for="full-name">Full name*</label>
-                    <input type="text" class="form-control" id="full-name"
-                           th:field="*{customerName}" placeholder="Full name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email address*</label>
-                    <input type="email" class="form-control" id="email"
-                           th:field="*{customerEmail}" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="ch-username">CH Username</label>
-                    <input type="text" class="form-control" id="ch-username"
-                           th:field="*{customerCHUsername}" placeholder="CH Username">
-                </div>
-
-                <button type="submit" class="btn btn-lg btn-block btn-primary">Create user</button>
+    <div class="row">
+        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
+            <h3>Scan RFID- or NFC card</h3>
+            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.app.request.CustomerAddRequest"*/-->
+            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
+                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
+                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+                <input type="submit" style="display: none;">
             </form>
         </div>
     </div>
@@ -80,6 +56,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<!--<script th:src="@{/js/vendor/vendor.min.js}"></script>-->
+<script th:src="@{/js/sales/sales.min.js}"></script>
 </body>
 </html>

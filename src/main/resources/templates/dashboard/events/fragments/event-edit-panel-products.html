@@ -30,23 +30,7 @@
             <h3 class="panel-title">Products</h3>
         </div>
         <div class="panel-body">
-            <!--/*@thymesVar id="eventProduct" type="ch.wisv.events.api.request.EventProductRequest"*/-->
-            <form th:action="@{/dashboard/events/add/product}" th:object="${eventProduct}"
-                  class="form-horizontal"
-                  id="addProduct" method="POST">
-                <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
-                <input type="hidden" th:field="*{eventKey}" th:value="*{eventKey}">
-                <input id="addProductKey" type="hidden" th:field="*{productID}">
-            </form>
-
-            <form th:action="@{/dashboard/events/delete/product}" th:object="${eventProduct}"
-                  class="form-horizontal"
-                  id="deleteProduct" method="POST">
-                <input type="hidden" th:field="*{eventID}" th:value="*{eventID}">
-                <input type="hidden" th:field="*{eventKey}" th:value="*{eventKey}">
-                <input id="deleteProductKey" type="hidden" th:field="*{productID}">
-            </form>
-
+            <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
             <div class="input-group" style="width: 100%">
                 <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                        placeholder="Add product">
@@ -57,32 +41,26 @@
             <!--<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>-->
             <p class="help-block">Start typing to look for a product.</p>
 
+            <div id="products">
+                <input type="hidden" th:field="*{products[__${stat.index}__]}" th:value="${product.id}" th:each="product, stat : ${event.products}">
+            </div>
+
             <table class="table table-hover" id="productDatatable">
                 <thead>
                 <tr>
                     <th>Product</th>
-                    <th>Sold/Available</th>
-                    <th>Start selling</th>
-                    <th>End selling</th>
                     <th></th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="product : ${products}">
-                    <td th:text="${product.title}">Data</td>
-                    <td>
-                        <span class="label label-success" th:text="'Sold: ' + ${product.sold}"></span>
-                        <span class="label label-default" th:text="'Available: ' + ${product.maxSold}"></span>
-                    </td>
-                    <td th:text="${product.sellStart}">Data</td>
-                    <td th:text="${product.sellEnd}">Data</td>
+                <tbody id="productsTable">
+                <tr th:each="product : ${event.products}">
+                    <td th:text="${product.title}"></td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a th:href="@{/dashboard/products/edit/} + ${product.key}"
-                               class="btn btn-info">
+                            <a th:href="@{/dashboard/products/edit/} + ${product.key} + '/'" class="btn btn-info">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>
-                            <a class="btn btn-danger remove-product" th:data-id="${product.id}">
+                            <a class="btn btn-danger remove-product" th:data-product-id="${product.id}">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </a>
                         </div>

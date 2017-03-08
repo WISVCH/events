@@ -30,7 +30,8 @@ import static java.util.Arrays.stream;
 public enum AppLocationEnum {
 
     DASHBOARD("Dashboard", "fa-dashboard", "/dashboard/", new SimpleGrantedAuthority("ROLE_ADMIN")),
-    SALES("Sales app", "fa-ticket", "/sales/", new SimpleGrantedAuthority("ROLE_USER"));
+    SALES("Sales products", "fa-ticket", "/sales/order/", new SimpleGrantedAuthority("ROLE_USER")),
+    SCAN("Scan products", "fa-barcode", "/sales/scan/", new SimpleGrantedAuthority("ROLE_USER"));
 
     /**
      * Field name

@@ -17,6 +17,7 @@ package ch.wisv.events.core.exception;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class CustomerException extends RuntimeException {
+
     /**
      * Constructor CustomerException creates a new CustomerException instance.
      *

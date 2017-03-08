@@ -1,4 +1,4 @@
-package ch.wisv.events.app.controller.sales;
+package ch.wisv.events.app.controller.sales.order;
 
 import ch.wisv.events.core.exception.OrderNotFound;
 import ch.wisv.events.core.model.order.Order;
@@ -32,7 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @PreAuthorize("hasRole('USER')")
-@RequestMapping("/sales/payment")
+@RequestMapping("/sales/order/payment")
 public class SalesPaymentController {
 
     /**
@@ -69,7 +69,7 @@ public class SalesPaymentController {
             return "redirect:/sales/overview/";
         }
 
-        return "sales/payment";
+        return "sales/order/payment";
     }
 
     /**
@@ -90,16 +90,16 @@ public class SalesPaymentController {
             if (PaymentOptions.getStatusByValue(payment) != OrderStatus.REJECTED) {
                 redirectAttributes.addFlashAttribute("reference", publicReference);
 
-                return "redirect:/sales/payment/" + payment + "/";
+                return "redirect:/sales/order/payment/" + payment + "/";
             }
             orderService.updateOrderStatus(order, OrderStatus.REJECTED);
             redirectAttributes.addFlashAttribute("error", "Payment method is not allowed!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         } catch (OrderNotFound e) {
             redirectAttributes.addFlashAttribute("error", "Order does not exists!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         }
     }
 
@@ -118,11 +118,11 @@ public class SalesPaymentController {
 
             redirectAttributes.addFlashAttribute("message", "Order has successfully been paid by cash!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         } catch (OrderNotFound e) {
             redirectAttributes.addFlashAttribute("error", "Order does not exists!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         }
     }
 
@@ -141,11 +141,11 @@ public class SalesPaymentController {
 
             redirectAttributes.addFlashAttribute("warning", "Order has been cancelled!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         } catch (OrderNotFound e) {
             redirectAttributes.addFlashAttribute("error", "Order does not exists!");
 
-            return "redirect:/sales/overview/";
+            return "redirect:/sales/order/";
         }
     }
 

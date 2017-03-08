@@ -35,13 +35,16 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Edit vendor</samp></h1>
             </div>
@@ -57,7 +60,6 @@
                   method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
-
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="panel panel-default">
@@ -71,7 +73,7 @@
                                             <label for="vendorGroup">LDAPGroup*</label>
                                             <select id="vendorGroup" class="form-control" th:field="*{ldapGroup}">
                                                 <option
-                                                        th:each="ldapgroup : ${T(ch.wisv.events.data.model.sales.LDAPGroupEnum).values()}"
+                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroupEnum).values()}"
                                                         th:value="${ldapgroup}"
                                                         th:selected="${ldapgroup == vendor.ldapGroup}"
                                                         th:text="${ldapgroup.getName()}">
@@ -83,13 +85,12 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="productStart">Starting selling*</label>
+                                            <label for="productStart">Starting selling</label>
 
                                             <input type="datetime-local" id="productStart"
                                                    th:field="*{startingTime}"
                                                    th:value="*{startingTime}"
-                                                   class="form-control"
-                                                   required>
+                                                   class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -122,6 +123,7 @@
                                                     th:text="${event.getTitle()}">
                                             </option>
                                         </select>
+                                        <p class="help-block">Use CRTL (Windows + Linux) or CMD (Mac) so select multiple events.</p>
                                     </div>
                                 </div>
                             </div>

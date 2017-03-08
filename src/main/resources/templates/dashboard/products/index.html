@@ -32,13 +32,16 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="/fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="/fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Products</samp> <a class="btn btn-primary btn-dashboard-header" href="create/">Create new
                     product</a></h1>
@@ -64,7 +67,7 @@
                     </thead>
                     <tbody>
                     <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-                    <tr th:each="product : ${products}">
+                    <tr th:each="product : ${products}" th:attr="data-key=${product.getKey()}">
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 0, 'POINT', 2, 'COMMA')}"></td>
@@ -116,11 +119,15 @@
         $('#dataTable').DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
-                {width: "120px", targets: 2},
+                {width: "60px", targets: 2},
                 {width: "120px", targets: 3},
-                {width: "360px", targets: 4},
+                {width: "180px;", targets: 4},
                 {width: "120px", targets: 5}
             ]
+        });
+
+        $('#dataTable tbody').on('click', 'tr', function () {
+            document.location = "/dashboard/products/overview/" + $(this).data('key') + "/";
         });
     });
 </script>

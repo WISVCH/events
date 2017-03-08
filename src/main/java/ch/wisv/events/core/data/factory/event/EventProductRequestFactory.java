@@ -1,7 +1,7 @@
 package ch.wisv.events.core.data.factory.event;
 
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.api.request.EventProductRequest;
+import ch.wisv.events.core.model.event.Event;
 
 /**
  * EventProductRequestFactory

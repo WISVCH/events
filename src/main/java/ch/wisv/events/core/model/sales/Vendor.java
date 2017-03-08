@@ -1,6 +1,8 @@
 package ch.wisv.events.core.model.sales;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.utils.LDAPGroupEnum;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
+@EqualsAndHashCode
 public class Vendor {
 
     /**
@@ -41,7 +44,7 @@ public class Vendor {
     @Id
     @GeneratedValue
     @Getter
-    private Long id;
+    private Integer id;
 
     /**
      * Field key UUId of the vendor.
@@ -90,7 +93,7 @@ public class Vendor {
     }
 
     /**
-     * Method add will add an Event to a Vendor.
+     * Method create will create an Event to a Vendor.
      *
      * @param event of type Event
      */
