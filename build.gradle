@@ -12,20 +12,22 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'events'
-    if (project.hasProperty('buildNumber')) {
-        version = "${buildNumber}"
-    } else {
-        version = 'SNAPSHOT'
-    }
+    version = project.hasProperty('buildNumber') ? buildNumber : 'SNAPSHOT'
     archiveName = "${baseName}.${extension}"
+    manifest {
+        attributes("Implementation-Title": "Events", "Implementation-Version": version)
+    }
 }
+
+springBoot {
+    executable = true
+}
+
 sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -35,8 +37,6 @@ repositories {
 }
 
 configurations {
-    // We're using Jetty instead
-    compile.exclude module: "spring-boot-starter-tomcat"
     // We're using HikariCP instead
     compile.exclude module: "tomcat-jdbc"
     // We're using Log4j2 instead
@@ -87,11 +87,3 @@ dependencies {
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
-
-eclipse {
-    classpath {
-        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-        containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-    }
-}
-
