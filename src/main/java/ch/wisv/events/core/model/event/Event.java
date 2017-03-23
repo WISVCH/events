@@ -47,6 +47,7 @@ public class Event {
     /**
      * Field description description of the Event.
      */
+    @Column(columnDefinition="TEXT")
     private String description;
 
     /**
