@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findByEndAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
                 == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -134,7 +134,7 @@ public class EventServiceImpl implements EventService {
         update.setImageURL(event.getImageURL());
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
-        update.setEnd(event.getEnd());
+        update.setEnding(event.getEnding());
         update.setTarget(event.getTarget());
         update.setLimit(event.getLimit());
         update.setSold(event.getSold());
@@ -180,7 +180,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> soldFivePrevious() {
-        return eventRepository.findTop5ByEndBeforeOrderByEndDesc(LocalDateTime.now());
+        return eventRepository.findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime.now());
     }
 
     /**
@@ -190,7 +190,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> soldFiveUpcoming() {
-        return eventRepository.findTop5ByEndAfterOrderByEnd(LocalDateTime.now());
+        return eventRepository.findTop5ByEndingAfterOrderByEnding(LocalDateTime.now());
     }
 
     /**

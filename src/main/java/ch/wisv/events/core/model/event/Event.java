@@ -89,12 +89,12 @@ public class Event {
     private LocalDateTime start;
 
     /**
-     * Field end ending time of the Event.
+     * Field ending ending time of the Event.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Getter
     @Setter
-    private LocalDateTime end;
+    private LocalDateTime ending;
 
     /**
      * Field sold amount of tickets sold by this Event.
@@ -143,10 +143,10 @@ public class Event {
      * @param limit       Limit of the Event
      * @param imageURL    Path to the Image of the Event
      * @param start       Starting DateTime of the Event
-     * @param end         Ending DateTime of the Event
+     * @param ending         Ending DateTime of the Event
      */
     public Event(String title, String description, String location, int target, Integer limit, String imageURL,
-                 LocalDateTime start, LocalDateTime end) {
+                 LocalDateTime start, LocalDateTime ending) {
         this();
         this.title = title;
         this.description = description;
@@ -154,7 +154,7 @@ public class Event {
         this.target = target;
         this.limit = limit;
         this.start = start;
-        this.end = end;
+        this.ending = ending;
         this.imageURL = imageURL;
     }
 
