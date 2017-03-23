@@ -120,9 +120,10 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!--suppress JSUnresolvedFunction -->
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
+        var table = $("#dataTable");
+        table.DataTable({
             pageLength: 25,
             order: [
                 [2, "desc"]
@@ -137,8 +138,9 @@
             ]
         });
 
-        $('#dataTable tbody').on('click', 'tr', function () {
-            document.location = "/dashboard/events/overview/" + $(this).data('key') + "/";
+        table.find('tbody').on('click', 'tr', function () {
+            /*[+ var link = [[@{/dashboard/events/overview/}]] + $(this).data('key') + "/"; +]*/
+            document.location = link;
         });
     });
 </script>

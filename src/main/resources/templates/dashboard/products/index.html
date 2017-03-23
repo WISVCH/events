@@ -114,9 +114,10 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!--suppress JSUnresolvedFunction -->
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        $('#dataTable').DataTable({
+        var table = $("#dataTable");
+        table.DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "60px", targets: 2},
@@ -126,8 +127,9 @@
             ]
         });
 
-        $('#dataTable tbody').on('click', 'tr', function () {
-            document.location = "/dashboard/products/overview/" + $(this).data('key') + "/";
+        table.find('tbody').on('click', 'tr', function () {
+            /*[+ var link = [[@{/dashboard/products/overview/}]] + $(this).data('key') + "/"; +]*/
+            document.location = link;
         });
     });
 </script>
