@@ -34,7 +34,7 @@ public class EventRequestFactory {
                 event.getTarget(),
                 event.getLimit(),
                 event.getStart().truncatedTo(ChronoUnit.MINUTES).toString(),
-                event.getEnd().truncatedTo(ChronoUnit.MINUTES).toString(),
+                event.getEnding().truncatedTo(ChronoUnit.MINUTES).toString(),
                 event.getImageURL(),
                 event.getKey(),
                 event.getOptions()
@@ -79,7 +79,7 @@ public class EventRequestFactory {
         event.setTarget(request.getTarget());
         event.setLimit(request.getLimit());
         event.setStart(LocalDateTime.parse(request.getEventStart(), format));
-        event.setEnd(LocalDateTime.parse(request.getEventEnd(), format));
+        event.setEnding(LocalDateTime.parse(request.getEventEnd(), format));
         event.setImageURL(request.getImage());
 
         return event;

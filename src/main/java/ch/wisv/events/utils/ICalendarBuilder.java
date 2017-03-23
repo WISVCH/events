@@ -2,12 +2,10 @@ package ch.wisv.events.utils;
 
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
-import biweekly.property.Summary;
 import ch.wisv.events.core.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class ICalendarBuilder {
         vEvent.setLocation(event.getLocation());
 
         vEvent.setDateStart(dateFromLocalDateTime(event.getStart()));
-        vEvent.setDateEnd(dateFromLocalDateTime(event.getEnd()));
+        vEvent.setDateEnd(dateFromLocalDateTime(event.getEnding()));
 
         return vEvent;
     }
