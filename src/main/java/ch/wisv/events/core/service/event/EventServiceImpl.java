@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
         update.setStart(event.getStart());
         update.setEnding(event.getEnding());
         update.setTarget(event.getTarget());
-        update.setLimit(event.getLimit());
+        update.setMaxSold(event.getMaxSold());
         update.setSold(event.getSold());
         update.setOptions(event.getOptions());
         update.setProducts(event.getProducts());
