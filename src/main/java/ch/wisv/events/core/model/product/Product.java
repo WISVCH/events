@@ -40,7 +40,7 @@ public class Product {
     /**
      * Description of the product.
      */
-    @Lob
+    @Column(columnDefinition="TEXT")
     public String description;
 
     /**
