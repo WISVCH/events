@@ -32,7 +32,7 @@ public class EventRequestFactory {
                 event.getDescription(),
                 event.getLocation(),
                 event.getTarget(),
-                event.getLimit(),
+                event.getMaxSold(),
                 event.getStart().truncatedTo(ChronoUnit.MINUTES).toString(),
                 event.getEnding().truncatedTo(ChronoUnit.MINUTES).toString(),
                 event.getImageURL(),
@@ -77,7 +77,7 @@ public class EventRequestFactory {
         event.setDescription(request.getDescription());
         event.setLocation(request.getLocation());
         event.setTarget(request.getTarget());
-        event.setLimit(request.getLimit());
+        event.setMaxSold(request.getLimit());
         event.setStart(LocalDateTime.parse(request.getEventStart(), format));
         event.setEnding(LocalDateTime.parse(request.getEventEnd(), format));
         event.setImageURL(request.getImage());
