@@ -31,20 +31,15 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/"><samp>events.ch.tudelft.nl</samp></a>
-                </div>
-            </div>
-        </nav>
+        <div th:replace="fragments/header :: header">
+            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-xs-12 content-wrapper text-center">
-            <h3>Geen tickets gevonden die je mag verkopen!</h3>
-            <p>Er zijn geen tickets gevonden die je mag verkopen op dit moment. Vraag aan het bestuur of je toegang mag tot het verkopen van
-                tickets!</p>
+            <h3>You are not authorized to sell any ticket!</h3>
+            <p>At the moment you are not authorized to sell any ticket! Want or need to sell tickets ask the board to give you access!</p>
         </div>
     </div>
 </div>
