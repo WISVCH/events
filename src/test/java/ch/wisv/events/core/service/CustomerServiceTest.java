@@ -188,10 +188,22 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testUpdate() {
-        when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(this.customer));
-        customerService.update(this.customer);
+        Customer update = new Customer();
+        update.setKey(this.customer.getKey());
+        update.setRfidToken("123");
+        update.setChUsername("test");
+        update.setEmail("test@test.com");
+        update.setName("test test");
 
-        verify(repository, times(1)).save(this.customer);
+        Customer mock = mock(Customer.class);
+        when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(mock));
+
+        customerService.update(update);
+        verify(mock, times(1)).setName(update.getName());
+        verify(mock, times(1)).setEmail(update.getEmail());
+        verify(mock, times(1)).setChUsername(update.getChUsername());
+        verify(mock, times(1)).setRfidToken(update.getRfidToken());
+        verify(repository, times(1)).save(mock);
     }
 
     /**
