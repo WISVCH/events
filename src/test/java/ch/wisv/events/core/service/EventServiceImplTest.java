@@ -89,7 +89,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEvents() throws Exception {
         this.event.getOptions().setPublished(EventStatus.PUBLISHED);
-        when(repository.findByEndAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
+        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getUpcomingEvents());
     }
@@ -97,7 +97,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEventsEmpty() throws Exception {
         this.event.getOptions().setPublished(EventStatus.PUBLISHED);
-        when(repository.findByEndAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
+        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
     }
@@ -105,7 +105,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEventsNotPublished() throws Exception {
         this.event.getOptions().setPublished(EventStatus.NOT_PUBLISHED);
-        when(repository.findByEndAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
+        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
     }
@@ -192,7 +192,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testSoldFivePrevious() throws Exception {
-        when(repository.findTop5ByEndBeforeOrderByEndDesc(any(LocalDateTime.class))).thenReturn(Collections
+        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(Collections
                 .singletonList(this
                 .event));
 
@@ -201,14 +201,14 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testSoldFivePreviousEmpty() throws Exception {
-        when(repository.findTop5ByEndBeforeOrderByEndDesc(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
+        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.soldFivePrevious());
     }
 
     @Test
     public void testSoldFiveUpcoming() throws Exception {
-        when(repository.findTop5ByEndAfterOrderByEnd(any(LocalDateTime.class))).thenReturn(Collections
+        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(Collections
                 .singletonList(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.soldFiveUpcoming());
@@ -216,7 +216,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testSoldFiveUpcomingEmpty() throws Exception {
-        when(repository.findTop5ByEndAfterOrderByEnd(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
+        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.soldFiveUpcoming());
     }
