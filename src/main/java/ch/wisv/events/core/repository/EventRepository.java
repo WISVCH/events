@@ -21,12 +21,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Event findById(Integer id);
 
     /**
-     * Find Events that end after a certain dateTime, so all upcoming events
+     * Find Events that ending after a certain dateTime, so all upcoming events
      *
-     * @param dateTime DateTime an event should end after
+     * @param dateTime DateTime an event should ending after
      * @return list of Events
      */
-    List<Event> findByEndAfter(LocalDateTime dateTime);
+    List<Event> findByEndingAfter(LocalDateTime dateTime);
 
     /**
      * Find an Event by key
@@ -46,20 +46,20 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
 
     /**
-     * Method findTop5ByEndAfterOrderByEnd ...
+     * Method findTop5ByEndingAfterOrderByEnding ...
      *
      * @param dateTime of type LocalDateTime
      * @return List<Event>
      */
-    List<Event> findTop5ByEndAfterOrderByEnd(LocalDateTime dateTime);
+    List<Event> findTop5ByEndingAfterOrderByEnding(LocalDateTime dateTime);
 
 
     /**
-     * Method findTop5ByEndBeforeOrderByEndDesc ...
+     * Method findTop5ByEndingBeforeOrderByEndingDesc ...
      *
      * @param dateTime of type LocalDateTime
      * @return List<Event>
      */
-    List<Event> findTop5ByEndBeforeOrderByEndDesc(LocalDateTime dateTime);
+    List<Event> findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime dateTime);
 
 }

@@ -28,6 +28,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
+@Table(name="\"order\"")
 public class Order {
 
     /**
