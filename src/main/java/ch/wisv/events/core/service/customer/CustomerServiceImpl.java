@@ -107,10 +107,10 @@ public class CustomerServiceImpl implements CustomerService {
         this.checkRequiredFields(customer);
         Customer model = this.getByKey(customer.getKey());
 
-        model.setChUsername(model.getChUsername());
-        model.setName(model.getName());
-        model.setEmail(model.getEmail());
-        model.setRfidToken(model.getRfidToken());
+        model.setChUsername(customer.getChUsername());
+        model.setName(customer.getName());
+        model.setEmail(customer.getEmail());
+        model.setRfidToken(customer.getRfidToken());
 
         customerRepository.save(model);
     }
