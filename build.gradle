@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 jar {
@@ -44,13 +45,15 @@ configurations {
 }
 
 dependencies {
+    compile("org.springframework.boot:spring-boot-devtools")
+
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-log4j2")
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
+
     compile("javax.el:javax.el-api:2.2.5")
-    compile("org.springframework.boot:spring-boot-devtools")
 
     compile("org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE")
     compile("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
