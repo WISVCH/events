@@ -190,6 +190,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testUpdate() {
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(this.customer));
         customerService.update(this.customer);
+
         verify(repository, times(1)).save(this.customer);
     }
 
