@@ -98,7 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Update a existing customer.
+     * Update an existing customer.
      *
      * @param customer customer model
      */
@@ -110,6 +110,7 @@ public class CustomerServiceImpl implements CustomerService {
         model.setChUsername(customer.getChUsername());
         model.setName(customer.getName());
         model.setEmail(customer.getEmail());
+        model.setRfidToken(customer.getRfidToken());
 
         customerRepository.save(model);
     }
