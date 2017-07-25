@@ -12,10 +12,14 @@ import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import com.google.common.collect.ImmutableList;
 import org.fluttercode.datafactory.impl.DataFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -124,19 +128,32 @@ public class TestDataRunner implements CommandLineRunner {
      * @throws Exception when
      */
     private void createEvents() throws Exception {
-        Event event = new Event(
-                "T.U.E.S.Day: Gamerendinging with too many players",
-                "Something about the lunchlecture",
-                "Lecture hall Boole",
-                200,
-                null,
-                "http://placehold.it/300x300",
-                LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES),
-                LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES)
-        );
-        event.addProduct(productRepository.findById(1).get());
-        event.getOptions().setPublished(EventStatus.PUBLISHED);
-        eventRepository.save(event);
+        JSONParser parser = new JSONParser();
+        JSONArray events = (JSONArray) parser.parse(new FileReader("src/main/resources/testdata/events.json"));
+
+        int i = 0;
+        for (Object event1 : events) {
+            JSONObject jsonEvent = (JSONObject) event1;
+            Event event = new Event(
+                    (String) jsonEvent.get("title"),
+                    (String) jsonEvent.get("description"),
+                    (String) jsonEvent.get("location"),
+                    ((Long) jsonEvent.get("target")).intValue(),
+                    ((Long) jsonEvent.get("maxSold")).intValue(),
+                    (String) jsonEvent.get("imageUrl"),
+                    LocalDateTime.now().plusDays(i).truncatedTo(ChronoUnit.MINUTES),
+                    LocalDateTime.now().plusDays(i).plusHours(1).truncatedTo(ChronoUnit.MINUTES),
+                    (String) jsonEvent.get("shortDescription")
+            );
+
+            if (jsonEvent.get("productNumber") != null) {
+                event.addProduct(productRepository.findById(((Long) jsonEvent.get("productNumber")).intValue()).get());
+            }
+            event.getOptions().setPublished(EventStatus.PUBLISHED);
+            eventRepository.save(event);
+            i++;
+        }
+
     }
 
     /**

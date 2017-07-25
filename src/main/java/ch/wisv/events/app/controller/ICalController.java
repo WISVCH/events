@@ -3,17 +3,13 @@ package ch.wisv.events.app.controller;
 import biweekly.ICalVersion;
 import biweekly.ICalendar;
 import biweekly.io.text.ICalWriter;
-import ch.wisv.events.utils.ICalendarBuilder;
 import ch.wisv.events.core.service.event.EventService;
-import org.apache.commons.io.IOUtils;
+import ch.wisv.events.utils.ICalendarBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -42,11 +38,12 @@ public class ICalController {
     /**
      * Default constructor
      */
-    public ICalController(EventService eventService){this.eventService = eventService;}
+    public ICalController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     /**
      * Get request on "/events/iCal" will present the ical with the events
-     *
      */
     @GetMapping(value = "/iCal", produces = "text/calendar; charset=utf-8")
     public void getAllEvents(HttpServletResponse response) {
@@ -58,6 +55,7 @@ public class ICalController {
 
     /**
      * Get request on /iCal/upcoming will present the ical with the upcoming events
+     *
      * @param response
      */
     @GetMapping(value = "/iCal/upcoming", produces = "text/calendar; charset=utf-8")
@@ -69,12 +67,13 @@ public class ICalController {
 
     /**
      * Attaches the ICal to the HttpServletResponse, providing the user with an iCal file.
+     *
      * @param ical
      * @param response
      * @throws IOException
      */
-    private void presentIcalFile(ICalendar ical, HttpServletResponse response){
-        try{
+    private void presentIcalFile(ICalendar ical, HttpServletResponse response) {
+        try {
             // Create a temporary file to for the iCalWriter to write to.
             ICalWriter writer = new ICalWriter(response.getOutputStream(), ICalVersion.V2_0);
             writer.write(ical);

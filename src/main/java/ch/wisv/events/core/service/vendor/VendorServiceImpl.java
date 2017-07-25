@@ -139,7 +139,7 @@ public class VendorServiceImpl implements VendorService {
         Object[][] check = new Object[][]{
                 {model.getKey(), "key"},
                 {model.getLdapGroup(), "ldap group"},
-                };
+        };
         this.checkFieldsEmpty(check);
     }
 

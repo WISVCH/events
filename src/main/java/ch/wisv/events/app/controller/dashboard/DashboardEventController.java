@@ -117,7 +117,7 @@ public class DashboardEventController {
      * Get request to delete event by Key
      *
      * @param redirect Spring RedirectAttributes
-     * @param key                PathVariable key of the Event
+     * @param key      PathVariable key of the Event
      * @return redirect
      */
     @GetMapping("/delete/{key}")

@@ -30,10 +30,11 @@ public class ICalendarBuilder {
 
     /**
      * Generates a iCal object for a list of events
+     *
      * @param events
      * @return
      */
-    public static ICalendar createIcalEventList(List<Event> events){
+    public static ICalendar createIcalEventList(List<Event> events) {
         ICalendar iCal = new ICalendar();
         events.forEach(event -> iCal.addEvent(createICalEvent(event)));
 
@@ -43,10 +44,11 @@ public class ICalendarBuilder {
 
     /**
      * Creates a biweekly VEvent for a Event object
+     *
      * @param event
      * @return
      */
-    private static VEvent createICalEvent(Event event){
+    private static VEvent createICalEvent(Event event) {
         VEvent vEvent = new VEvent();
 
         vEvent.setSummary(event.getTitle());
@@ -62,12 +64,13 @@ public class ICalendarBuilder {
 
     /**
      * Converts a LocalDateTime to a date object
-     *
+     * <p>
      * Source: http://stackoverflow.com/questions/19431234/converting-between-java-time-localdatetime-and-java-util-date
+     *
      * @param date
      * @return The date object representing the LocalDateTime object
      */
-    private static Date dateFromLocalDateTime(LocalDateTime date){
+    private static Date dateFromLocalDateTime(LocalDateTime date) {
         return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
     }
 

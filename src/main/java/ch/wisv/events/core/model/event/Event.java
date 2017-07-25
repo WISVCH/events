@@ -45,9 +45,14 @@ public class Event {
     private String title;
 
     /**
+     * Field shortDescription
+     */
+    private String shortDescription;
+
+    /**
      * Field description description of the Event.
      */
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     /**
@@ -115,13 +120,13 @@ public class Event {
      * @param description Description of the Event
      * @param location    Location of the Event
      * @param target      Target of the Event
-     * @param maxSold       Limit of the Event
+     * @param maxSold     Limit of the Event
      * @param imageURL    Path to the Image of the Event
      * @param start       Starting DateTime of the Event
-     * @param ending         Ending DateTime of the Event
+     * @param ending      Ending DateTime of the Event
      */
     public Event(String title, String description, String location, int target, Integer maxSold, String imageURL,
-                 LocalDateTime start, LocalDateTime ending) {
+                 LocalDateTime start, LocalDateTime ending, String shortDescription) {
         this();
         this.title = title;
         this.description = description;
@@ -131,6 +136,7 @@ public class Event {
         this.start = start;
         this.ending = ending;
         this.imageURL = imageURL;
+        this.shortDescription = shortDescription;
     }
 
     /**
