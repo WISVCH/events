@@ -49,7 +49,7 @@ public class EventServiceImplTest extends ServiceTest {
     private ProductService productService;
 
     @InjectMocks
-    private EventService service = new EventServiceImpl();
+    private EventService service = new EventServiceImpl(repository, productService);
 
     private Event event;
 
@@ -63,7 +63,8 @@ public class EventServiceImplTest extends ServiceTest {
                 10,
                 "path/to/files",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
     }
 

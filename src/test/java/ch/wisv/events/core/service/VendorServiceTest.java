@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
 import ch.wisv.events.core.model.event.Event;
@@ -12,14 +11,9 @@ import ch.wisv.events.utils.LDAPGroupEnum;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -57,7 +51,7 @@ public class VendorServiceTest extends ServiceTest {
      * VendorService with the Mock of the VendorRepository
      */
     @InjectMocks
-    private VendorService vendorService = new VendorServiceImpl();
+    private VendorService vendorService = new VendorServiceImpl(repository);
 
     /**
      * Default instance of the Vendor class

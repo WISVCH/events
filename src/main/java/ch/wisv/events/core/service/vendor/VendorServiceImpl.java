@@ -35,14 +35,16 @@ public class VendorServiceImpl implements VendorService {
     /**
      * VendorRepository.
      */
-    @Autowired
-    private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
 
     /**
      * Constructor VendorServiceImpl creates a new VendorServiceImpl instance.
+     *
+     * @param vendorRepository of type VendorRepository
      */
-    public VendorServiceImpl() {
-
+    @Autowired
+    public VendorServiceImpl(VendorRepository vendorRepository) {
+        this.vendorRepository = vendorRepository;
     }
 
     /**

@@ -3,7 +3,7 @@ package ch.wisv.events.app.controller.sales.order;
 import ch.wisv.events.core.exception.OrderNotFound;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
-import ch.wisv.events.core.model.sales.PaymentOptions;
+import ch.wisv.events.core.model.sales.PaymentOption;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -87,7 +87,7 @@ public class SalesPaymentController {
                                @RequestParam(value = "publicReference") String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
-            if (PaymentOptions.getStatusByValue(payment) != OrderStatus.REJECTED) {
+            if (PaymentOption.getStatusByValue(payment) != OrderStatus.REJECTED) {
                 redirectAttributes.addFlashAttribute("reference", publicReference);
 
                 return "redirect:/sales/order/payment/" + payment + "/";

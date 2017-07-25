@@ -85,6 +85,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method setUp ...
+     *
      * @throws Exception when
      */
     @Before
@@ -94,6 +95,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method tearDown ...
+     *
      * @throws Exception when
      */
     @After
@@ -128,6 +130,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Test get by public reference method
+     *
      * @throws Exception when
      */
     @Test
@@ -139,6 +142,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Test get by public reference when order does not exists
+     *
      * @throws Exception when
      */
     @Test
@@ -151,6 +155,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testGetOrdersByProduct ...
+     *
      * @throws Exception when
      */
     @Test
@@ -165,6 +170,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Test clone get product orders
+     *
      * @throws Exception
      */
     @Test
@@ -191,6 +197,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testGetOrdersByProduct ...
+     *
      * @throws Exception when
      */
     @Test
@@ -205,6 +212,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testCreate ...
+     *
      * @throws Exception when
      */
     @Test
@@ -224,6 +232,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testCreate ...
+     *
      * @throws Exception when
      */
     @Test
@@ -241,6 +250,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testAddCustomerToOrder ...
+     *
      * @throws Exception when
      */
     @Test
@@ -253,12 +263,13 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testUpdateOrderStatus ...
+     *
      * @throws Exception when
      */
     @Test
     public void testUpdateOrderStatus() throws Exception {
         Event event = new Event("Test", "test", "test", 10, 10, "path/to/file", LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now(), null);
         Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
         event.addProduct(product);
@@ -273,6 +284,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testUpdateOrderStatusToPaid ...
+     *
      * @throws Exception when
      */
     @Test
@@ -286,6 +298,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testUpdateOrderStatusToPaid ...
+     *
      * @throws Exception when
      */
     @Test
@@ -300,6 +313,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testUpdateOrderStatusToPaid ...
+     *
      * @throws Exception when
      */
     @Test
@@ -314,6 +328,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testUpdateOrderStatusToPaid ...
+     *
      * @throws Exception when
      */
     @Test

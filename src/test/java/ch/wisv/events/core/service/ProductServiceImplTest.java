@@ -56,7 +56,7 @@ public class ProductServiceImplTest extends ServiceTest {
      * ProductService
      */
     @InjectMocks
-    private ProductService service = new ProductServiceImpl();
+    private ProductService service = new ProductServiceImpl(repository);
 
     /**
      * Default Product
