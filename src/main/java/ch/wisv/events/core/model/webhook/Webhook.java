@@ -49,10 +49,10 @@ public class Webhook {
     private boolean active;
 
     /**
-     * Field webhookOptions
+     * Field webhookTriggers
      */
     @ElementCollection(targetClass = WebhookTrigger.class)
-    private List<WebhookTrigger> webhookOptions;
+    private List<WebhookTrigger> webhookTriggers;
 
     /**
      * Constructor Webhook creates a new Webhook instance.

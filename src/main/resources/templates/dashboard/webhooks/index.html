@@ -44,7 +44,7 @@
         <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Webhooks</samp>
-                    <a class="btn btn-primary btn-dashboard-header" th:href="@{create/}">Create new webhooks</a></h1>
+                    <a class="btn btn-primary btn-dashboard-header" th:href="@{create/}">Create new webhook</a></h1>
             </div>
 
             <div class="row">
@@ -58,36 +58,30 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>LDAP Group</th>
-                        <th>Event(s)</th>
-                        <th>Begin date</th>
-                        <th>Ending date</th>
+                        <th>Url</th>
+                        <th>Events</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="vendors" type="List<ch.wisv.events.core.model.sales.Vendor>"*/-->
-                    <!--/*@thymesVar id="vendor" type="ch.wisv.events.core.model.sales.Vendor"*/-->
-                    <tr th:each="vendor : ${vendors}">
+                    <!--/*@thymesVar id="webhooks" type="List<ch.wisv.events.core.model.webhook.Webhook>"*/-->
+                    <!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+                    <tr th:each="webhook : ${webhooks}">
                         <td>
                             <input type="checkbox" title="Select row">
                         </td>
-                        <td th:text="${vendor.getLdapGroup().getName()}">Row 1 Data 1</td>
+                        <td th:text="${webhook.getPayloadUrl()}"></td>
                         <td>
-                            <ul style="padding-left: 16px;">
-                                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-                                <li th:each="event : ${vendor.getEvents()}" th:text="${event.getTitle()}"></li>
-                            </ul>
+                            <span th:each="trigger : ${webhook.getWebhookTriggers()}"
+                                  th:text="${trigger.getName()} + ', '"></span>
                         </td>
-                        <td th:text="${vendor.getStartingTime()}"></td>
-                        <td th:text="${vendor.getEndingTime()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${vendor.getKey()} + '/'" class="btn btn-info">
+                                <a th:href="'edit/' + ${webhook.getKey()} + '/'" class="btn btn-info">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="'delete/' + ${vendor.getKey()}"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${vendor.getLdapGroup()} + '?\');'"
+                                <a th:href="'delete/' + ${webhook.getKey()}"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${webhook.getPayloadUrl()} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
@@ -109,16 +103,10 @@
 <script>
     $(document).ready(function () {
         $('#dataTable').DataTable({
-            order: [
-                [3, "desc"],
-                [4, "desc"]
-            ],
+            order: [],
             columnDefs: [
                 {width: "20px", targets: 0, sortable: false},
-                {width: "240px", targets: 1},
-                {width: "120px", targets: 3},
-                {width: "120px", targets: 4},
-                {width: "80px", targets: 5}
+                {width: "80px", targets: 3}
             ]
         });
     });

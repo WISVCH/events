@@ -1,5 +1,6 @@
 package ch.wisv.events.app.controller.dashboard;
 
+import ch.wisv.events.core.exception.InvalidWebhookException;
 import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.service.webhook.WebhookService;
@@ -27,7 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Controller
-@RequestMapping("/dashboard/webhook")
+@RequestMapping("/dashboard/webhooks")
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardWebhookController {
 
@@ -70,6 +71,7 @@ public class DashboardWebhookController {
         if (!model.containsAttribute("webhook")) {
             model.addAttribute("webhook", new Webhook());
         }
+
         return "dashboard/webhooks/create";
     }
 
@@ -107,19 +109,18 @@ public class DashboardWebhookController {
      * @return redirect to other page
      */
     @PostMapping("/add")
-    public String add(RedirectAttributes redirect, @ModelAttribute Vendor model) {
-//        try {
-//            vendorService.create(model);
-//            redirect.addFlashAttribute("message", "Vendor has been added!");
-//
-//            return "redirect:/dashboard/webhooks/";
-//        } catch (InvalidVendorException e) {
-//            redirect.addFlashAttribute("error", e.getMessage());
-//            redirect.addFlashAttribute("vendor", model);
-//
-//            return "redirect:/dashboard/webhooks/create/";
-//        }
-        return "";
+    public String add(RedirectAttributes redirect, @ModelAttribute Webhook model) {
+        try {
+            webhookService.create(model);
+            redirect.addFlashAttribute("message", "Webhook has been added!");
+
+            return "redirect:/dashboard/webhooks/";
+        } catch (InvalidWebhookException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("webhook", model);
+
+            return "redirect:/dashboard/webhooks/create/";
+        }
     }
 
     /**
@@ -132,7 +133,7 @@ public class DashboardWebhookController {
     @PostMapping("/update")
     public String update(RedirectAttributes redirect, @ModelAttribute Vendor model) {
 //        try {
-//            vendorService.update(model);
+//            webhookService.update(model);
 //            redirect.addFlashAttribute("message", "Vendor changes saves!");
 //        } catch (InvalidVendorException e) {
 //            redirect.addFlashAttribute("error", e.getMessage());

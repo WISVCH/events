@@ -61,9 +61,9 @@
                     </a>
                 </li>
                 <li class="divider"></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/webhook/') ? 'active':''}">
-                    <a th:href="@{/dashboard/webhook/}" href="#">
-                        <i class="fa fa-users fa-fw" aria-hidden="true"></i> Webhooks
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/webhooks/') ? 'active':''}">
+                    <a th:href="@{/dashboard/webhooks/}" href="#">
+                        <i class="fa fa-globe fa-fw" aria-hidden="true"></i> Webhooks
                     </a>
                 </li>
             </ul>

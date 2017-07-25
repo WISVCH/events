@@ -68,7 +68,7 @@
                                         <div class="form-group">
                                             <label for="payloadUrl">Payload URL*</label>
                                             <input type="text" id="payloadUrl" th:field="*{payloadUrl}"
-                                                   class="form-control">
+                                                   class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -91,11 +91,16 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div class="test"
-                                             th:each="webhookTrigger : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
-                                            <label for="webhookTrigger">
-                                                <input type="checkbox">
-                                                <span th:text="${webhookTrigger}"></span>
+                                        <!--/*@thymesVar id="webhookTrigger" type="ch.wisv.events.core.model.webhook.WebhookTrigger"*/-->
+                                        <div class="col-sm-6"
+                                             th:each="webhookTrigger, iter : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
+                                            <label th:for="'webhookTrigger' + ${iter.index}" class="checkbox-inline">
+                                                <input type="checkbox" th:id="'webhookTrigger' + ${iter.index}"
+                                                       th:field="*{webhookTriggers}" th:value="${webhookTrigger}">
+                                                <h5 style="margin: 3px 0;"
+                                                    th:text="${webhookTrigger.getName()}"></h5>
+                                                <p class="text-small text-gray"
+                                                   th:text="${webhookTrigger.getDescription()}"></p>
                                             </label>
                                         </div>
                                     </div>

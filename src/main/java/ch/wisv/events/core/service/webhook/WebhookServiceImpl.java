@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.webhook;
 
+import ch.wisv.events.core.exception.InvalidWebhookException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.repository.WebhookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,19 @@ public class WebhookServiceImpl implements WebhookService {
     @Override
     public List<Webhook> getAll() {
         return repository.findAll();
+    }
+
+    /**
+     * Method create ...
+     *
+     * @param model of type Webhook
+     */
+    @Override
+    public void create(Webhook model) throws InvalidWebhookException {
+        if (model.getPayloadUrl() == null || model.getPayloadUrl().equals("")) {
+            throw new InvalidWebhookException();
+        } else {
+            repository.saveAndFlush(model);
+        }
     }
 }
