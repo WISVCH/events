@@ -16,14 +16,12 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class InvalidWebhookException extends Throwable {
+public class WebhookNotFoundException extends Throwable {
 
     /**
-     * Constructor InvalidWebhookException creates a new InvalidWebhookException instance.
-     *
-     * @param s of type String
+     * Constructor WebhookNotFoundException creates a new WebhookNotFoundException instance.
      */
-    public InvalidWebhookException(String s) {
-        super(s);
+    public WebhookNotFoundException() {
+        super("Webhook not found!");
     }
 }

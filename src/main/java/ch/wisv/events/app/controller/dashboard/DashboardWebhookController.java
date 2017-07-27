@@ -1,7 +1,7 @@
 package ch.wisv.events.app.controller.dashboard;
 
 import ch.wisv.events.core.exception.InvalidWebhookException;
-import ch.wisv.events.core.model.sales.Vendor;
+import ch.wisv.events.core.exception.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.service.webhook.WebhookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,28 +84,21 @@ public class DashboardWebhookController {
      */
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
-//        try {
-//            Vendor vendor = vendorService.getByKey(key);
-//            Collection<Event> eventList = eventService.getUpcomingEvents();
-//            eventList.addAll(vendor.getEvents());
-//
-//            model.addAttribute("vendor", vendor);
-//            model.addAttribute("upcomingEvents", eventList.stream().distinct().collect(
-//                    Collectors.toCollection(ArrayList::new)));
-//
-//            return "dashboard/webhooks/edit";
-//        } catch (VendorNotFoundException e) {
-//
-//            return "redirect:/dashboard/webhooks/";
-//        }
-        return "";
+        try {
+            Webhook webhook = webhookService.getByKey(key);
+            model.addAttribute("webhook", webhook);
+
+            return "dashboard/webhooks/edit";
+        } catch (WebhookNotFoundException e) {
+            return "redirect:/dashboard/webhooks/";
+        }
     }
 
     /**
-     * Add a new vendor.
+     * Add a new Webhook.
      *
      * @param redirect RedirectAttributes
-     * @param model    RequestModel with the needed information
+     * @param model    Webhook with the needed information
      * @return redirect to other page
      */
     @PostMapping("/add")
@@ -124,23 +117,23 @@ public class DashboardWebhookController {
     }
 
     /**
-     * Update a existing vendor.
+     * Update a existing Webhook.
      *
      * @param redirect RedirectAttributes
-     * @param model    Vendor model with the needed information
+     * @param model    Webhook model with the needed information
      * @return redirect to edit page
      */
     @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Vendor model) {
-//        try {
-//            webhookService.update(model);
-//            redirect.addFlashAttribute("message", "Vendor changes saves!");
-//        } catch (InvalidVendorException e) {
-//            redirect.addFlashAttribute("error", e.getMessage());
-//        }
-//
-//        return "redirect:/dashboard/webhooks/edit/" + model.getKey() + "/";
-        return "";
+    public String update(RedirectAttributes redirect, @ModelAttribute Webhook model) {
+        try {
+            webhookService.update(model);
+
+            redirect.addFlashAttribute("message", "Webhook changes saves!");
+        } catch (InvalidWebhookException | WebhookNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/dashboard/webhooks/edit/" + model.getKey() + "/";
     }
 
     /**
@@ -152,19 +145,18 @@ public class DashboardWebhookController {
      */
     @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
-//        try {
-//            Vendor vendor = vendorService.getByKey(key);
-//            vendorService.delete(vendor);
-//
-//            redirect.addFlashAttribute("message", "Vendor access for " + vendor.getLdapGroup() + " has been deleted!");
-//
-//            return "redirect:/dashboard/webhooks/";
-//        } catch (VendorNotFoundException e) {
-//            redirect.addFlashAttribute("error", e.getMessage());
-//
-//            return "redirect:/dashboard/webhooks/";
-//        }
-        return "";
+        try {
+            Webhook webhook = webhookService.getByKey(key);
+            webhookService.delete(webhook);
+
+            redirect.addFlashAttribute("message", "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
+
+            return "redirect:/dashboard/webhooks/";
+        } catch (WebhookNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/dashboard/webhooks/";
+        }
     }
 
 }

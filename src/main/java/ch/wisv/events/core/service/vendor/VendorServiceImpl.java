@@ -4,7 +4,7 @@ import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
 import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -60,13 +60,13 @@ public class VendorServiceImpl implements VendorService {
     /**
      * Method getAllByLDAPGroup get list of vendors by ldap group.
      *
-     * @param ldapEnum of type LDAPGroupEnum
+     * @param ldapEnum of type LDAPGroup
      * @return List<Vendor>
      */
     @Override
     public List<Vendor> getAllByLDAPGroup(String ldapEnum) {
         try {
-            LDAPGroupEnum ldapGroupEnum = LDAPGroupEnum.valueOf(ldapEnum.toUpperCase());
+            LDAPGroup ldapGroupEnum = LDAPGroup.valueOf(ldapEnum.toUpperCase());
 
             return vendorRepository.findByLdapGroup(ldapGroupEnum);
         } catch (IllegalArgumentException e) {

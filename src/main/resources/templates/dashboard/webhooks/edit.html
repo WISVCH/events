@@ -46,7 +46,7 @@
 
         <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
-                <h1><samp>Edit vendor</samp></h1>
+                <h1><samp>Edit webhook</samp></h1>
             </div>
 
             <div class="row">
@@ -55,8 +55,8 @@
                 </div>
             </div>
 
-            <!--/*@thymesVar id="vendor" type="ch.wisv.events.core.model.sales.Vendor"*/-->
-            <form th:action="@{/dashboard/vendors/update}" th:object="${vendor}"
+            <!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+            <form th:action="@{/dashboard/webhooks/update}" th:object="${webhook}"
                   method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
@@ -70,60 +70,59 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="vendorGroup">LDAPGroup*</label>
-                                            <select id="vendorGroup" class="form-control" th:field="*{ldapGroup}">
-                                                <option
-                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroupEnum).values()}"
-                                                        th:value="${ldapgroup}"
-                                                        th:selected="${ldapgroup == vendor.ldapGroup}"
-                                                        th:text="${ldapgroup.getName()}">
-                                                </option>
-                                            </select>
+                                            <label for="payloadUrl">Payload URL*</label>
+                                            <input type="text" id="payloadUrl" th:field="*{payloadUrl}"
+                                                   class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="productStart">Starting selling</label>
-
-                                            <input type="datetime-local" id="productStart"
-                                                   th:field="*{startingTime}"
-                                                   th:value="*{startingTime}"
-                                                   class="form-control">
+                                            <label for="secret">Secret</label>
+                                            <input type="password" id="secret" th:value="*{secret}"
+                                                   data-toggle="password" class="form-control" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="productEnd">Ending selling</label>
-                                            <input type="datetime-local" id="productEnd"
-                                                   th:field="*{endingTime}"
-                                                   th:value="*{endingTime}"
-                                                   class="form-control">
+                                            <label for="ldapGroup">LDAP group*</label>
+                                            <select name="" id="ldapGroup" class="form-control"
+                                                    th:field="*{ldapGroup}"
+                                                    required>
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                        th:value="${group}"
+                                                        th:text="${group.getName()}">
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Events</h3>
+                                <h3 class="panel-title">Options</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <select class="form-control" th:field="*{events}" multiple
-                                                th:style="'height: ' + (22 * ${upcomingEvents.size()} + 14) + 'px'">
-                                            <option style="padding-top: 3px; padding-bottom: 3px"
-                                                    th:each="event : ${upcomingEvents}"
-                                                    th:value="${event.id}"
-                                                    th:text="${event.getTitle()}">
-                                            </option>
-                                        </select>
-                                        <p class="help-block">Use CRTL (Windows + Linux) or CMD (Mac) so select multiple events.</p>
+                                        <!--/*@thymesVar id="webhookTrigger" type="ch.wisv.events.core.model.webhook.WebhookTrigger"*/-->
+                                        <div class="col-sm-6"
+                                             th:each="webhookTrigger, iter : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
+                                            <label th:for="'webhookTrigger' + ${iter.index}" class="checkbox-inline">
+                                                <input type="checkbox" th:id="'webhookTrigger' + ${iter.index}"
+                                                       th:field="*{webhookTriggers}" th:value="${webhookTrigger}">
+                                                <h5 style="margin: 3px 0;"
+                                                    th:text="${webhookTrigger.getName()}"></h5>
+                                                <p class="text-small text-gray"
+                                                   th:text="${webhookTrigger.getDescription()}"></p>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -144,5 +143,11 @@
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/bootstrap-show-password/1.0.2/bootstrap-show-password.js}"></script>
+<script>
+    $(document).ready(function () {
+        $("#secret").password('hide');
+    });
+</script>
 </body>
 </html>

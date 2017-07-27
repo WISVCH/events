@@ -1,27 +1,32 @@
 package ch.wisv.events.core.model.event;
 
-import lombok.Getter;
-import lombok.Setter;
+import ch.wisv.events.utils.LDAPGroup;
+import lombok.Data;
 
 import java.io.Serializable;
 
 /**
  * EventOption
  */
+@Data
 public class EventOptions implements Serializable {
 
     /**
      * Status of the Event
      */
-    @Getter
-    @Setter
     public EventStatus published;
+
+    /**
+     * Field organizedBy
+     */
+    public LDAPGroup organizedBy;
 
     /**
      * Default constructor, with status not published.
      */
     public EventOptions() {
         this.published = EventStatus.NOT_PUBLISHED;
+        this.organizedBy = LDAPGroup.BESTUUR;
     }
 
 }

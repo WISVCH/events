@@ -20,9 +20,15 @@ import lombok.Getter;
  */
 public enum WebhookTrigger {
 
-    EVENT_CREATE("Event creation", "On create of a new event."),
-    EVENT_UPDATE("Event update", "On change of an existing event."),
-    EVENT_DELETE("Event delete", "Delete of an existing event.");
+    EVENT_CREATE("EVENT_CREATE", "Event creation", "On create of a new event."),
+    EVENT_UPDATE("EVENT_UPDATE", "Event update", "On change of an existing event."),
+    EVENT_DELETE("EVENT_DELETE", "Event delete", "Delete of an existing event.");
+
+    /**
+     * Field tag
+     */
+    @Getter
+    private final String tag;
 
     /**
      * Field name
@@ -39,10 +45,12 @@ public enum WebhookTrigger {
     /**
      * Constructor WebhookTrigger creates a new WebhookTrigger instance.
      *
+     * @param tag
      * @param name        of type String
      * @param description of type String
      */
-    WebhookTrigger(String name, String description) {
+    WebhookTrigger(String tag, String name, String description) {
+        this.tag = tag;
         this.name = name;
         this.description = description;
     }

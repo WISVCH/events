@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.webhook;
+
+import lombok.Data;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,14 +18,17 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class InvalidWebhookException extends Throwable {
+@Data
+public class WebhookRequest {
 
     /**
-     * Constructor InvalidWebhookException creates a new InvalidWebhookException instance.
-     *
-     * @param s of type String
+     * Field webhookTrigger
      */
-    public InvalidWebhookException(String s) {
-        super(s);
-    }
+    private String webhookTrigger;
+
+    /**
+     * Field data
+     */
+    private String data;
+
 }

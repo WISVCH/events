@@ -7,6 +7,8 @@ import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.sales.Vendor;
+import ch.wisv.events.core.model.webhook.Webhook;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.*;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.SoldProductService;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Component;
 import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TestDataRunner.
@@ -50,6 +54,8 @@ public class TestDataRunner implements CommandLineRunner {
 
     private final SoldProductRepository soldProductRepository;
 
+    private final WebhookRepository webhookRepository;
+
     private final int
             events = 1,
             products = 3,
@@ -62,7 +68,7 @@ public class TestDataRunner implements CommandLineRunner {
     public TestDataRunner(EventRepository eventRepository, ProductRepository productRepository,
                           VendorRepository vendorRepository, CustomerRepository customerRepository,
                           OrderRepository orderRepository, OrderService orderService,
-                          SoldProductService soldProductService, SoldProductRepository soldProductRepository) {
+                          SoldProductService soldProductService, SoldProductRepository soldProductRepository, WebhookRepository webhookRepository) {
         this.eventRepository = eventRepository;
         this.productRepository = productRepository;
         this.vendorRepository = vendorRepository;
@@ -71,6 +77,7 @@ public class TestDataRunner implements CommandLineRunner {
         this.orderService = orderService;
         this.soldProductService = soldProductService;
         this.soldProductRepository = soldProductRepository;
+        this.webhookRepository = webhookRepository;
         df = new DataFactory();
     }
 
@@ -83,13 +90,14 @@ public class TestDataRunner implements CommandLineRunner {
           Sell access
          */
         Vendor vendor = new Vendor();
-        vendor.setLdapGroup(LDAPGroupEnum.W3CIE);
+        vendor.setLdapGroup(LDAPGroup.W3CIE);
         vendor.addEvent(eventRepository.findById(1));
         vendor.setStartingTime(LocalDateTime.now().minusDays(10).truncatedTo(ChronoUnit.MINUTES));
         vendor.setEndingTime(LocalDateTime.now().plusDays(10).truncatedTo(ChronoUnit.MINUTES));
         vendorRepository.saveAndFlush(vendor);
 
         this.createRandomCustomers();
+        this.createWebhook();
     }
 
     /**
@@ -184,6 +192,27 @@ public class TestDataRunner implements CommandLineRunner {
         customer.setRfidToken("123");
 
         customerRepository.saveAndFlush(customer);
+    }
+
+    /**
+     * Method createWebhook ...
+     *
+     * @throws Exception when
+     */
+    private void createWebhook() throws Exception {
+        Webhook webhook = new Webhook();
+        webhook.setPayloadUrl("https://dinosaur.us/webhook");
+        webhook.setSecret("dsf98asejhgr23qr90-erwa98523");
+        webhook.setActive(true);
+        webhook.setLdapGroup(LDAPGroup.BEHEER);
+
+        List<WebhookTrigger> list = new ArrayList<>();
+        list.add(WebhookTrigger.EVENT_CREATE);
+        list.add(WebhookTrigger.EVENT_UPDATE);
+
+        webhook.setWebhookTriggers(list);
+
+        webhookRepository.saveAndFlush(webhook);
     }
 
 }

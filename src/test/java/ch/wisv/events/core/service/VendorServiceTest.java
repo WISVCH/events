@@ -7,7 +7,7 @@ import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
 import ch.wisv.events.core.service.vendor.VendorService;
 import ch.wisv.events.core.service.vendor.VendorServiceImpl;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public class VendorServiceTest extends ServiceTest {
     public void setUp() throws Exception {
         vendor = new Vendor();
 
-        vendor.setLdapGroup(LDAPGroupEnum.BEHEER);
+        vendor.setLdapGroup(LDAPGroup.BEHEER);
         vendor.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
         vendor.setStartingTime(LocalDateTime.now());
         vendor.setEndingTime(LocalDateTime.now());
@@ -147,7 +147,7 @@ public class VendorServiceTest extends ServiceTest {
     public void add() throws Exception {
         Vendor temp = new Vendor();
         temp.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
-        temp.setLdapGroup(LDAPGroupEnum.BEHEER);
+        temp.setLdapGroup(LDAPGroup.BEHEER);
         temp.setStartingTime(LocalDateTime.now());
         temp.setEndingTime(LocalDateTime.now());
 

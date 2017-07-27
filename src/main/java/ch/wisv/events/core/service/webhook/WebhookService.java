@@ -1,7 +1,10 @@
 package ch.wisv.events.core.service.webhook;
 
 import ch.wisv.events.core.exception.InvalidWebhookException;
+import ch.wisv.events.core.exception.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
+import ch.wisv.events.utils.LDAPGroup;
 
 import java.util.List;
 
@@ -30,11 +33,42 @@ public interface WebhookService {
      */
     List<Webhook> getAll();
 
+    /**
+     * Method getByKey get Webhook by Key.
+     *
+     * @param key of type String
+     * @return Webhook
+     */
+    Webhook getByKey(String key) throws WebhookNotFoundException;
 
     /**
-     * Method create ...
+     * Method getByTriggerAndLdapGroup ...
+     *
+     * @param webhookTrigger of type WebhookTrigger
+     * @param ldapGroup      of type LDAPGroup
+     * @return List<Webhook>
+     */
+    List<Webhook> getByTriggerAndLdapGroup(WebhookTrigger webhookTrigger, LDAPGroup ldapGroup);
+
+    /**
+     * Method create a new Webhook.
      *
      * @param model of type Webhook
      */
     void create(Webhook model) throws InvalidWebhookException;
+
+    /**
+     * Method update an existing Webhook.
+     *
+     * @param model of type Webhook
+     */
+    void update(Webhook model) throws WebhookNotFoundException, InvalidWebhookException;
+
+
+    /**
+     * Method delete an existing Webhook.
+     *
+     * @param model of type Webhook
+     */
+    void delete(Webhook model);
 }

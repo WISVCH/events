@@ -61,6 +61,7 @@
                         <th>Title</th>
                         <th>Starting date</th>
                         <th>Status</th>
+                        <th>Organized by</th>
                         <th>Sold/Target/Limit</th>
                         <th>Progress target</th>
                         <th>Actions</th>
@@ -72,19 +73,20 @@
                         <td>
                             <input class="form-control" type="checkbox"/>
                         </td>
-                        <td th:text="${event.title}">Row 1 Data 1</td>
-                        <td th:text="${event.start}"></td>
-                        <td th:text="${event.options.published}"></td>
+                        <td th:text="${event.getTitle()}">Row 1 Data 1</td>
+                        <td th:text="${event.getStart()}"></td>
+                        <td th:text="${event.getOptions().getPublished()}"></td>
+                        <td th:text="${event.getOptions().getOrganizedBy()}"></td>
                         <td>
-                            <span class="label label-success" th:text="'Sold: ' + ${event.sold}"></span>
-                            <span class="label label-primary" th:text="'Target: ' + ${event.target}"></span>
-                            <span class="label label-default" th:text="'Limit: ' + ${event.maxSold}"></span>
+                            <span class="label label-success" th:text="'Sold: ' + ${event.getSold()}"></span>
+                            <span class="label label-primary" th:text="'Target: ' + ${event.getTarget()}"></span>
+                            <span class="label label-default" th:text="'Limit: ' + ${event.getMaxSold()}"></span>
                         </td>
                         <td>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.sold}"
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.getSold()}"
                                      aria-valuemin="0"
-                                     th:aria-valuemax="${event.target}"
+                                     th:aria-valuemax="${event.getTarget()}"
                                      th:style="'width: ' + ${event.calcProgress()} + '%;'"
                                      th:text="${event.calcProgress()} + '%'">
                                     59%
@@ -131,9 +133,10 @@
                 {width: "20px", targets: 0},
                 {width: "120px", targets: 2},
                 {width: "60px", targets: 3},
-                {width: "180px", targets: 4},
+                {width: "100px", targets: 4},
                 {width: "180px", targets: 5},
-                {width: "120px", targets: 6}
+                {width: "180px", targets: 6},
+                {width: "120px", targets: 7}
             ]
         });
 

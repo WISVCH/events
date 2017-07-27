@@ -80,6 +80,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="ldapGroup">LDAP group*</label>
+                                            <select name="" id="ldapGroup" class="form-control"
+                                                    th:field="*{ldapGroup}"
+                                                    required>
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                        th:value="${group}"
+                                                        th:text="${group.getName()}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

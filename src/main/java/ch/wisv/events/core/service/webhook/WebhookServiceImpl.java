@@ -1,12 +1,16 @@
 package ch.wisv.events.core.service.webhook;
 
 import ch.wisv.events.core.exception.InvalidWebhookException;
+import ch.wisv.events.core.exception.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookRepository;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -53,16 +57,86 @@ public class WebhookServiceImpl implements WebhookService {
     }
 
     /**
-     * Method create ...
+     * Method getByKey get Webhook by Key.
+     *
+     * @param key of type String
+     * @return Webhook
+     */
+    @Override
+    public Webhook getByKey(String key) throws WebhookNotFoundException {
+        Optional<Webhook> webhookOptional = repository.findByKey(key);
+
+        return webhookOptional.orElseThrow(WebhookNotFoundException::new);
+    }
+
+    /**
+     * Method getByTriggerAndLdapGroup ...
+     *
+     * @param webhookTrigger of type WebhookTrigger
+     * @param ldapGroup      of type LDAPGroup
+     * @return List<Webhook>
+     */
+    @Override
+    public List<Webhook> getByTriggerAndLdapGroup(WebhookTrigger webhookTrigger, LDAPGroup ldapGroup) {
+        return repository.findAllByWebhookTriggersContainsAndLdapGroup(webhookTrigger, ldapGroup);
+    }
+
+    /**
+     * Method create a new Webhook.
      *
      * @param model of type Webhook
      */
     @Override
     public void create(Webhook model) throws InvalidWebhookException {
+        this.assertIsValidWebhook(model);
+
+        repository.saveAndFlush(model);
+    }
+
+
+    /**
+     * Method update an existing Webhook.
+     *
+     * @param model of type Webhook
+     */
+    @Override
+    public void update(Webhook model) throws WebhookNotFoundException, InvalidWebhookException {
+        Webhook webhook = this.getByKey(model.getKey());
+        webhook.setPayloadUrl(model.getPayloadUrl());
+        webhook.setWebhookTriggers(model.getWebhookTriggers());
+        webhook.setActive(model.isActive());
+        webhook.setLdapGroup(model.getLdapGroup());
+
+        this.assertIsValidWebhook(webhook);
+
+        repository.saveAndFlush(webhook);
+    }
+
+    /**
+     * Method delete an existing Webhook.
+     *
+     * @param model of type Webhook
+     */
+    @Override
+    public void delete(Webhook model) {
+        repository.delete(model);
+    }
+
+    /**
+     * Method assertIsValidWebhook ...
+     *
+     * @param model of type Webhook
+     * @throws InvalidWebhookException when
+     */
+    private void assertIsValidWebhook(Webhook model) throws InvalidWebhookException {
         if (model.getPayloadUrl() == null || model.getPayloadUrl().equals("")) {
-            throw new InvalidWebhookException();
-        } else {
-            repository.saveAndFlush(model);
+            throw new InvalidWebhookException("Payload URL can not be empty!");
+        }
+
+        if (model.getLdapGroup() == null) {
+            throw new InvalidWebhookException("LDAP group can not be null!");
         }
     }
+
+
 }

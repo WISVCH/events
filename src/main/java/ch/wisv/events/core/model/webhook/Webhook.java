@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.webhook;
 
+import ch.wisv.events.utils.LDAPGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -57,6 +58,11 @@ public class Webhook {
      * Field active
      */
     private boolean active;
+
+    /**
+     * Field ldapGroup
+     */
+    private LDAPGroup ldapGroup;
 
     /**
      * Field webhookTriggers

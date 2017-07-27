@@ -4,8 +4,10 @@ import ch.wisv.events.api.request.EventProductRequest;
 import ch.wisv.events.core.exception.EventNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.webhook.WebhookPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -96,6 +98,13 @@ public class DashboardEventController {
         }
     }
 
+    /**
+     * Method overview ...
+     *
+     * @param model of type Model
+     * @param key of type String
+     * @return String
+     */
     @GetMapping("/overview/{key}/")
     public String overview(Model model, @PathVariable String key) {
         try {
@@ -125,8 +134,9 @@ public class DashboardEventController {
         try {
             Event event = eventService.getByKey(key);
             eventService.delete(event);
-
             redirect.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
+
+            WebhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
 
             return "redirect:/dashboard/events/";
         } catch (EventNotFound e) {
@@ -148,6 +158,8 @@ public class DashboardEventController {
         try {
             eventService.create(event);
             redirect.addFlashAttribute("message", event.getTitle() + " successfully created!");
+
+            WebhookPublisher.event(WebhookTrigger.EVENT_CREATE, event);
 
             return "redirect:/dashboard/events/";
         } catch (RuntimeException e) {
@@ -186,6 +198,8 @@ public class DashboardEventController {
         try {
             eventService.update(event);
             redirect.addFlashAttribute("message", "Event changes saved!");
+
+            WebhookPublisher.event(WebhookTrigger.EVENT_UPDATE, event);
 
             return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
         } catch (EventNotFound e) {
