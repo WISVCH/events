@@ -38,8 +38,8 @@ public class EventCreateUpdateRequestFactory extends WebhookRequestFactory {
             jsonObject.put("title", event.getTitle());
             jsonObject.put("description", event.getDescription());
             jsonObject.put("short_description", event.getShortDescription());
-            jsonObject.put("event_start", event.getStart());
-            jsonObject.put("event_end", event.getEnding());
+            jsonObject.put("event_start", event.getStart().toString());
+            jsonObject.put("event_end", event.getEnding().toString());
             jsonObject.put("location", event.getLocation());
 
             return jsonObject;

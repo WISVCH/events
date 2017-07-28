@@ -31,8 +31,7 @@ public abstract class WebhookRequestFactory {
      * Field mapping
      */
     private static HashMap<WebhookTrigger, WebhookRequestFactory> mapping = new HashMap<WebhookTrigger, WebhookRequestFactory>() {{
-        put(WebhookTrigger.EVENT_CREATE, new EventCreateUpdateRequestFactory());
-        put(WebhookTrigger.EVENT_UPDATE, new EventCreateUpdateRequestFactory());
+        put(WebhookTrigger.EVENT_CREATE_UPDATE, new EventCreateUpdateRequestFactory());
         put(WebhookTrigger.EVENT_DELETE, new EventDeleteRequestFactory());
     }};
 

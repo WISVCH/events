@@ -5,7 +5,6 @@ import ch.wisv.events.core.exception.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookRepository;
-import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ import java.util.Optional;
 public class WebhookServiceImpl implements WebhookService {
 
     /**
-     * Field repository
+     * Field this.repository
      */
     private final WebhookRepository repository;
 
@@ -53,7 +52,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public List<Webhook> getAll() {
-        return repository.findAll();
+        return this.repository.findAll();
     }
 
     /**
@@ -64,7 +63,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public Webhook getByKey(String key) throws WebhookNotFoundException {
-        Optional<Webhook> webhookOptional = repository.findByKey(key);
+        Optional<Webhook> webhookOptional = this.repository.findByKey(key);
 
         return webhookOptional.orElseThrow(WebhookNotFoundException::new);
     }
@@ -73,12 +72,11 @@ public class WebhookServiceImpl implements WebhookService {
      * Method getByTriggerAndLdapGroup ...
      *
      * @param webhookTrigger of type WebhookTrigger
-     * @param ldapGroup      of type LDAPGroup
      * @return List<Webhook>
      */
     @Override
-    public List<Webhook> getByTriggerAndLdapGroup(WebhookTrigger webhookTrigger, LDAPGroup ldapGroup) {
-        return repository.findAllByWebhookTriggersContainsAndLdapGroup(webhookTrigger, ldapGroup);
+    public List<Webhook> getByTrigger(WebhookTrigger webhookTrigger) {
+        return this.repository.findAllByWebhookTriggersIsContaining(webhookTrigger);
     }
 
     /**
@@ -90,7 +88,7 @@ public class WebhookServiceImpl implements WebhookService {
     public void create(Webhook model) throws InvalidWebhookException {
         this.assertIsValidWebhook(model);
 
-        repository.saveAndFlush(model);
+        this.repository.saveAndFlush(model);
     }
 
 
@@ -109,7 +107,7 @@ public class WebhookServiceImpl implements WebhookService {
 
         this.assertIsValidWebhook(webhook);
 
-        repository.saveAndFlush(webhook);
+        this.repository.saveAndFlush(webhook);
     }
 
     /**
@@ -119,7 +117,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public void delete(Webhook model) {
-        repository.delete(model);
+        this.repository.delete(model);
     }
 
     /**
@@ -137,6 +135,4 @@ public class WebhookServiceImpl implements WebhookService {
             throw new InvalidWebhookException("LDAP group can not be null!");
         }
     }
-
-
 }

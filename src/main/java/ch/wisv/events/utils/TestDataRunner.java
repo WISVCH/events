@@ -201,14 +201,13 @@ public class TestDataRunner implements CommandLineRunner {
      */
     private void createWebhook() throws Exception {
         Webhook webhook = new Webhook();
-        webhook.setPayloadUrl("https://dinosaur.us/webhook");
-        webhook.setSecret("dsf98asejhgr23qr90-erwa98523");
+        webhook.setPayloadUrl("http://localhost:1234/wp-json/events-sync/v1/single/");
         webhook.setActive(true);
         webhook.setLdapGroup(LDAPGroup.BEHEER);
 
         List<WebhookTrigger> list = new ArrayList<>();
-        list.add(WebhookTrigger.EVENT_CREATE);
-        list.add(WebhookTrigger.EVENT_UPDATE);
+        list.add(WebhookTrigger.EVENT_CREATE_UPDATE);
+        list.add(WebhookTrigger.EVENT_DELETE);
 
         webhook.setWebhookTriggers(list);
 

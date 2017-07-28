@@ -2,20 +2,22 @@ package ch.wisv.events.core.webhook;
 
 import ch.wisv.events.core.exception.WebhookRequestFactoryNotFoundException;
 import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
+import ch.wisv.events.core.service.webhook.WebhookService;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
-import org.apache.http.HttpEntity;
+import lombok.Setter;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Scanner;
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -33,42 +35,86 @@ import java.util.Scanner;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class WebhookPublisher {
+@Component
+public class WebhookPublisher extends Thread {
 
-    protected WebhookPublisher() {
+    /**
+     * Field webhookService
+     */
+    private final WebhookService webhookService;
 
+    /**
+     * Field trigger
+     */
+    @Setter
+    private WebhookTrigger trigger;
+
+    /**
+     * Field object
+     */
+    @Setter
+    private Object object;
+
+    /**
+     * Constructor WebhookPublisher creates a new WebhookPublisher instance.
+     *
+     * @param webhookService of type WebhookService.
+     */
+    private WebhookPublisher(WebhookService webhookService) {
+        this.webhookService = webhookService;
     }
 
-    public static void event(WebhookTrigger trigger, Object object) {
-        WebhookPublisher webhookPusher = new WebhookPublisher();
+    /**
+     * Method event set up an event.
+     *
+     * @param trigger of type WebhookTrigger
+     * @param object  of type Object
+     */
+    public void event(WebhookTrigger trigger, Object object) {
+        this.setTrigger(trigger);
+        this.setObject(object);
 
+        this.run();
+    }
+
+    /**
+     * Method run generates request and send requests to all the webhooks.
+     */
+    public void run() {
         try {
-            JSONObject request = WebhookRequestFactory.generateRequest(trigger, object);
-            webhookPusher.request("http://httpbin.org/post", request);
-        } catch (WebhookRequestFactoryNotFoundException | UnsupportedEncodingException | WebhookRequestObjectIncorrect e) {
+            JSONObject request = WebhookRequestFactory.generateRequest(this.trigger, this.object);
+
+            List<Webhook> webhooks = this.webhookService.getByTrigger(trigger);
+            webhooks.forEach(webhook -> {
+                this.request(webhook.getPayloadUrl(), request);
+            });
+        } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
             e.printStackTrace();
         }
     }
 
-    protected void request(String url, JSONObject request) throws UnsupportedEncodingException {
+    /**
+     * Method request sends out the request to a url.
+     *
+     * @param url     of type String
+     * @param request of type JSONObject
+     */
+    private void request(String url, JSONObject request) {
         HttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
 
-        httpPost.setEntity(new StringEntity(request.toString()));
         httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(new StringEntity(request.toJSONString(), "UTF8"));
 
         try {
             HttpResponse response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
 
-            InputStream in = entity.getContent();
-            Scanner sc = new Scanner(in);
-
-            while (sc.hasNext()) {
-                System.out.println(sc.nextLine());
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                // TODO: add monitoring
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO: add monitoring
         }
     }
 }

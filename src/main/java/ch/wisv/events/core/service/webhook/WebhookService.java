@@ -4,7 +4,6 @@ import ch.wisv.events.core.exception.InvalidWebhookException;
 import ch.wisv.events.core.exception.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
-import ch.wisv.events.utils.LDAPGroup;
 
 import java.util.List;
 
@@ -45,10 +44,9 @@ public interface WebhookService {
      * Method getByTriggerAndLdapGroup ...
      *
      * @param webhookTrigger of type WebhookTrigger
-     * @param ldapGroup      of type LDAPGroup
      * @return List<Webhook>
      */
-    List<Webhook> getByTriggerAndLdapGroup(WebhookTrigger webhookTrigger, LDAPGroup ldapGroup);
+    List<Webhook> getByTrigger(WebhookTrigger webhookTrigger);
 
     /**
      * Method create a new Webhook.
