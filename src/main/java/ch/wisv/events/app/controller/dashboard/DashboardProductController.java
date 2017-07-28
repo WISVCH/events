@@ -2,8 +2,8 @@ package ch.wisv.events.app.controller.dashboard;
 
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.service.product.SoldProductService;
 import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -110,7 +110,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Post request to add a Product
+     * Post request to create a Product
      *
      * @param model    Product model attr.
      * @param redirect Spring RedirectAttributes
@@ -119,7 +119,7 @@ public class DashboardProductController {
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Product model) {
         try {
-            productService.add(model);
+            productService.create(model);
             redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");
 
             return "redirect:/dashboard/products/";

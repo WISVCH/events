@@ -29,6 +29,15 @@ public interface VendorService {
      */
     List<Vendor> getAll();
 
+
+    /**
+     * Method getAllByLDAPGroup get list of vendors by ldap group.
+     *
+     * @param ldapEnum of type LDAPGroupEnum
+     * @return List<Vendor>
+     */
+    List<Vendor> getAllByLDAPGroup(String ldapEnum);
+
     /**
      * Method getByKey will return a Vendor by its key.
      *
@@ -38,11 +47,11 @@ public interface VendorService {
     Vendor getByKey(String key);
 
     /**
-     * Method add will add a new Vendor.
+     * Method create will create a new Vendor.
      *
      * @param vendor of type Vendor
      */
-    void add(Vendor vendor);
+    void create(Vendor vendor);
 
     /**
      * Method update will update an existing Vendor.

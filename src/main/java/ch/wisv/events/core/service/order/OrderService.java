@@ -1,10 +1,10 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.app.request.OrderRequest;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.app.request.SalesOrderRequest;
 
 import java.util.List;
 
@@ -53,16 +53,16 @@ public interface OrderService {
     List<Order> getOrdersByProduct(Product product);
 
     /**
-     * Method create creates a new order by SalesOrderRequest.
+     * Method create creates a new order by OrderRequest.
      *
-     * @param orderRequest of type SalesOrderRequest
+     * @param orderRequest of type OrderRequest
      * @return Order
      */
-    Order create(SalesOrderRequest orderRequest);
+    Order create(OrderRequest orderRequest);
 
 
     /**
-     * Method addCustomerToOrder will add a customer to an order.
+     * Method addCustomerToOrder will create a customer to an order.
      *
      * @param order    of type Order
      * @param customer of type Customer

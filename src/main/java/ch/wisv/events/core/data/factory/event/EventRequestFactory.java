@@ -1,14 +1,15 @@
 package ch.wisv.events.core.data.factory.event;
 
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.api.request.EventRequest;
+import ch.wisv.events.core.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 /**
  * EventRequestFactory
- *
+ * <p>
  * TODO: replace
  */
 public class EventRequestFactory {
@@ -31,9 +32,9 @@ public class EventRequestFactory {
                 event.getDescription(),
                 event.getLocation(),
                 event.getTarget(),
-                event.getLimit(),
-                event.getStart().toString(),
-                event.getEnd().toString(),
+                event.getMaxSold(),
+                event.getStart().truncatedTo(ChronoUnit.MINUTES).toString(),
+                event.getEnding().truncatedTo(ChronoUnit.MINUTES).toString(),
                 event.getImageURL(),
                 event.getKey(),
                 event.getOptions()
@@ -48,13 +49,19 @@ public class EventRequestFactory {
      */
     public static Event create(EventRequest request) {
         return new Event(
+                request.getId(),
+                request.getKey(),
                 request.getTitle(),
                 request.getDescription(),
                 request.getLocation(),
+                request.getImage(),
+                null,
+                LocalDateTime.parse(request.getEventStart(), format),
+                LocalDateTime.parse(request.getEventEnd(), format),
+                0,
                 request.getTarget(),
                 request.getLimit(),
-                request.getImage(), LocalDateTime.parse(request.getEventStart(), format),
-                LocalDateTime.parse(request.getEventEnd(), format)
+                request.getOptions()
         );
     }
 
@@ -70,9 +77,9 @@ public class EventRequestFactory {
         event.setDescription(request.getDescription());
         event.setLocation(request.getLocation());
         event.setTarget(request.getTarget());
-        event.setLimit(request.getLimit());
+        event.setMaxSold(request.getLimit());
         event.setStart(LocalDateTime.parse(request.getEventStart(), format));
-        event.setEnd(LocalDateTime.parse(request.getEventEnd(), format));
+        event.setEnding(LocalDateTime.parse(request.getEventEnd(), format));
         event.setImageURL(request.getImage());
 
         return event;

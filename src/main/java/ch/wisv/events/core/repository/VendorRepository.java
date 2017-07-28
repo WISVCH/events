@@ -1,8 +1,10 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.sales.Vendor;
+import ch.wisv.events.utils.LDAPGroupEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,11 +34,11 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
     Optional<Vendor> findByKey(String key);
 
     /**
-     * Method findById find Vendor by ID.
+     * Method findByLdapGroup find Vendor by LDAP.
      *
-     * @param id of type Long
-     * @return Optional<Vendor>
+     * @param ldapGroup of type LDAPGroup
+     * @return List<Vendor>
      */
-    Optional<Vendor> findById(Long id);
+    List<Vendor> findByLdapGroup(LDAPGroupEnum ldapGroup);
 
 }

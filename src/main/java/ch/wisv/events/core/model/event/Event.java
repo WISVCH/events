@@ -2,14 +2,15 @@ package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,6 +18,8 @@ import java.util.UUID;
  */
 @Entity
 @AllArgsConstructor
+@EqualsAndHashCode
+@Data
 public class Event {
 
     /**
@@ -29,42 +32,32 @@ public class Event {
      */
     @Id
     @GeneratedValue
-    @Getter
-    private long id;
+    private Integer id;
 
     /**
      * Key of the event, getter only so it can not be changed.
      */
-    @Getter
     private String key;
-
 
     /**
      * Field title title of the Event.
      */
-    @Getter
-    @Setter
     private String title;
 
     /**
      * Field description description of the Event.
      */
-    @Getter
-    @Setter
+    @Column(columnDefinition="TEXT")
     private String description;
 
     /**
      * Field location location of the Event.
      */
-    @Getter
-    @Setter
     private String location;
 
     /**
      * Field imageURL imageUrl to an image of the Event.
      */
-    @Getter
-    @Setter
     private String imageURL;
 
     /**
@@ -72,55 +65,38 @@ public class Event {
      * an Event can contain multiple Products.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
-    @Getter
-    @Setter
-    private Set<Product> products;
-
+    private List<Product> products;
 
     /**
      * Field start starting time of the Event.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime start;
 
     /**
-     * Field end ending time of the Event.
+     * Field ending ending time of the Event.
      */
-    @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
-    private LocalDateTime end;
-
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    private LocalDateTime ending;
 
     /**
      * Field sold amount of tickets sold by this Event.
      */
-    @Getter
-    @Setter
     private int sold;
-
 
     /**
      * Field target target of the amount of tickets sold by this Event.
      */
-    @Getter
-    @Setter
     private int target;
 
     /**
      * Maximum number of products sold for the event. Its an Integer instead of an int, so the value can be null.
      */
-    @Getter
-    @Setter
-    private Integer limit;
+    private Integer maxSold;
 
     /**
      * Options for the event.
      */
-    @Getter
-    @Setter
     private EventOptions options;
 
     /**
@@ -128,7 +104,7 @@ public class Event {
      */
     public Event() {
         this.key = UUID.randomUUID().toString();
-        this.products = new HashSet<>();
+        this.products = new ArrayList<>();
         this.options = new EventOptions();
     }
 
@@ -139,21 +115,21 @@ public class Event {
      * @param description Description of the Event
      * @param location    Location of the Event
      * @param target      Target of the Event
-     * @param limit       Limit of the Event
+     * @param maxSold       Limit of the Event
      * @param imageURL    Path to the Image of the Event
      * @param start       Starting DateTime of the Event
-     * @param end         Ending DateTime of the Event
+     * @param ending         Ending DateTime of the Event
      */
-    public Event(String title, String description, String location, int target, Integer limit, String imageURL,
-                 LocalDateTime start, LocalDateTime end) {
+    public Event(String title, String description, String location, int target, Integer maxSold, String imageURL,
+                 LocalDateTime start, LocalDateTime ending) {
         this();
         this.title = title;
         this.description = description;
         this.location = location;
         this.target = target;
-        this.limit = limit;
+        this.maxSold = maxSold;
         this.start = start;
-        this.end = end;
+        this.ending = ending;
         this.imageURL = imageURL;
     }
 

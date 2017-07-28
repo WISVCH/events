@@ -29,26 +29,25 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Create vendor</samp></h1>
             </div>
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div th:replace="/fragments/message :: messages"></div>
+                    <div th:replace="fragments/message :: messages"></div>
                 </div>
             </div>
 
@@ -70,7 +69,7 @@
                                             <label for="vendorGroup">LDAPGroup*</label>
                                             <select id="vendorGroup" class="form-control" th:field="*{ldapGroup}">
                                                 <option
-                                                        th:each="ldapgroup : ${T(ch.wisv.events.data.model.sales.LDAPGroupEnum).values()}"
+                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroupEnum).values()}"
                                                         th:value="${ldapgroup}"
                                                         th:text="${ldapgroup.getName()}">
                                                 </option>
@@ -81,12 +80,10 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="productStart">Starting selling*</label>
-
+                                            <label for="productStart">Starting selling</label>
                                             <input type="datetime-local" id="productStart"
                                                    th:field="*{startingTime}"
-                                                   class="form-control"
-                                                   required>
+                                                   class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">

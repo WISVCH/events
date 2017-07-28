@@ -1,8 +1,11 @@
 package ch.wisv.events.app.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,18 +23,14 @@ import lombok.Setter;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NoArgsConstructor
-public class SalesCustomerAddRequest {
+@AllArgsConstructor
+public class OrderRequest {
 
     @Getter
     @Setter
-    private String orderReference;
+    public Map<String, Integer> products;
 
-    @Getter
-    @Setter
-    private String rfidToken;
-
-    public SalesCustomerAddRequest(String orderReference) {
-        this.orderReference = orderReference;
+    public OrderRequest() {
+        this.products = new HashMap<>();
     }
 }

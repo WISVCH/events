@@ -1,12 +1,15 @@
 package ch.wisv.events.core.service.vendor;
 
-import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
+import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
+import ch.wisv.events.utils.LDAPGroupEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,15 +35,14 @@ public class VendorServiceImpl implements VendorService {
     /**
      * VendorRepository.
      */
-    private final VendorRepository vendorRepository;
+    @Autowired
+    private VendorRepository vendorRepository;
 
     /**
      * Constructor VendorServiceImpl creates a new VendorServiceImpl instance.
-     *
-     * @param vendorRepository of type VendorRepository
      */
-    public VendorServiceImpl(VendorRepository vendorRepository) {
-        this.vendorRepository = vendorRepository;
+    public VendorServiceImpl() {
+
     }
 
     /**
@@ -51,6 +53,23 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<Vendor> getAll() {
         return vendorRepository.findAll();
+    }
+
+    /**
+     * Method getAllByLDAPGroup get list of vendors by ldap group.
+     *
+     * @param ldapEnum of type LDAPGroupEnum
+     * @return List<Vendor>
+     */
+    @Override
+    public List<Vendor> getAllByLDAPGroup(String ldapEnum) {
+        try {
+            LDAPGroupEnum ldapGroupEnum = LDAPGroupEnum.valueOf(ldapEnum.toUpperCase());
+
+            return vendorRepository.findByLdapGroup(ldapGroupEnum);
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -69,12 +88,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     /**
-     * Method add will add a new Vendor.
+     * Method create will create a new Vendor.
      *
      * @param vendor of type Vendor
      */
     @Override
-    public void add(Vendor vendor) {
+    public void create(Vendor vendor) {
         this.checkRequiredFields(vendor);
 
         vendorRepository.saveAndFlush(vendor);
@@ -115,11 +134,11 @@ public class VendorServiceImpl implements VendorService {
      * @throws InvalidVendorException when one of the required fields is not valid
      */
     private void checkRequiredFields(Vendor model) throws InvalidVendorException {
+        if (model == null) throw new InvalidVendorException("Vendor can not be null!");
+
         Object[][] check = new Object[][]{
                 {model.getKey(), "key"},
                 {model.getLdapGroup(), "ldap group"},
-                {model.getStartingTime(), "starting time"},
-                {model.getEndingTime(), "ending time"},
                 };
         this.checkFieldsEmpty(check);
     }

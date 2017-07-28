@@ -32,20 +32,23 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Orders</samp></h1>
             </div>
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div th:replace="/fragments/message :: messages"></div>
+                    <div th:replace="fragments/message :: messages"></div>
                 </div>
             </div>
 
@@ -64,12 +67,12 @@
                     </thead>
                     <tbody>
                     <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-                    <tr th:each="order : ${orders}">
+                    <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
                         <td>
                             <input type="checkbox">
                         </td>
                         <td th:text="'#' + ${order.getId()}"></td>
-                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}"></span></td>
+                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}" style="margin-right: 16px;"></span></td>
                         <td>
                             <a th:href="'/dashboard/customers/edit/' + ${order.getCustomer().getKey()} + '/'"
                                th:text="${order.getCustomer().getName()}"></a>
@@ -101,14 +104,19 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!--suppress JSUnresolvedFunction -->
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        $('#dataTable').DataTable({
+        var table = $("#dataTable");
+        table.DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "20px", targets: 1},
                 {width: "80px", targets: 6}
             ]
+        });
+
+        table.find('tbody').on('click', 'tr', function () {
+            document.location = "/dashboard/orders/edit/" + $(this).data('key') + "/";
         });
     });
 </script>

@@ -36,35 +36,45 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="/fragments/header :: header">
-            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <div class="row">
+            <div th:replace="fragments/header :: header">
+                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+            </div>
+            <div th:replace="fragments/sidebar :: sidebar"></div>
         </div>
     </div>
-    <div class="row content-wrapper">
-        <div th:replace="/fragments/sidebar :: sidebar" class="col-xs-2"></div>
-        <div class="col-xs-10 main">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
                 <h1><samp>Edit event</samp></h1>
             </div>
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div th:replace="/fragments/message :: messages"></div>
+                    <div th:replace="fragments/message :: messages"></div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <!--/*@thymesVar id="event" type="ch.wisv.events.api.request.EventRequest"*/-->
-                    <form th:action="@{/dashboard/events/update}" th:object="${event}"
-                          method="POST" id="editEvent">
+                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                <form th:action="@{/dashboard/events/update}" th:object="${event}" method="POST">
+                    <input type="hidden" th:value="*{key}" th:field="*{key}">
+
+                    <div class="col-sm-12 col-md-6">
+                        <!--/*@thymesVar id="event" type="ch.wisv.events.api.request.EventRequest"*/-->
                         <div th:replace="dashboard/events/fragments/event-edit-panel-information :: edit-information"></div>
-                    </form>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div th:replace="dashboard/events/fragments/event-edit-panel-options :: edit-options"></div>
-                    <div th:replace="dashboard/events/fragments/event-edit-panel-products :: edit-products"></div>
-                </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div th:replace="dashboard/events/fragments/event-edit-panel-options :: edit-options"></div>
+                        <div th:replace="dashboard/events/fragments/event-edit-panel-products :: edit-products"></div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Update">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -77,6 +87,51 @@
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 <!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
-<script th:src="@{/js/dashboard/edit-event.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        /*[+ var link = [[@{/api/v1/products/unused/search}]]; +]*/
+
+        $("#q").autocomplete({
+            serviceUrl: link,
+            showNoSuggestionNotice: true,
+            noSuggestionNotice: "<div class=\"autocomplete-suggestion\" data-index=\"1\">No product found.</div>",
+            lookupLimit: 3,
+            minChars: 1,
+            onSelect: function (suggestion) {
+                var products = $("#products");
+                var size = products.children().length;
+                products.append('<input type="hidden" id="products' + size + '" name="products[' + size + ']" value="' + suggestion.data + '">');
+
+                $("#productsTable").append("<tr><td><span class='label label-danger'>N.S.Y.</span> " + suggestion.value + "</td><td></td></tr>");
+                $("#q").val("");
+            }
+        });
+
+        $(".remove-product").click(function () {
+            var products = $("#products").children();
+            var productID = $(this).attr('data-product-id');
+
+            $(this).parent().parent().parent().remove();
+            for (var i = 0; i < products.length; i++) {
+                if (productID == products[i].value) {
+                    products[i].remove();
+                }
+            }
+        });
+
+        $("#productDatatable").DataTable({
+            searching: false,
+            paging: false,
+            info: false,
+            columnDefs: [
+                {
+                    width: "120px",
+                    targets: 1,
+                    orderable: false
+                }
+            ]
+        });
+    });
+</script>
 </body>
 </html>

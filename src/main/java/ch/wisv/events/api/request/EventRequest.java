@@ -14,7 +14,7 @@ public class EventRequest {
     /**
      * ID of an Event
      */
-    Long id;
+    Integer id;
 
     /**
      * Title, Key, Description, Location, Event Start, Event End, and Image Path of an Event
@@ -51,7 +51,7 @@ public class EventRequest {
      * @param key         Key of an Event
      * @param options     EventOptions of an Event
      */
-    public EventRequest(Long id, String title, String description, String location, int target, Integer limit,
+    public EventRequest(Integer id, String title, String description, String location, int target, Integer limit,
                         String eventStart, String eventEnd, String image, String key, EventOptions options) {
         this.id = id;
         this.title = title;

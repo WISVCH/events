@@ -20,11 +20,11 @@ public class EventProductRequest {
     /**
      * ID of an Event
      */
-    Long eventID;
+    Integer eventID;
 
     /**
      * ID of a Product
      */
-    Long productID;
+    Integer productID;
 
 }

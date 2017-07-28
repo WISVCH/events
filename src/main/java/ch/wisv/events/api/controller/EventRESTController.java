@@ -1,9 +1,9 @@
 package ch.wisv.events.api.controller;
 
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.exception.EventNotFound;
 import ch.wisv.events.api.response.EventDefaultResponse;
 import ch.wisv.events.api.response.ProductDefaultResponse;
+import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
 import org.springframework.http.HttpStatus;

@@ -28,31 +28,23 @@
     <![endif]-->
 </head>
 
-<body id="scanPage">
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
+<body id="scanProduct">
 <div class="container-fluid">
     <div class="row">
-        <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/"><samp>CH events sell app</samp></a>
-                </div>
-            </div>
-        </nav>
+        <div th:replace="fragments/header :: header">
+            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        </div>
     </div>
 
-    <div class="row content-wrapper">
-        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
-            <h3>Scan RFID- or NFC card</h3>
-            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.app.request.SalesCustomerAddRequest"*/-->
-            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
-                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
-                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
-                <input type="submit" style="display: none;">
-            </form>
+    <div class="row content-wrapper scan-page" th:classappend="${scanned}">
+        <div class="col-xs-12">
+            <h3 th:text="${customer.getName()}"></h3>
+        </div>
+
+        <div class="next-button">
+            <a th:href="@{/sales/scan/}" class="btn btn-primary btn-block btn-lg">
+                Next <i class="fa fa-arrow-right"></i>
+            </a>
         </div>
     </div>
 </div>

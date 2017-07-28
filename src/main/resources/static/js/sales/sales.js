@@ -27,4 +27,14 @@ $(document).ready(function () {
         }
         token.val(token.val() + e.key);
     });
+
+    $("#scanProduct").keypress(function (e) {
+        var token = $("#customerRFID");
+
+        if (e.which === 13) {
+            $("#formScanProduct").submit();
+            return false;
+        }
+        token.val(token.val() + e.key);
+    });
 });

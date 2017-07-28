@@ -26,8 +26,7 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-
-        <div class="col-sm-3 col-md-2 sidebar" th:fragment="sidebar">
+        <div th:fragment="sidebar" style="position: fixed; top: 51px; left: 0; width: 100%; padding: 20px">
             <ul class="nav nav-sidebar">
                 <li th:classappend="${#httpServletRequest.getRequestURI() == '/dashboard/' ? 'active':''}">
                     <a th:href="@{/dashboard/}">
@@ -61,6 +60,7 @@
                         <i class="fa fa-users fa-fw" aria-hidden="true"></i> Customers
                     </a>
                 </li>
+                <li class="divider"></li>
             </ul>
         </div>
     </div>
@@ -68,7 +68,7 @@
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+<!-- Placed at the ending of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>

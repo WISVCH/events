@@ -32,11 +32,19 @@ public interface ProductService {
     Product getByKey(String key);
 
     /**
+     * Get Product by ID
+     *
+     * @param productID id of a Product
+     * @return Product
+     */
+    Product getByID(Integer productID);
+
+    /**
      * Add a new Product using a Product
      *
      * @param product of type Product
      */
-    void add(Product product);
+    void create(Product product);
 
     /**
      * Update Product using a Product

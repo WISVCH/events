@@ -1,9 +1,9 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.vendor.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +125,7 @@ public class DashboardVendorController {
     @PostMapping("/add")
     public String add(RedirectAttributes redirect, @ModelAttribute Vendor model) {
         try {
-            vendorService.add(model);
+            vendorService.create(model);
             redirect.addFlashAttribute("message", "Vendor has been added!");
 
             return "redirect:/dashboard/vendors/";

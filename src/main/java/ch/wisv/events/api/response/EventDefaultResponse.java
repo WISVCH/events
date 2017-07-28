@@ -68,7 +68,7 @@ public class EventDefaultResponse {
         this.location = event.getLocation();
         this.imageURL = event.getImageURL();
         this.startEvent = event.getStart();
-        this.endEvent = event.getEnd();
+        this.endEvent = event.getEnding();
     }
 
 }
