@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -48,13 +47,13 @@ public class EventServiceImplTest extends ServiceTest {
     @Mock
     private ProductService productService;
 
-    @InjectMocks
-    private EventService service = new EventServiceImpl(repository, productService);
+    private EventService service;
 
     private Event event;
 
     @Before
     public void setUp() throws Exception {
+        this.service = new EventServiceImpl(repository, productService);;
         this.event = new Event(
                 "Test",
                 "test",

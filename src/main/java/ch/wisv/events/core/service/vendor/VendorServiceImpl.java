@@ -60,7 +60,7 @@ public class VendorServiceImpl implements VendorService {
     /**
      * Method getAllByLDAPGroup get list of vendors by ldap group.
      *
-     * @param ldapEnum of type LDAPGroup
+     * @param ldapEnum of type LDAPGroupEnum
      * @return List<Vendor>
      */
     @Override

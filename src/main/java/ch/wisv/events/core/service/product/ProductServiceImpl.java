@@ -142,6 +142,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isLinked()) {
             throw new ProductInUseException("Product is already added to an Event or Product");
         }
+
         productRepository.delete(product);
     }
 

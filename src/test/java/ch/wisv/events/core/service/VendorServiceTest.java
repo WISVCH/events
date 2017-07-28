@@ -11,7 +11,6 @@ import ch.wisv.events.utils.LDAPGroup;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -50,8 +49,7 @@ public class VendorServiceTest extends ServiceTest {
     /**
      * VendorService with the Mock of the VendorRepository
      */
-    @InjectMocks
-    private VendorService vendorService = new VendorServiceImpl(repository);
+    private VendorService vendorService;
 
     /**
      * Default instance of the Vendor class
@@ -65,12 +63,14 @@ public class VendorServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        vendor = new Vendor();
+        this.vendorService = new VendorServiceImpl(repository);
 
-        vendor.setLdapGroup(LDAPGroup.BEHEER);
-        vendor.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
-        vendor.setStartingTime(LocalDateTime.now());
-        vendor.setEndingTime(LocalDateTime.now());
+        this.vendor = new Vendor();
+
+        this.vendor.setLdapGroup(LDAPGroup.BEHEER);
+        this.vendor.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
+        this.vendor.setStartingTime(LocalDateTime.now());
+        this.vendor.setEndingTime(LocalDateTime.now());
     }
 
     /**
@@ -80,7 +80,7 @@ public class VendorServiceTest extends ServiceTest {
      */
     @After
     public void tearDown() throws Exception {
-        vendor = null;
+        this.vendor = null;
     }
 
     /**
