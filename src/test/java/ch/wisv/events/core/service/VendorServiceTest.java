@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
 import ch.wisv.events.core.model.event.Event;
@@ -8,18 +7,12 @@ import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
 import ch.wisv.events.core.service.vendor.VendorService;
 import ch.wisv.events.core.service.vendor.VendorServiceImpl;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -56,8 +49,7 @@ public class VendorServiceTest extends ServiceTest {
     /**
      * VendorService with the Mock of the VendorRepository
      */
-    @InjectMocks
-    private VendorService vendorService = new VendorServiceImpl();
+    private VendorService vendorService;
 
     /**
      * Default instance of the Vendor class
@@ -71,12 +63,14 @@ public class VendorServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        vendor = new Vendor();
+        this.vendorService = new VendorServiceImpl(repository);
 
-        vendor.setLdapGroup(LDAPGroupEnum.BEHEER);
-        vendor.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
-        vendor.setStartingTime(LocalDateTime.now());
-        vendor.setEndingTime(LocalDateTime.now());
+        this.vendor = new Vendor();
+
+        this.vendor.setLdapGroup(LDAPGroup.BEHEER);
+        this.vendor.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
+        this.vendor.setStartingTime(LocalDateTime.now());
+        this.vendor.setEndingTime(LocalDateTime.now());
     }
 
     /**
@@ -86,7 +80,7 @@ public class VendorServiceTest extends ServiceTest {
      */
     @After
     public void tearDown() throws Exception {
-        vendor = null;
+        this.vendor = null;
     }
 
     /**
@@ -153,7 +147,7 @@ public class VendorServiceTest extends ServiceTest {
     public void add() throws Exception {
         Vendor temp = new Vendor();
         temp.setEvents(Collections.singletonList(Mockito.mock(Event.class)));
-        temp.setLdapGroup(LDAPGroupEnum.BEHEER);
+        temp.setLdapGroup(LDAPGroup.BEHEER);
         temp.setStartingTime(LocalDateTime.now());
         temp.setEndingTime(LocalDateTime.now());
 

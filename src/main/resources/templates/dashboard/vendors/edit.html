@@ -73,7 +73,7 @@
                                             <label for="vendorGroup">LDAPGroup*</label>
                                             <select id="vendorGroup" class="form-control" th:field="*{ldapGroup}">
                                                 <option
-                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroupEnum).values()}"
+                                                        th:each="ldapgroup : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
                                                         th:value="${ldapgroup}"
                                                         th:selected="${ldapgroup == vendor.ldapGroup}"
                                                         th:text="${ldapgroup.getName()}">

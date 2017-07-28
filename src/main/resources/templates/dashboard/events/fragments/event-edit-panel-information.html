@@ -44,6 +44,13 @@
                        required>
             </div>
             <div class="form-group">
+                <label for="eventShort">Short description*</label>
+                <input type="text" class="form-control" id="eventShort"
+                       placeholder="Short description"
+                       th:field="*{shortDescription}" th:value="*{shortDescription}"
+                       required>
+            </div>
+            <div class="form-group">
                 <label for="eventDescription">Description</label>
                 <textarea id="eventDescription" class="form-control" placeholder="Description"
                           rows="5"

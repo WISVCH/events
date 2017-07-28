@@ -73,7 +73,7 @@ public class SalesScannerController {
 
     /**
      * Method checkView displays the status of the scanned ticket.
-     *
+     * <p>
      * Green: person x has a ticket is valid
      * Orange: ticket of person x is already scanned
      * Red: person x has no ticket

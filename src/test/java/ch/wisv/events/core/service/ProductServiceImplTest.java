@@ -2,7 +2,6 @@ package ch.wisv.events.core.service;
 
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
@@ -11,7 +10,6 @@ import ch.wisv.events.core.service.product.ProductServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
@@ -55,8 +53,7 @@ public class ProductServiceImplTest extends ServiceTest {
     /**
      * ProductService
      */
-    @InjectMocks
-    private ProductService service = new ProductServiceImpl();
+    private ProductService service;
 
     /**
      * Default Product
@@ -68,6 +65,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        this.service = new ProductServiceImpl(repository);
         this.product = new Product(
                 "Product",
                 "Description",
@@ -255,8 +253,7 @@ public class ProductServiceImplTest extends ServiceTest {
         thrown.expect(ProductInUseException.class);
         thrown.expectMessage("Product is already added to an Event");
 
-        when(eventService.getEventByProductKey(this.product.getKey())).thenReturn(Collections.singletonList(any
-                (Event.class)));
+        this.product.setLinked(true);
 
         service.delete(this.product);
     }

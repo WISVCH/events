@@ -1,8 +1,7 @@
 package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +26,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
+@Data
 public class SoldProduct {
 
     /**
@@ -34,45 +34,34 @@ public class SoldProduct {
      */
     @Id
     @GeneratedValue
-    @Getter
     private Integer id;
 
     /**
      * Key of the sold product
      */
-    @Getter
-    @Setter
     private String key;
 
     /**
      * Product that is sold
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Product product;
 
     /**
      * Order of the sold product
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Order order;
 
     /**
      * Customer who bought the product
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Customer customer;
 
     /**
      * Status of the sold product
      */
-    @Getter
-    @Setter
     private SoldProductStatus status;
 
     /**

@@ -4,7 +4,7 @@ import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;
 import ch.wisv.events.core.model.sales.Vendor;
 import ch.wisv.events.core.repository.VendorRepository;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -35,14 +35,16 @@ public class VendorServiceImpl implements VendorService {
     /**
      * VendorRepository.
      */
-    @Autowired
-    private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
 
     /**
      * Constructor VendorServiceImpl creates a new VendorServiceImpl instance.
+     *
+     * @param vendorRepository of type VendorRepository
      */
-    public VendorServiceImpl() {
-
+    @Autowired
+    public VendorServiceImpl(VendorRepository vendorRepository) {
+        this.vendorRepository = vendorRepository;
     }
 
     /**
@@ -64,7 +66,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<Vendor> getAllByLDAPGroup(String ldapEnum) {
         try {
-            LDAPGroupEnum ldapGroupEnum = LDAPGroupEnum.valueOf(ldapEnum.toUpperCase());
+            LDAPGroup ldapGroupEnum = LDAPGroup.valueOf(ldapEnum.toUpperCase());
 
             return vendorRepository.findByLdapGroup(ldapGroupEnum);
         } catch (IllegalArgumentException e) {
@@ -139,7 +141,7 @@ public class VendorServiceImpl implements VendorService {
         Object[][] check = new Object[][]{
                 {model.getKey(), "key"},
                 {model.getLdapGroup(), "ldap group"},
-                };
+        };
         this.checkFieldsEmpty(check);
     }
 

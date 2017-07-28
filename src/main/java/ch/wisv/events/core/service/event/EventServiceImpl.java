@@ -38,14 +38,24 @@ public class EventServiceImpl implements EventService {
     /**
      * EventRepository
      */
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     /**
      * ProductRepository
      */
+    private final ProductService productService;
+
+    /**
+     * Constructor EventServiceImpl creates a new EventServiceImpl instance.
+     *
+     * @param eventRepository of type EventRepository
+     * @param productService  of type ProductService
+     */
     @Autowired
-    private ProductService productService;
+    public EventServiceImpl(EventRepository eventRepository, ProductService productService) {
+        this.eventRepository = eventRepository;
+        this.productService = productService;
+    }
 
     /**
      * Get all Events
@@ -76,7 +86,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getAvailableEvents() {
         return eventRepository.findAll().stream().filter(x -> x.getOptions().getPublished() == EventStatus.PUBLISHED)
-                              .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -122,7 +132,7 @@ public class EventServiceImpl implements EventService {
     /**
      * Update event by Event
      *
-     * @param event
+     * @param event Event
      */
     @Override
     public void update(Event event) {
@@ -135,11 +145,11 @@ public class EventServiceImpl implements EventService {
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
         update.setEnding(event.getEnding());
-        update.setTarget(event.getTarget());
         update.setMaxSold(event.getMaxSold());
         update.setSold(event.getSold());
         update.setOptions(event.getOptions());
         update.setProducts(event.getProducts());
+        update.setShortDescription(event.getShortDescription());
 
         this.updateLinkedProducts(update.getProducts(), true);
         eventRepository.save(update);

@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByProduct(Product product) {
         List<Order> orders = this.getAllOrders();
         return orders.stream().filter(x -> x.getProducts().stream().anyMatch(p -> p.equals(product)))
-                     .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     /**

@@ -1,7 +1,7 @@
 package ch.wisv.events.core.model.sales;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,7 +58,7 @@ public class Vendor {
      */
     @Getter
     @Setter
-    private LDAPGroupEnum ldapGroup;
+    private LDAPGroup ldapGroup;
 
     /**
      * Field startingTime starting time of the sell access.

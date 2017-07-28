@@ -2,10 +2,8 @@ package ch.wisv.events.core.service.product;
 
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +35,17 @@ public class ProductServiceImpl implements ProductService {
     /**
      * ProductRepository
      */
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     /**
-     * EventService
+     * Constructor ProductServiceImpl creates a new ProductServiceImpl instance.
+     *
+     * @param productRepository of type ProductRepository
      */
     @Autowired
-    private EventService eventService;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     /**
      * Get all products
@@ -64,8 +65,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAvailableProducts() {
         return productRepository.findAllBySellStartBeforeAndSellEndAfter(LocalDateTime.now(), LocalDateTime.now())
-                                .stream().filter(x -> x.getSold() < x.getMaxSold())
-                                .collect(Collectors.toCollection(ArrayList::new));
+                .stream().filter(x -> x.getSold() < x.getMaxSold())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -138,10 +139,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void delete(Product product) {
-        List<Event> events = eventService.getEventByProductKey(product.getKey());
-        if (events.size() > 0) {
-            throw new ProductInUseException("Product is already added to an Event");
+        if (product.isLinked()) {
+            throw new ProductInUseException("Product is already added to an Event or Product");
         }
+
         productRepository.delete(product);
     }
 

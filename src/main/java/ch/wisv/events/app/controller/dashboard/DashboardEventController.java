@@ -3,14 +3,16 @@ package ch.wisv.events.app.controller.dashboard;
 import ch.wisv.events.api.request.EventProductRequest;
 import ch.wisv.events.core.exception.EventNotFound;
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.webhook.WebhookPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -36,15 +38,22 @@ public class DashboardEventController {
     private final SoldProductService soldProductService;
 
     /**
+     * Field webhookPublisher
+     */
+    private final WebhookPublisher webhookPublisher;
+
+    /**
      * Default constructor
      *
      * @param eventService       EventService
      * @param soldProductService SoldProductService
+     * @param webhookPublisher   WebhookPublisher
      */
     @Autowired
-    public DashboardEventController(EventService eventService, SoldProductService soldProductService) {
+    public DashboardEventController(EventService eventService, SoldProductService soldProductService, WebhookPublisher webhookPublisher) {
         this.eventService = eventService;
         this.soldProductService = soldProductService;
+        this.webhookPublisher = webhookPublisher;
     }
 
     /**
@@ -55,7 +64,7 @@ public class DashboardEventController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("events", eventService.getAllEvents());
+        model.addAttribute("events", this.eventService.getAllEvents());
 
         return "dashboard/events/index";
     }
@@ -85,10 +94,8 @@ public class DashboardEventController {
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("event")) {
-                model.addAttribute("event", eventService.getByKey(key));
+                model.addAttribute("event", this.eventService.getByKey(key));
             }
-
-//            model.addAttribute("eventProduct", EventProductRequestFactory.create(event));
 
             return "dashboard/events/edit";
         } catch (EventNotFound e) {
@@ -96,13 +103,20 @@ public class DashboardEventController {
         }
     }
 
+    /**
+     * Method overview ...
+     *
+     * @param model of type Model
+     * @param key   of type String
+     * @return String
+     */
     @GetMapping("/overview/{key}/")
     public String overview(Model model, @PathVariable String key) {
         try {
-            Event event = eventService.getByKey(key);
+            Event event = this.eventService.getByKey(key);
 
             List<SoldProduct> soldProduct = new ArrayList<>();
-            event.getProducts().forEach(x -> soldProduct.addAll(soldProductService.getByProduct(x)));
+            event.getProducts().forEach(x -> soldProduct.addAll(this.soldProductService.getByProduct(x)));
 
             model.addAttribute("event", event);
             model.addAttribute("soldProducts", soldProduct);
@@ -117,16 +131,16 @@ public class DashboardEventController {
      * Get request to delete event by Key
      *
      * @param redirect Spring RedirectAttributes
-     * @param key                PathVariable key of the Event
+     * @param key      PathVariable key of the Event
      * @return redirect
      */
     @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Event event = eventService.getByKey(key);
-            eventService.delete(event);
-
+            Event event = this.eventService.getByKey(key);
+            this.eventService.delete(event);
             redirect.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
+            this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
 
             return "redirect:/dashboard/events/";
         } catch (EventNotFound e) {
@@ -146,8 +160,12 @@ public class DashboardEventController {
     @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
-            eventService.create(event);
+            this.eventService.create(event);
             redirect.addFlashAttribute("message", event.getTitle() + " successfully created!");
+
+            if (event.getOptions().getPublished() == EventStatus.PUBLISHED) {
+                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+            }
 
             return "redirect:/dashboard/events/";
         } catch (RuntimeException e) {
@@ -156,22 +174,6 @@ public class DashboardEventController {
 
             return "redirect:/dashboard/events/create/";
         }
-    }
-
-    /**
-     * Post request to delete a Product from an Event
-     *
-     * @param eventProductRequest EventProductRequest model attr.
-     * @param redirectAttributes  Spring RedirectAttributes
-     * @return redirect
-     */
-    @PostMapping("/product/delete")
-    public String deleteProductFromEvent(@ModelAttribute @Validated EventProductRequest eventProductRequest,
-                                         RedirectAttributes redirectAttributes) {
-        eventService.deleteProductFromEvent(eventProductRequest.getEventID(), eventProductRequest.getProductID());
-        redirectAttributes.addFlashAttribute("message", "Product removed from Event!");
-
-        return "redirect:/dashboard/events/edit/" + eventProductRequest.getEventKey();
     }
 
     /**
@@ -184,16 +186,36 @@ public class DashboardEventController {
     @PostMapping("/update")
     public String update(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
-            eventService.update(event);
+            this.eventService.update(event);
             redirect.addFlashAttribute("message", "Event changes saved!");
 
-            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
+            if (event.getOptions().getPublished() == EventStatus.PUBLISHED) {
+                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+            } else {
+                this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
+            }
+
         } catch (EventNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
-
-            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
         }
+
+        return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
+    }
+
+    /**
+     * Post request to delete a Product from an Event
+     *
+     * @param redirect Spring RedirectAttributes
+     * @param request  EventProductRequest model attr.
+     * @return redirect
+     */
+    @PostMapping("/product/delete")
+    public String deleteProductFromEvent(RedirectAttributes redirect, @ModelAttribute EventProductRequest request) {
+        this.eventService.deleteProductFromEvent(request.getEventID(), request.getProductID());
+        redirect.addFlashAttribute("message", "Product removed from Event!");
+
+        return "redirect:/dashboard/events/edit/" + request.getEventKey() + "/";
     }
 
 }

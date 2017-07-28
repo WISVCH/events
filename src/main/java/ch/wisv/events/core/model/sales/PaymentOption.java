@@ -23,7 +23,7 @@ import static java.util.Arrays.stream;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public enum PaymentOptions {
+public enum PaymentOption {
 
     CASH(1, "Cash", "cash", "success", OrderStatus.PAID_CASH),
     CANCEL(2, "Cancel", "cancel", "danger", OrderStatus.CANCELLED);
@@ -59,7 +59,7 @@ public enum PaymentOptions {
     private final OrderStatus orderStatus;
 
     /**
-     * Constructor PaymentOptions creates a new PaymentOptions instance.
+     * Constructor PaymentOption creates a new PaymentOption instance.
      *
      * @param id           of type int
      * @param displayName  of type String
@@ -67,7 +67,7 @@ public enum PaymentOptions {
      * @param displayClass of type String
      * @param orderStatus  of type OrderStatus
      */
-    PaymentOptions(int id, String displayName, String value, String displayClass, OrderStatus orderStatus) {
+    PaymentOption(int id, String displayName, String value, String displayClass, OrderStatus orderStatus) {
         this.id = id;
         this.displayName = displayName;
         this.value = value;
@@ -83,7 +83,7 @@ public enum PaymentOptions {
      * @return OrderStatus
      */
     public static OrderStatus getStatusByValue(String payment) {
-        PaymentOptions tmp = stream(PaymentOptions.values()).filter(option -> Objects
+        PaymentOption tmp = stream(PaymentOption.values()).filter(option -> Objects
                 .equals(option.getValue(), payment)).findFirst().orElse(null);
         return (tmp != null) ? tmp.getOrderStatus() : OrderStatus.REJECTED;
     }

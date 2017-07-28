@@ -52,6 +52,7 @@ public class EventRequestFactory {
                 request.getId(),
                 request.getKey(),
                 request.getTitle(),
+                null,
                 request.getDescription(),
                 request.getLocation(),
                 request.getImage(),

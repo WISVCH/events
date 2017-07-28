@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductRESTController {
 
-
     /**
      * ProductService.
      */
@@ -87,8 +86,8 @@ public class ProductRESTController {
 
         String finalQuery = (query != null) ? query : "";
         productList.stream()
-                   .filter(p -> !p.isLinked() && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
-                   .forEach(x -> search.addItem(x.getTitle(), x.getId()));
+                .filter(p -> !p.isLinked() && p.getTitle().toLowerCase().contains(finalQuery.toLowerCase()))
+                .forEach(x -> search.addItem(x.getTitle(), x.getId()));
 
         return search;
     }

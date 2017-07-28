@@ -30,7 +30,7 @@ public class DashboardController {
     /**
      * DashboardController
      *
-     * @param eventService EventService
+     * @param eventService       EventService
      * @param soldProductService SoldProductService
      */
     @Autowired

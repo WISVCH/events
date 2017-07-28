@@ -1,7 +1,7 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.sales.Vendor;
-import ch.wisv.events.utils.LDAPGroupEnum;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -39,6 +39,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
      * @param ldapGroup of type LDAPGroup
      * @return List<Vendor>
      */
-    List<Vendor> findByLdapGroup(LDAPGroupEnum ldapGroup);
+    List<Vendor> findByLdapGroup(LDAPGroup ldapGroup);
 
 }

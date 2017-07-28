@@ -131,7 +131,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             if (userInfo instanceof CHUserInfo) {
                 CHUserInfo info = (CHUserInfo) userInfo;
                 return info.getLdapGroups().stream().anyMatch(x -> this.adminGroups.stream().anyMatch(x::equals)) ?
-                       ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
+                        ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
             }
             return ImmutableSet.of();
         });

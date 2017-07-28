@@ -118,7 +118,7 @@ public class SoldProductServiceImpl implements SoldProductService {
     /**
      * Method createSubProduct create a soldproduct item for the sub products of a product
      *
-     * @param order of type Order
+     * @param order   of type Order
      * @param product of type Product
      */
     private void createSubProduct(Order order, Product product) {
@@ -136,7 +136,7 @@ public class SoldProductServiceImpl implements SoldProductService {
 
     /**
      * Method remove SoldProduct of an certain order
-     *
+     * <p>
      * // TODO: also remove sold sub Products
      *
      * @param order of type Order

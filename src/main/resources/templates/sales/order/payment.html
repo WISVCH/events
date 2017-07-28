@@ -79,7 +79,7 @@
                 <input type="hidden" name="publicReference" th:value="${order.getPublicReference()}">
                 <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
                         name="payment"
-                        th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOptions).values()}"
+                        th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOption).values()}"
                         th:value="${payment.getValue()}"
                         th:text="${payment.getDisplayName()}">
                 </button>
