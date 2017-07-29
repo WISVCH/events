@@ -5,6 +5,7 @@ import biweekly.ICalendar;
 import biweekly.io.text.ICalWriter;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.utils.ICalendarBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +34,15 @@ import java.io.IOException;
 @RequestMapping(value = "/events")
 public class ICalController {
 
+    /**
+     * Field eventService
+     */
     private final EventService eventService;
 
     /**
      * Default constructor
      */
+    @Autowired
     public ICalController(EventService eventService) {
         this.eventService = eventService;
     }
