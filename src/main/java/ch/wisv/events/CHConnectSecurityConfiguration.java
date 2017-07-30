@@ -144,6 +144,7 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
 
         return oidcFilter;
     }
+
     /**
      * Dynamic server configuration service: the information at $issuerUri/.well-known/openid-configuration is used
      * to configure the OIDC server.
@@ -154,7 +155,7 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
     public ServerConfigurationService serverConfigurationService() {
         DynamicServerConfigurationService serverConfigurationService = new DynamicServerConfigurationService();
         serverConfigurationService.setWhitelist(Collections.singleton(properties.getIssuerUri()));
+
         return serverConfigurationService;
     }
-
 }

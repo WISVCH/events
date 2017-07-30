@@ -5,9 +5,13 @@ import com.nimbusds.jose.JWSAlgorithm;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
+import org.mitre.openid.connect.client.service.RegisteredClientService;
+import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
+import org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientService;
 import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -90,16 +94,35 @@ public class CHConnectConfiguration {
     }
 
     /**
+     * Dynamic client configuration service: this application is dynamically registered as an OIDC client when
+     * authentication first occurs. This registration is persisted in a JSON file to avoid re-registration every time
+     * the application is restarted.
+     *
+     * @return ClientConfigurationService
+     */
+    @Bean
+    @Profile("!prod")
+    public ClientConfigurationService clientConfigurationService() {
+        RegisteredClientService registeredClientService = new JsonFileRegisteredClientService("config/oidc-client-registration.json");
+
+        DynamicRegistrationClientConfigurationService clientConfigurationService = new
+                DynamicRegistrationClientConfigurationService();
+        clientConfigurationService.setRegisteredClientService(registeredClientService);
+        clientConfigurationService.setTemplate(getRegisteredClient());
+        return clientConfigurationService;
+    }
+
+
+    /**
      * Static client configuration: in production, we use a client configured from Spring properties.
      *
      * @return ClientConfigurationService with a single statically configured client
      */
     @Bean
+    @Profile("prod")
     public ClientConfigurationService clientProdConfigurationService() {
         StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
         clientConfigurationService.setClients(Collections.singletonMap(issuerUri, getRegisteredClient()));
-
         return clientConfigurationService;
     }
-
 }
