@@ -3,18 +3,13 @@ package ch.wisv.events;
 import ch.wisv.connect.client.CHUserInfoFetcher;
 import ch.wisv.connect.common.model.CHUserInfo;
 import com.google.common.collect.ImmutableSet;
-import com.nimbusds.jose.JWSAlgorithm;
-import org.mitre.oauth2.model.ClientDetailsEntity;
-import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
 import org.mitre.openid.connect.client.OIDCAuthenticationProvider;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
-import org.mitre.openid.connect.client.service.RegisteredClientService;
 import org.mitre.openid.connect.client.service.ServerConfigurationService;
 import org.mitre.openid.connect.client.service.impl.*;
 import org.mitre.openid.connect.web.UserInfoInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,52 +28,37 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Collections;
-import java.util.Set;
+
+import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
 
 /**
- * Should be replaced with CH Connect
+ * CH Connect Security Configuration
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    /**
-     * Login path as defined in {@link OIDCAuthenticationFilter#FILTER_PROCESSES_URL}
-     */
-    private final String loginPath = "/openid_connect_login";
+    private final CHConnectConfiguration properties;
 
-    /**
-     * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration
-     */
-    @Value("${connect.issuerUri}")
-    private String issuerUri;
+    private final ClientConfigurationService clientConfigurationService;
 
-    /**
-     * URI of this application, without trailing slash
-     */
-    @Value("${connect.clientUri}")
-    private String clientUri;
-
-    /**
-     * Groups that are admin in the system
-     */
-    @Value("#{'${events.admin.groups}'.split(',')}")
-    private Set<String> adminGroups;
+    public CHConnectSecurityConfiguration(CHConnectConfiguration properties, ClientConfigurationService clientConfigurationService) {
+        this.properties = properties;
+        this.clientConfigurationService = clientConfigurationService;
+    }
 
     /**
      * Configure the {@link HttpSecurity} object.
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+        http.addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
-        ;
+                .logoutSuccessUrl("/");
     }
 
     /**
@@ -96,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new LoginUrlAuthenticationEntryPoint(loginPath);
+        return new LoginUrlAuthenticationEntryPoint(FILTER_PROCESSES_URL);
     }
 
     /**
@@ -121,6 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationProvider oidcAuthenticationProvider() {
+        // TODO: fully configurable roles
         SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
         SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
 
@@ -130,7 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setAuthoritiesMapper((idToken, userInfo) -> {
             if (userInfo instanceof CHUserInfo) {
                 CHUserInfo info = (CHUserInfo) userInfo;
-                return info.getLdapGroups().stream().anyMatch(x -> this.adminGroups.stream().anyMatch(x::equals)) ?
+                return properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains) ?
                         ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
             }
             return ImmutableSet.of();
@@ -152,10 +133,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         oidcFilter.setAuthenticationManager(authenticationManager());
 
         oidcFilter.setServerConfigurationService(serverConfigurationService());
-        oidcFilter.setClientConfigurationService(clientConfigurationService());
+        oidcFilter.setClientConfigurationService(clientConfigurationService);
 
         StaticSingleIssuerService issuer = new StaticSingleIssuerService();
-        issuer.setIssuer(this.issuerUri);
+        issuer.setIssuer(properties.getIssuerUri());
         oidcFilter.setIssuerService(issuer);
 
         // TODO: for production, sign or encrypt requests
@@ -163,36 +144,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         return oidcFilter;
     }
-
-    /**
-     * Dynamic client configuration service: this application is dynamically registered as an OIDC client when
-     * authentication first occurs. This registration is persisted in a JSON file to avoid re-registration every time
-     * the application is restarted.
-     * <p>
-     * TODO: for production, we want a statically configured client
-     *
-     * @return ClientConfigurationService
-     */
-    @Bean
-    public ClientConfigurationService clientConfigurationService() {
-        RegisteredClient client = new RegisteredClient();
-        client.setClientName("Events Development");
-        client.setScope(ImmutableSet.of("openid", "email", "phone", "profile", "ldap"));
-        client.setTokenEndpointAuthMethod(ClientDetailsEntity.AuthMethod.SECRET_BASIC);
-        client.setRedirectUris(Collections.singleton(clientUri + loginPath));
-        client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
-        client.setJwksUri(clientUri + "/jwk");
-
-        RegisteredClientService registeredClientService = new JsonFileRegisteredClientService
-                ("config/oidc-client-registration.json");
-
-        DynamicRegistrationClientConfigurationService clientConfigurationService = new
-                DynamicRegistrationClientConfigurationService();
-        clientConfigurationService.setRegisteredClientService(registeredClientService);
-        clientConfigurationService.setTemplate(client);
-        return clientConfigurationService;
-    }
-
     /**
      * Dynamic server configuration service: the information at $issuerUri/.well-known/openid-configuration is used
      * to configure the OIDC server.
@@ -202,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ServerConfigurationService serverConfigurationService() {
         DynamicServerConfigurationService serverConfigurationService = new DynamicServerConfigurationService();
-        serverConfigurationService.setWhitelist(Collections.singleton(issuerUri));
+        serverConfigurationService.setWhitelist(Collections.singleton(properties.getIssuerUri()));
         return serverConfigurationService;
     }
 
