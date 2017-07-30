@@ -2,7 +2,9 @@ package ch.wisv.events.core.model.sales;
 
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.utils.LDAPGroup;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -32,8 +34,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Data
 @Entity
+@Data
 public class Vendor {
 
     /**
@@ -41,6 +43,7 @@ public class Vendor {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**

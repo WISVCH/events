@@ -1,9 +1,7 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -17,8 +15,6 @@ import java.util.UUID;
  * Event entity.
  */
 @Entity
-@AllArgsConstructor
-@EqualsAndHashCode
 @Data
 public class Event {
 
@@ -32,6 +28,7 @@ public class Event {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**

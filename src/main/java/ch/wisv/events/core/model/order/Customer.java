@@ -1,6 +1,8 @@
 package ch.wisv.events.core.model.order;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +25,8 @@ import java.util.UUID;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Data
 @Entity
+@Data
 public class Customer {
 
     /**
@@ -32,6 +34,7 @@ public class Customer {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**

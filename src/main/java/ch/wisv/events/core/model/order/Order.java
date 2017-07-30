@@ -1,6 +1,8 @@
 package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +31,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "\"order\"")
+@Data
 public class Order {
 
     /**
@@ -41,21 +44,17 @@ public class Order {
      */
     @Id
     @GeneratedValue
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**
      * Field status status of the Order.
      */
-    @Getter
-    @Setter
     private OrderStatus status;
 
     /**
      * Field amount amount of the Order.
      */
-    @Getter
-    @Setter
     private float amount;
 
     /**
@@ -68,31 +67,23 @@ public class Order {
     /**
      * Field publicReference UUID for public reference.
      */
-    @Getter
-    @Setter
     private String publicReference;
 
     /**
      * Field creationDate date time on which the order is create.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
     private LocalDateTime creationDate;
 
     /**
      * Field paidDate date time on which the order has been paid.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
     private LocalDateTime paidDate;
 
     /**
      * Field customer customer that order this.
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Customer customer;
 

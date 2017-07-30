@@ -1,7 +1,6 @@
 package ch.wisv.events.core.model.webhook;
 
 import ch.wisv.events.utils.LDAPGroup;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.ElementCollection;
@@ -29,7 +28,6 @@ import java.util.UUID;
  */
 @Entity
 @Data
-@AllArgsConstructor
 public class Webhook {
 
     /**

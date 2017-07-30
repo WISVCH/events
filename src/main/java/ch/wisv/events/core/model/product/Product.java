@@ -1,8 +1,9 @@
 package ch.wisv.events.core.model.product;
 
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -16,7 +17,6 @@ import java.util.UUID;
  * Product Entity.
  */
 @Entity
-@AllArgsConstructor
 @Data
 public class Product {
 
@@ -25,6 +25,7 @@ public class Product {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     public Integer id;
 
     /**
