@@ -38,7 +38,7 @@ public enum LDAPGroup {
     MATCH("MatCH"),
     MEISCIE("MeisCie"),
     REISCOMMISSIE("Reiscommissie"),
-    SJAARCIES("SjaarCie"),
+    SJAARCIE("SjaarCie"),
     SYMPOSIUM("Symposiumcommissie"),
     VERDIEPCIE("VerdiepCie"),
     W3CIE("W3Cie"),
