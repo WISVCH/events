@@ -2,9 +2,7 @@ package ch.wisv.events.core.model.sales;
 
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.utils.LDAPGroup;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -34,8 +32,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@Data
 @Entity
-@EqualsAndHashCode
 public class Vendor {
 
     /**
@@ -43,45 +41,34 @@ public class Vendor {
      */
     @Id
     @GeneratedValue
-    @Getter
     private Integer id;
 
     /**
      * Field key UUId of the vendor.
      */
-    @Getter
-    @Setter
     private String key;
 
     /**
      * Field ldapGroup ldapGroup.
      */
-    @Getter
-    @Setter
     private LDAPGroup ldapGroup;
 
     /**
      * Field startingTime starting time of the sell access.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    @Getter
-    @Setter
     private LocalDateTime startingTime;
 
     /**
      * Field endingTime ending time of the sell access.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    @Getter
-    @Setter
     private LocalDateTime endingTime;
 
     /**
      * Field events events that is ldap group is allowed to sell.
      */
     @ManyToMany(targetEntity = Event.class)
-    @Getter
-    @Setter
     private List<Event> events;
 
     /**
