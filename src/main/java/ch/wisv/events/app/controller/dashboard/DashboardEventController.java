@@ -9,7 +9,7 @@ import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.wisv.events.utils.FormMode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,7 +49,6 @@ public class DashboardEventController {
      * @param soldProductService SoldProductService
      * @param webhookPublisher   WebhookPublisher
      */
-    @Autowired
     public DashboardEventController(EventService eventService, SoldProductService soldProductService, WebhookPublisher webhookPublisher) {
         this.eventService = eventService;
         this.soldProductService = soldProductService;
@@ -78,10 +77,11 @@ public class DashboardEventController {
     @GetMapping("/create/")
     public String create(Model model) {
         if (!model.containsAttribute("event")) {
+            model.addAttribute("mode", FormMode.CREATE);
             model.addAttribute("event", new Event());
         }
 
-        return "dashboard/events/create";
+        return "dashboard/events/form";
     }
 
     /**
@@ -94,10 +94,11 @@ public class DashboardEventController {
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("event")) {
+                model.addAttribute("mode", FormMode.UPDATE);
                 model.addAttribute("event", this.eventService.getByKey(key));
             }
 
-            return "dashboard/events/edit";
+            return "dashboard/events/form";
         } catch (EventNotFound e) {
             return "redirect:/dashboard/events/";
         }
