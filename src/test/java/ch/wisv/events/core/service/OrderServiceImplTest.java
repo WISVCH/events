@@ -169,33 +169,6 @@ public class OrderServiceImplTest extends ServiceTest {
     }
 
     /**
-     * Test clone get product orders
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetOrdersByProductClone() throws Exception {
-        Product product = new Product();
-        Product product1 = new Product(
-                product.getId(),
-                product.getKey(),
-                product.getTitle(),
-                product.getDescription(),
-                product.getCost(),
-                product.getSold(),
-                product.getMaxSold(),
-                product.getSellStart(),
-                product.getSellEnd(),
-                product.getProducts(),
-                product.isLinked()
-        );
-        this.order.addProduct(product);
-        when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
-
-        assertEquals(ImmutableList.of(this.order), service.getOrdersByProduct(product1));
-    }
-
-    /**
      * Method testGetOrdersByProduct ...
      *
      * @throws Exception when

@@ -33,6 +33,9 @@ import java.io.IOException;
 @RequestMapping(value = "/events")
 public class ICalController {
 
+    /**
+     * Field eventService
+     */
     private final EventService eventService;
 
     /**
@@ -56,7 +59,7 @@ public class ICalController {
     /**
      * Get request on /iCal/upcoming will present the ical with the upcoming events
      *
-     * @param response
+     * @param response of type HttpServletResponse.
      */
     @GetMapping(value = "/iCal/upcoming", produces = "text/calendar; charset=utf-8")
     public void getUpcomingEvents(HttpServletResponse response) {
@@ -68,9 +71,9 @@ public class ICalController {
     /**
      * Attaches the ICal to the HttpServletResponse, providing the user with an iCal file.
      *
-     * @param ical
-     * @param response
-     * @throws IOException
+     * @param ical     of type ICalendar.
+     * @param response of type HttpServletResponse.
+     * @throws RuntimeException
      */
     private void presentIcalFile(ICalendar ical, HttpServletResponse response) {
         try {

@@ -1,0 +1,10 @@
+[
+  {
+    "ldapGroup": "BEHEER",
+    "payloadUrl": "http://localhost:1234/wp-json/events-sync/v1/single/",
+    "triggers": [
+      "EVENT_CREATE_UPDATE",
+      "EVENT_DELETE"
+    ]
+  }
+]

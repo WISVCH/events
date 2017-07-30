@@ -27,6 +27,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @PreAuthorize("isAuthenticated()")
 public class MainController {
 
+    /**
+     * Method index.
+     *
+     * @param model of type Model
+     * @param auth  of type OIDCAuthenticationToken
+     * @return String
+     */
     @GetMapping("/")
     public String index(Model model, OIDCAuthenticationToken auth) {
         model.addAttribute("locations", AppLocationEnum.getLocations(auth.getAuthorities()));

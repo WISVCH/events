@@ -53,6 +53,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-log4j2")
     compile("org.springframework.boot:spring-boot-starter-tomcat")
 
+    compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+
     compile("javax.el:javax.el-api:2.2.5")
 
     compile("org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE")

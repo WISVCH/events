@@ -1,7 +1,9 @@
 package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +36,7 @@ public class SoldProduct {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**

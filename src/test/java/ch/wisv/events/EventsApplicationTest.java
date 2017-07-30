@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @ComponentScan
-@EnableAutoConfiguration(exclude=FlywayAutoConfiguration.class)
+@EnableAutoConfiguration(exclude={FlywayAutoConfiguration.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "flyway.enabled=false")
 @ActiveProfiles("test")
 public class EventsApplicationTest {

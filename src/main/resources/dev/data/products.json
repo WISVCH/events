@@ -1,0 +1,8 @@
+[
+  {
+    "title": "T.U.E.S.Day lecture ticket",
+    "description": "Ticket for the T.U.E.S.Day lecture.",
+    "cost": 1.00,
+    "maxSold": 100
+  }
+]
