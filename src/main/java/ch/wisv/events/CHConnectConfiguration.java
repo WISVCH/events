@@ -102,7 +102,7 @@ public class CHConnectConfiguration {
      * @return ClientConfigurationService
      */
     @Bean
-    @Profile("!prod")
+    @Profile("!production")
     public ClientConfigurationService clientConfigurationService() {
         RegisteredClientService registeredClientService = new JsonFileRegisteredClientService("config/oidc-client-registration.json");
 
@@ -120,7 +120,7 @@ public class CHConnectConfiguration {
      * @return ClientConfigurationService with a single statically configured client
      */
     @Bean
-    @Profile("prod")
+    @Profile("production")
     public ClientConfigurationService clientProdConfigurationService() {
         StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
         clientConfigurationService.setClients(Collections.singletonMap(issuerUri, getRegisteredClient()));
