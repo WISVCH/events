@@ -23,10 +23,17 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
 
     <style>
-        .error-owl {
+        .error-owl-container {
             position: absolute;
-            left: -50px;
-            top: 470px;
+            left: -80px;
+            top: 360px;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .error-owl {
+            width: 300px;
         }
 
         div.speech {
@@ -84,13 +91,7 @@
     <div class="row">
         <div class="content-wrapper">
 
-            <div class="row" style="padding: 40px;">
-                <div class="col-md-4 col-md-offset-4">
-                    <img th:src="@{/img/logo.svg}" alt="" style="width: 100%;">
-                </div>
-            </div>
-
-            <div class="row">
+            <div class="row" style="margin-top: 100px;">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                     <div class="speech">
                         <h1><samp>Owl no, something unexpected happened!</samp></h1>
@@ -107,7 +108,10 @@
                 </div>
 
             </div>
-            <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/8795-200.png" class="error-owl" alt="">
+
+            <div class="error-owl-container">
+                <img th:src="@{/img/error-owl.svg}" class="error-owl" alt="">
+            </div>
         </div>
     </div>
 </div>
