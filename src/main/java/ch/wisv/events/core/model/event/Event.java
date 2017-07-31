@@ -19,11 +19,6 @@ import java.util.UUID;
 public class Event {
 
     /**
-     * Date format.
-     */
-    private final String TIME_FORMAT = "dd/MM/yyyy HH:mm";
-
-    /**
      * ID of the event, getter only so it can not be changed.
      */
     @Id

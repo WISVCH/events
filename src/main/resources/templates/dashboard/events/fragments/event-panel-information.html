@@ -42,13 +42,10 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="eventEnd">Ending time*</label>
+                        <label>Ending time*</label>
 
-                        <input type="datetime-local" id="eventEnd"
-                               th:field="*{ending}"
-                               th:value="*{ending}"
-                               class="form-control"
-                               required>
+                        <input type="datetime-local" class="form-control"
+                               th:field="*{ending}" th:value="*{ending}" required>
                     </div>
                 </div>
             </div>
@@ -59,21 +56,16 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="eventTarget">Target*</label>
-                        <input type="number" step="1" id="eventTarget" class="form-control"
-                               placeholder="Registration target (e.g. 100)"
-                               th:value="*{target}"
-                               th:field="*{target}"
-                               required>
+                        <label>Target*</label>
+                        <input type="number" step="1" class="form-control" placeholder="Registration target (e.g. 100)"
+                               th:field="*{target}" th:value="*{target}" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="eventLimit">Limit</label>
-                        <input type="number" step="1" id="eventLimit" class="form-control"
-                               placeholder="Registration maxSold (e.g. 100)"
-                               th:value="*{maxSold}"
-                               th:field="*{maxSold}">
+                        <label>Limit</label>
+                        <input type="number" step="1" class="form-control" placeholder="Max sold (e.g. 100)"
+                               th:field="*{maxSold}" th:value="*{maxSold}">
                     </div>
                 </div>
             </div>

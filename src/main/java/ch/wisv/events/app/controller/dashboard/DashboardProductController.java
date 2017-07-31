@@ -116,8 +116,8 @@ public class DashboardProductController {
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
-    @PostMapping("/add")
-    public String add(RedirectAttributes redirect, @ModelAttribute Product model) {
+    @PostMapping("/create")
+    public String create(RedirectAttributes redirect, @ModelAttribute Product model) {
         try {
             productService.create(model);
             redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");

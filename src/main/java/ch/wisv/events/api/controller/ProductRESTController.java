@@ -1,18 +1,23 @@
 package ch.wisv.events.api.controller;
 
+import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.api.response.ProductDefaultResponse;
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.product.Search;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
-import ch.wisv.events.utils.ResponseEntityBuilder;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
 
 /**
  * ProductRESTController.
@@ -50,8 +55,21 @@ public class ProductRESTController {
     @GetMapping(value = "")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getAllProducts() {
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
+        return createResponseEntity(HttpStatus.OK, "",
                 productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity createProduct(HttpServletRequest request, @Validated @RequestBody ProductDTO product) {
+        Product created = this.productService.create(product);
+
+        JSONObject json = new JSONObject();
+        json.put("product_id", created.getId());
+        json.put("product_key", created.getKey());
+        json.put("product_title", created.getTitle());
+
+        return createResponseEntity(HttpStatus.CREATED, "Product successfullly created", json);
     }
 
     /**
@@ -66,9 +84,9 @@ public class ProductRESTController {
         try {
             Product product = productService.getByKey(key);
 
-            return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
+            return createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
         } catch (ProductNotFound e) {
-            return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+            return createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -78,7 +96,7 @@ public class ProductRESTController {
      * @param query query
      * @return Search Object
      */
-    @GetMapping(value = "/unused/search")
+    @GetMapping(value = "/search/unused")
     @PreAuthorize("hasRole('ADMIN')")
     public Search getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();

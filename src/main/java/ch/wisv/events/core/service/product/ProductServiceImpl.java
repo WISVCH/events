@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.ProductInUseException;
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
@@ -100,6 +101,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Add a new Product using a Product
+     *
+     * @param product of type Product
+     */
+    @Override
+    public Product create(Product product) {
+        return productRepository.saveAndFlush(product);
+    }
+
+    /**
+     * Method create ...
+     *
+     * @param productDTO of type ProductDTO
+     */
+    @Override
+    public Product create(ProductDTO productDTO) {
+        Product product = new Product();
+
+        product.setTitle(productDTO.getTitle());
+        product.setDescription(productDTO.getDescription());
+        product.setCost(productDTO.getCost());
+        product.setMaxSold(productDTO.getMaxSold());
+
+        // Set sell start by default to now.
+        product.setSellStart(LocalDateTime.now());
+
+        return this.create(product);
+    }
+
+    /**
      * Update Product using a Product
      *
      * @param product Product containing the new product information
@@ -120,16 +151,6 @@ public class ProductServiceImpl implements ProductService {
 
         this.updateLinkedProducts(model.getProducts(), true);
         productRepository.save(model);
-    }
-
-    /**
-     * Add a new Product using a Product
-     *
-     * @param product of type Product
-     */
-    @Override
-    public void create(Product product) {
-        productRepository.saveAndFlush(product);
     }
 
     /**

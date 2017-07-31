@@ -190,7 +190,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testCreate() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 10, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 10, LocalDateTime.now(), LocalDateTime.now());
         HashMap<String, Integer> products = new HashMap<>();
         products.put(product.getKey(), 2);
 
@@ -210,7 +210,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testCreateException() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         HashMap<String, Integer> products = new HashMap<>();
         products.put(product.getKey(), 2);
 
@@ -243,7 +243,7 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testUpdateOrderStatus() throws Exception {
         Event event = new Event("Test", "test", "test", 10, 10, "path/to/file", LocalDateTime.now(),
                 LocalDateTime.now(), null);
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
         event.addProduct(product);
 
@@ -262,7 +262,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateOrderStatusToPaid() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
 
         service.updateOrderStatus(this.order, OrderStatus.PAID_CASH);
@@ -276,7 +276,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateOrderStatusToPaidDouble() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
         this.order.setStatus(OrderStatus.PAID_CASH);
 
@@ -291,7 +291,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateOrderStatusFromPaid() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
         this.order.setStatus(OrderStatus.PAID_CASH);
 
@@ -306,7 +306,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateOrderStatusFromPaidDouble() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("Test", "test", 1.d, 1, LocalDateTime.now(), LocalDateTime.now());
         this.order.addProduct(product);
         this.order.setStatus(OrderStatus.REJECTED);
 

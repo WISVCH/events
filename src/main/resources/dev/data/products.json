@@ -4,5 +4,17 @@
     "description": "Ticket for the T.U.E.S.Day lecture.",
     "cost": 1.00,
     "maxSold": 100
+  },
+  {
+    "title": "Thea",
+    "description": "Ticket for a cup of thea.",
+    "cost": 0.00,
+    "maxSold": 100
+  },
+  {
+    "title": "Coffee",
+    "description": "Ticket for a cup of coffee.",
+    "cost": 0.00,
+    "maxSold": 100
   }
 ]

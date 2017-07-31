@@ -1,10 +1,8 @@
-package ch.wisv.events.api.response;
+package ch.wisv.events.api.request;
 
-import ch.wisv.events.core.model.product.Product;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -22,43 +20,28 @@ import javax.persistence.Lob;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@AllArgsConstructor
-public class ProductDefaultResponse {
+@Getter
+public class ProductDTO {
 
     /**
-     * Field key of the Product
+     * Field title
      */
-    @Getter
-    private String key;
-
-    /**
-     * Field title of the Product
-     */
-    @Getter
+    @NotNull
     private String title;
 
     /**
-     * Field description of the Product
+     * Field description
      */
-    @Lob
-    @Getter
     private String description;
 
     /**
-     * Field cost of the Product
+     * Field cost
      */
-    @Getter
+    @NotNull
     private Double cost;
 
     /**
-     * Constructor ProductDefaultResponse creates a new ProductDefaultResponse instance.
-     *
-     * @param product of type Product
+     * Field maxSold
      */
-    public ProductDefaultResponse(Product product) {
-        this.key = product.getKey();
-        this.title = product.getTitle();
-        this.description = product.getDescription();
-        this.cost = product.getCost();
-    }
+    private Integer maxSold;
 }

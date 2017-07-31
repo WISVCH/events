@@ -71,7 +71,7 @@ public class ProductTestDataRunner extends TestDataRunner {
         return new Product(
                 (String) jsonEvent.get("title"),
                 (String) jsonEvent.get("description"),
-                ((Double) jsonEvent.get("cost")).floatValue(),
+                (Double) jsonEvent.get("cost"),
                 ((Long) jsonEvent.get("maxSold")).intValue(),
                 LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES),
                 LocalDateTime.now().plusDays(days).plusHours(1).truncatedTo(ChronoUnit.MINUTES)

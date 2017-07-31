@@ -96,6 +96,8 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void create(Event event) {
+        this.updateLinkedProducts(event.getProducts(), true);
+        
         eventRepository.saveAndFlush(event);
     }
 

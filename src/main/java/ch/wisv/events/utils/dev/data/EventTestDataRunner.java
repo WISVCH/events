@@ -106,9 +106,14 @@ public class EventTestDataRunner extends TestDataRunner {
     private Event addProduct(Event event, JSONObject jsonObject) {
         if (jsonObject.get("productNumber") != null) {
             int productNumber = ((Long) jsonObject.get("productNumber")).intValue();
-            Optional<Product> product = this.productRepository.findById(productNumber);
+            Optional<Product> optional = this.productRepository.findById(productNumber);
 
-            product.ifPresent(event::addProduct);
+            if (optional.isPresent()) {
+                Product product = optional.get();
+
+                event.addProduct(product);
+                product.setLinked(true);
+            }
         }
 
         return event;
