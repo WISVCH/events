@@ -1,11 +1,15 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,22 +33,26 @@ public class Event {
     /**
      * Key of the event, getter only so it can not be changed.
      */
+    @NotEmpty
     private String key;
 
     /**
      * Field title title of the Event.
      */
+    @NotEmpty
     private String title;
 
     /**
      * Field shortDescription
      */
+    @NotEmpty
     private String shortDescription;
 
     /**
      * Field description description of the Event.
      */
     @Column(columnDefinition = "TEXT")
+    @NotEmpty
     private String description;
 
     /**
@@ -68,12 +76,14 @@ public class Event {
      * Field start starting time of the Event.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @NotNull
     private LocalDateTime start;
 
     /**
      * Field ending ending time of the Event.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @NotNull
     private LocalDateTime ending;
 
     /**
@@ -84,7 +94,8 @@ public class Event {
     /**
      * Field target target of the amount of tickets sold by this Event.
      */
-    private int target;
+    @NotNull
+    private Integer target;
 
     /**
      * Maximum number of products sold for the event. Its an Integer instead of an int, so the value can be null.
@@ -94,6 +105,7 @@ public class Event {
     /**
      * Options for the event.
      */
+    @NotNull
     private EventOptions options;
 
     /**

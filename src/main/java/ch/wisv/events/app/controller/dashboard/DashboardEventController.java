@@ -1,6 +1,5 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.api.request.EventProductRequest;
 import ch.wisv.events.core.exception.EventNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
@@ -171,7 +170,7 @@ public class DashboardEventController {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
-            return "redirect:/dashboard/events/";
+            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
         } catch (RuntimeException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
@@ -199,26 +198,11 @@ public class DashboardEventController {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
             }
 
-        } catch (EventNotFound e) {
+        } catch (RuntimeException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
         }
 
         return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
-    }
-
-    /**
-     * Post request to delete a Product from an Event
-     *
-     * @param redirect Spring RedirectAttributes
-     * @param request  EventProductRequest model attr.
-     * @return redirect
-     */
-    @PostMapping("/product/delete")
-    public String deleteProductFromEvent(RedirectAttributes redirect, @ModelAttribute EventProductRequest request) {
-        this.eventService.deleteProductFromEvent(request.getEventID(), request.getProductID());
-        redirect.addFlashAttribute("message", "Product removed from Event!");
-
-        return "redirect:/dashboard/events/edit/" + request.getEventKey() + "/";
     }
 }

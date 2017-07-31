@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.InvalidEventException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -96,8 +97,9 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void create(Event event) {
+        this.assertIsValidEvent(event);
         this.updateLinkedProducts(event.getProducts(), true);
-        
+
         eventRepository.saveAndFlush(event);
     }
 
@@ -117,27 +119,14 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Delete a product from an Event
-     *
-     * @param eventId   eventId
-     * @param productId productId
-     */
-    @Override
-    public void deleteProductFromEvent(Integer eventId, Integer productId) {
-        Event event = eventRepository.findOne(eventId);
-
-        Product product = productService.getByID(productId);
-        event.getProducts().remove(product);
-        eventRepository.save(event);
-    }
-
-    /**
      * Update event by Event
      *
      * @param event Event
      */
     @Override
     public void update(Event event) {
+        this.assertIsValidEvent(event);
+
         Event update = this.getByKey(event.getKey());
         this.updateLinkedProducts(update.getProducts(), false);
 
@@ -186,26 +175,6 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Method soldFivePrevious returns the fivePrevious of this EventService object.
-     *
-     * @return the fivePrevious (type List<Event>) of this EventService object.
-     */
-    @Override
-    public List<Event> soldFivePrevious() {
-        return eventRepository.findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime.now());
-    }
-
-    /**
-     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
-     *
-     * @return the fiveUpcoming (type List<Event>) of this EventService object.
-     */
-    @Override
-    public List<Event> soldFiveUpcoming() {
-        return eventRepository.findTop5ByEndingAfterOrderByEnding(LocalDateTime.now());
-    }
-
-    /**
      * Update the linked status of Products
      *
      * @param products List of Products
@@ -218,4 +187,35 @@ public class EventServiceImpl implements EventService {
         });
     }
 
+    /**
+     * Method assertIsValidEvent ...
+     *
+     * @param event of type Event
+     */
+    private void assertIsValidEvent(Event event) {
+        if (event.getTitle() == null || event.getTitle().equals("")) {
+            throw new InvalidEventException("Title is required, and therefore should be filled in!");
+        }
+        if (event.getShortDescription() == null || event.getTitle().equals("")) {
+            throw new InvalidEventException("Short description is required, and therefore should be filled in!");
+        }
+        if (event.getDescription() == null || event.getTitle().equals("")) {
+            throw new InvalidEventException("Description is required, and therefore should be filled in!");
+        }
+        if (event.getStart() == null) {
+            throw new InvalidEventException("Starting time is required, and therefore should be filled in!");
+        }
+        if (event.getEnding() == null) {
+            throw new InvalidEventException("Ending time is required, and therefore should be filled in!");
+        }
+        if (event.getStart().isAfter(event.getEnding())) {
+            throw new InvalidEventException("Starting time should be before the ending time");
+        }
+        if (event.getTarget() == null || event.getTarget().equals(0)) {
+            throw new InvalidEventException("Target is required, and therefore should be filled in!");
+        }
+        if (event.getMaxSold() != null && event.getTarget() >= event.getMaxSold()) {
+            throw new InvalidEventException("Limit should be greater or equal to the target");
+        }
+    }
 }
