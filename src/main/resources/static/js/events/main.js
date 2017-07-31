@@ -21,6 +21,29 @@ $(document).ready(function () {
         }
     });
 
+    $('.remove-product').on('click', function (e) {
+        e.preventDefault();
+
+        var products = $("#products");
+        var size = products.children().size();
+
+        var removeProductId = $(this).data('product-id');
+        var removeProductInput = products.find(":input[value='" + removeProductId + "']");
+        var start = removeProductInput.attr('id').replace("products", "");
+
+        // Remove input row in table
+        removeProductInput.remove();
+        $(this).parent().parent().remove();
+
+        // Reset index of all the following products in the list.
+        for (var i = start; i < size; i++) {
+            var followingProduct = products.find("#products" + i);
+
+            followingProduct.attr('id', 'products' + (i - 1));
+            followingProduct.attr('name', 'products[' + (i - 1) + ']');
+        }
+    });
+
     $("#createNewProductButton").on('click', function (e) {
         e.preventDefault();
 
