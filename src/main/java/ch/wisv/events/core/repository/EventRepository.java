@@ -35,31 +35,4 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return list of Events
      */
     Optional<Event> findByKey(String key);
-
-    /**
-     * Find all events that are connect to the same Product by Product ID
-     *
-     * @param id id of a Product
-     * @return list of Events
-     */
-    List<Event> findAllByProductsId(Integer id);
-
-
-    /**
-     * Method findTop5ByEndingAfterOrderByEnding ...
-     *
-     * @param dateTime of type LocalDateTime
-     * @return List<Event>
-     */
-    List<Event> findTop5ByEndingAfterOrderByEnding(LocalDateTime dateTime);
-
-
-    /**
-     * Method findTop5ByEndingBeforeOrderByEndingDesc ...
-     *
-     * @param dateTime of type LocalDateTime
-     * @return List<Event>
-     */
-    List<Event> findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime dateTime);
-
 }

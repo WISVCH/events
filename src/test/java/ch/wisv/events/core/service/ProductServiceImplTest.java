@@ -69,7 +69,7 @@ public class ProductServiceImplTest extends ServiceTest {
         this.product = new Product(
                 "Product",
                 "Description",
-                1.f,
+                1.d,
                 100,
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(1)

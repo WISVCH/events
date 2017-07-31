@@ -1,15 +1,15 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.api.request.EventProductRequest;
 import ch.wisv.events.core.exception.EventNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.wisv.events.utils.FormMode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,7 +49,6 @@ public class DashboardEventController {
      * @param soldProductService SoldProductService
      * @param webhookPublisher   WebhookPublisher
      */
-    @Autowired
     public DashboardEventController(EventService eventService, SoldProductService soldProductService, WebhookPublisher webhookPublisher) {
         this.eventService = eventService;
         this.soldProductService = soldProductService;
@@ -77,11 +76,14 @@ public class DashboardEventController {
      */
     @GetMapping("/create/")
     public String create(Model model) {
+        model.addAttribute("mode", FormMode.CREATE);
+        model.addAttribute("product", new Product());
+
         if (!model.containsAttribute("event")) {
             model.addAttribute("event", new Event());
         }
 
-        return "dashboard/events/create";
+        return "dashboard/events/form";
     }
 
     /**
@@ -93,11 +95,12 @@ public class DashboardEventController {
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
+            model.addAttribute("mode", FormMode.UPDATE);
             if (!model.containsAttribute("event")) {
                 model.addAttribute("event", this.eventService.getByKey(key));
             }
 
-            return "dashboard/events/edit";
+            return "dashboard/events/form";
         } catch (EventNotFound e) {
             return "redirect:/dashboard/events/";
         }
@@ -167,7 +170,7 @@ public class DashboardEventController {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
-            return "redirect:/dashboard/events/";
+            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
         } catch (RuntimeException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
@@ -195,27 +198,11 @@ public class DashboardEventController {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
             }
 
-        } catch (EventNotFound e) {
+        } catch (RuntimeException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
         }
 
         return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
     }
-
-    /**
-     * Post request to delete a Product from an Event
-     *
-     * @param redirect Spring RedirectAttributes
-     * @param request  EventProductRequest model attr.
-     * @return redirect
-     */
-    @PostMapping("/product/delete")
-    public String deleteProductFromEvent(RedirectAttributes redirect, @ModelAttribute EventProductRequest request) {
-        this.eventService.deleteProductFromEvent(request.getEventID(), request.getProductID());
-        redirect.addFlashAttribute("message", "Product removed from Event!");
-
-        return "redirect:/dashboard/events/edit/" + request.getEventKey() + "/";
-    }
-
 }

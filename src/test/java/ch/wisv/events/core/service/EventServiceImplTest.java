@@ -53,7 +53,8 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.service = new EventServiceImpl(repository, productService);;
+        this.service = new EventServiceImpl(repository, productService);
+
         this.event = new Event(
                 "Test",
                 "test",
@@ -63,7 +64,7 @@ public class EventServiceImplTest extends ServiceTest {
                 "path/to/files",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null
+                "Short description"
         );
     }
 
@@ -157,15 +158,6 @@ public class EventServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void testDeleteProductFromEvent() throws Exception {
-        when(repository.findOne(anyInt())).thenReturn(this.event);
-        when(productService.getByID(anyInt())).thenReturn(mock(Product.class));
-
-        service.deleteProductFromEvent(1, 1);
-        verify(repository, times(1)).save(any(Event.class));
-    }
-
-    @Test
     public void testUpdateEvent() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.of(this.event));
 
@@ -189,36 +181,4 @@ public class EventServiceImplTest extends ServiceTest {
 
         assertEquals(ImmutableList.of(this.event), service.getEventByProductKey(product.getKey()));
     }
-
-    @Test
-    public void testSoldFivePrevious() throws Exception {
-        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(Collections
-                .singletonList(this
-                .event));
-
-        assertEquals(ImmutableList.of(this.event), service.soldFivePrevious());
-    }
-
-    @Test
-    public void testSoldFivePreviousEmpty() throws Exception {
-        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.soldFivePrevious());
-    }
-
-    @Test
-    public void testSoldFiveUpcoming() throws Exception {
-        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(Collections
-                .singletonList(this.event));
-
-        assertEquals(ImmutableList.of(this.event), service.soldFiveUpcoming());
-    }
-
-    @Test
-    public void testSoldFiveUpcomingEmpty() throws Exception {
-        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.soldFiveUpcoming());
-    }
-
 }

@@ -12,7 +12,6 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,26 +42,38 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Field orderRepository
      */
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     /**
      * Field eventService
      */
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
     /**
      * Field productService
      */
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     /**
      * Field soldProductService
      */
-    @Autowired
-    private SoldProductService soldProductService;
+    private final SoldProductService soldProductService;
+
+
+    /**
+     * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
+     *
+     * @param orderRepository    of type OrderRepository
+     * @param eventService       of type EventService
+     * @param productService     of type ProductService
+     * @param soldProductService of type SoldProductService
+     */
+    public OrderServiceImpl(OrderRepository orderRepository, EventService eventService, ProductService productService, SoldProductService soldProductService) {
+        this.orderRepository = orderRepository;
+        this.eventService = eventService;
+        this.productService = productService;
+        this.soldProductService = soldProductService;
+    }
 
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.

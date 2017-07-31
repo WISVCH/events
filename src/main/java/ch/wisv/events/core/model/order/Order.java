@@ -114,6 +114,7 @@ public class Order {
      */
     public void addProduct(Product product) {
         this.products.add(product);
+
         this.amount += product.getCost();
     }
 
