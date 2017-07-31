@@ -18,7 +18,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -75,8 +74,7 @@ public class OrderServiceImplTest extends ServiceTest {
     /**
      * Field service
      */
-    @InjectMocks
-    private OrderService service = new OrderServiceImpl();
+    private OrderService service;
 
     /**
      * Default Order
@@ -90,6 +88,8 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        this.service = new OrderServiceImpl(repository, eventService, productService, soldProductService);
+
         this.order = new Order(mock(Customer.class));
     }
 
@@ -161,6 +161,7 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testGetOrdersByProduct() throws Exception {
         Product product = new Product();
+        product.setCost(0.d);
         this.order.addProduct(product);
 
         when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
@@ -176,6 +177,7 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testGetOrdersByProductEmpty() throws Exception {
         Product product = new Product();
+        product.setCost(0.d);
         this.order.addProduct(product);
 
         when(repository.findAll()).thenReturn(ImmutableList.of(new Order()));

@@ -94,7 +94,7 @@ public class SoldProductServiceTest extends ServiceTest {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.empty());
 
         thrown.expect(SoldProductNotFoundException.class);
-        thrown.expectMessage("Sold Product with key " + this.soldProduct.getKey() +  " is not found!");
+        thrown.expectMessage("Sold Product with key " + this.soldProduct.getKey() + " is not found!");
         soldProductService.getByKey(this.soldProduct.getKey());
     }
 
@@ -198,12 +198,18 @@ public class SoldProductServiceTest extends ServiceTest {
     @Test
     public void create() {
         Order order = new Order();
-        order.addProduct(new Product());
-        order.addProduct(new Product());
+
+        Product product1 = new Product();
+        product1.setCost(0.d);
+        Product product2 = new Product();
+        product2.setCost(0.d);
+
+        order.addProduct(product1);
+        order.addProduct(product2);
 
         soldProductService.create(order);
 
-        verify(repository,  times(2)).saveAndFlush(any(SoldProduct.class));
+        verify(repository, times(2)).saveAndFlush(any(SoldProduct.class));
     }
 
     /**
@@ -214,7 +220,7 @@ public class SoldProductServiceTest extends ServiceTest {
         Order order = new Order();
 
         soldProductService.create(order);
-        verify(repository,  times(0)).saveAndFlush(any(SoldProduct.class));
+        verify(repository, times(0)).saveAndFlush(any(SoldProduct.class));
     }
 
     /**

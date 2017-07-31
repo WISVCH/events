@@ -90,6 +90,9 @@ public class Product {
     public Product() {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
+
+        // Set default sold to zero.
+        this.sold = 0;
     }
 
     /**

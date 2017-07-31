@@ -54,7 +54,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Before
     public void setUp() throws Exception {
         this.service = new EventServiceImpl(repository, productService);
-        ;
+
         this.event = new Event(
                 "Test",
                 "test",
@@ -64,7 +64,7 @@ public class EventServiceImplTest extends ServiceTest {
                 "path/to/files",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null
+                "Short description"
         );
     }
 

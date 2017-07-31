@@ -214,7 +214,7 @@ public class EventServiceImpl implements EventService {
         if (event.getTarget() == null || event.getTarget().equals(0)) {
             throw new InvalidEventException("Target is required, and therefore should be filled in!");
         }
-        if (event.getMaxSold() != null && event.getTarget() >= event.getMaxSold()) {
+        if (event.getMaxSold() != null && event.getTarget() > event.getMaxSold()) {
             throw new InvalidEventException("Limit should be greater or equal to the target");
         }
     }
