@@ -33,18 +33,14 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Starting time*</label>
-                        <input type="datetime-local"
-                               th:field="*{start}"
-                               th:value="*{start}"
-                               class="form-control"
-                               required>
+                        <input type="datetime-local" class="form-control" placeholder="Click to select date"
+                               th:field="*{start}" th:value="*{start}" required>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Ending time*</label>
-
-                        <input type="datetime-local" class="form-control"
+                        <input type="datetime-local" class="form-control" placeholder="Click to select date"
                                th:field="*{ending}" th:value="*{ending}" required>
                     </div>
                 </div>
