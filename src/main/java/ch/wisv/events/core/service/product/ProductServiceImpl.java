@@ -155,6 +155,7 @@ public class ProductServiceImpl implements ProductService {
         model.setSellStart(product.getSellStart());
         model.setSellEnd(product.getSellEnd());
         model.setProducts(product.getProducts());
+        model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
 
         this.updateLinkedProducts(model.getProducts(), true);
         productRepository.save(model);
