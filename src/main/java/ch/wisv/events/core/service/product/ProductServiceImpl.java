@@ -2,7 +2,7 @@ package ch.wisv.events.core.service.product;
 
 import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.ProductInUseException;
-import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with key " + key + " not found!");
+        throw new EventsModelNotFound("Product with key " + key + " not found!");
     }
 
     /**
@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with id " + productID + " not found!");
+        throw new EventsModelNotFound("Product with id " + productID + " not found!");
     }
 
     /**
