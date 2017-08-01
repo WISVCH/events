@@ -44,4 +44,9 @@ public class ProductDTO {
      * Field maxSold
      */
     private Integer maxSold;
+
+    /**
+     * Field maxSoldPerCustomer
+     */
+    private Integer maxSoldPerCustomer;
 }
