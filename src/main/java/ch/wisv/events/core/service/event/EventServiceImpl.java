@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.exception.EventNotFound;
-import ch.wisv.events.core.exception.InvalidEventException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -115,7 +115,8 @@ public class EventServiceImpl implements EventService {
         if (eventOptional.isPresent()) {
             return eventOptional.get();
         }
-        throw new EventNotFound("Event with key " + key + " not found.");
+
+        throw new EventsModelNotFound("Event with key " + key + " not found.");
     }
 
     /**
@@ -194,28 +195,31 @@ public class EventServiceImpl implements EventService {
      */
     private void assertIsValidEvent(Event event) {
         if (event.getTitle() == null || event.getTitle().equals("")) {
-            throw new InvalidEventException("Title is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
         }
         if (event.getShortDescription() == null || event.getTitle().equals("")) {
-            throw new InvalidEventException("Short description is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Short description is required, and therefore should be filled in!");
         }
         if (event.getDescription() == null || event.getTitle().equals("")) {
-            throw new InvalidEventException("Description is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Description is required, and therefore should be filled in!");
         }
         if (event.getStart() == null) {
-            throw new InvalidEventException("Starting time is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Starting time is required, and therefore should be filled in!");
         }
         if (event.getEnding() == null) {
-            throw new InvalidEventException("Ending time is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Ending time is required, and therefore should be filled in!");
         }
         if (event.getStart().isAfter(event.getEnding())) {
-            throw new InvalidEventException("Starting time should be before the ending time");
+            throw new EventsInvalidModelException("Starting time should be before the ending time");
         }
         if (event.getTarget() == null || event.getTarget().equals(0)) {
-            throw new InvalidEventException("Target is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Target is required, and therefore should be filled in!");
         }
         if (event.getMaxSold() != null && event.getTarget() > event.getMaxSold()) {
-            throw new InvalidEventException("Limit should be greater or equal to the target");
+            throw new EventsInvalidModelException("Limit should be greater or equal to the target!");
+        }
+        if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
+            throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
         }
     }
 }

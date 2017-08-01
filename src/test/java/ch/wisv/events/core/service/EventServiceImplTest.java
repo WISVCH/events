@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -151,7 +151,7 @@ public class EventServiceImplTest extends ServiceTest {
     public void testGetByKeyException() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.empty());
 
-        thrown.expect(EventNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         thrown.expectMessage("Event with key " + this.event.getKey() + " not found.");
 
         service.getByKey(this.event.getKey());

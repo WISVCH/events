@@ -16,14 +16,14 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class InvalidEventException extends RuntimeException {
+public class EventsInvalidModelException extends RuntimeException {
 
     /**
-     * Constructor InvalidEventException creates a new InvalidEventException instance.
+     * Constructor EventsInvalidModelException creates a new EventsInvalidModelException instance.
      *
      * @param message of type String
      */
-    public InvalidEventException(String message) {
+    public EventsInvalidModelException(String message) {
         super(message);
     }
 }

@@ -2,7 +2,7 @@ package ch.wisv.events.api.controller;
 
 import ch.wisv.events.api.response.EventDefaultResponse;
 import ch.wisv.events.api.response.ProductDefaultResponse;
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
@@ -70,7 +70,7 @@ public class EventRESTController {
             Event event = eventService.getByKey(key);
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -89,7 +89,7 @@ public class EventRESTController {
                     eventService.getByKey(key).getProducts().stream()
                             .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) && x.getSellEnd().isAfter(
                                     LocalDateTime.now())).map(ProductDefaultResponse::new));
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
