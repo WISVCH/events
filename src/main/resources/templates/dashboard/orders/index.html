@@ -56,10 +56,9 @@
                 <table id="dataTable" class="table table-hover">
                     <thead>
                     <tr>
-                        <th></th>
                         <th>#</th>
-                        <th>Product(s)</th>
                         <th>Customer</th>
+                        <th>Product(s)</th>
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -68,22 +67,20 @@
                     <tbody>
                     <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
                     <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
-                        <td>
-                            <input type="checkbox">
-                        </td>
                         <td th:text="'#' + ${order.getId()}"></td>
-                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}"
-                                  style="margin-right: 16px;"></span></td>
                         <td>
-                            <a th:href="'/dashboard/customers/edit/' + ${order.getCustomer().getKey()} + '/'"
+                            <a th:href="@{'/dashboard/customers/edit/' + ${order.getCustomer().getKey()} + '/'}"
                                th:text="${order.getCustomer().getName()}"></a>
                         </td>
-                        <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></td>
+                        <td>
+                            <span th:each="product : ${order.getProducts()}" th:text="${product.title} + ', '"></span>
+                        </td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
                         <td th:text="${order.getStatus().toString()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${order.getPublicReference()} + '/'" class="btn btn-info">
-                                    <i class="glyphicon glyphicon-edit"></i>
+                                <a th:href="'view/' + ${order.getPublicReference()} + '/'" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-eye-open"></i>
                                 </a>
                                 <a th:href="'delete/' + ${order.getPublicReference()}"
                                    th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
@@ -111,13 +108,16 @@
         table.DataTable({
             columnDefs: [
                 {width: "20px", targets: 0},
-                {width: "20px", targets: 1},
-                {width: "80px", targets: 6}
+                {width: "160px", targets: 1},
+                {width: "80px", targets: 3},
+                {width: "80px", targets: 4},
+                {width: "80px", targets: 5}
             ]
         });
 
         table.find('tbody').on('click', 'tr', function () {
-            document.location = "/dashboard/orders/view/" + $(this).data('key') + "/";
+            /*[+ var link = [[@{/dashboard/orders/view/}]] + $(this).data('key') + "/"; +]*/
+            document.location = link;
         });
     });
 </script>
