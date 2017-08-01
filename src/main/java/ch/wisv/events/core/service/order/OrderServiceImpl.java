@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.app.request.OrderRequest;
-import ch.wisv.events.core.exception.OrderNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductLimitExceededException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
@@ -97,7 +97,8 @@ public class OrderServiceImpl implements OrderService {
         if (orderOption.isPresent()) {
             return orderOption.get();
         }
-        throw new OrderNotFound("Order with reference " + reference + " not found!");
+
+        throw new EventsModelNotFound("Order with reference " + reference + " not found!");
     }
 
     /**

@@ -1,6 +1,6 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.core.exception.OrderNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,23 +45,35 @@ public class DashboardOrderController {
         this.orderService = orderService;
     }
 
+    /**
+     * Show list of all orders.
+     *
+     * @param model of type Model
+     * @return String
+     */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("orders", this.orderService.getAllOrders());
 
         return "dashboard/orders/index";
     }
 
-    @GetMapping("/edit/{key}/")
+    /**
+     * Get a view of an order.
+     *
+     * @param model of type Model
+     * @param key   of type String
+     * @return String
+     */
+    @GetMapping("/view/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Order order = orderService.getByReference(key);
+            Order order = this.orderService.getByReference(key);
             model.addAttribute("order", order);
 
-            return "dashboard/orders/edit";
-        } catch (OrderNotFound e) {
+            return "dashboard/orders/view";
+        } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/orders/";
         }
     }
-
 }

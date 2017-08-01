@@ -34,7 +34,6 @@ public interface OrderService {
      */
     List<Order> getAllOrders();
 
-
     /**
      * Method getByReference returns Order with the given Reference.
      *
@@ -42,7 +41,6 @@ public interface OrderService {
      * @return Order
      */
     Order getByReference(String reference);
-
 
     /**
      * Method getOrdersByProduct returns list of orders with a certain product in it.

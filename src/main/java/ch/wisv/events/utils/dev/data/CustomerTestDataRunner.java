@@ -2,7 +2,6 @@ package ch.wisv.events.utils.dev.data;
 
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.repository.CustomerRepository;
-import ch.wisv.events.core.repository.EventRepository;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -39,9 +38,8 @@ public class CustomerTestDataRunner extends TestDataRunner {
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
      *
      * @param customerRepository of type VendorRepository
-     * @param eventRepository of type EventRepository
      */
-    public CustomerTestDataRunner(CustomerRepository customerRepository, EventRepository eventRepository) {
+    public CustomerTestDataRunner(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
 
         this.setJsonFileName("customers.json");
@@ -56,7 +54,7 @@ public class CustomerTestDataRunner extends TestDataRunner {
     protected void loop(JSONObject jsonObject) {
         Customer customer = this.createCustomer(jsonObject);
 
-        this.customerRepository.save(customer);
+        this.customerRepository.saveAndFlush(customer);
     }
 
     /**

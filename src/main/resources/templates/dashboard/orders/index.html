@@ -72,7 +72,8 @@
                             <input type="checkbox">
                         </td>
                         <td th:text="'#' + ${order.getId()}"></td>
-                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}" style="margin-right: 16px;"></span></td>
+                        <td><span th:each="product : ${order.getProducts()}" th:text="${product.title}"
+                                  style="margin-right: 16px;"></span></td>
                         <td>
                             <a th:href="'/dashboard/customers/edit/' + ${order.getCustomer().getKey()} + '/'"
                                th:text="${order.getCustomer().getName()}"></a>
@@ -116,7 +117,7 @@
         });
 
         table.find('tbody').on('click', 'tr', function () {
-            document.location = "/dashboard/orders/edit/" + $(this).data('key') + "/";
+            document.location = "/dashboard/orders/view/" + $(this).data('key') + "/";
         });
     });
 </script>

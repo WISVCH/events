@@ -17,6 +17,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/sympo_slot.png?itok=wS0WI0hy"
+    "productNumber": 2
   },
   {
     "title": "MatCH CH vision Music Festival",
@@ -35,6 +36,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/rallyposterphotoshop.png?itok=tdgvGKIl"
+    "productNumber": 3
   },
   {
     "title": "Annu drinks",
