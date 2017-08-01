@@ -17,6 +17,7 @@
           th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 
     <!-- Custom styles for this template -->
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
@@ -29,10 +30,6 @@
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
-
 <div class="container-fluid">
     <div class="row">
         <div class="row">
@@ -45,8 +42,9 @@
     <div class="row">
 
         <div class="col-md-offset-2 col-md-10 content-wrapper">
+            <!--/*@thymesVar id="mode" type="ch.wisv.events.utils.FormMode"*/-->
             <div class="page-header">
-                <h1><samp>Create product</samp></h1>
+                <h1><samp th:text="${mode.getDisplayName() + ' product'}"></samp></h1>
             </div>
 
             <div class="row">
@@ -56,20 +54,21 @@
             </div>
 
             <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-            <form th:action="@{/dashboard/products/add}" th:object="${product}" method="POST">
+            <form th:action="@{'/dashboard/products/' + ${mode.getFormAction()}}" th:object="${product}"
+                  method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <div th:replace="dashboard/products/fragments/product-create-panel-information :: create-information"></div>
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                        <div th:replace="dashboard/products/fragments/product-edit-panel-subproduct :: edit-subproduct"></div>
-                    </div>
+                <div class="col-sm-12 col-md-6">
+                    <div th:replace="dashboard/products/fragments/product-panel-information :: product-information"></div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div th:replace="dashboard/products/fragments/product-panel-products :: panel-products"></div>
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Create">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" th:value="Save">
+                    </div>
                 </div>
             </form>
         </div>
@@ -80,55 +79,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-<script src="https://use.fontawesome.com/359d25f9da.js"></script>
-<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
-<script th:inline="javascript">
-    $(document).ready(function () {
-        /*[+ var link = [[@{/api/v1/products/unused/search}]]; +]*/
-
-        $("#q").autocomplete({
-            serviceUrl: link,
-            showNoSuggestionNotice: true,
-            noSuggestionNotice: "<div class=\"autocomplete-suggestion\" data-index=\"1\">No product found.</div>",
-            lookupLimit: 3,
-            minChars: 1,
-            onSelect: function (suggestion) {
-                var products = $("#products");
-                var size = products.children().length;
-                products.append('<input type="hidden" id="products' + size + '" name="products[' + size + ']" value="' + suggestion.data + '">');
-
-                $("#productsTable").append("<tr><td><span class='label label-danger'>N.S.Y.</span> " + suggestion.value + "</td><td></td></tr>");
-                $("#q").val("");
-            }
-        });
-
-        $(".remove-product").click(function () {
-            var products = $("#products").children();
-            var productID = $(this).attr('data-product-id');
-
-            $(this).parent().parent().parent().remove();
-            for (var i = 0; i < products.length; i++) {
-                if (productID == products[i].value) {
-                    products[i].remove();
-                }
-            }
-        });
-
-        $("#productDatatable").DataTable({
-            searching: false,
-            paging: false,
-            info: false,
-            columnDefs: [
-                {
-                    width: "120px",
-                    targets: 1,
-                    orderable: false
-                }
-            ]
-        });
-    });
-</script>
+<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/flatpickr/3.0.6/src/flatpickr.js}"></script>
+<script th:src="@{/js/events.js}"></script>
+<script th:src="@{/js/products/main.js}"></script>
 </body>
 </html>
