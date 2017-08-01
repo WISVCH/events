@@ -1,6 +1,7 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -101,7 +102,7 @@ public class DashboardEventController {
             }
 
             return "dashboard/events/form";
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/events/";
         }
     }
@@ -125,7 +126,7 @@ public class DashboardEventController {
             model.addAttribute("soldProducts", soldProduct);
 
             return "dashboard/events/overview";
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/events/";
         }
     }
@@ -146,7 +147,7 @@ public class DashboardEventController {
             this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
 
             return "redirect:/dashboard/events/";
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("message", "Event has not been deleted, because it does not exists!");
 
             return "redirect:/dashboard/events/";
@@ -171,7 +172,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
-        } catch (RuntimeException e) {
+        } catch (EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
@@ -198,7 +199,7 @@ public class DashboardEventController {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
             }
 
-        } catch (RuntimeException e) {
+        } catch (EventsModelNotFound | EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
         }

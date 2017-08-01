@@ -16,9 +16,14 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventNotFound extends RuntimeException {
+public class EventsModelNotFound extends RuntimeException {
 
-    public EventNotFound(String message) {
+    /**
+     * Constructor EventsModelNotFound creates a new EventsModelNotFound instance.
+     *
+     * @param message of type String
+     */
+    public EventsModelNotFound(String message) {
         super(message);
     }
 
