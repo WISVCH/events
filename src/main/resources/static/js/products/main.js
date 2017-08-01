@@ -55,7 +55,8 @@ $(document).ready(function () {
                 title: $("#productTitle").val(),
                 description: $("#productDescription").val(),
                 cost: $("#productCost").val(),
-                maxSold: $("#maxSold").val()
+                maxSold: $("#maxSold").val(),
+                maxSoldPerCustomer: $("#maxSoldPerCustomer").val()
             };
 
             $.ajax({

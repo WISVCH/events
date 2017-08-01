@@ -131,6 +131,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(productDTO.getDescription());
         product.setCost(productDTO.getCost());
         product.setMaxSold(productDTO.getMaxSold());
+        product.setMaxSoldPerCustomer(productDTO.getMaxSoldPerCustomer());
 
         return this.create(product);
     }
