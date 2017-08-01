@@ -208,5 +208,4 @@ public class ProductServiceImpl implements ProductService {
             throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
         }
     }
-
 }
