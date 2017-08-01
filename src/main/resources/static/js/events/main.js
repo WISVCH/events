@@ -84,7 +84,7 @@ $(document).ready(function () {
         var fail = false;
 
         $('#addProductForm').find('select, textarea, input').each(function () {
-            if (!$(this).prop('required')) {
+            if (!$(this).hasClass('required')) {
 
             } else {
                 if (!$(this).val()) {

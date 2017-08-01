@@ -56,7 +56,7 @@
             <div class="row">
                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
                 <form th:action="@{'/dashboard/events/' + ${mode.getFormAction()}}" th:object="${event}"
-                      method="POST" novalidate>
+                      method="POST">
                     <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                     <div class="col-sm-12 col-md-6">
