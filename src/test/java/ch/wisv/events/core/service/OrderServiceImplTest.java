@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.app.request.OrderRequest;
-import ch.wisv.events.core.exception.OrderNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductLimitExceededException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
@@ -147,7 +147,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByReferenceEmpty() throws Exception {
-        thrown.expect(OrderNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
 
         service.getByReference(this.order.getPublicReference());
