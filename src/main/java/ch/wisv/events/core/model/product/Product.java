@@ -62,6 +62,11 @@ public class Product {
     public Integer maxSold;
 
     /**
+     * Field maxSoldPerCustomer
+     */
+    public Integer maxSoldPerCustomer;
+
+    /**
      * Start DateTime for selling this product.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
