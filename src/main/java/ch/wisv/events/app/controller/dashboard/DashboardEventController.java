@@ -5,7 +5,6 @@ import ch.wisv.events.core.exception.EventsInvalidModelException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
@@ -78,8 +77,6 @@ public class DashboardEventController {
     @GetMapping("/create/")
     public String create(Model model) {
         model.addAttribute("mode", FormMode.CREATE);
-        model.addAttribute("product", new Product());
-
         if (!model.containsAttribute("event")) {
             model.addAttribute("event", new Event());
         }

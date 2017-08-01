@@ -1,8 +1,9 @@
 package ch.wisv.events.core.service.product;
 
 import ch.wisv.events.api.request.ProductDTO;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductInUseException;
-import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with key " + key + " not found!");
+        throw new EventsModelNotFound("Product with key " + key + " not found!");
     }
 
     /**
@@ -97,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with id " + productID + " not found!");
+        throw new EventsModelNotFound("Product with id " + productID + " not found!");
     }
 
     /**
@@ -107,6 +108,13 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product create(Product product) {
+        this.assertIsValidProduct(product);
+
+        if (product.getSellStart() == null) {
+            // Set sell start by default to now.
+            product.setSellStart(LocalDateTime.now());
+        }
+
         return productRepository.saveAndFlush(product);
     }
 
@@ -124,9 +132,6 @@ public class ProductServiceImpl implements ProductService {
         product.setCost(productDTO.getCost());
         product.setMaxSold(productDTO.getMaxSold());
 
-        // Set sell start by default to now.
-        product.setSellStart(LocalDateTime.now());
-
         return this.create(product);
     }
 
@@ -137,6 +142,8 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void update(Product product) {
+        this.assertIsValidProduct(product);
+
         Product model = this.getByKey(product.getKey());
         this.updateLinkedProducts(model.getProducts(), false);
 
@@ -180,4 +187,25 @@ public class ProductServiceImpl implements ProductService {
         });
     }
 
+    /**
+     * Method assertIsValidProduct ...
+     *
+     * @param product of type Product
+     */
+    private void assertIsValidProduct(Product product) {
+        if (product.getTitle() == null || product.getTitle().equals("")) {
+            throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
+        }
+        if (product.getSellStart() != null && product.getSellEnd() != null) {
+            if (product.getSellStart().isAfter(product.getSellEnd())) {
+                throw new EventsInvalidModelException("Starting time should be before the ending time");
+            }
+        }
+        if (product.getCost() == null) {
+            throw new EventsInvalidModelException("Target is required, and therefore should be filled in!");
+        }
+        if (product.getProducts().stream().distinct().count() != product.getProducts().size()) {
+            throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
+        }
+    }
 }

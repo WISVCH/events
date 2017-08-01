@@ -70,7 +70,7 @@
                     <tr th:each="product : ${products}" th:attr="data-key=${product.getKey()}">
                         <td th:text="${product.id}">Row 1 Data 1</td>
                         <td th:text="${product.title}">Row 1 Data 1</td>
-                        <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 0, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(product.cost, 1, 'POINT', 2, 'COMMA')}"></td>
                         <td>
                             <span class="label label-success" th:text="'Sold: ' + ${product.sold}"></span>
                             <span class="label label-default" th:text="'Available: ' + ${product.maxSold}"></span>
@@ -128,7 +128,7 @@
         });
 
         table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/dashboard/products/overview/}]] + $(this).data('key') + "/"; +]*/
+            /*[+ var link = [[@{/dashboard/products/edit/}]] + $(this).data('key') + "/"; +]*/
             document.location = link;
         });
     });

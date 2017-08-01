@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service;
 
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductInUseException;
-import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
@@ -158,7 +158,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByKeyEmpty() throws Exception {
-        thrown.expect(ProductNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
 
         when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());
@@ -184,7 +184,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByIdEmpty() throws Exception {
-        thrown.expect(ProductNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         thrown.expectMessage("Product with id " + this.product.getId() + " not found!");
 
         when(repository.findById(this.product.getId())).thenReturn(Optional.empty());
@@ -211,7 +211,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateEmpty() throws Exception {
-        thrown.expect(ProductNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
 
         when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());

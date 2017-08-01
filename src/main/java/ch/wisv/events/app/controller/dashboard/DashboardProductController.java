@@ -1,9 +1,12 @@
 package ch.wisv.events.app.controller.dashboard;
 
+import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.utils.FormMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -49,7 +52,7 @@ public class DashboardProductController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", this.productService.getAllProducts());
 
         return "dashboard/products/index";
     }
@@ -62,11 +65,13 @@ public class DashboardProductController {
      */
     @GetMapping("/create/")
     public String create(Model model) {
+        model.addAttribute("mode", FormMode.CREATE);
+
         if (!model.containsAttribute("product")) {
             model.addAttribute("product", new Product());
         }
 
-        return "dashboard/products/create";
+        return "dashboard/products/form";
     }
 
     /**
@@ -79,11 +84,13 @@ public class DashboardProductController {
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Product product = productService.getByKey(key);
-            model.addAttribute("product", product);
+            model.addAttribute("mode", FormMode.UPDATE);
+            if (!model.containsAttribute("event")) {
+                model.addAttribute("product", this.productService.getByKey(key));
+            }
 
-            return "dashboard/products/edit";
-        } catch (ProductNotFound e) {
+            return "dashboard/products/form";
+        } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/products/";
         }
     }
@@ -110,48 +117,6 @@ public class DashboardProductController {
     }
 
     /**
-     * Post request to create a Product
-     *
-     * @param model    Product model attr.
-     * @param redirect Spring RedirectAttributes
-     * @return redirect
-     */
-    @PostMapping("/create")
-    public String create(RedirectAttributes redirect, @ModelAttribute Product model) {
-        try {
-            productService.create(model);
-            redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");
-
-            return "redirect:/dashboard/products/";
-        } catch (RuntimeException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("product", model);
-
-            return "redirect:/dashboard/products/create/";
-        }
-    }
-
-
-    /**
-     * Method edit post request to update an existing Product
-     *
-     * @param redirect of type RedirectAttributes
-     * @param model    of type Product
-     * @return String
-     */
-    @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Product model) {
-        try {
-            productService.update(model);
-            redirect.addFlashAttribute("message", "Changes have been saved!");
-        } catch (ProductNotFound e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-        }
-
-        return "redirect:/dashboard/products/edit/" + model.getKey() + "/";
-    }
-
-    /**
      * Get request to delete a Product
      *
      * @param redirectAttributes Spring RedirectAttributes
@@ -171,4 +136,45 @@ public class DashboardProductController {
         return "redirect:/dashboard/products/";
     }
 
+    /**
+     * Post request to create a Product
+     *
+     * @param product    Product product attr.
+     * @param redirect Spring RedirectAttributes
+     * @return redirect
+     */
+    @PostMapping("/create")
+    public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
+        try {
+            productService.create(product);
+            redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
+
+            return "redirect:/dashboard/products/edit/" + product.getKey() + "/";
+        } catch (EventsInvalidModelException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("product", product);
+
+            return "redirect:/dashboard/products/create/";
+        }
+    }
+
+
+    /**
+     * Method edit post request to update an existing Product
+     *
+     * @param redirect of type RedirectAttributes
+     * @param model    of type Product
+     * @return String
+     */
+    @PostMapping("/update")
+    public String update(RedirectAttributes redirect, @ModelAttribute Product model) {
+        try {
+            this.productService.update(model);
+            redirect.addFlashAttribute("message", "Changes have been saved!");
+        } catch (EventsModelNotFound | EventsInvalidModelException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/dashboard/products/edit/" + model.getKey() + "/";
+    }
 }
