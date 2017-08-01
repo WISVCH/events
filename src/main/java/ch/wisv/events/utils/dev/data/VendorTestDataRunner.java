@@ -89,6 +89,7 @@ public class VendorTestDataRunner extends TestDataRunner {
     private Vendor addEvents(Vendor vendor, JSONArray jsonArray) {
         for (Object o : jsonArray) {
             int eventId = ((Long) o).intValue();
+
             vendor.addEvent(this.eventRepository.findById(eventId));
         }
 

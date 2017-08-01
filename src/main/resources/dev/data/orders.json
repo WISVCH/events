@@ -1,0 +1,10 @@
+[
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "geen idee",
+    "orderStatus": "PAID_PIN"
+  }
+]

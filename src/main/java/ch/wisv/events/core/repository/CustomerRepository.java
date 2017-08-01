@@ -24,6 +24,14 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     /**
+     * Method findById ...
+     *
+     * @param customerId of type Integer
+     * @return Optional<Customer>
+     */
+    Optional<Customer> findById(Integer customerId);
+
+    /**
      * Find a customer by its rfidToken.
      *
      * @param token of type String
@@ -38,5 +46,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * @return optional
      */
     Optional<Customer> findByKey(String key);
-
 }

@@ -62,19 +62,19 @@ public class ProductTestDataRunner extends TestDataRunner {
     /**
      * Method createProduct ...
      *
-     * @param jsonEvent of type JSONObject
+     * @param jsonObject of type JSONObject
      * @return Product
      */
-    private Product createProduct(JSONObject jsonEvent) {
+    private Product createProduct(JSONObject jsonObject) {
         int days = df.getNumberBetween(1, 10);
 
         return new Product(
-                (String) jsonEvent.get("title"),
-                (String) jsonEvent.get("description"),
-                (Double) jsonEvent.get("cost"),
-                ((Long) jsonEvent.get("maxSold")).intValue(),
-                LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES),
-                LocalDateTime.now().plusDays(days).plusHours(1).truncatedTo(ChronoUnit.MINUTES)
+                (String) jsonObject.get("title"),
+                (String) jsonObject.get("description"),
+                (Double) jsonObject.get("cost"),
+                ((Long) jsonObject.get("maxSold")).intValue(),
+                LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES)
         );
     }
 }

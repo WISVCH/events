@@ -1,9 +1,12 @@
 [
   {
-    "ldapGroup": "BESTUUR",
+    "ldapGroup": "W3CIE",
     "events": [
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   }
 ]

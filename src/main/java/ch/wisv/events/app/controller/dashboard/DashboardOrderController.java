@@ -1,7 +1,8 @@
 package ch.wisv.events.app.controller.dashboard;
 
-import ch.wisv.events.core.exception.OrderNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -45,23 +47,55 @@ public class DashboardOrderController {
         this.orderService = orderService;
     }
 
+    /**
+     * Show list of all orders.
+     *
+     * @param model of type Model
+     * @return String
+     */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("orders", this.orderService.getAllOrders());
 
         return "dashboard/orders/index";
     }
 
-    @GetMapping("/edit/{key}/")
+    /**
+     * Get a view of an order.
+     *
+     * @param model of type Model
+     * @param key   of type String
+     * @return String
+     */
+    @GetMapping("/view/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Order order = orderService.getByReference(key);
+            Order order = this.orderService.getByReference(key);
             model.addAttribute("order", order);
 
-            return "dashboard/orders/edit";
-        } catch (OrderNotFound e) {
+            return "dashboard/orders/view";
+        } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/orders/";
         }
     }
 
+    /**
+     * Method delete ...
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key of type String
+     * @return String
+     */
+    @GetMapping("/delete/{key}")
+    public String delete(RedirectAttributes redirect, @PathVariable String key) {
+        try {
+            Order order = this.orderService.getByReference(key);
+            this.orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+
+            redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
+        } catch (EventsModelNotFound ignored) {
+        }
+
+        return "redirect:/dashboard/orders/";
+    }
 }

@@ -112,7 +112,6 @@ public class EventTestDataRunner extends TestDataRunner {
                 Product product = optional.get();
 
                 event.addProduct(product);
-                product.setLinked(true);
             }
         }
 
