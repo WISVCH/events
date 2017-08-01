@@ -65,9 +65,10 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="orderPublicReference" class="control-label">Public reference</label>
-                                                <input type="text" class="form-control" id="orderPublicReference" disabled
-                                                       th:value="${order.getPublicReference()}">
+                                                <label for="orderPublicReference" class="control-label">Public
+                                                    reference</label>
+                                                <input type="text" class="form-control" id="orderPublicReference"
+                                                       readonly th:value="${order.getPublicReference()}">
                                             </div>
                                         </div>
                                     </div>
@@ -75,7 +76,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="orderStatus" class="control-label">Status</label>
-                                                <input type="text" class="form-control" id="orderStatus" disabled
+                                                <input type="text" class="form-control" id="orderStatus" readonly
                                                        th:value="${order.getStatus().toString()}">
                                             </div>
                                         </div>
@@ -84,8 +85,17 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="orderDate" class="control-label">Created at</label>
-                                                <input type="datetime-local" class="form-control" id="orderDate" disabled
-                                                       th:value="${order.getCreationDate()}">
+                                                <input type="datetime-local" class="form-control" id="orderDate"
+                                                       readonly th:value="${order.getCreationDate()}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="orderDate" class="control-label">Created by</label>
+                                                <input type="text" class="form-control"
+                                                       readonly th:value="${order.getCreatedBy()}">
                                             </div>
                                         </div>
                                     </div>
@@ -93,8 +103,8 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="orderPaidAt" class="control-label">Paid at</label>
-                                                <input type="datetime-local" class="form-control" id="orderPaidAt" disabled
-                                                       th:value="${order.getPaidDate()}">
+                                                <input type="datetime-local" class="form-control" id="orderPaidAt"
+                                                       readonly th:value="${order.getPaidDate()}">
                                             </div>
                                         </div>
                                     </div>
@@ -111,7 +121,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="customerName" class="control-label">Name</label>
-                                                <input type="text" class="form-control" id="customerName" disabled
+                                                <input type="text" class="form-control" id="customerName" readonly
                                                        th:value="${order.getCustomer().getName()}">
                                             </div>
                                         </div>
@@ -120,7 +130,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="customerEmail" class="control-label">Email</label>
-                                                <input type="text" class="form-control" id="customerEmail" disabled
+                                                <input type="text" class="form-control" id="customerEmail" readonly
                                                        th:value="${order.getCustomer().getEmail()}">
                                             </div>
                                         </div>
@@ -128,8 +138,9 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="customerCHUsername" class="control-label">CH username</label>
-                                                <input type="text" class="form-control" id="customerCHUsername" disabled
+                                                <label for="customerCHUsername" class="control-label">CH
+                                                    username</label>
+                                                <input type="text" class="form-control" id="customerCHUsername" readonly
                                                        th:value="${order.getCustomer().getChUsername()}">
                                             </div>
                                         </div>

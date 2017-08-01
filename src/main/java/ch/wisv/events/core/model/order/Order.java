@@ -3,7 +3,6 @@ package ch.wisv.events.core.model.order;
 import ch.wisv.events.core.model.product.Product;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -60,7 +59,6 @@ public class Order {
     /**
      * Field products list of Products in the Order.
      */
-    @Getter
     @ManyToMany(targetEntity = Product.class)
     private List<Product> products;
 
@@ -68,6 +66,11 @@ public class Order {
      * Field publicReference UUID for public reference.
      */
     private String publicReference;
+
+    /**
+     * Field soldBy
+     */
+    private String createdBy;
 
     /**
      * Field creationDate date time on which the order is create.
@@ -117,5 +120,4 @@ public class Order {
 
         this.amount += product.getCost();
     }
-
 }

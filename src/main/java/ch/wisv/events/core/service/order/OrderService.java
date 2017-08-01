@@ -58,7 +58,6 @@ public interface OrderService {
      */
     Order create(OrderRequest orderRequest);
 
-
     /**
      * Method addCustomerToOrder will create a customer to an order.
      *

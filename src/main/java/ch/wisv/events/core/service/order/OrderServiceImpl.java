@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.app.request.OrderRequest;
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductLimitExceededException;
@@ -12,6 +13,8 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -136,6 +139,9 @@ public class OrderServiceImpl implements OrderService {
                 order.addProduct(product);
             }
         }
+
+        OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        order.setCreatedBy(((CHUserInfo) auth.getUserInfo()).getLdapUsername());
 
         // TODO: check iff there are products in the order
 
