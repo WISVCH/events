@@ -139,20 +139,20 @@ public class DashboardProductController {
     /**
      * Post request to create a Product
      *
-     * @param model    Product model attr.
+     * @param product    Product product attr.
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
     @PostMapping("/create")
-    public String create(RedirectAttributes redirect, @ModelAttribute Product model) {
+    public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
-            productService.create(model);
-            redirect.addFlashAttribute("message", "Product " + model.getTitle() + " has been successfully created!");
+            productService.create(product);
+            redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
 
-            return "redirect:/dashboard/products/";
+            return "redirect:/dashboard/products/edit/" + product.getKey() + "/";
         } catch (EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("product", model);
+            redirect.addFlashAttribute("product", product);
 
             return "redirect:/dashboard/products/create/";
         }
