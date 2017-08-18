@@ -1,0 +1,51 @@
+############## Production properties #############################################################
+# This is the default property file which can be used as a template for default configuration.   #
+# Copy this file to `/config/application.properties`, with the runnable jar in the `/` directory #
+##################################################################################################
+
+spring:
+  datasource:
+    # DATABASE PROPERTIES
+  	driverClassName: org.postgresql.Driver
+    # Change <MyDB> with the name of your database name
+  	url: jdbc:postgresql://localhost:5432/<myDB>
+
+    # Username to log in to the database
+    # It's recommended to create a dedicated Database user instead of using the default postgres user
+  	username: <dbUser>
+
+    # Password to log in with <dbUser> in database <MyDB>
+  	password: <dbPassword>
+  
+  data.jpa.repositories.enabled: true
+
+  jpa:
+    # Set to false in production to prevent spamming of console
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
+
+    # This setting defines the database creation/update behaviour. Change with caution.
+    properties.hibernate.default_schema: public
+
+  thymeleaf:
+  # THYMELEAF (ThymeleafAutoConfiguration)
+    check-template-location: true
+    prefix: :./config/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    content-type: text/html
+
+# Database migration automation. Set to false for development
+# flyway.enabled: true
+# spring.jpa.properties.hibernate.hbm2ddl.auto: none
+
+# Serve connect
+server.port: 8080
+
+# CH Connect Configuration
+wisvch.connect:
+  issuerUri: https://connect.ch.tudelft.nl/
+  clientUri: http://localhost:8080/events
