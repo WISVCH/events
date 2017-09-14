@@ -1,4 +1,4 @@
-package ch.wisv.events.dashboard;
+package ch.wisv.events.dashboard.controller;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;

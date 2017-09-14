@@ -1,4 +1,4 @@
-package ch.wisv.events.sales.order.controller;
+package ch.wisv.events.sales.controller;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;

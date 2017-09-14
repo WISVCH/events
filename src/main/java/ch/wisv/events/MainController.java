@@ -1,4 +1,4 @@
-package ch.wisv.events.sales.controller;
+package ch.wisv.events;
 
 import ch.wisv.events.utils.AppLocation;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;

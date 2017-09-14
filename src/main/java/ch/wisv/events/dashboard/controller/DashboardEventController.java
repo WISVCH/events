@@ -1,4 +1,4 @@
-package ch.wisv.events.dashboard;
+package ch.wisv.events.dashboard.controller;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.EventsInvalidModelException;

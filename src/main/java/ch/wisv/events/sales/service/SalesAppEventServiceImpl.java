@@ -1,4 +1,4 @@
-package ch.wisv.events.sales.order.service;
+package ch.wisv.events.sales.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.model.event.EventOptions;
