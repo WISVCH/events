@@ -48,9 +48,9 @@ public class CHConnectConfiguration {
 
     public CHConnectConfiguration() {
         registeredClient = new RegisteredClient();
-        registeredClient.setScope(ImmutableSet.of("openid", "email", "profile", "ldap", "offline_access"));
+        registeredClient.setScope(ImmutableSet.of("openid", "email", "profile", "ldap"));
         registeredClient.setTokenEndpointAuthMethod(ClientDetailsEntity.AuthMethod.SECRET_BASIC);
-        registeredClient.setGrantTypes(ImmutableSet.of("refresh_token", "authorization_code"));
+        registeredClient.setGrantTypes(ImmutableSet.of("authorization_code"));
         registeredClient.setResponseTypes(Collections.singleton("code"));
         registeredClient.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
     }
