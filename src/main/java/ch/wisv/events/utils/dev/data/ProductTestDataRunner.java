@@ -55,6 +55,7 @@ public class ProductTestDataRunner extends TestDataRunner {
     @Override
     protected void loop(JSONObject jsonObject) {
         Product product = this.createProduct(jsonObject);
+        product.setMaxSoldPerCustomer(25);
 
         this.productRepository.save(product);
     }

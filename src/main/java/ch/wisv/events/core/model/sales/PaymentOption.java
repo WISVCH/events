@@ -26,6 +26,7 @@ import static java.util.Arrays.stream;
 public enum PaymentOption {
 
     CASH(1, "Cash", "cash", "success", OrderStatus.PAID_CASH),
+    PIN(1, "Pin", "pin", "success", OrderStatus.PAID_PIN),
     CANCEL(2, "Cancel", "cancel", "danger", OrderStatus.CANCELLED);
 
     /**

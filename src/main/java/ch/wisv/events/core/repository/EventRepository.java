@@ -1,6 +1,7 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventOptions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -21,12 +22,20 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Event findById(Integer id);
 
     /**
-     * Find Events that ending after a certain dateTime, so all upcoming events
+     * Find Events that ending after a certain dateTime, so all upcoming events.
      *
      * @param dateTime DateTime an event should ending after
      * @return list of Events
      */
     List<Event> findByEndingAfter(LocalDateTime dateTime);
+
+    /**
+     * Find all Events that are organized by a certain LDAPGroup.
+     *
+     * @param options of type EventOptions
+     * @return List<Event>
+     */
+    List<Event> findAllByOptions(EventOptions options);
 
     /**
      * Find an Event by key

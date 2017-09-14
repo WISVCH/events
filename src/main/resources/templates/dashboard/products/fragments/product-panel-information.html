@@ -56,7 +56,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Max sold per customer.</label>
-                        <input type="number" step="1" class="form-control"
+                        <input type="number" step="1" min="1" max="25" class="form-control"
                                placeholder="Amount of tickets that are available"
                                th:value="*{maxSoldPerCustomer}" th:field="*{maxSoldPerCustomer}">
                         <p class="help-block">Leave blank for infinite amount of tickets!</p>

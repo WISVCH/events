@@ -1,6 +1,6 @@
-package ch.wisv.events.app.controller;
+package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.app.utils.AppLocationEnum;
+import ch.wisv.events.utils.AppLocation;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class MainController {
      */
     @GetMapping("/")
     public String index(Model model, OIDCAuthenticationToken auth) {
-        model.addAttribute("locations", AppLocationEnum.getLocations(auth.getAuthorities()));
+        model.addAttribute("locations", AppLocation.getLocations(auth.getAuthorities()));
 
         return "index";
     }

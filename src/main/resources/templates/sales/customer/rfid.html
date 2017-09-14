@@ -39,10 +39,11 @@
     <div class="row">
         <div class="col-xs-12 main text-center" style="margin-top: 60px;">
             <h3>Scan RFID- or NFC card</h3>
-            <!--/*@thymesVar id="orderUserRequest" type="ch.wisv.events.app.request.CustomerAddRequest"*/-->
-            <form th:action="@{/sales/order/customer/add}" th:object="${orderUserRequest}" method="POST" id="formScan">
-                <input type="text" th:field="*{orderReference}" th:value="*{orderReference}" style="display: none;">
-                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+            <form th:action="@{../order}" th:object="${order}" method="POST" id="formScan">
+                <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
+                <input type="hidden" th:field="*{customer.rfidToken}" id="rfidToken">
+
                 <input type="submit" style="display: none;">
             </form>
         </div>
@@ -52,6 +53,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/sales/sales.min.js}"></script>
+<script>
+    $("#scanPage").on('keypress', function (e) {
+        var token = $("#rfidToken");
+
+        if (e.which === 13) {
+            $("#formScan").submit();
+            return false;
+        }
+        token.val(token.val() + e.key);
+        console.log(e.key);
+    })
+</script>
 </body>
 </html>

@@ -6,7 +6,6 @@ import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,6 @@ public class EventRESTController {
      *
      * @param eventService EventService.
      */
-    @Autowired
     public EventRESTController(EventService eventService) {
         this.eventService = eventService;
     }
