@@ -1,4 +1,4 @@
-package ch.wisv.events.sales.order.service;
+package ch.wisv.events.sales.service;
 
 import ch.wisv.events.core.exception.EventsSalesAppException;
 import ch.wisv.events.core.model.product.Product;

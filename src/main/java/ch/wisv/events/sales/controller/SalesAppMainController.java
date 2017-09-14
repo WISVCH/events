@@ -1,11 +1,11 @@
-package ch.wisv.events.sales.order.controller;
+package ch.wisv.events.sales.controller;
 
 import ch.wisv.events.core.exception.EventsSalesAppException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.sales.order.service.SalesAppEventService;
-import ch.wisv.events.sales.order.service.SalesAppOrderService;
-import ch.wisv.events.sales.order.service.SalesAppSoldProductService;
+import ch.wisv.events.sales.service.SalesAppEventService;
+import ch.wisv.events.sales.service.SalesAppOrderService;
+import ch.wisv.events.sales.service.SalesAppSoldProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

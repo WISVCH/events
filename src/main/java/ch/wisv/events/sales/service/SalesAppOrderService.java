@@ -1,4 +1,4 @@
-package ch.wisv.events.sales.order.service;
+package ch.wisv.events.sales.service;
 
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;

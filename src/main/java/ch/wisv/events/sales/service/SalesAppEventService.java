@@ -1,6 +1,8 @@
-package ch.wisv.events.sales.order.service;
+package ch.wisv.events.sales.service;
 
 import ch.wisv.events.core.model.product.Product;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -18,13 +20,12 @@ import ch.wisv.events.core.model.product.Product;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface SalesAppSoldProductService {
+public interface SalesAppEventService {
 
     /**
-     * Method assertAmountOfProductLeft.
+     * Method getAllGrantedProducts returns the allGrantedProducts of this SalesAppEventService object.
      *
-     * @param product of type Product
-     * @param integer of type Integer
+     * @return the allGrantedProducts (type List<Product>) of this SalesAppEventService object.
      */
-    void assertAmountOfProductLeft(Product product, Long integer);
+    List<Product> getAllGrantedProducts();
 }
