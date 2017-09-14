@@ -74,6 +74,7 @@ public class ProductServiceImplTest extends ServiceTest {
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(1)
         );
+        this.product.setMaxSoldPerCustomer(1);
     }
 
     /**
