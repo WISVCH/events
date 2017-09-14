@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.utils.LDAPGroup;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * EventOption
  */
 @Data
+@AllArgsConstructor
 public class EventOptions implements Serializable {
 
     /**

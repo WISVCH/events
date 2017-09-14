@@ -108,12 +108,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product create(Product product) {
-        this.assertIsValidProduct(product);
-
         if (product.getSellStart() == null) {
             // Set sell start by default to now.
             product.setSellStart(LocalDateTime.now());
         }
+        this.assertIsValidProduct(product);
 
         return productRepository.saveAndFlush(product);
     }
@@ -198,16 +197,24 @@ public class ProductServiceImpl implements ProductService {
         if (product.getTitle() == null || product.getTitle().equals("")) {
             throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
         }
+        if (product.getSellStart() == null) {
+            throw new EventsInvalidModelException("Starting date for selling is required, and therefore should be " +
+                    "filled in!");
+        }
         if (product.getSellStart() != null && product.getSellEnd() != null) {
             if (product.getSellStart().isAfter(product.getSellEnd())) {
-                throw new EventsInvalidModelException("Starting time should be before the ending time");
+                throw new EventsInvalidModelException("Starting date for selling should be before the ending time");
             }
         }
         if (product.getCost() == null) {
-            throw new EventsInvalidModelException("Target is required, and therefore should be filled in!");
+            throw new EventsInvalidModelException("Price is required, and therefore should be filled in!");
         }
         if (product.getProducts().stream().distinct().count() != product.getProducts().size()) {
             throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
+        }
+        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 ||
+                product.getMaxSoldPerCustomer() > 25) {
+            throw new EventsInvalidModelException("Max sold per customer should be between 1 and 25!");
         }
     }
 }

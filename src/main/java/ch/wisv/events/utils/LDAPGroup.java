@@ -26,6 +26,7 @@ public enum LDAPGroup {
     CHOCO("CHoCo"),
     COMMA("ComMA"),
     DIES("Dies"),
+    DIENST2("Dienst2"),
     FACIE("FaCie"),
     FILMCREW("Filmcrew"),
     FLITCIE("FlitCie"),

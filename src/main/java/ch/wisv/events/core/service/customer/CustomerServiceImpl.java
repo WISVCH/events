@@ -58,6 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (optional.isPresent()) {
             return optional.get();
         }
+
         throw new CustomerNotFound("Customer with RFID token " + token + " not found!");
     }
 

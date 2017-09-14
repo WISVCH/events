@@ -42,7 +42,7 @@
         </div>
 
         <div class="col-xs-12">
-            <!--/*@thymesVar id="scanProduct" type="ch.wisv.events.app.request.ScanProductRequest"*/-->
+            <!--/*@thymesVar id="scanProduct" type="ch.wisv.events.sales.request.ScanProductRequest"*/-->
             <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
             <form th:action="@{/sales/scan/check}" method="post" th:field="${scanProduct}" id="formScanProduct">
                 <legend>Scan ticket</legend>

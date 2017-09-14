@@ -1,4 +1,4 @@
-package ch.wisv.events.app.controller.dashboard;
+package ch.wisv.events.dashboard;
 
 import ch.wisv.events.core.exception.InvalidVendorException;
 import ch.wisv.events.core.exception.VendorNotFoundException;

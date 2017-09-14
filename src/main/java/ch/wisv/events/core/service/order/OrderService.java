@@ -1,9 +1,6 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.app.request.OrderRequest;
-import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 
 import java.util.List;
@@ -51,27 +48,32 @@ public interface OrderService {
     List<Order> getOrdersByProduct(Product product);
 
     /**
-     * Method create creates a new order by OrderRequest.
+     * Method create creates and order.
      *
-     * @param orderRequest of type OrderRequest
-     * @return Order
+     * @param order of type Order
      */
-    Order create(OrderRequest orderRequest);
+    void create(Order order);
 
     /**
-     * Method addCustomerToOrder will create a customer to an order.
+     * Method update ...
      *
-     * @param order    of type Order
-     * @param customer of type Customer
+     * @param order of type Order
      */
-    void addCustomerToOrder(Order order, Customer customer);
+    void update(Order order);
 
-
-    /**
-     * Method updateOrderStatus will update the order status and update the product count.
-     *
-     * @param order       of type Order
-     * @param orderStatus of type OrderStatus
-     */
-    void updateOrderStatus(Order order, OrderStatus orderStatus);
+//    /**
+//     * Method addCustomerToOrder will create a customer to an order.
+//     *
+//     * @param order    of type Order
+//     * @param customer of type Customer
+//     */
+//    void addCustomerToOrder(Order order, Customer customer);
+//
+//    /**
+//     * Method updateOrderStatus will update the order status and update the product count.
+//     *
+//     * @param order       of type Order
+//     * @param orderStatus of type OrderStatus
+//     */
+//    void updateOrderStatus(Order order, OrderStatus orderStatus);
 }

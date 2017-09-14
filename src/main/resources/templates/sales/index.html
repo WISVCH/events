@@ -3,7 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
@@ -37,17 +41,89 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-12 content-wrapper text-center">
-            <h3>You are not authorized to sell any ticket!</h3>
-            <p>At the moment you are not authorized to sell any ticket! Want or need to sell tickets ask the board to give you access!</p>
+        <div class="col-sm-12">
+            <div th:replace="fragments/message :: messages"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.core.model.product.Product>"*/-->
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.Order"*/-->
+            <form th:if="${products.size() > 0}" th:action="@{./}" th:object="${order}" method="POST">
+                <div class="row sell-product-block" th:each="product : ${products}">
+                    <div class="col-xs-12">
+                        <div class="well well-sm">
+                            <div class="row">
+                                <div class="col-xs-12 section-box">
+                                    <h3 th:text="${product.title}"></h3>
+                                    <div class="form-group amount-block">
+                                        <div class="input-group">
+                                            <div class="input-group-addon decrease">
+                                                <i class="fa fa-minus fa-fw"></i>
+                                            </div>
+                                            <input type="number" class="form-control" step="1"
+                                                   min="0" th:max="${product.getMaxSoldPerCustomer()}"
+                                                   th:attr="data-product-id=${product.getId()}">
+                                            <div class="input-group-addon increase">
+                                                <i class="fa fa-plus fa-fw"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="products"></div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">
+                    Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <h3 class="text-center" style="margin-top: 60px;" th:if="${products.size() == 0}">Sold out.</h3>
         </div>
     </div>
 </div>
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/sales/sales.min.js}"></script>
+<script th:src="@{/js/events.js}"></script>
+<script>
+    $(document).ready(function () {
+        $("input[type=number]").each(function () {
+            $(this).val(0);
+        });
+
+        $(".decrease").on("click", function () {
+            var el = $(this).parent().children("input[type=number]")[0];
+            var amount = parseInt($(el).val());
+
+            if (amount > 0) $(el).val(amount - 1);
+        });
+
+        $(".increase").on("click", function () {
+            var el = $(this).parent().children("input[type=number]")[0];
+            var amount = parseInt($(el).val());
+
+            $(el).val(amount + 1);
+        });
+
+        $("form").on('submit', function (e) {
+            const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
+            var count = 0;
+
+            $("input[type=number]").each(function () {
+                for (var i = 0; i < parseInt($(this).val()); i++) {
+                    var productId = $(this).data('product-id');
+
+                    $("#products").append(format(productInput, [count, count, productId]));
+                    count++;
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

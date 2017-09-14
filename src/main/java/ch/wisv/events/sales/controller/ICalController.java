@@ -1,4 +1,4 @@
-package ch.wisv.events.app.controller;
+package ch.wisv.events.sales.controller;
 
 import biweekly.ICalVersion;
 import biweekly.ICalendar;

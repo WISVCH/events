@@ -1,8 +1,7 @@
-package ch.wisv.events.app.controller.dashboard;
+package ch.wisv.events.dashboard;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -90,7 +89,7 @@ public class DashboardOrderController {
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.orderService.getByReference(key);
-            this.orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+//            this.orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
             redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
         } catch (EventsModelNotFound ignored) {

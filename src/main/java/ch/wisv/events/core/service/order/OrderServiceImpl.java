@@ -1,24 +1,15 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.app.request.OrderRequest;
 import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.exception.ProductLimitExceededException;
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
-import org.mitre.openid.connect.model.OIDCAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -113,83 +104,104 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrdersByProduct(Product product) {
         List<Order> orders = this.getAllOrders();
+
         return orders.stream().filter(x -> x.getProducts().stream().anyMatch(p -> p.equals(product)))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Method create creates a new order by OrderRequest.
+     * Method create creates and order.
      *
-     * @param orderRequest of type OrderRequest
-     * @return Order
+     * @param order of type Order
      */
     @Override
-    public Order create(OrderRequest orderRequest) {
-        Order order = new Order();
-        for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
-            Product product = productService.getByKey(entry.getKey());
-
-            if (product.getMaxSold() != null && product.getSold() + entry.getValue() > product.getMaxSold()) {
-                throw new ProductLimitExceededException(
-                        "Not enough products of " + product.getTitle() + ", only " + (product
-                                .getMaxSold() - product.getSold()) + " items left. ");
-            }
-
-            for (Integer i = 0; i < entry.getValue(); i++) {
-                order.addProduct(product);
-            }
-        }
-
-        OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        order.setCreatedBy(((CHUserInfo) auth.getUserInfo()).getLdapUsername());
-
-        // TODO: check iff there are products in the order
-
-        orderRepository.saveAndFlush(order);
-
-        return order;
+    public void create(Order order) {
+        this.orderRepository.saveAndFlush(order);
     }
 
     /**
-     * Method addCustomerToOrder will create a customer to an order.
+     * Method update ...
      *
-     * @param order    of type Order
-     * @param customer of type Customer
+     * @param order of type Order
      */
     @Override
-    public void addCustomerToOrder(Order order, Customer customer) {
-        order.setCustomer(customer);
+    public void update(Order order) {
 
-        orderRepository.save(order);
     }
 
-    /**
-     * Method updateOrderStatus will update the order status and update the product count.
-     *
-     * @param order       of type Order
-     * @param orderStatus of type OrderStatus
-     */
-    @Override
-    public void updateOrderStatus(Order order, OrderStatus orderStatus) {
-        OrderStatus old = order.getStatus();
-        if (!old.toString().contains("PAID") && orderStatus.toString().contains("PAID")) {
-            order.getProducts().forEach(x -> x.setSold(x.getSold() + 1));
-            soldProductService.create(order);
-        } else if (old.toString().contains("PAID") && !orderStatus.toString().contains("PAID")) {
-            order.getProducts().forEach(x -> x.setSold(x.getSold() - 1));
-            soldProductService.remove(order);
-        }
+    //    /**
+//     * Method create creates a new order by OrderRequest.
+//     *
+//     * @param orderRequest of type OrderRequest
+//     * @return Order
+//     */
+//    @Override
+//    public Order create(OrderRequest orderRequest) {
+//        Order order = new Order();
+//        for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
+//            Product product = productService.getByKey(entry.getKey());
+//
+//            if (product.getMaxSold() != null && product.getSold() + entry.getValue() > product.getMaxSold()) {
+//                throw new ProductLimitExceededException(
+//                        "Not enough products of " + product.getTitle() + ", only " + (product
+//                                .getMaxSold() - product.getSold()) + " items left. ");
+//            }
+//
+//            for (Integer i = 0; i < entry.getValue(); i++) {
+//                order.addProduct(product);
+//            }
+//        }
+//
+//        OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+//        order.setCreatedBy(((CHUserInfo) auth.getUserInfo()).getLdapUsername());
+//
+//        // TODO: check iff there are products in the order
+//
+//        orderRepository.saveAndFlush(order);
+//
+//        return order;
+//    }
 
-        // Update event sold count
-        order.getProducts().forEach(x -> {
-            List<Event> events = eventService.getEventByProductKey(x.getKey());
-            events.forEach(y -> {
-                y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
-                eventService.update(y);
-            });
-        });
-
-        order.setStatus(orderStatus);
-        orderRepository.save(order);
-    }
+//    /**
+//     * Method addCustomerToOrder will create a customer to an order.
+//     *
+//     * @param order    of type Order
+//     * @param customer of type Customer
+//     */
+//    @Override
+//    public void addCustomerToOrder(Order order, Customer customer) {
+//        order.setCustomer(customer);
+//
+//        orderRepository.save(order);
+//    }
+//
+//    /**
+//     * Method updateOrderStatus will update the order status and update the product count.
+//     *
+//     * @param order       of type Order
+//     * @param orderStatus of type OrderStatus
+//     */
+//    @Override
+//    public void updateOrderStatus(Order order, OrderStatus orderStatus) {
+//        OrderStatus old = order.getStatus();
+//        if (!old.toString().contains("PAID") && orderStatus.toString().contains("PAID")) {
+//            order.getProducts().forEach(x -> x.setSold(x.getSold() + 1));
+//            soldProductService.create(order);
+//        } else if (old.toString().contains("PAID") && !orderStatus.toString().contains("PAID")) {
+//            order.getProducts().forEach(x -> x.setSold(x.getSold() - 1));
+//            soldProductService.remove(order);
+//        }
+//
+//        // Update event sold count
+//        order.getProducts().forEach(x -> {
+//            List<Event> events = eventService.getEventByProductKey(x.getKey());
+//            events.forEach(y -> {
+//                y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
+//                eventService.update(y);
+//            });
+//        });
+//
+//        order.setStatus(orderStatus);
+//        orderRepository.save(order);
+//    }
 }
