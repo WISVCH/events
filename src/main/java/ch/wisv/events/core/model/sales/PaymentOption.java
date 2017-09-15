@@ -86,6 +86,7 @@ public enum PaymentOption {
     public static OrderStatus getStatusByValue(String payment) {
         PaymentOption tmp = stream(PaymentOption.values()).filter(option -> Objects
                 .equals(option.getValue(), payment)).findFirst().orElse(null);
+
         return (tmp != null) ? tmp.getOrderStatus() : OrderStatus.REJECTED;
     }
 

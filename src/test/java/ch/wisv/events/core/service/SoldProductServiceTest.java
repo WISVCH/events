@@ -152,7 +152,7 @@ public class SoldProductServiceTest extends ServiceTest {
         when(repository.findAllByCustomerAndProduct(any(Customer.class), any(Product.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
-        List<SoldProduct> temp = soldProductService.getByCustomerAndProduct(mock(Customer.class),
+        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
                 mock(Product.class));
 
         assertEquals(Collections.singletonList(soldProduct), temp);
@@ -163,7 +163,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProductNull() {
-        List<SoldProduct> temp = soldProductService.getByCustomerAndProduct(null, null);
+        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(null, null);
 
         assertEquals(Collections.emptyList(), temp);
     }
@@ -224,13 +224,13 @@ public class SoldProductServiceTest extends ServiceTest {
     }
 
     /**
-     * Test remove sold products from an order
+     * Test delete sold products from an order
      */
     @Test
     public void remove() {
         when(repository.findAllByOrder(any(Order.class))).thenReturn(Collections.singletonList(this.soldProduct));
 
-        soldProductService.remove(any(Order.class));
+        soldProductService.delete(any(Order.class));
         verify(repository, times(1)).delete(this.soldProduct);
     }
 

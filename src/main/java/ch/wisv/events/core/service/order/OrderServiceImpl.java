@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
-
 
     /**
      * Field orderRepository
@@ -116,6 +116,8 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void create(Order order) {
+        order.setAmount(order.getProducts().stream().mapToDouble(Product::getCost).sum());
+
         this.orderRepository.saveAndFlush(order);
     }
 
@@ -126,82 +128,29 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void update(Order order) {
+        order.setAmount(order.getProducts().stream().mapToDouble(Product::getCost).sum());
 
+        this.orderRepository.saveAndFlush(order);
     }
 
-    //    /**
-//     * Method create creates a new order by OrderRequest.
-//     *
-//     * @param orderRequest of type OrderRequest
-//     * @return Order
-//     */
-//    @Override
-//    public Order create(OrderRequest orderRequest) {
-//        Order order = new Order();
-//        for (Map.Entry<String, Integer> entry : orderRequest.getProducts().entrySet()) {
-//            Product product = productService.getByKey(entry.getKey());
-//
-//            if (product.getMaxSold() != null && product.getSold() + entry.getValue() > product.getMaxSold()) {
-//                throw new ProductLimitExceededException(
-//                        "Not enough products of " + product.getTitle() + ", only " + (product
-//                                .getMaxSold() - product.getSold()) + " items left. ");
-//            }
-//
-//            for (Integer i = 0; i < entry.getValue(); i++) {
-//                order.addProduct(product);
-//            }
-//        }
-//
-//        OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-//        order.setCreatedBy(((CHUserInfo) auth.getUserInfo()).getLdapUsername());
-//
-//        // TODO: check iff there are products in the order
-//
-//        orderRepository.saveAndFlush(order);
-//
-//        return order;
-//    }
+    /**
+     * Method updateOrderStatus
+     *
+     * @param order  of type Order
+     * @param status of type OrderStatus
+     */
+    @Override
+    public void updateOrderStatus(Order order, OrderStatus status) {
+        order.setStatus(status);
 
-//    /**
-//     * Method addCustomerToOrder will create a customer to an order.
-//     *
-//     * @param order    of type Order
-//     * @param customer of type Customer
-//     */
-//    @Override
-//    public void addCustomerToOrder(Order order, Customer customer) {
-//        order.setCustomer(customer);
-//
-//        orderRepository.save(order);
-//    }
-//
-//    /**
-//     * Method updateOrderStatus will update the order status and update the product count.
-//     *
-//     * @param order       of type Order
-//     * @param orderStatus of type OrderStatus
-//     */
-//    @Override
-//    public void updateOrderStatus(Order order, OrderStatus orderStatus) {
-//        OrderStatus old = order.getStatus();
-//        if (!old.toString().contains("PAID") && orderStatus.toString().contains("PAID")) {
-//            order.getProducts().forEach(x -> x.setSold(x.getSold() + 1));
-//            soldProductService.create(order);
-//        } else if (old.toString().contains("PAID") && !orderStatus.toString().contains("PAID")) {
-//            order.getProducts().forEach(x -> x.setSold(x.getSold() - 1));
-//            soldProductService.remove(order);
-//        }
-//
-//        // Update event sold count
-//        order.getProducts().forEach(x -> {
-//            List<Event> events = eventService.getEventByProductKey(x.getKey());
-//            events.forEach(y -> {
-//                y.setSold(y.getProducts().stream().mapToInt(Product::getSold).sum());
-//                eventService.update(y);
-//            });
-//        });
-//
-//        order.setStatus(orderStatus);
-//        orderRepository.save(order);
-//    }
+        if (status == OrderStatus.REFUNDED) {
+            order.getProducts().forEach(product -> product.setSold(product.getSold() - 1));
+            this.soldProductService.delete(order);
+        } else {
+            order.getProducts().forEach(product -> product.setSold(product.getSold() + 1));
+            this.soldProductService.create(order);
+        }
+
+        this.orderRepository.saveAndFlush(order);
+    }
 }

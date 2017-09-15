@@ -75,4 +75,13 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
      * @return Long
      */
     Long countAllByProduct(Product product);
+
+    /**
+     * Method findAllByProductAndUniqueCode.
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> findAllByProductAndUniqueCode(Product product, String uniqueCode);
 }

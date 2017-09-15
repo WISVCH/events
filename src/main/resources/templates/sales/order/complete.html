@@ -28,7 +28,7 @@
     <![endif]-->
 </head>
 
-<body id="scanPage">
+<body>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/header :: header">
@@ -37,33 +37,27 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-12 main text-center" style="margin-top: 60px;">
-            <h3>Scan RFID- or NFC card</h3>
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-            <form th:action="@{./}" th:object="${order}" method="POST" id="formScan">
-                <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
-                <input type="hidden" th:field="*{customer.rfidToken}" id="rfidToken">
+        <div class="col-xs-12 content-wrapper" style="text-align: center; margin-top: calc(10vh)">
+            <p class="text-success">
+                <i class="fa fa-check-circle fa-5x"></i>
+            </p>
+            <h2>Order successful!</h2>
+        </div>
+    </div>
 
-                <input type="submit" style="display: none;">
-            </form>
+    <div class="row" style="margin-top: calc(90vh - 266px)">
+        <div class="col-xs-12">
+            <a th:href="@{/sales/}" class="btn btn-lg btn-primary btn-block">
+                Close
+            </a>
         </div>
     </div>
 </div>
 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script>
-    $("#scanPage").on('keypress', function (e) {
-        var token = $("#rfidToken");
-
-        if (e.which === 13) {
-            $("#formScan").submit();
-            return false;
-        }
-        token.val(token.val() + e.key);
-        console.log(e.key);
-    })
-</script>
+<script th:src="@{/js/sales/sales.min.js}"></script>
 </body>
 </html>

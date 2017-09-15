@@ -54,7 +54,7 @@ public class Order {
     /**
      * Field amount amount of the Order.
      */
-    private float amount;
+    private Double amount;
 
     /**
      * Field products list of Products in the Order.
@@ -101,23 +101,11 @@ public class Order {
     }
 
     /**
-     * Constructor Order creates a new Order instance.
-     *
-     * @param customer of type Customer
-     */
-    public Order(Customer customer) {
-        this();
-        this.customer = customer;
-    }
-
-    /**
      * Add product to Order and create cost to product.
      *
      * @param product Product
      */
     public void addProduct(Product product) {
         this.products.add(product);
-
-        this.amount += product.getCost();
     }
 }

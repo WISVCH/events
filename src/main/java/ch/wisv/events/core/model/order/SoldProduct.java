@@ -63,6 +63,11 @@ public class SoldProduct {
     private Customer customer;
 
     /**
+     * Field uniqueCode
+     */
+    private String uniqueCode;
+
+    /**
      * Status of the sold product
      */
     private SoldProductStatus status;
@@ -76,17 +81,15 @@ public class SoldProduct {
     }
 
     /**
-     * Constructor with Customer, Product and Order
+     * Constructor SoldProduct creates a new SoldProduct instance.
      *
-     * @param customer Customer
-     * @param product  Product
-     * @param order    Order
+     * @param product of type Product
+     * @param order of type Order
+     * @param customer of type Customer
      */
-    public SoldProduct(Customer customer, Product product, Order order) {
-        this();
-        this.customer = customer;
+    public SoldProduct(Product product, Order order, Customer customer) {
         this.product = product;
         this.order = order;
+        this.customer = customer;
     }
-
 }

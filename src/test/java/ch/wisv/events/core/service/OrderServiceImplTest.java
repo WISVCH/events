@@ -293,7 +293,7 @@ public class OrderServiceImplTest extends ServiceTest {
 //        this.order.setStatus(OrderStatus.PAID_CASH);
 //
 //        service.updateOrderStatus(this.order, OrderStatus.REJECTED);
-//        verify(soldProductService, times(1)).remove(this.order);
+//        verify(soldProductService, times(1)).delete(this.order);
 //    }
 //
 //    /**
@@ -308,7 +308,7 @@ public class OrderServiceImplTest extends ServiceTest {
 //        this.order.setStatus(OrderStatus.REJECTED);
 //
 //        service.updateOrderStatus(this.order, OrderStatus.REJECTED);
-//        verify(soldProductService, times(0)).remove(this.order);
+//        verify(soldProductService, times(0)).delete(this.order);
 //    }
 
 }
