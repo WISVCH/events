@@ -2,13 +2,15 @@ package ch.wisv.events.sales.controller;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.sales.PaymentOption;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -29,8 +31,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @PreAuthorize("hasRole('USER')")
-@RequestMapping("/sales/order/{publicReference}")
-public class SalesAppOrderController {
+@RequestMapping("/sales/payment/order/{publicReference}")
+public class SalesAppPaymentController {
 
     /**
      * Field orderService
@@ -40,9 +42,9 @@ public class SalesAppOrderController {
     /**
      * Constructor SalesController creates a new SalesController instance.
      *
-     * @param orderService         of type OrderService.
+     * @param orderService of type OrderService.
      */
-    public SalesAppOrderController(OrderService orderService) {
+    public SalesAppPaymentController(OrderService orderService) {
         this.orderService = orderService;
     }
 
@@ -52,37 +54,21 @@ public class SalesAppOrderController {
      * @param redirect of type RedirectAttributes
      * @return String
      */
-    @GetMapping("/")
-    public String overview(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
+    @PostMapping("/")
+    public String payment(RedirectAttributes redirect,
+                          @PathVariable String publicReference,
+                          @RequestParam(value = "payment") String payment
+    ) {
         try {
             Order order = this.orderService.getByReference(publicReference);
-            model.addAttribute("order", order);
+            OrderStatus status = PaymentOption.getStatusByValue(payment);
 
-            return "sales/order/index";
+            this.orderService.updateOrderStatus(order, status);
+            return "redirect:/sales/order/" + order.getPublicReference() + "/complete/";
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
-        }
-    }
-
-    /**
-     * Method complete ...
-     *
-     * @param redirect of type RedirectAttributes
-     * @param publicReference of type String
-     * @return String
-     */
-    @GetMapping("/complete/")
-    public String complete(RedirectAttributes redirect, @PathVariable String publicReference) {
-        try {
-            this.orderService.getByReference(publicReference);
-
-            return "sales/order/complete";
-        } catch (EventsModelNotFound e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-
-            return "redirect:/sales/";
+            return "redirect:/sales/order/" + publicReference + "/";
         }
     }
 }

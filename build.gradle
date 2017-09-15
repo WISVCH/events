@@ -66,6 +66,7 @@ dependencies {
     compile 'com.zaxxer:HikariCP'
     compile 'com.google.guava:guava'
     compile 'org.hibernate:hibernate-validator'
+    compile 'org.apache.commons:commons-lang3:3.5'
 
     compile('ch.wisv:wisvch-connect-client:1.2.6.0') {
         // Workaround for https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/pull/1084

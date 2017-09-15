@@ -88,9 +88,8 @@ public class OrderTestDataRunner extends TestDataRunner {
         Optional<Customer> customer = this.customerRepository.findByRfidToken(customerRfid);
 
         if (customer.isPresent()) {
-            ch.wisv.events.core.model.order.Order order = new ch.wisv.events.core.model.order.Order(
-                customer.get()
-            );
+            ch.wisv.events.core.model.order.Order order = new ch.wisv.events.core.model.order.Order();
+            order.setCustomer(customer.get());
 
             List<Product> allProduct = this.productRepository.findAll();
             order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));

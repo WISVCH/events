@@ -75,8 +75,9 @@
                 </tfoot>
             </table>
 
-            <form th:action="@{/sales/order/payment}" method="POST">
-                <input type="hidden" name="publicReference" th:value="${order.getPublicReference()}">
+            <form th:action="@{'/sales/payment/order/' + ${order.getPublicReference()} + '/'}" method="POST">
+
+                <!--/*@thymesVar id="payment" type="ch.wisv.events.core.model.sales.PaymentOption"*/-->
                 <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
                         name="payment"
                         th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOption).values()}"

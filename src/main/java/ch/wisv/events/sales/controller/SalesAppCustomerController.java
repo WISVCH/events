@@ -74,7 +74,7 @@ public class SalesAppCustomerController {
             Order order = this.orderService.getByReference(publicReference);
             model.addAttribute("order", order);
 
-            return "sales/order/scan";
+            return "sales/customer/rfid";
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
@@ -97,10 +97,10 @@ public class SalesAppCustomerController {
 
             return "redirect:/sales/";
         } catch (CustomerNotFound e) {
-            return "redirect:/sales/order/customer/create/";
+            return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
         }
 
-        return "redirect:/sales/order/overview/" + order.getPublicReference() + "/";
+        return "redirect:/sales/order/" + order.getPublicReference() + "/";
     }
 
     /**
@@ -128,6 +128,6 @@ public class SalesAppCustomerController {
         this.customerService.create(order.getCustomer());
         this.salesAppOrderService.addCustomerToOrder(order, order.getCustomer());
 
-        return "redirect:/sales/order/overview/" + order.getPublicReference() + "/";
+        return "redirect:/sales/order/" + order.getPublicReference() + "/";
     }
 }
