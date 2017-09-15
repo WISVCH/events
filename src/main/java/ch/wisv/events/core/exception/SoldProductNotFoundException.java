@@ -16,7 +16,7 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SoldProductNotFoundException extends Exception {
+public class SoldProductNotFoundException extends RuntimeException {
 
     /**
      * Constructor SoldProductNotFoundException creates a new SoldProductNotFoundException instance.
