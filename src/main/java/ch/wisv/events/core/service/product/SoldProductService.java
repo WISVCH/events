@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.core.exception.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -31,7 +30,7 @@ public interface SoldProductService {
      *
      * @return SoldProduct
      */
-    SoldProduct getByKey(String key) throws SoldProductNotFoundException;
+    SoldProduct getByKey(String key);
 
     /**
      * Method getAll returns the all of this SoldProductService object.
@@ -71,7 +70,7 @@ public interface SoldProductService {
      *
      * @param order of type Order
      */
-    void create(Order order);
+    List<SoldProduct> create(Order order);
 
     /**
      * Method delete ...
@@ -85,5 +84,5 @@ public interface SoldProductService {
      *
      * @param soldProduct of type SoldProduct
      */
-    void update(SoldProduct soldProduct) throws SoldProductNotFoundException;
+    void update(SoldProduct soldProduct);
 }

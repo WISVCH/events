@@ -7,11 +7,12 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -52,12 +53,13 @@ public class SoldProductServiceImpl implements SoldProductService {
      * @return SoldProduct
      */
     @Override
-    public SoldProduct getByKey(String key) throws SoldProductNotFoundException {
-        Optional<SoldProduct> optional = this.soldProductRepository.findByKey(key);
+    public SoldProduct getByKey(String key) {
+        if (Strings.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException();
+        }
 
-        return optional.orElseThrow(() ->
-                new SoldProductNotFoundException("Sold Product with key {" + key + "} is not exists!")
-        );
+        return this.soldProductRepository.findByKey(key)
+                .orElseThrow(() -> new SoldProductNotFoundException("SoldProduct with key " + key + " is not exists!"));
     }
 
     /**
@@ -110,7 +112,9 @@ public class SoldProductServiceImpl implements SoldProductService {
      * @param order of type Order
      */
     @Override
-    public void create(Order order) {
+    public List<SoldProduct> create(Order order) {
+        List<SoldProduct> soldProducts = new ArrayList<>();
+
         order.getProducts().forEach(product -> {
             SoldProduct soldProduct = new SoldProduct(
                     product,
@@ -119,10 +123,12 @@ public class SoldProductServiceImpl implements SoldProductService {
             );
             soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
 
-            this.soldProductRepository.saveAndFlush(soldProduct);
+            soldProducts.add(soldProduct);
 
-            System.out.println(soldProduct.getUniqueCode());
+            this.soldProductRepository.saveAndFlush(soldProduct);
         });
+
+        return soldProducts;
     }
 
     /**
@@ -168,7 +174,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      * @param soldProduct of type SoldProduct
      */
     @Override
-    public void update(SoldProduct soldProduct) throws SoldProductNotFoundException {
+    public void update(SoldProduct soldProduct) {
         SoldProduct model = this.getByKey(soldProduct.getKey());
 
         model.setOrder(soldProduct.getOrder());

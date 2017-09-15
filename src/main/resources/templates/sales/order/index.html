@@ -75,8 +75,8 @@
                 </tfoot>
             </table>
 
-            <form th:action="@{'/sales/payment/order/' + ${order.getPublicReference()} + '/'}" method="POST">
-
+            <form th:action="@{'/sales/payment/order/' + ${order.getPublicReference()} + '/'}" method="POST"
+                  style="position: fixed; bottom: 15px; left: 15px; right: 15px;">
                 <!--/*@thymesVar id="payment" type="ch.wisv.events.core.model.sales.PaymentOption"*/-->
                 <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
                         name="payment"
