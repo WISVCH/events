@@ -3,10 +3,10 @@ package ch.wisv.events.core.service.order;
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
-import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +41,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Field eventService
      */
-    private final EventService eventService;
-
-    /**
-     * Field productService
-     */
-    private final ProductService productService;
+    private final MailService mailService;
 
     /**
      * Field soldProductService
@@ -58,14 +53,12 @@ public class OrderServiceImpl implements OrderService {
      * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
      *
      * @param orderRepository    of type OrderRepository
-     * @param eventService       of type EventService
-     * @param productService     of type ProductService
+     * @param mailService        of type MailService
      * @param soldProductService of type SoldProductService
      */
-    public OrderServiceImpl(OrderRepository orderRepository, EventService eventService, ProductService productService, SoldProductService soldProductService) {
+    public OrderServiceImpl(OrderRepository orderRepository, MailService mailService, SoldProductService soldProductService) {
         this.orderRepository = orderRepository;
-        this.eventService = eventService;
-        this.productService = productService;
+        this.mailService = mailService;
         this.soldProductService = soldProductService;
     }
 
@@ -141,16 +134,17 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) {
-        order.setStatus(status);
-
         if (status == OrderStatus.REFUNDED) {
             order.getProducts().forEach(product -> product.setSold(product.getSold() - 1));
             this.soldProductService.delete(order);
-        } else {
+        } else if (!order.getStatus().toString().contains("PAID")) {
             order.getProducts().forEach(product -> product.setSold(product.getSold() + 1));
-            this.soldProductService.create(order);
+            List<SoldProduct> soldProducts = this.soldProductService.create(order);
+
+            this.mailService.sendOrderToCustomer(order, soldProducts);
         }
 
+        order.setStatus(status);
         this.orderRepository.saveAndFlush(order);
     }
 }

@@ -64,6 +64,7 @@ public class SalesAppPaymentController {
             OrderStatus status = PaymentOption.getStatusByValue(payment);
 
             this.orderService.updateOrderStatus(order, status);
+
             return "redirect:/sales/order/" + order.getPublicReference() + "/complete/";
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
