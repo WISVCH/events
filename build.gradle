@@ -55,6 +55,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-tomcat'
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
 
     compile 'javax.el:javax.el-api:2.2.5'

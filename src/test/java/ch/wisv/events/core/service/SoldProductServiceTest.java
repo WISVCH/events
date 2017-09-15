@@ -11,7 +11,6 @@ import ch.wisv.events.core.service.product.SoldProductServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Collections;
@@ -48,8 +47,7 @@ public class SoldProductServiceTest extends ServiceTest {
     /**
      * SoldProductService with the mock of the repository
      */
-    @InjectMocks
-    private SoldProductService soldProductService = new SoldProductServiceImpl();
+    private SoldProductService soldProductService;
 
     /**
      * Default instance of the SoldProduct class
@@ -61,6 +59,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        this.soldProductService = new SoldProductServiceImpl(repository);
         soldProduct = new SoldProduct();
 
         soldProduct.setCustomer(mock(Customer.class));
@@ -94,7 +93,7 @@ public class SoldProductServiceTest extends ServiceTest {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.empty());
 
         thrown.expect(SoldProductNotFoundException.class);
-        thrown.expectMessage("Sold Product with key " + this.soldProduct.getKey() + " is not found!");
+        thrown.expectMessage("SoldProduct with key " + this.soldProduct.getKey() + " is not exists!");
         soldProductService.getByKey(this.soldProduct.getKey());
     }
 
@@ -231,7 +230,7 @@ public class SoldProductServiceTest extends ServiceTest {
         when(repository.findAllByOrder(any(Order.class))).thenReturn(Collections.singletonList(this.soldProduct));
 
         soldProductService.delete(any(Order.class));
-        verify(repository, times(1)).delete(this.soldProduct);
+        verify(repository, times(1)).delete(Collections.singletonList(this.soldProduct));
     }
 
     /**
