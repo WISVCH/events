@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.mail;
 
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.MailSendException;
@@ -51,6 +52,7 @@ public class MailServiceImpl implements MailService {
      * @param mailSender     of type JavaMailSender
      * @param templateEngine of type templateEngine
      */
+    @Autowired
     public MailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;

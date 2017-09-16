@@ -1,13 +1,17 @@
 package ch.wisv.events;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import ch.wisv.events.core.service.mail.MailService;
+import org.mockito.Mockito;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -25,15 +29,45 @@ import org.springframework.test.context.junit4.SpringRunner;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@RunWith(SpringRunner.class)
+@Configuration
 @ComponentScan
-@EnableAutoConfiguration(exclude={FlywayAutoConfiguration.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "flyway.enabled=false")
+@EnableAutoConfiguration(exclude = {FlywayAutoConfiguration.class})
 @ActiveProfiles("test")
 public class EventsApplicationTest {
 
-    @Test
-    public void contextLoads() {
+
+    /**
+     * Method main ...
+     *
+     * @param args of type String[]
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(EventsApplicationTest.class, args);
     }
 
+    /**
+     * Method mailService ...
+     *
+     * @return MailService
+     */
+    @Bean
+    @Primary
+    public MailService mailService() {
+        return Mockito.mock(MailService.class);
+    }
+
+    @Component
+    public class TestRunner implements CommandLineRunner {
+
+        /**
+         * Callback used to run the bean.
+         *
+         * @param args incoming main method arguments
+         * @throws Exception on error
+         */
+        @Override
+        public void run(String... args) throws Exception {
+
+        }
+    }
 }
