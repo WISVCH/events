@@ -40,7 +40,7 @@ public class SalesAppOrderController {
     /**
      * Constructor SalesController creates a new SalesController instance.
      *
-     * @param orderService         of type OrderService.
+     * @param orderService of type OrderService.
      */
     public SalesAppOrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -69,16 +69,18 @@ public class SalesAppOrderController {
     /**
      * Method complete ...
      *
-     * @param redirect of type RedirectAttributes
+     * @param redirect        of type RedirectAttributes
      * @param publicReference of type String
      * @return String
      */
-    @GetMapping("/complete/")
-    public String complete(RedirectAttributes redirect, @PathVariable String publicReference) {
+    @GetMapping("/{ending}/")
+    public String complete(RedirectAttributes redirect, @PathVariable String publicReference,
+                           @PathVariable String ending
+    ) {
         try {
             this.orderService.getByReference(publicReference);
 
-            return "sales/order/complete";
+            return "sales/order/" + ending;
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
