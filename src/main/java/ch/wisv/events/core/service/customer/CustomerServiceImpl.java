@@ -36,14 +36,24 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Field customerRepository.
      */
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     /**
      * Field orderRepository.
      */
+    private final OrderRepository orderRepository;
+
+    /**
+     * Constructor CustomerServiceImpl creates a new CustomerServiceImpl instance.
+     *
+     * @param customerRepository of type CustomerRepository
+     * @param orderRepository    of type OrderRepository
+     */
     @Autowired
-    private OrderRepository orderRepository;
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
+        this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
+    }
 
     /**
      * Get a customer by rfidToken.
@@ -53,13 +63,9 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByRFIDToken(String token) {
-        Optional<Customer> optional = customerRepository.findByRfidToken(token);
+        Optional<Customer> customer = customerRepository.findByRfidToken(token);
 
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-
-        throw new CustomerNotFound("Customer with RFID token " + token + " not found!");
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with RFID token " + token + " not found!"));
     }
 
     /**
@@ -80,11 +86,9 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByKey(String key) {
-        Optional<Customer> optional = customerRepository.findByKey(key);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new CustomerNotFound("Customer with key " + key + " not found!");
+        Optional<Customer> customer = customerRepository.findByKey(key);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with key " + key + " not found!"));
     }
 
     /**
@@ -109,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void create(Customer customer) {
         this.assertIsValidCustomer(customer);
 
-        customerRepository.saveAndFlush(customer);
+        this.customerRepository.saveAndFlush(customer);
     }
 
     /**
@@ -127,7 +131,7 @@ public class CustomerServiceImpl implements CustomerService {
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
 
-        customerRepository.save(model);
+        this.customerRepository.save(model);
     }
 
     /**
@@ -141,7 +145,8 @@ public class CustomerServiceImpl implements CustomerService {
         if (orders.size() > 0) {
             throw new CustomerException("Customer has already placed orders, so it can not be deleted!");
         }
-        customerRepository.delete(customer);
+
+        this.customerRepository.delete(customer);
     }
 
     /**
@@ -164,11 +169,15 @@ public class CustomerServiceImpl implements CustomerService {
             throw new InvalidCustomerException("Email is empty, but a required field, so please fill in this field!");
         }
 
-        if (!customer.getRfidToken().equals("") && customerRepository.findByRfidToken(customer.getRfidToken()).isPresent()) {
+        if (customer.getRfidToken() == null) {
+            throw new InvalidCustomerException("RFID token can not be null.");
+        }
+
+        if (!customer.getRfidToken().equals("") && this.customerRepository.findByRfidToken(customer.getRfidToken()).isPresent()) {
             throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
         }
 
-        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+        if (this.customerRepository.findByEmail(customer.getEmail()).isPresent()) {
             throw new RFIDTokenAlreadyUsedException("Email address is already used!");
         }
     }
