@@ -65,7 +65,12 @@ public class SalesAppPaymentController {
 
             this.orderService.updateOrderStatus(order, status);
 
-            return "redirect:/sales/order/" + order.getPublicReference() + "/complete/";
+            if (status == OrderStatus.CANCELLED) {
+                return "redirect:/sales/order/" + order.getPublicReference() + "/cancelled/";
+            } else {
+                return "redirect:/sales/order/" + order.getPublicReference() + "/complete/";
+            }
+
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
