@@ -30,6 +30,6 @@ public class V1_3_2__Reformat_sales_app implements SpringJdbcMigration {
      */
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        jdbcTemplate.execute("ALTER TABLE public.unique_code ADD COLUMN unique_code VARCHAR(255)");
+        jdbcTemplate.execute("ALTER TABLE public.sold_product ADD COLUMN unique_code VARCHAR(255)");
     }
 }
