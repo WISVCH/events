@@ -31,6 +31,5 @@ public class V1_3__Reformat_sales_app implements SpringJdbcMigration {
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
         jdbcTemplate.execute("ALTER TABLE public.order ALTER COLUMN amount TYPE float8");
-        jdbcTemplate.execute("ALTER TABLE public.product ADD COLUMN max_sold_per_customer TYPE integer");
     }
 }
