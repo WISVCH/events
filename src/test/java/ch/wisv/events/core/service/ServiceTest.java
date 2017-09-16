@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = EventsApplicationTest.class)
+@SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public abstract class ServiceTest {
 
