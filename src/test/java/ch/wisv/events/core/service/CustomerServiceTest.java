@@ -12,7 +12,6 @@ import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.customer.CustomerServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Collections;
@@ -54,8 +53,7 @@ public class CustomerServiceTest extends ServiceTest {
     /**
      * Field CustomerService;
      */
-    @InjectMocks
-    private CustomerService customerService = new CustomerServiceImpl();
+    private CustomerService customerService;
 
     /**
      * Customer default
@@ -67,6 +65,8 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        this.customerService = new CustomerServiceImpl(repository, orderRepository);
+
         this.customer = new Customer("Christiaan Huygens", "events@ch.tudelft.nl", "christiaanh", "12345678");
     }
 
@@ -77,7 +77,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testFindByRFIDToken() {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
 
-        assertEquals(this.customer, customerService.getByRFIDToken("key"));
+        assertEquals(this.customer, this.customerService.getByRFIDToken("key"));
     }
 
     /**
@@ -89,7 +89,7 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expectMessage("Customer with RFID token key not found!");
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
-        customerService.getByRFIDToken("key");
+        this.customerService.getByRFIDToken("key");
     }
 
     /**
@@ -99,7 +99,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetAllCustomers() {
         when(repository.findAll()).thenReturn(Collections.singletonList(this.customer));
 
-        assertEquals(Collections.singletonList(this.customer), customerService.getAllCustomers());
+        assertEquals(Collections.singletonList(this.customer), this.customerService.getAllCustomers());
     }
 
     /**
@@ -109,7 +109,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetAllCustomersEmpty() {
         when(repository.findAll()).thenReturn(Collections.emptyList());
 
-        assertEquals(Collections.emptyList(), customerService.getAllCustomers());
+        assertEquals(Collections.emptyList(), this.customerService.getAllCustomers());
     }
 
     /**
@@ -119,7 +119,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetByKey() {
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(this.customer));
 
-        assertEquals(this.customer, customerService.getByKey(this.customer.getKey()));
+        assertEquals(this.customer, this.customerService.getByKey(this.customer.getKey()));
     }
 
     /**
@@ -131,7 +131,7 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expectMessage("Customer with key key not found!");
         when(repository.findByKey(anyString())).thenReturn(Optional.empty());
 
-        customerService.getByKey("key");
+        this.customerService.getByKey("key");
     }
 
     /**
@@ -139,9 +139,10 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testCreate() {
-        when(repository.findAll()).thenReturn(Collections.emptyList());
+        when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        customerService.create(this.customer);
+        this.customerService.create(this.customer);
         verify(repository, times(1)).saveAndFlush(any(Customer.class));
     }
 
@@ -154,7 +155,7 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expectMessage("Name is empty, but a required field, so please fill in this field!");
         this.customer.setName(null);
 
-        customerService.create(this.customer);
+        this.customerService.create(this.customer);
     }
 
     /**
@@ -166,7 +167,7 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expectMessage("Email is empty, but a required field, so please fill in this field!");
         this.customer.setEmail(null);
 
-        customerService.create(this.customer);
+        this.customerService.create(this.customer);
     }
 
     /**
@@ -175,12 +176,13 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreateMissingRFIDToken() {
         Customer duplicate = new Customer("Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", "12345678");
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.customer));
+        when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         thrown.expect(RFIDTokenAlreadyUsedException.class);
         thrown.expectMessage("RFID token is already used!");
 
-        customerService.create(duplicate);
+        this.customerService.create(duplicate);
     }
 
     /**
@@ -197,8 +199,10 @@ public class CustomerServiceTest extends ServiceTest {
 
         Customer mock = mock(Customer.class);
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(mock));
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
-        customerService.update(update);
+        this.customerService.update(update);
         verify(mock, times(1)).setName(update.getName());
         verify(mock, times(1)).setEmail(update.getEmail());
         verify(mock, times(1)).setChUsername(update.getChUsername());
@@ -213,7 +217,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testDelete() {
         when(orderRepository.findByCustomer(this.customer)).thenReturn(Collections.emptyList());
 
-        customerService.delete(this.customer);
+        this.customerService.delete(this.customer);
         verify(repository, times(1)).delete(this.customer);
     }
 
@@ -227,6 +231,6 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expect(CustomerException.class);
         thrown.expectMessage("Customer has already placed orders, so it can not be deleted!");
 
-        customerService.delete(this.customer);
+        this.customerService.delete(this.customer);
     }
 }
