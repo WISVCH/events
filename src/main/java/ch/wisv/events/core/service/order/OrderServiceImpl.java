@@ -8,6 +8,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +49,6 @@ public class OrderServiceImpl implements OrderService {
      */
     private final SoldProductService soldProductService;
 
-
     /**
      * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
      *
@@ -56,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
      * @param mailService        of type MailService
      * @param soldProductService of type SoldProductService
      */
+    @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, MailService mailService, SoldProductService soldProductService) {
         this.orderRepository = orderRepository;
         this.mailService = mailService;

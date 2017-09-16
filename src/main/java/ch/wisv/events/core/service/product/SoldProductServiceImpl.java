@@ -9,6 +9,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      *
      * @param soldProductRepository of type SoldProductRepository
      */
+    @Autowired
     public SoldProductServiceImpl(SoldProductRepository soldProductRepository) {
         this.soldProductRepository = soldProductRepository;
     }
