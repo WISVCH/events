@@ -1,7 +1,9 @@
 package ch.wisv.events.sales.controller;
 
 import ch.wisv.events.core.exception.CustomerNotFound;
+import ch.wisv.events.core.exception.EventsInvalidException;
 import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
@@ -91,12 +93,24 @@ public class SalesAppCustomerController {
     @PostMapping("/rfid/")
     public String addCustomerToOrder(RedirectAttributes redirect, Order order) {
         try {
-            this.salesAppOrderService.addCustomerToOrder(order, order.getCustomer());
+            Customer customer;
+            if (order.getCustomer().getRfidToken() != null) {
+                customer = this.customerService.getByRFIDToken(order.getCustomer().getRfidToken());
+            } else if (order.getCustomer().getEmail() != null) {
+                customer = this.customerService.getByEmail(order.getCustomer().getEmail());
+            } else {
+                throw new EventsInvalidException("Invalid request!");
+            }
+
+            this.salesAppOrderService.addCustomerToOrder(order, customer);
+
         } catch (EventsModelNotFound e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";
         } catch (CustomerNotFound e) {
+            redirect.addFlashAttribute("order", order);
+
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
         }
 
@@ -109,12 +123,21 @@ public class SalesAppCustomerController {
      * @return String
      */
     @GetMapping("/create/")
-    public String create(Model model) {
+    public String create(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         if (!model.containsAttribute("order")) {
-            return "redirect:/sales/";
+            try {
+                Order order = orderService.getByReference(publicReference);
+
+                model.addAttribute("order", order);
+            } catch (EventsModelNotFound e) {
+                redirect.addFlashAttribute("error", "No order set!");
+
+                return "redirect:/sales/";
+            }
         }
 
         return "sales/customer/create";
+
     }
 
     /**

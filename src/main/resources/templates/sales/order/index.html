@@ -63,14 +63,14 @@
                 <tr th:each="product : ${order.getProducts()}">
                     <td th:text="${product.getTitle()}"></td>
                     <td class="text-right"
-                        th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 0, 'POINT', 2, 'COMMA')}"></td>
+                        th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
                     <th>Totaal</th>
                     <th class="text-right"
-                        th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></th>
+                        th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
                 </tr>
                 </tfoot>
             </table>
