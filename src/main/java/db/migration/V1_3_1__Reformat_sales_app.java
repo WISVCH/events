@@ -30,6 +30,6 @@ public class V1_3_1__Reformat_sales_app implements SpringJdbcMigration {
      */
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        jdbcTemplate.execute("ALTER TABLE public.product ADD COLUMN max_sold_per_customer TYPE integer");
+        jdbcTemplate.execute("ALTER TABLE public.product ADD COLUMN max_sold_per_customer INTEGER");
     }
 }
