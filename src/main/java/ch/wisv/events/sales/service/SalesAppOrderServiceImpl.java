@@ -56,17 +56,15 @@ public class SalesAppOrderServiceImpl implements SalesAppOrderService {
      */
     @Override
     public void addCustomerToOrder(Order order, Customer customer) {
-        customer = this.customerService.getByRFIDToken(customer.getRfidToken());
-        Order that;
-
         try {
-            that = this.orderService.getByReference(order.getPublicReference());
+            customer = this.customerService.getByKey(customer.getKey());
+            order = this.orderService.getByReference(order.getPublicReference());
+
+            order.setCustomer(customer);
+            this.orderService.update(order);
         } catch (EventsModelNotFound e) {
             throw new EventsSalesAppException("Order not found!");
         }
-
-        that.setCustomer(customer);
-        this.orderService.update(that);
     }
 
     /**

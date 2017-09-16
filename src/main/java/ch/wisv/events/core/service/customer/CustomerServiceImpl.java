@@ -10,7 +10,6 @@ import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getByRFIDToken(String token) {
         Optional<Customer> optional = customerRepository.findByRfidToken(token);
+
         if (optional.isPresent()) {
             return optional.get();
         }
@@ -88,24 +88,38 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Get a Customer by email.
+     *
+     * @param email of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getByEmail(String email) {
+        Optional<Customer> customer = this.customerRepository.findByEmail(email);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with email " + email + " not found!"));
+    }
+
+    /**
      * Add a new customer.
      *
      * @param customer customer model
      */
     @Override
     public void create(Customer customer) {
-        this.checkRequiredFields(customer);
+        this.assertIsValidCustomer(customer);
+
         customerRepository.saveAndFlush(customer);
     }
 
     /**
-     * Update an existing customer.
+     * Update a existing customer.
      *
      * @param customer customer model
      */
     @Override
     public void update(Customer customer) {
-        this.checkRequiredFields(customer);
+        this.assertIsValidCustomer(customer);
         Customer model = this.getByKey(customer.getKey());
 
         model.setChUsername(customer.getChUsername());
@@ -133,38 +147,29 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Will check all the required fields if they are valid.
      *
-     * @param model of type Customer
+     * @param customer of type Customer
      * @throws InvalidCustomerException      when one of the required fields is not valid
      * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
      */
-    private void checkRequiredFields(Customer model) throws InvalidCustomerException {
-        if (model == null) throw new InvalidCustomerException("Customer can not be null!");
+    private void assertIsValidCustomer(Customer customer) throws InvalidCustomerException {
+        if (customer == null) {
+            throw new InvalidCustomerException("Customer can not be null!");
+        }
 
-        String[][] check = new String[][]{
-                {model.getName(), "name"},
-                {model.getEmail(), "email"},
-                {model.getRfidToken(), "RFID token"}
-        };
-        this.checkFieldsEmpty(check);
+        if (customer.getName() == null || customer.getName().equals("")) {
+            throw new InvalidCustomerException("Name is empty, but a required field, so please fill in this field!");
+        }
 
-        if (customerRepository.findAll().stream().anyMatch(x -> !x.getKey().equals(model.getKey())
-                && x.getRfidToken().equals(model.getRfidToken()))) {
+        if (customer.getEmail() == null || customer.getEmail().equals("")) {
+            throw new InvalidCustomerException("Email is empty, but a required field, so please fill in this field!");
+        }
+
+        if (!customer.getRfidToken().equals("") && customerRepository.findByRfidToken(customer.getRfidToken()).isPresent()) {
             throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
         }
-    }
 
-    /**
-     * Checks if the a field in the String[][] is empty. If so it will throw an exception
-     *
-     * @param fields of type String[][]
-     * @throws InvalidCustomerException when one of the fields in empty
-     */
-    private void checkFieldsEmpty(String[][] fields) throws InvalidCustomerException {
-        for (String[] field : fields) {
-            if (field[0] == null || field[0].equals("")) {
-                throw new InvalidCustomerException(StringUtils.capitalize(field[1]) + " is empty, but a required "
-                        + "field, so please fill in this field!");
-            }
+        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+            throw new RFIDTokenAlreadyUsedException("Email address is already used!");
         }
     }
 }

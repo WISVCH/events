@@ -39,6 +39,10 @@
     <div class="row">
         <div class="col-xs-12 main text-center" style="margin-top: 60px;">
             <h3>Scan RFID- or NFC card</h3>
+            <p class="help-block">
+                When there is a new user that wants to use rfid! Please first scan the rfid card, then create an
+                account.
+            </p>
             <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
             <form th:action="@{./}" th:object="${order}" method="POST" id="formScan">
                 <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
@@ -46,6 +50,32 @@
 
                 <input type="submit" style="display: none;">
             </form>
+
+            <div class="row">
+                <h1 style="font-weight: 100;">or</h1>
+            </div>
+
+            <h3>Fill in a email-address</h3>
+        </div>
+
+        <div class="col-sm-4 col-sm-offset-4">
+            <form th:action="@{./}" th:object="${order}" method="POST">
+                <div class="form-group">
+                    <input type="email" class="form-control input-lg" th:field="*{customer.email}"
+                           placeholder="Email address">
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" style="position: fixed; bottom: 15px; left: 15px; right: 15px;">
+        <div class="col-xs-12">
+            <a th:href="@{'/sales/order/' + ${order.getPublicReference()} + '/customer/create/'}"
+               class="btn btn-lg btn-warning btn-block">
+                Create new user (without rfid!)
+            </a>
         </div>
     </div>
 </div>

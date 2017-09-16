@@ -36,16 +36,17 @@
         </div>
     </div>
 
-    <div class="row content-wrapper content-wrapper">
-        <div class="col-sm-12">
-            <div th:replace="fragments/message :: messages"></div>
-        </div>
+    <form th:action="@{./}" th:object="${order}" method="POST">
+        <div class="row content-wrapper content-wrapper">
+            <div class="col-sm-12">
+                <div th:replace="fragments/message :: messages"></div>
+            </div>
 
-        <div class="col-xs-12">
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-            <form th:action="@{./}" th:object="${order}" method="POST">
-                <input type="text" th:value="*{publicReference}" th:field="*{publicReference}" title="">
-                <input type="text" th:value="*{customer.rfidToken}" th:field="*{customer.rfidToken}" title="">
+            <div class="col-xs-12">
+                <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+                <input type="hidden" th:value="*{publicReference}" th:field="*{publicReference}" title="">
+                <input type="hidden" th:value="${order.customer == null ? '' : order.customer.rfidToken}"
+                       th:field="*{customer.rfidToken}" title="">
 
                 <div class="form-group">
                     <label>Full name*</label>
@@ -63,10 +64,16 @@
                            th:field="*{customer.chUsername}">
                 </div>
 
-                <button type="submit" class="btn btn-lg btn-block btn-primary">Create user</button>
-            </form>
+
+            </div>
         </div>
-    </div>
+
+        <div class="row" style="position: fixed; bottom: 15px; left: 15px; right: 15px;">
+            <div class="col-xs-12">
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Create user</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

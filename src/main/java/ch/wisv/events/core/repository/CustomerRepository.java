@@ -46,4 +46,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * @return optional
      */
     Optional<Customer> findByKey(String key);
+
+    /**
+     * Find a Customer by its email.
+     *
+     * @param email of type String
+     * @return Optional<Customer>
+     */
+    Optional<Customer> findByEmail(String email);
 }

@@ -46,6 +46,14 @@ public interface CustomerService {
     Customer getByKey(String key);
 
     /**
+     * Get a Customer by email.
+     *
+     * @param email of type String
+     * @return Customer
+     */
+    Customer getByEmail(String email);
+
+    /**
      * Update a existing customer.
      *
      * @param customer customer model
@@ -65,5 +73,4 @@ public interface CustomerService {
      * @param customer customer model
      */
     void delete(Customer customer);
-
 }
