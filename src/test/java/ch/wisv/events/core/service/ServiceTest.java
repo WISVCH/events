@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = EventsApplicationTest.class, properties = "flyway.enabled=false")
+@SpringBootTest(classes = EventsApplicationTest.class)
 @ActiveProfiles("test")
 public abstract class ServiceTest {
 
