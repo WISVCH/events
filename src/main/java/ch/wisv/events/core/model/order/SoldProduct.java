@@ -88,6 +88,8 @@ public class SoldProduct {
      * @param customer of type Customer
      */
     public SoldProduct(Product product, Order order, Customer customer) {
+        this();
+
         this.product = product;
         this.order = order;
         this.customer = customer;

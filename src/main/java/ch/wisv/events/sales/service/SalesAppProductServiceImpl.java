@@ -30,7 +30,7 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
-public class SalesAppEventServiceImpl implements SalesAppEventService {
+public class SalesAppProductServiceImpl implements SalesAppProductService {
 
     /**
      * Field eventRepository
@@ -38,18 +38,18 @@ public class SalesAppEventServiceImpl implements SalesAppEventService {
     private final EventRepository eventRepository;
 
     /**
-     * Constructor SalesAppEventServiceImpl creates a new SalesAppEventServiceImpl instance.
+     * Constructor SalesAppProductServiceImpl creates a new SalesAppProductServiceImpl instance.
      *
      * @param eventRepository of type EventRepository
      */
-    public SalesAppEventServiceImpl(EventRepository eventRepository) {
+    public SalesAppProductServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
     /**
-     * Method getAllGrantedProducts returns the allGrantedProducts of this SalesAppEventService object.
+     * Method getAllGrantedProducts returns the allGrantedProducts of this SalesAppProductService object.
      *
-     * @return the allGrantedProducts (type List<Product>) of this SalesAppEventService object.
+     * @return the allGrantedProducts (type List<Product>) of this SalesAppProductService object.
      */
     @Override
     public List<Product> getAllGrantedProducts() {
@@ -65,9 +65,9 @@ public class SalesAppEventServiceImpl implements SalesAppEventService {
     }
 
     /**
-     * Method getAllLdapGroups returns the allLdapGroups of this SalesAppEventServiceImpl object.
+     * Method getAllLdapGroups returns the allLdapGroups of this SalesAppProductServiceImpl object.
      *
-     * @return the allLdapGroups (type List<LDAPGroup>) of this SalesAppEventServiceImpl object.
+     * @return the allLdapGroups (type List<LDAPGroup>) of this SalesAppProductServiceImpl object.
      */
     private List<LDAPGroup> getAllLdapGroups() {
         OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext()

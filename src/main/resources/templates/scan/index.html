@@ -13,7 +13,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{../../favicon.ico}">
 
-    <title>Events - Sales</title>
+    <title>Events - Scan</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
@@ -46,46 +46,18 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-bottom: 2rem;">
         <div class="col-sm-12">
-            <!--/*@thymesVar id="products" type="java.util.List<ch.wisv.events.core.model.product.Product>"*/-->
-            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.Order"*/-->
-            <form th:if="${products.size() > 0}" th:action="@{./}" th:object="${order}" method="POST">
-                <div class="row sell-product-block" th:each="product : ${products}">
-                    <div class="col-xs-12">
-                        <div class="well well-sm">
-                            <div class="row">
-                                <div class="col-xs-12 section-box">
-                                    <h3 th:text="${product.title}"></h3>
-                                    <div class="form-group amount-block">
-                                        <div class="input-group">
-                                            <div class="input-group-addon decrease">
-                                                <i class="fa fa-minus fa-fw"></i>
-                                            </div>
-                                            <input type="number" class="form-control" step="1"
-                                                   min="0" th:max="${product.getMaxSoldPerCustomer()}"
-                                                   th:attr="data-product-id=${product.getId()}">
-                                            <div class="input-group-addon increase">
-                                                <i class="fa fa-plus fa-fw"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="products"></div>
-
-                <div style="position: fixed; bottom: 15px; left: 15px; right: 15px;">
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">
-                        Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </form>
-
-            <h3 class="text-center" style="margin-top: 60px;" th:if="${products.size() == 0}">Sold out.</h3>
+            <h3 class="text-center">Select a product</h3>
+        </div>
+    </div>
+    <!--/*@thymesVar id="products" type="List<ch.wisv.events.core.model.product.Product>"*/-->
+    <div class="row" th:each=" product : ${products}" style="margin-bottom: 2rem;">
+        <div class="col-xs-6 col-xs-offset-3">
+            <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}" class="btn btn-lg btn-block btn-primary">
+                <span th:text="${product.getTitle()}"></span>
+                <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 </div>
