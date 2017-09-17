@@ -38,7 +38,7 @@ public class SalesAppOrderServiceImpl implements SalesAppOrderService {
     private final CustomerService customerService;
 
     /**
-     * Constructor SalesAppEventServiceImpl creates a new SalesAppEventServiceImpl instance.
+     * Constructor SalesAppProductServiceImpl creates a new SalesAppProductServiceImpl instance.
      *
      * @param orderService    of type OrderService
      * @param customerService of type CustomerService

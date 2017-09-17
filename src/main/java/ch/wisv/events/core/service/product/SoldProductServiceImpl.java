@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -94,7 +95,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product) {
-        return this.soldProductRepository.findAllByCustomerAndProduct(customer, product);
+        return this.soldProductRepository.findAllByProductAndCustomer(product, customer);
     }
 
     /**
@@ -199,11 +200,11 @@ public class SoldProductServiceImpl implements SoldProductService {
             throw new EventsInvalidException("SoldProduct should contain a Product, before calling this method.");
         }
 
-        List<SoldProduct> soldProducts = this.soldProductRepository.findAllByProductAndUniqueCode(
+        Optional<SoldProduct> optional = this.soldProductRepository.findByProductAndUniqueCode(
                 soldProduct.getProduct(),
                 uniqueCode
         );
 
-        return soldProducts.size() == 0 || soldProducts.size() == 1 && soldProducts.get(0).equals(soldProduct);
+        return !optional.isPresent();
     }
 }

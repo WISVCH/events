@@ -3,7 +3,7 @@ package ch.wisv.events.sales.controller;
 import ch.wisv.events.core.exception.EventsSalesAppException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.sales.service.SalesAppEventService;
+import ch.wisv.events.sales.service.SalesAppProductService;
 import ch.wisv.events.sales.service.SalesAppOrderService;
 import ch.wisv.events.sales.service.SalesAppSoldProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +42,7 @@ public class SalesAppMainController {
     /**
      * Field salesAppEventService
      */
-    private final SalesAppEventService salesAppEventService;
+    private final SalesAppProductService salesAppEventService;
 
     /**
      * Field salesAppSoldProductService
@@ -57,11 +57,11 @@ public class SalesAppMainController {
     /**
      * Constructor SalesController creates a new SalesController instance.
      *
-     * @param salesAppEventService       of type SalesAppEventService.
+     * @param salesAppEventService       of type SalesAppProductService.
      * @param salesAppSoldProductService of type SalesAppSoldProductService.
      * @param salesAppOrderService               of type OrderService.
      */
-    public SalesAppMainController(SalesAppEventService salesAppEventService, SalesAppSoldProductService salesAppSoldProductService, SalesAppOrderService salesAppOrderService) {
+    public SalesAppMainController(SalesAppProductService salesAppEventService, SalesAppSoldProductService salesAppSoldProductService, SalesAppOrderService salesAppOrderService) {
         this.salesAppEventService = salesAppEventService;
         this.salesAppSoldProductService = salesAppSoldProductService;
         this.salesAppOrderService = salesAppOrderService;

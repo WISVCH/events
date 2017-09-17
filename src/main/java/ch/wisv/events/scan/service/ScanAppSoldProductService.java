@@ -1,6 +1,9 @@
-package ch.wisv.events.sales.service;
+package ch.wisv.events.scan.service;
 
+import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.scan.object.ScanResult;
 
 import java.util.List;
 
@@ -20,12 +23,11 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface SalesAppEventService {
+public interface ScanAppSoldProductService {
 
-    /**
-     * Method getAllGrantedProducts returns the allGrantedProducts of this SalesAppEventService object.
-     *
-     * @return the allGrantedProducts (type List<Product>) of this SalesAppEventService object.
-     */
-    List<Product> getAllGrantedProducts();
+    List<SoldProduct> getAllByProductAndCustomer(Product product, Customer customer);
+
+    SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode);
+
+    ScanResult scanProductWithUniqueCode(Product product, String uniqueCode);
 }

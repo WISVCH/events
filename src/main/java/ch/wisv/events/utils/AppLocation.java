@@ -31,7 +31,7 @@ public enum AppLocation {
 
     DASHBOARD("Dashboard", "fa-dashboard", "/dashboard/", new SimpleGrantedAuthority("ROLE_ADMIN")),
     SALES("Sales products", "fa-ticket", "/sales/", new SimpleGrantedAuthority("ROLE_USER")),
-    SCAN("Scan products", "fa-barcode", "/sales/scan/", new SimpleGrantedAuthority("ROLE_USER"));
+    SCAN("Scan products", "fa-barcode", "/scan/", new SimpleGrantedAuthority("ROLE_USER"));
 
     /**
      * Field name

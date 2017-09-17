@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{../../favicon.ico}">
+
+    <title>Events - Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
+          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/chales.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body id="scanPage">
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/header :: header">
+            <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <h2 th:text="${product.getTitle()}"></h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <form th:action="@{./}" method="POST" id="formScan">
+            <div class="col-xs-12 main text-center" style="margin-top: 60px;">
+                <h3>Scan RFID- or NFC card</h3>
+                <input type="hidden" name="rfidToken" id="rfidToken">
+            </div>
+
+            <div class="col-xs-12 text-center" style="margin-bottom: 16px;">
+                <h1 style="font-weight: 100; margin: 8px auto;">or</h1>
+
+                <h3>Fill in an unique code</h3>
+            </div>
+
+            <div class="col-xs-8 col-xs-offset-2">
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" id="uniqueCode" name="uniqueCode"
+                           placeholder="Unique code">
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script>
+    $("#scanPage").on('keypress', function (e) {
+        var token = $("#rfidToken");
+
+        if (e.which === 13) {
+            $("#formScan").submit();
+            return false;
+        }
+        token.val(token.val() + e.key);
+    });
+</script>
+</body>
+</html>

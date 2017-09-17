@@ -30,7 +30,7 @@ public class SalesAppSoldProductServiceImpl implements SalesAppSoldProductServic
     private final SoldProductRepository soldProductRepository;
 
     /**
-     * Constructor SalesAppEventServiceImpl creates a new SalesAppEventServiceImpl instance.
+     * Constructor SalesAppProductServiceImpl creates a new SalesAppProductServiceImpl instance.
      *
      * @param soldProductRepository of type SoldProductRepository
      */

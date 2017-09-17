@@ -148,7 +148,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProduct() {
-        when(repository.findAllByCustomerAndProduct(any(Customer.class), any(Product.class)))
+        when(repository.findByProductAndCustomer(any(Product.class), any(Customer.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
         List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
