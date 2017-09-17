@@ -148,7 +148,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProduct() {
-        when(repository.findByProductAndCustomer(any(Product.class), any(Customer.class)))
+        when(repository.findAllByProductAndCustomer(any(Product.class), any(Customer.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
         List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
@@ -202,6 +202,8 @@ public class SoldProductServiceTest extends ServiceTest {
         product1.setCost(0.d);
         Product product2 = new Product();
         product2.setCost(0.d);
+
+        when(repository.findByProductAndUniqueCode(any(Product.class), anyString())).thenReturn(Optional.empty());
 
         order.addProduct(product1);
         order.addProduct(product2);
