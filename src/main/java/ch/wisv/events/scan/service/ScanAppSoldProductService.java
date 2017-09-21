@@ -25,9 +25,47 @@ import java.util.List;
  */
 public interface ScanAppSoldProductService {
 
+    /**
+     * Method getAllByProductAndCustomer ...
+     *
+     * @param product  of type Product
+     * @param customer of type Customer
+     * @return List<SoldProduct>
+     */
     List<SoldProduct> getAllByProductAndCustomer(Product product, Customer customer);
 
+    /**
+     * Method getByProductAndUniqueCode ...
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     * @return SoldProduct
+     */
     SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode);
 
-    ScanResult scanProductWithUniqueCode(Product product, String uniqueCode);
+    /**
+     * Method scanByProductAndUniqueCode ...
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     * @return ScanResult
+     */
+    ScanResult scanByProductAndUniqueCode(Product product, String uniqueCode);
+
+    /**
+     * Method scanProductWithRfid ...
+     *
+     * @param product  of type Product
+     * @param customer of type String
+     * @return ScanResult
+     */
+    ScanResult scanByProductAndCustomer(Product product, Customer customer);
+
+    /**
+     * Method scanSoldProduct ...
+     *
+     * @param soldProduct of type SoldProduct
+     * @return ScanResult
+     */
+    ScanResult scanSoldProduct(SoldProduct soldProduct);
 }
