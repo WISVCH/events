@@ -45,18 +45,18 @@
 
     <div class="row">
         <form th:action="@{./}" method="POST" id="formScan">
-            <div class="col-xs-12 main text-center" style="margin-top: 60px;">
-                <h3>Scan RFID- or NFC card</h3>
+            <div class="col-xs-12 main text-center">
+                <h4>Scan RFID- or NFC card</h4>
                 <input type="hidden" name="rfidToken" id="rfidToken">
             </div>
 
             <div class="col-xs-12 text-center" style="margin-bottom: 16px;">
-                <h1 style="font-weight: 100; margin: 8px auto;">or</h1>
+                <h1 style="font-weight: 100; margin: 8px auto 16px;">or</h1>
 
-                <h3>Fill in an unique code</h3>
+                <h4>Fill in an unique code</h4>
             </div>
 
-            <div class="col-xs-8 col-xs-offset-2">
+            <div class="col-xs-10 col-xs-offset-1">
                 <div class="form-group">
                     <input type="text" class="form-control input-lg" id="uniqueCode" name="uniqueCode"
                            placeholder="Unique code">

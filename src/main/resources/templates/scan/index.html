@@ -53,7 +53,7 @@
     </div>
     <!--/*@thymesVar id="products" type="List<ch.wisv.events.core.model.product.Product>"*/-->
     <div class="row" th:each=" product : ${products}" style="margin-bottom: 2rem;">
-        <div class="col-xs-6 col-xs-offset-3">
+        <div class="col-xs-10 col-xs-offset-1">
             <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}" class="btn btn-lg btn-block btn-primary">
                 <span th:text="${product.getTitle()}"></span>
                 <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
@@ -61,44 +61,5 @@
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/events.js}"></script>
-<script>
-    $(document).ready(function () {
-        $("input[type=number]").each(function () {
-            $(this).val(0);
-        });
-
-        $(".decrease").on("click", function () {
-            var el = $(this).parent().children("input[type=number]")[0];
-            var amount = parseInt($(el).val());
-
-            if (amount > 0) $(el).val(amount - 1);
-        });
-
-        $(".increase").on("click", function () {
-            var el = $(this).parent().children("input[type=number]")[0];
-            var amount = parseInt($(el).val());
-
-            $(el).val(amount + 1);
-        });
-
-        $("form").on('submit', function (e) {
-            const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
-            var count = 0;
-
-            $("input[type=number]").each(function () {
-                for (var i = 0; i < parseInt($(this).val()); i++) {
-                    var productId = $(this).data('product-id');
-
-                    $("#products").append(format(productInput, [count, count, productId]));
-                    count++;
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

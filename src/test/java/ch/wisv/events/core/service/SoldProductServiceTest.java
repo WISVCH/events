@@ -245,5 +245,4 @@ public class SoldProductServiceTest extends ServiceTest {
 
         verify(repository, times(1)).save(this.soldProduct);
     }
-
 }

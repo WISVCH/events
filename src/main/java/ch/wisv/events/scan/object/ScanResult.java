@@ -33,7 +33,12 @@ public enum ScanResult {
     /**
      * Scan result when the SoldProduct does not exists.
      */
-    PRODUCT_NOT_EXISTS("There is no ticket available", "#b52b27");
+    PRODUCT_NOT_EXISTS("There is no ticket available", "#b52b27"),
+
+    /**
+     * Scan result when there are multiple ticket on the same account
+     */
+    MULTIPLE_PRODUCT("", "#df8a13");
 
     /**
      * Field header

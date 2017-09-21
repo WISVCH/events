@@ -37,42 +37,45 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-10 col-xs-offset-1 main text-center" style="margin-top: 60px;">
-            <h3>Scan RFID- or NFC card</h3>
+        <div class="col-xs-12 text-center">
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <h2 th:text="${product.getTitle()}"></h2>
+        </div>
+    </div>
 
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-            <form th:action="@{./}" th:object="${order}" method="POST" id="formScan">
-                <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
-                <input type="hidden" th:field="*{customer.rfidToken}" id="rfidToken">
-
-                <input type="submit" style="display: none;">
-            </form>
-
-            <div class="row">
-                <h1 style="font-weight: 100;">or</h1>
+    <form th:action="@{./}" method="POST" th:if="${soldProducts.size() != 0}">
+        <div class="row">
+            <div class="col-xs-12 main text-center">
+                <h5 style="font-weight: 200;">Select the tickets that you want to scan.</h5>
+                <input type="hidden" name="rfidToken" id="rfidToken">
             </div>
 
-            <h3>Fill in a email-address</h3>
+            <div class="col-xs-10 col-xs-offset-1" style="padding: 30px;">
+                <label class="control control--checkbox" th:each="soldProduct : ${soldProducts}">
+                    <span th:text="${soldProduct.getUniqueCode()}"></span>
+                    <input type="checkbox" th:value="${soldProduct.getId()}" name="soldProducts" id="soldProducts"/>
+                    <div class="control__indicator"></div>
+                </label>
+            </div>
         </div>
 
-        <div class="col-xs-10 col-xs-offset-1">
-            <form th:action="@{./}" th:object="${order}" method="POST">
-                <div class="form-group">
-                    <input type="email" class="form-control input-lg" th:field="*{customer.email}"
-                           placeholder="Email address">
-                </div>
-
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
                 <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
-            </form>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1 text-center">
+            <h5 style="font-weight: 200;">No tickets left to scan!</h5>
         </div>
     </div>
 
     <div class="row" style="position: fixed; bottom: 15px; left: 15px; right: 15px;">
         <div class="col-xs-12">
-            <a th:href="@{'/sales/order/' + ${order.getPublicReference()} + '/customer/create/'}"
-               class="btn btn-lg btn-warning btn-block">
-                Create new user (without rfid!)
-            </a>
+            <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}"
+               class="btn btn-lg btn-block btn-primary">Back</a>
         </div>
     </div>
 </div>
@@ -80,16 +83,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script>
-    $("#scanPage").on('keypress', function (e) {
-        var token = $("#rfidToken");
-
-        if (e.which === 13) {
-            $("#formScan").submit();
-            return false;
-        }
-        token.val(token.val() + e.key);
-    })
-</script>
 </body>
 </html>
