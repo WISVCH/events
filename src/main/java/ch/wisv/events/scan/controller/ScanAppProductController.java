@@ -62,7 +62,7 @@ public class ScanAppProductController {
      *
      * @param productService            of type ProductService.
      * @param scanAppSoldProductService of type ScanAppSoldProductService.
-     * @param customerService
+     * @param customerService           of type CustomerService.
      */
     @Autowired
     public ScanAppProductController(ProductService productService,
@@ -151,7 +151,6 @@ public class ScanAppProductController {
         }
     }
 
-
     /**
      * Method select ...
      *
@@ -162,7 +161,9 @@ public class ScanAppProductController {
      * @return String
      */
     @PostMapping("/{productKey}/select/{customerKey}/")
-    public String select(RedirectAttributes redirect, @PathVariable String productKey, @PathVariable String customerKey,
+    public String select(RedirectAttributes redirect,
+            @PathVariable String productKey,
+            @PathVariable String customerKey,
             @RequestParam(value = "soldProducts") List<SoldProduct> soldProducts
     ) {
         try {
@@ -178,10 +179,7 @@ public class ScanAppProductController {
                 }
             }
 
-            redirect.addFlashAttribute("result", result);
-            redirect.addFlashAttribute("product", product);
-
-            return "redirect:/scan/result/";
+            return this.createRedirect(redirect, product, result);
         } catch (EventsModelNotFound | CustomerNotFound e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
@@ -205,10 +203,7 @@ public class ScanAppProductController {
             if (result == ScanResult.MULTIPLE_PRODUCT) {
                 return "redirect:/scan/product/" + product.getKey() + "/select/" + customer.getKey() + "/";
             } else {
-                redirect.addFlashAttribute("result", result);
-                redirect.addFlashAttribute("product", product);
-
-                return "redirect:/scan/result/";
+                return this.createRedirect(redirect, product, result);
             }
         } catch (CustomerNotFound e) {
             redirect.addFlashAttribute("result", e.getMessage());
@@ -228,6 +223,19 @@ public class ScanAppProductController {
      */
     private String handleUniqueCodeRequest(RedirectAttributes redirect, Product product, String uniqueCode) {
         ScanResult result = this.scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
+
+        return this.createRedirect(redirect, product, result);
+    }
+
+    /**
+     * Create default redirect response.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param product  of type Product
+     * @param result   of type ScanResult
+     * @return String
+     */
+    private String createRedirect(RedirectAttributes redirect, Product product, ScanResult result) {
         redirect.addFlashAttribute("result", result);
         redirect.addFlashAttribute("product", product);
 
