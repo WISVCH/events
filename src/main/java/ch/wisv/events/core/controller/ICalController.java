@@ -87,6 +87,4 @@ public class ICalController {
             throw new RuntimeException("IOError writing ICalendar to response output stream", e);
         }
     }
-
-
 }
