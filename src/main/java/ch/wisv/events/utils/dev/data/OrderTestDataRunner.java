@@ -94,6 +94,7 @@ public class OrderTestDataRunner extends TestDataRunner {
             List<Product> allProduct = this.productRepository.findAll();
             order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));
             order.setStatus(OrderStatus.valueOf((String) jsonObject.get("orderStatus")));
+            order.setAmount(10.d);
 
             return order;
         }
