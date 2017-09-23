@@ -89,7 +89,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEvents() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getUpcomingEvents());
@@ -97,7 +97,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEventsEmpty() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
@@ -105,7 +105,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEventsNotPublished() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.NOT_PUBLISHED);
+        this.event.setPublished(EventStatus.NOT_PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
@@ -113,7 +113,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetAvailableEvents() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getAvailableEvents());
@@ -176,7 +176,7 @@ public class EventServiceImplTest extends ServiceTest {
         Product product = new Product();
         this.event.addProduct(product);
 
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getEventByProductKey(product.getKey()));

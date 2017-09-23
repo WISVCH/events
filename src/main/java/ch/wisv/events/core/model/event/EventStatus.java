@@ -5,7 +5,6 @@ import static java.util.Arrays.stream;
 /**
  * Enum EventStatus
  */
-
 public enum EventStatus {
 
     PUBLISHED(1, "Published"),

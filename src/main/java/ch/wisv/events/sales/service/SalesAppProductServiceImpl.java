@@ -1,16 +1,20 @@
 package ch.wisv.events.sales.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.core.model.event.EventOptions;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.utils.LDAPGroup;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,15 +57,36 @@ public class SalesAppProductServiceImpl implements SalesAppProductService {
      */
     @Override
     public List<Product> getAllGrantedProducts() {
-        List<Product> products = new ArrayList<>();
+        List<Event> grantedEvents = this.getGrantedEvents();
 
-        this.getAllLdapGroups().forEach(current -> {
-            this.eventRepository.findAllByOptions(new EventOptions(EventStatus.PUBLISHED, current)).forEach(
-                    event -> products.addAll(event.getProducts())
-            );
-        });
+        List<Product> products = new ArrayList<>();
+        grantedEvents.forEach(event -> event.getProducts().forEach(product -> {
+            if (product.getSellStart().isBefore(LocalDateTime.now()) && product.getSellEnd().isAfter(LocalDateTime.now())) {
+                products.add(product);
+            }
+        }));
 
         return products;
+    }
+
+    /**
+     * Method getGrantedEvents ...
+     *
+     * @return List<Event>
+     */
+    private List<Event> getGrantedEvents() {
+        Collection<GrantedAuthority> authorities = this.getAuthentication().getAuthorities();
+        List<Event> grantedEvents = new ArrayList<>();
+
+        if (authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            grantedEvents.addAll(this.eventRepository.findAllByPublishedAndEndingIsAfter(EventStatus.PUBLISHED, LocalDateTime.now()));
+        } else {
+            this.getAllLdapGroups().forEach(current -> grantedEvents.addAll(
+                    this.eventRepository.findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus.PUBLISHED, current, LocalDateTime.now()))
+            );
+        }
+
+        return grantedEvents;
     }
 
     /**
@@ -70,12 +95,9 @@ public class SalesAppProductServiceImpl implements SalesAppProductService {
      * @return the allLdapGroups (type List<LDAPGroup>) of this SalesAppProductServiceImpl object.
      */
     private List<LDAPGroup> getAllLdapGroups() {
-        OIDCAuthenticationToken auth = (OIDCAuthenticationToken) SecurityContextHolder.getContext()
-                .getAuthentication();
-
         List<LDAPGroup> groups = new ArrayList<>();
-        if (auth.getUserInfo() instanceof CHUserInfo) {
-            CHUserInfo userInfo = (CHUserInfo) auth.getUserInfo();
+        if (this.getAuthentication().getUserInfo() instanceof CHUserInfo) {
+            CHUserInfo userInfo = (CHUserInfo) this.getAuthentication().getUserInfo();
 
             userInfo.getLdapGroups().forEach(current -> {
                 try {
@@ -86,5 +108,14 @@ public class SalesAppProductServiceImpl implements SalesAppProductService {
         }
 
         return groups;
+    }
+
+    /**
+     * Method getAuthentication returns the authentication of this SalesAppProductServiceImpl object.
+     *
+     * @return the authentication (type OIDCAuthenticationToken) of this SalesAppProductServiceImpl object.
+     */
+    private OIDCAuthenticationToken getAuthentication() {
+        return (OIDCAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     }
 }

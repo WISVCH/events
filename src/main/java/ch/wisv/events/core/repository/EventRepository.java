@@ -1,7 +1,8 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.event.EventOptions;
+import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -14,14 +15,6 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
-     * Find an Event by ID.
-     *
-     * @param id id of Event
-     * @return Event
-     */
-    Event findById(Integer id);
-
-    /**
      * Find Events that ending after a certain dateTime, so all upcoming events.
      *
      * @param dateTime DateTime an event should ending after
@@ -32,10 +25,19 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     /**
      * Find all Events that are organized by a certain LDAPGroup.
      *
-     * @param options of type EventOptions
+     * @param published   of type EventStatus
+     * @param organizedBy of type LDAPGroup
      * @return List<Event>
      */
-    List<Event> findAllByOptions(EventOptions options);
+    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus published, LDAPGroup organizedBy, LocalDateTime ending);
+
+    /**
+     * Method findAllByPublished ...
+     *
+     * @param published of type EventStatus
+     * @return List<Event>
+     */
+    List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
 
     /**
      * Find an Event by key

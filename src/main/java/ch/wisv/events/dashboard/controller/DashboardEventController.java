@@ -164,7 +164,7 @@ public class DashboardEventController {
             this.eventService.create(event);
             redirect.addFlashAttribute("message", event.getTitle() + " successfully created!");
 
-            if (event.getOptions().getPublished() == EventStatus.PUBLISHED) {
+            if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
@@ -190,7 +190,7 @@ public class DashboardEventController {
             this.eventService.update(event);
             redirect.addFlashAttribute("message", "Event changes saved!");
 
-            if (event.getOptions().getPublished() == EventStatus.PUBLISHED) {
+            if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             } else {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);

@@ -75,8 +75,8 @@
                         </td>
                         <td th:text="${event.getTitle()}">Row 1 Data 1</td>
                         <td th:text="${event.getStart()}"></td>
-                        <td th:text="${event.getOptions().getPublished()}"></td>
-                        <td th:text="${event.getOptions().getOrganizedBy()}"></td>
+                        <td th:text="${event.getPublished()}"></td>
+                        <td th:text="${event.getOrganizedBy().getName()}"></td>
                         <td>
                             <span class="label label-success" th:text="'Sold: ' + ${event.getSold()}"></span>
                             <span class="label label-primary" th:text="'Target: ' + ${event.getTarget()}"></span>
