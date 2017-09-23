@@ -104,14 +104,21 @@ public class Event {
     private Integer maxSold;
 
     /**
-     * Field published
+     * Publish status of the event.
      */
     private EventStatus published;
 
     /**
-     * Field organizedBy
+     * Commission/board which organizes the Event.
      */
     private LDAPGroup organizedBy;
+
+    /**
+     * List of all the possible catergories.
+     */
+    @NotNull
+    @ElementCollection
+    private List<EventCategory> categories;
 
     /**
      * Default constructor.
@@ -121,6 +128,7 @@ public class Event {
         this.products = new ArrayList<>();
         this.published = EventStatus.NOT_PUBLISHED;
         this.organizedBy = LDAPGroup.BESTUUR;
+        this.categories = new ArrayList<>();
     }
 
     /**

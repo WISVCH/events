@@ -143,6 +143,7 @@ public class EventServiceImpl implements EventService {
         update.setPublished(event.getPublished());
         update.setOrganizedBy(event.getOrganizedBy());
         update.setShortDescription(event.getShortDescription());
+        update.setCategories(event.getCategories());
 
         this.updateLinkedProducts(update.getProducts(), true);
         eventRepository.save(update);

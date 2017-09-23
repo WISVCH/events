@@ -27,6 +27,15 @@
                     </option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>Categories</label>
+                <div class="checkbox" th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
+                    <label>
+                        <input type="checkbox" th:field="*{categories}" th:value="${category}"
+                               th:text="${category.getDisplayName()}">
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 </div>
