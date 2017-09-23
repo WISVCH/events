@@ -10,9 +10,9 @@
         <div class="panel-body">
             <div class="form-group">
                 <label for="eventStatus">Status*</label>
-                <select name="" id="eventStatus" class="form-control" th:field="*{options.published}" required>
+                <select name="" id="eventStatus" class="form-control" th:field="*{published}" required>
                     <option th:each="state : ${T(ch.wisv.events.core.model.event.EventStatus).values()}"
-                            th:selected="${event.options.published.getId() == state.getId()}"
+                            th:selected="${event.published.getId() == state.getId()}"
                             th:value="${state}"
                             th:text="${state.getDisplayName()}">
                     </option>
@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="organizedBy">Organized by*</label>
-                <select name="" id="organizedBy" class="form-control" th:field="*{options.organizedBy}" required>
+                <select name="" id="organizedBy" class="form-control" th:field="*{organizedBy}" required>
                     <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
                             th:value="${group}"
                             th:text="${group.getName()}">

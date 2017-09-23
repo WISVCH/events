@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.utils.LDAPGroup;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -103,10 +104,14 @@ public class Event {
     private Integer maxSold;
 
     /**
-     * Options for the event.
+     * Field published
      */
-    @NotNull
-    private EventOptions options;
+    private EventStatus published;
+
+    /**
+     * Field organizedBy
+     */
+    private LDAPGroup organizedBy;
 
     /**
      * Default constructor.
@@ -114,7 +119,8 @@ public class Event {
     public Event() {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
-        this.options = new EventOptions();
+        this.published = EventStatus.NOT_PUBLISHED;
+        this.organizedBy = LDAPGroup.BESTUUR;
     }
 
     /**
@@ -130,7 +136,8 @@ public class Event {
      * @param ending      Ending DateTime of the Event
      */
     public Event(String title, String description, String location, int target, Integer maxSold, String imageURL,
-                 LocalDateTime start, LocalDateTime ending, String shortDescription) {
+            LocalDateTime start, LocalDateTime ending, String shortDescription
+    ) {
         this();
         this.title = title;
         this.description = description;
@@ -161,5 +168,4 @@ public class Event {
     public double calcProgress() {
         return Math.min(Math.round((((double) this.sold / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }
-
 }

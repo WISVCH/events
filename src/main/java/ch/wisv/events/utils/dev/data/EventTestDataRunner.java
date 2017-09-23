@@ -92,8 +92,8 @@ public class EventTestDataRunner extends TestDataRunner {
                 LocalDateTime.now().plusDays(days).plusHours(1).truncatedTo(ChronoUnit.MINUTES),
                 (String) jsonObject.get("shortDescription")
         );
-        event.getOptions().setPublished(EventStatus.PUBLISHED);
-        event.getOptions().setOrganizedBy(LDAPGroup.DIENST2);
+        event.setPublished(EventStatus.PUBLISHED);
+        event.setOrganizedBy(LDAPGroup.AKCIE);
 
         return event;
     }

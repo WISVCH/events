@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished()
                 == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -86,7 +86,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream().filter(x -> x.getOptions().getPublished() == EventStatus.PUBLISHED)
+        return eventRepository.findAll().stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -139,8 +139,9 @@ public class EventServiceImpl implements EventService {
         update.setEnding(event.getEnding());
         update.setMaxSold(event.getMaxSold());
         update.setSold(event.getSold());
-        update.setOptions(event.getOptions());
         update.setProducts(event.getProducts());
+        update.setPublished(event.getPublished());
+        update.setOrganizedBy(event.getOrganizedBy());
         update.setShortDescription(event.getShortDescription());
 
         this.updateLinkedProducts(update.getProducts(), true);
