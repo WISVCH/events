@@ -62,7 +62,6 @@
                         <th>Starting date</th>
                         <th>Status</th>
                         <th>Organized by</th>
-                        <th>Sold/Target/Limit</th>
                         <th>Progress target</th>
                         <th>Actions</th>
                     </tr>
@@ -77,11 +76,6 @@
                         <td th:text="${event.getStart()}"></td>
                         <td th:text="${event.getPublished()}"></td>
                         <td th:text="${event.getOrganizedBy().getName()}"></td>
-                        <td>
-                            <span class="label label-success" th:text="'Sold: ' + ${event.getSold()}"></span>
-                            <span class="label label-primary" th:text="'Target: ' + ${event.getTarget()}"></span>
-                            <span class="label label-default" th:text="'Limit: ' + ${event.getMaxSold()}"></span>
-                        </td>
                         <td>
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.getSold()}"
@@ -135,8 +129,7 @@
                 {width: "60px", targets: 3},
                 {width: "100px", targets: 4},
                 {width: "180px", targets: 5},
-                {width: "180px", targets: 6},
-                {width: "120px", targets: 7}
+                {width: "120px", targets: 6}
             ]
         });
 
