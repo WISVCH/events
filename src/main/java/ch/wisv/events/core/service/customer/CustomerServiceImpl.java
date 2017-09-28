@@ -173,12 +173,48 @@ public class CustomerServiceImpl implements CustomerService {
             throw new InvalidCustomerException("RFID token can not be null.");
         }
 
-        if (!customer.getRfidToken().equals("") && this.customerRepository.findByRfidToken(customer.getRfidToken()).isPresent()) {
+        if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
             throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
         }
 
-        if (this.customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+        if (this.isNotUniqueEmail(customer)) {
             throw new RFIDTokenAlreadyUsedException("Email address is already used!");
+        }
+    }
+
+    /**
+     * Method check if given email is not used by another Customer.
+     *
+     * @param customer of type Customer
+     * @return boolean
+     */
+    private boolean isNotUniqueEmail(Customer customer) {
+        Optional<Customer> optional =  this.customerRepository.findByEmail(customer.getEmail());
+
+        if (optional.isPresent()) {
+            Customer temp = optional.get();
+
+            return !(customer.getKey().equals(temp.getKey()));
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Method check if given rfidToken is not used by another Customer.
+     *
+     * @param customer of type Customer
+     * @return boolean
+     */
+    private boolean isNotUniqueRfidToken(Customer customer) {
+        Optional<Customer> optional = this.customerRepository.findByRfidToken(customer.getRfidToken());
+
+        if (optional.isPresent()) {
+            Customer temp = optional.get();
+
+            return !(customer.getKey().equals(temp.getKey()));
+        } else {
+            return false;
         }
     }
 }
