@@ -60,13 +60,34 @@ public class SalesAppProductServiceImpl implements SalesAppProductService {
         List<Event> grantedEvents = this.getGrantedEvents();
 
         List<Product> products = new ArrayList<>();
-        grantedEvents.forEach(event -> event.getProducts().forEach(product -> {
-            if (product.getSellStart().isBefore(LocalDateTime.now()) && product.getSellEnd().isAfter(LocalDateTime.now())) {
-                products.add(product);
-            }
-        }));
+        grantedEvents.forEach(event -> {
+            event.getProducts().forEach(product -> {
+                if (this.shouldProductBeSoldNow(event, product)) {
+                    products.add(product);
+                }
+            });
+        });
 
         return products;
+    }
+
+    /**
+     * Determine if a Product should be sold now.
+     *
+     * @param event   of type Event
+     * @param product of type Product
+     * @return boolean
+     */
+    private boolean shouldProductBeSoldNow(Event event, Product product) {
+        if (product.getSellStart().isBefore(LocalDateTime.now())) {
+            if (product.getSellEnd() == null) {
+                return event.getEnding().isAfter(LocalDateTime.now());
+            } else {
+                return product.getSellEnd().isAfter(LocalDateTime.now());
+            }
+        }
+
+        return false;
     }
 
     /**
