@@ -46,7 +46,74 @@
 
 
             <div class="row">
-                div.col
+                <div class="col-xs-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Upcoming events</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Progress target</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                                <tr th:each="event : ${upcoming}">
+                                    <td th:text="${event.getTitle()}"></td>
+                                    <td>
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar"
+                                                 th:aria-valuenow="${event.getSold()}"
+                                                 aria-valuemin="0"
+                                                 th:aria-valuemax="${event.getTarget()}"
+                                                 th:style="'width: ' + ${event.calcProgress()} + '%;'"
+                                                 th:text="${event.calcProgress()} + '%'">
+                                                59%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Previous events</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Attendance rate</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="something : ${previous}">
+                                    <td th:text="${something.key.getTitle()}"></td>
+                                    <td>
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar"
+                                                 th:aria-valuenow="${something.value}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 th:style="'width: ' + ${something.value} + '%;'"
+                                                 th:text="${something.value} + '%'">
+                                                59%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

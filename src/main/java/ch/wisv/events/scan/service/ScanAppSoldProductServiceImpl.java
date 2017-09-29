@@ -38,11 +38,6 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
     private final SoldProductRepository soldProductRepository;
 
     /**
-     * Field customerService
-     */
-    private final CustomerService customerService;
-
-    /**
      * Constructor ScanAppSoldProductServiceImpl creates a new ScanAppSoldProductServiceImpl instance.
      *
      * @param soldProductRepository of type SoldProductRepository
@@ -50,7 +45,6 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
      */
     public ScanAppSoldProductServiceImpl(SoldProductRepository soldProductRepository, CustomerService customerService) {
         this.soldProductRepository = soldProductRepository;
-        this.customerService = customerService;
     }
 
     /**
@@ -140,6 +134,5 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
         } else {
             return ScanResult.MULTIPLE_PRODUCT;
         }
-
     }
 }

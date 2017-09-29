@@ -79,7 +79,7 @@ public class EventTestDataRunner extends TestDataRunner {
      * @return Event
      */
     private Event createEvent(JSONObject jsonObject) {
-        int days = df.getNumberBetween(1, 10);
+        int days = df.getNumberBetween(-10, 10);
 
         Event event = new Event(
                 (String) jsonObject.get("title"),

@@ -40,10 +40,20 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
 
     /**
-     * Find an Event by key
+     * Find an Event by key.
      *
      * @param key key of an Event
      * @return list of Events
      */
     Optional<Event> findByKey(String key);
+
+
+    /**
+     * Find all Event between a period of time.
+     *
+     * @param start  of type LocalDateTime
+     * @param ending of type LocalDateTime
+     * @return List<Event>
+     */
+    List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
 }

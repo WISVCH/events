@@ -4,8 +4,10 @@ import ch.wisv.events.core.exception.EventsInvalidModelException;
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductNotFound;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.webhook.WebhookPublisher;
 import ch.wisv.events.utils.FormMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,15 +35,25 @@ public class DashboardProductController {
     private final SoldProductService soldProductService;
 
     /**
+     * Field webhookPublisher
+     */
+    private final WebhookPublisher webhookPublisher;
+
+    /**
      * Default constructor
      *
-     * @param productService     ProductService
-     * @param soldProductService SoldProductService
+     * @param productService     of type ProductService.
+     * @param soldProductService of type SoldProductService.
+     * @param webhookPublisher   of type WebhookPublisher.
      */
     @Autowired
-    public DashboardProductController(ProductService productService, SoldProductService soldProductService) {
+    public DashboardProductController(ProductService productService,
+            SoldProductService soldProductService,
+            WebhookPublisher webhookPublisher
+    ) {
         this.productService = productService;
         this.soldProductService = soldProductService;
+        this.webhookPublisher = webhookPublisher;
     }
 
     /**
@@ -127,8 +139,9 @@ public class DashboardProductController {
     public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
         Product product = productService.getByKey(key);
         try {
-            productService.delete(product);
+            this.productService.delete(product);
             redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
+            this.webhookPublisher.event(WebhookTrigger.PRODUCT_DELETE, product);
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -139,15 +152,16 @@ public class DashboardProductController {
     /**
      * Post request to create a Product
      *
-     * @param product    Product product attr.
+     * @param product  Product product attr.
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
     @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
-            productService.create(product);
+            this.productService.create(product);
             redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
+            this.webhookPublisher.event(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
 
             return "redirect:/dashboard/products/edit/" + product.getKey() + "/";
         } catch (EventsInvalidModelException e) {
@@ -163,18 +177,19 @@ public class DashboardProductController {
      * Method edit post request to update an existing Product
      *
      * @param redirect of type RedirectAttributes
-     * @param model    of type Product
+     * @param product  of type Product
      * @return String
      */
     @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Product model) {
+    public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
-            this.productService.update(model);
+            this.productService.update(product);
             redirect.addFlashAttribute("message", "Changes have been saved!");
+            this.webhookPublisher.event(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
         } catch (EventsModelNotFound | EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/dashboard/products/edit/" + model.getKey() + "/";
+        return "redirect:/dashboard/products/edit/" + product.getKey() + "/";
     }
 }

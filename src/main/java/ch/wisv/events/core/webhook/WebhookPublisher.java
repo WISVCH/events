@@ -85,9 +85,7 @@ public class WebhookPublisher extends Thread {
             JSONObject request = WebhookRequestFactory.generateRequest(this.trigger, this.object);
 
             List<Webhook> webhooks = this.webhookService.getByTrigger(trigger);
-            webhooks.forEach(webhook -> {
-                this.request(webhook.getPayloadUrl(), request);
-            });
+            webhooks.forEach(webhook -> this.request(webhook.getPayloadUrl(), request));
         } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
             e.printStackTrace();
         }
@@ -106,6 +104,8 @@ public class WebhookPublisher extends Thread {
         httpPost.setHeader("Content-type", "application/json");
         httpPost.setHeader("Accept", "application/json");
         httpPost.setEntity(new StringEntity(request.toJSONString(), "UTF8"));
+
+        System.out.println(request.toJSONString());
 
         try {
             HttpResponse response = httpClient.execute(httpPost);

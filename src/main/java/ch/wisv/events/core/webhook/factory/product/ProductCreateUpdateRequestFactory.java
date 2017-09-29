@@ -1,8 +1,8 @@
-package ch.wisv.events.core.webhook.factory.event;
+package ch.wisv.events.core.webhook.factory.product;
 
 
 import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
-import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
 import org.json.simple.JSONObject;
 
@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventDeleteRequestFactory extends WebhookRequestFactory {
+public class ProductCreateUpdateRequestFactory extends WebhookRequestFactory {
 
     /**
      * Method getRequestData ...
@@ -31,10 +31,13 @@ public class EventDeleteRequestFactory extends WebhookRequestFactory {
      */
     @Override
     public JSONObject getRequestData(Object object) throws WebhookRequestObjectIncorrect {
-        if (object instanceof Event) {
-            Event event = (Event) object;
+        if (object instanceof Product) {
+            Product product = (Product) object;
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("key", event.getKey());
+            jsonObject.put("key", product.getKey());
+            jsonObject.put("title", product.getTitle());
+            jsonObject.put("description", product.getDescription());
+            jsonObject.put("price", product.getCost());
 
             return jsonObject;
         } else {
