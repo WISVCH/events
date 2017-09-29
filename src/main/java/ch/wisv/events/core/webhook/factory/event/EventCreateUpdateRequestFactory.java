@@ -3,8 +3,15 @@ package ch.wisv.events.core.webhook.factory.event;
 
 import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventCategory;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
+import ch.wisv.events.core.webhook.factory.product.ProductCreateUpdateRequestFactory;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -30,7 +37,7 @@ public class EventCreateUpdateRequestFactory extends WebhookRequestFactory {
      * @param object of type Object
      */
     @Override
-    protected JSONObject getRequestData(Object object) throws WebhookRequestObjectIncorrect {
+    public JSONObject getRequestData(Object object) throws WebhookRequestObjectIncorrect {
         if (object instanceof Event) {
             Event event = (Event) object;
             JSONObject jsonObject = new JSONObject();
@@ -41,10 +48,33 @@ public class EventCreateUpdateRequestFactory extends WebhookRequestFactory {
             jsonObject.put("event_start", event.getStart().toString());
             jsonObject.put("event_end", event.getEnding().toString());
             jsonObject.put("location", event.getLocation());
+            jsonObject.put("categories", event.getCategories().stream().map(EventCategory::toString).collect(Collectors.toList()));
+            jsonObject.put("products", this.generateProductRequestData(event.getProducts()));
 
             return jsonObject;
         } else {
             throw new WebhookRequestObjectIncorrect();
         }
+    }
+
+    /**
+     * Method generateProductRequestData ...
+     *
+     * @param productList of type List<Product>
+     * @return JSONArray
+     */
+    private JSONArray generateProductRequestData(List<Product> productList) {
+        ProductCreateUpdateRequestFactory productCreateUpdateRequestFactory = new ProductCreateUpdateRequestFactory();
+        JSONArray jsonArray = new JSONArray();
+
+        productList.forEach(product -> {
+            try {
+                jsonArray.add(productCreateUpdateRequestFactory.getRequestData(product));
+            } catch (WebhookRequestObjectIncorrect webhookRequestObjectIncorrect) {
+                webhookRequestObjectIncorrect.printStackTrace();
+            }
+        });
+
+        return jsonArray;
     }
 }

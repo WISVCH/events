@@ -149,7 +149,6 @@ public class ProductServiceImpl implements ProductService {
 
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
-        model.setSold(product.getSold());
         model.setCost(product.getCost());
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());

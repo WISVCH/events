@@ -138,7 +138,9 @@ public class OrderServiceImpl implements OrderService {
         if (status == OrderStatus.CANCELLED) {
             this.orderRepository.delete(order);
         } else if (status == OrderStatus.REFUNDED) {
-            order.getProducts().forEach(product -> product.setSold(product.getSold() - 1));
+            order.getProducts().forEach(product -> {
+                product.setSold(product.getSold() - 1);
+            });
             this.soldProductService.delete(order);
         } else if (!order.getStatus().toString().contains("PAID")) {
             order.getProducts().forEach(product -> product.setSold(product.getSold() + 1));

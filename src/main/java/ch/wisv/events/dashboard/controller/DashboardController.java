@@ -1,5 +1,8 @@
 package ch.wisv.events.dashboard.controller;
 
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DashboardController.
@@ -47,9 +55,41 @@ public class DashboardController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        // TODO: create nice looking and good working dashboard with relevant information.
+        model.addAttribute("upcoming", this.determineUpcomingEvents());
+        model.addAttribute("previous", this.determinePreviousEventAttendance());
 
         return "dashboard/index";
     }
 
+    /**
+     * Method determinePreviousEventAttendance ...
+     * @return HashMap<Event, Integer>
+     */
+    private HashMap<Event, Integer> determinePreviousEventAttendance() {
+        HashMap<Event, Integer> events = new HashMap<>();
+
+        this.eventService.getPreviousEventsLastTwoWeeks().forEach(event -> {
+            List<SoldProduct> soldProducts = this.soldProductService.getAllByEvent(event);
+            Long countScanned = soldProducts.stream().filter(soldProduct -> soldProduct.getStatus() == SoldProductStatus.SCANNED).count();
+
+            if (soldProducts.size() == 0) {
+                events.put(event, 0);
+            } else {
+                events.put(event, (int) (countScanned / soldProducts.size()));
+            }
+        });
+
+        return events;
+    }
+
+    /**
+     * Method determineUpcomingEvents ...
+     *
+     * @return List<Event>
+     */
+    private List<Event> determineUpcomingEvents() {
+        return this.eventService.getUpcomingEvents().stream().filter(event ->
+                event.getStart().isBefore(LocalDateTime.now().plusWeeks(2))
+        ).collect(Collectors.toList());
+    }
 }

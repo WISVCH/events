@@ -5,6 +5,8 @@ import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.webhook.factory.event.EventCreateUpdateRequestFactory;
 import ch.wisv.events.core.webhook.factory.event.EventDeleteRequestFactory;
+import ch.wisv.events.core.webhook.factory.product.ProductCreateUpdateRequestFactory;
+import ch.wisv.events.core.webhook.factory.product.ProductDeleteFactory;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -33,6 +35,8 @@ public abstract class WebhookRequestFactory {
     private static HashMap<WebhookTrigger, WebhookRequestFactory> mapping = new HashMap<WebhookTrigger, WebhookRequestFactory>() {{
         put(WebhookTrigger.EVENT_CREATE_UPDATE, new EventCreateUpdateRequestFactory());
         put(WebhookTrigger.EVENT_DELETE, new EventDeleteRequestFactory());
+        put(WebhookTrigger.PRODUCT_CREATE_UPDATE, new ProductCreateUpdateRequestFactory());
+        put(WebhookTrigger.PRODUCT_DELETE, new ProductDeleteFactory());
     }};
 
     /**
@@ -70,5 +74,5 @@ public abstract class WebhookRequestFactory {
      *
      * @param object of type Object
      */
-    protected abstract JSONObject getRequestData(Object object) throws WebhookRequestObjectIncorrect;
+    public abstract JSONObject getRequestData(Object object) throws WebhookRequestObjectIncorrect;
 }

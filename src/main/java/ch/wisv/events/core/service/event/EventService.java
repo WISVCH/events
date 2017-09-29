@@ -66,4 +66,11 @@ public interface EventService {
      * @return List of Events
      */
     List<Event> getEventByProductKey(String key);
+
+    /**
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
+     *
+     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     */
+    List<Event> getPreviousEventsLastTwoWeeks();
 }

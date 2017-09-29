@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.product;
 
 import ch.wisv.events.core.exception.EventsInvalidException;
 import ch.wisv.events.core.exception.SoldProductNotFoundException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -186,6 +187,20 @@ public class SoldProductServiceImpl implements SoldProductService {
         model.setCustomer(soldProduct.getCustomer());
 
         this.soldProductRepository.save(soldProduct);
+    }
+
+    /**
+     * Method getAllByEvent ...
+     *
+     * @param event of type Event
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getAllByEvent(Event event) {
+        List<SoldProduct> soldProducts = new ArrayList<>();
+        event.getProducts().forEach(product -> soldProducts.addAll(this.getByProduct(product)));
+
+        return soldProducts;
     }
 
     /**

@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -75,8 +75,8 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished()
-                == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -86,8 +86,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return eventRepository.findAll().stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED).collect(Collectors.toList());
     }
 
     /**
@@ -175,6 +174,16 @@ public class EventServiceImpl implements EventService {
         }));
 
         return events;
+    }
+
+    /**
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
+     *
+     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     */
+    @Override
+    public List<Event> getPreviousEventsLastTwoWeeks() {
+        return this.eventRepository.findAllByEndingBetween(LocalDateTime.now().minusWeeks(2), LocalDateTime.now());
     }
 
     /**

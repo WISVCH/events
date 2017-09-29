@@ -20,8 +20,10 @@ import lombok.Getter;
  */
 public enum WebhookTrigger {
 
-    EVENT_CREATE_UPDATE("EVENT_CREATE_UPDATE", "Event create or update", "Creation or update of an Event"),
-    EVENT_DELETE("EVENT_DELETE", "Event delete", "Deletion of an existing event.");
+    EVENT_CREATE_UPDATE("EVENT_CREATE_UPDATE", "Event create or update", "Creation or update of an Event."),
+    EVENT_DELETE("EVENT_DELETE", "Event delete", "Deletion of an existing event."),
+    PRODUCT_CREATE_UPDATE("PRODUCT_CREATE_UPDATE", "Product create or update", "Creation or update of an Product."),
+    PRODUCT_DELETE("PRODUCT_DELETE", "Product delete", "Deletion of an existing product.");
 
     /**
      * Field tag

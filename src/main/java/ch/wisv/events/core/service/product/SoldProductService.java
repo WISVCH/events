@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -85,4 +86,12 @@ public interface SoldProductService {
      * @param soldProduct of type SoldProduct
      */
     void update(SoldProduct soldProduct);
+
+    /**
+     * Method getAllByEvent ...
+     *
+     * @param event of type Event
+     * @return List<SoldProduct>
+     */
+    List<SoldProduct> getAllByEvent(Event event);
 }
