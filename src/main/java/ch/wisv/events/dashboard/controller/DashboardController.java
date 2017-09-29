@@ -3,6 +3,7 @@ package ch.wisv.events.dashboard.controller;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,10 @@ public class DashboardController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("upcoming", this.determineUpcomingEvents());
+        List<Event> upcomingEvents = this.determineUpcomingEvents();
+        upcomingEvents.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
+
+        model.addAttribute("upcoming", upcomingEvents);
         model.addAttribute("previous", this.determinePreviousEventAttendance());
 
         return "dashboard/index";
@@ -69,13 +73,14 @@ public class DashboardController {
         HashMap<Event, Integer> events = new HashMap<>();
 
         this.eventService.getPreviousEventsLastTwoWeeks().forEach(event -> {
+            event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum());
             List<SoldProduct> soldProducts = this.soldProductService.getAllByEvent(event);
             Long countScanned = soldProducts.stream().filter(soldProduct -> soldProduct.getStatus() == SoldProductStatus.SCANNED).count();
 
             if (soldProducts.size() == 0) {
                 events.put(event, 0);
             } else {
-                events.put(event, (int) (countScanned / soldProducts.size()));
+                events.put(event, (int) ((countScanned.doubleValue() / soldProducts.size()) * 100.d));
             }
         });
 

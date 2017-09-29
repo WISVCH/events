@@ -1,10 +1,11 @@
 package ch.wisv.events.dashboard.controller;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
@@ -63,6 +64,8 @@ public class DashboardEventController {
      */
     @GetMapping("/")
     public String index(Model model) {
+        List<Event> allEvent = this.eventService.getAllEvents();
+        allEvent.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
         model.addAttribute("events", this.eventService.getAllEvents());
 
         return "dashboard/events/index";

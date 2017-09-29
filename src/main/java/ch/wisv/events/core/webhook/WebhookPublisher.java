@@ -105,8 +105,6 @@ public class WebhookPublisher extends Thread {
         httpPost.setHeader("Accept", "application/json");
         httpPost.setEntity(new StringEntity(request.toJSONString(), "UTF8"));
 
-        System.out.println(request.toJSONString());
-
         try {
             HttpResponse response = httpClient.execute(httpPost);
 
