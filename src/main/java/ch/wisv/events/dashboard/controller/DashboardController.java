@@ -80,7 +80,7 @@ public class DashboardController {
         int totalCustomers = this.customerService.getAllCustomers().size();
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(
-                totalCustomers - 1,
+                this.determineTotalCustomersLastMonth(),
                 totalCustomers
         ));
 
@@ -106,7 +106,17 @@ public class DashboardController {
     }
 
     /**
+     * Method determineTotalCustomersLastMonth ...
+     *
+     * @return int
+     */
+    private int determineTotalCustomersLastMonth() {
+        return this.customerService.getAllCustomerCreatedAfter(LocalDateTime.now().minusMonths(1)).size();
+    }
+
+    /**
      * Method determineTotalEventsLastMonth ...
+     *
      * @return double
      */
     private double determineTotalEventsLastMonth() {

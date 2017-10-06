@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.customer;
 
 import ch.wisv.events.core.model.order.Customer;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,6 +29,14 @@ public interface CustomerService {
      * @return list of all customers
      */
     List<Customer> getAllCustomers();
+
+    /**
+     * Method getAllCustomerCreatedAfter ...
+     *
+     * @param after of type LocalDateTime
+     * @return List<Customer>
+     */
+    List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
 
     /**
      * Get a customer by rfidToken.
