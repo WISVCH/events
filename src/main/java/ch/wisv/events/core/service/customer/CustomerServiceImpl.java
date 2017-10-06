@@ -11,6 +11,7 @@ import ch.wisv.events.core.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +77,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    /**
+     * Method getAllCustomerCreatedAfter ...
+     *
+     * @param after of type LocalDateTime
+     * @return List<Customer>
+     */
+    @Override
+    public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
+        return this.customerRepository.findAllByCreatedAtAfter(after);
     }
 
     /**

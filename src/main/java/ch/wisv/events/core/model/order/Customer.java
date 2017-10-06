@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -63,10 +64,16 @@ public class Customer {
     private String rfidToken;
 
     /**
+     * Field createdAt when th
+     */
+    private LocalDateTime createdAt;
+
+    /**
      * Constructor Customer creates a new Customer instance.
      */
     public Customer() {
         this.key = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
     }
 
     /**
