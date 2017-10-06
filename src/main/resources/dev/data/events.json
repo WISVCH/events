@@ -21,12 +21,13 @@
   },
   {
     "title": "MatCH CH vision Music Festival",
-    "shortDescription": "Show yourself off on the Just Dance Tournement in the /pub",
+    "shortDescription": "Show yourself off on the Just Dance Tournament in the /pub",
     "description": "Ever thought, I am a dancing queen! Do you have the moves like Jagger? Show yourself off on the Just Dance Tournement in the /pub",
     "location": "/pub",
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/tv-just-dance-ch_0.png?itok=_pNAz-Ba"
+    "productNumber": 4
   },
   {
     "title": "WiFi Rally",
@@ -45,6 +46,7 @@
     "location": "/pub",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ch-vignet_3.png?itok=upBfqQpL"
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ch-vignet_3.png?itok=upBfqQpL",
+    "productNumber": 5
   }
 ]

@@ -2,19 +2,31 @@
   {
     "title": "T.U.E.S.Day lecture ticket",
     "description": "Ticket for the T.U.E.S.Day lecture.",
-    "cost": 1.00,
+    "cost": 0.00,
     "maxSold": 100
   },
   {
     "title": "Symposium ticket",
-    "description": "Ticket for the Symposium ticket.",
-    "cost": 0.00,
+    "description": "Ticket for the Symposium.",
+    "cost": 5.00,
     "maxSold": 100
   },
   {
     "title": "WIFI Rally ticket",
-    "description": "Ticket for the WIFI Rally ticket.",
-    "cost": 0.00,
+    "description": "Ticket for the WIFI Rally.",
+    "cost": 15.00,
     "maxSold": 100
+  },
+  {
+    "title": "MatCH ticket",
+    "description": "Ticket for the MatCH activity.",
+    "cost": 3.00,
+    "maxSold": 100
+  },
+  {
+    "title": "Annuarium",
+    "description": "",
+    "cost": 1.00,
+    "maxSold": 250
   }
 ]

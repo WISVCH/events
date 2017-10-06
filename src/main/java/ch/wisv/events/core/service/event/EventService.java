@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.model.event.Event;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,6 +16,15 @@ public interface EventService {
      * @return Collection of Events
      */
     List<Event> getAllEvents();
+
+    /**
+     * Get all Events between a lowerbound and upperbound
+     *
+     * @param lowerbound of type LocalDateTime
+     * @param upperbound of type LocalDateTime
+     * @return List<Event>
+     */
+    List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
 
     /**
      * Get all upcoming Events

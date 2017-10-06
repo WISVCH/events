@@ -41,9 +41,87 @@
     <div class="row">
         <div class="col-sm-offset-3 col-sm-9 col-md-offset-2 col-md-10 content-wrapper">
             <div class="page-header">
-                <h1><samp>Dashboard</samp></h1>
+                <h1><samp>Overview</samp></h1>
             </div>
 
+            <div class="row" style="margin-bottom: 32px;">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="dashboard-panel">
+                        <h5 class="dashboard-panel-heading">Total events</h5>
+                        <h3 th:inline="text">
+                            <small>no.</small>
+                            [[${totalEvents}]]
+                        </h3>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 60%;">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                        <span class="dashboard-panel-info-text">
+                            <i th:class="'fa fa-arrow-' + ((${increaseEvents} > 0) ? 'up' : 'down')"></i>
+                            <strong>[[${increaseEvents}]]%</strong> [[${increaseEvents} > 0 ? 'more' : 'less']] than last month
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="dashboard-panel">
+                        <h5 class="dashboard-panel-heading">Total number of customers</h5>
+                        <h3 th:inline="text">
+                            <small>no.</small>
+                            [[${totalCustomers}]]
+                        </h3>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 60%;">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                        <span class="dashboard-panel-info-text">
+                            <i th:class="'fa fa-arrow-' + ((${increaseCustomers} > 0) ? 'up' : 'down')"></i>
+                            <strong>[[${increaseCustomers}]]%</strong> [[${increaseCustomers} > 0 ? 'more' : 'less']] than last month
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="dashboard-panel">
+                        <h5 class="dashboard-panel-heading">Average target rate</h5>
+                        <h3 th:inline="text">[[${averageTargetRate}]]
+                            <small>%</small>
+                        </h3>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 60%;">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
+                        </div>
+                        <span class="dashboard-panel-info-text">
+                            <i th:class="'fa fa-arrow-' + ((${changeTargetRate} > 0) ? 'up' : 'down')"></i>
+                            <strong>[[${changeTargetRate}]]%</strong> [[${changeTargetRate} > 0 ? 'more' : 'less']] than previous board
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="dashboard-panel">
+                        <h5 class="dashboard-panel-heading">Average attendance rate</h5>
+                        <h3 th:inline="text">[[${averageAttendanceRate}]]
+                            <small>%</small>
+                        </h3>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar"
+                                 th:aria-valuenow="${averageAttendanceRate}"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 th:style="'width: ' + ${averageAttendanceRate} + '%;'">
+                                <span class="sr-only">59%</span>
+                            </div>
+                        </div>
+                        <span class="dashboard-panel-info-text">
+                            <i th:class="'fa fa-arrow-' + ((${changeAttendanceRate} > 0) ? 'up' : 'down')"></i>
+                            <strong>[[${changeAttendanceRate}]]%</strong> [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-xs-6">

@@ -69,6 +69,18 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * Get all Events between a lowerbound and upperbound
+     *
+     * @param lowerbound of type LocalDateTime
+     * @param upperbound of type LocalDateTime
+     * @return List<Event>
+     */
+    @Override
+    public List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
+        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerbound, upperbound);
+    }
+
+    /**
      * Get all upcoming Events
      *
      * @return Collection of Events
