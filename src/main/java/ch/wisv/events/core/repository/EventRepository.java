@@ -47,13 +47,21 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      */
     Optional<Event> findByKey(String key);
 
-
     /**
-     * Find all Event between a period of time.
+     * Find all Event with ending between a period of time.
      *
      * @param start  of type LocalDateTime
      * @param ending of type LocalDateTime
      * @return List<Event>
      */
     List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
+
+    /**
+     * Find all Event with start between a period of time.
+     *
+     * @param after of type LocalDateTime
+     * @param before of type LocalDateTime
+     * @return List<Event>
+     */
+    List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
 }

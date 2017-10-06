@@ -9,6 +9,12 @@
     "name": "Sven Popping",
     "email": "svenp@ch.tudelft.nl",
     "chUsername": "svenp",
-    "rfidToken": "geen idee"
+    "rfidToken": "333"
+  },
+  {
+    "name": "Sven van Hal",
+    "email": "svenh@ch.tudelft.nl",
+    "chUsername": "svenh",
+    "rfidToken": "222"
   }
 ]

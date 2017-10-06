@@ -2,10 +2,15 @@ package ch.wisv.events.utils.dev.data;
 
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
+import ch.wisv.events.core.repository.SoldProductRepository;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -51,16 +56,27 @@ public class OrderTestDataRunner extends TestDataRunner {
     private final ProductRepository productRepository;
 
     /**
+     * Field soldProductRepository
+     */
+    private final SoldProductRepository soldProductRepository;
+
+    /**
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
      *
-     * @param orderRepository    of type OrderRepository
-     * @param customerRepository of type CustomerRepository
-     * @param productRepository  of type ProductRepository
+     * @param orderRepository       of type OrderRepository
+     * @param customerRepository    of type CustomerRepository
+     * @param productRepository     of type ProductRepository
+     * @param soldProductRepository of type SoldProductRepository
      */
-    public OrderTestDataRunner(OrderRepository orderRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
+    public OrderTestDataRunner(OrderRepository orderRepository,
+            CustomerRepository customerRepository,
+            ProductRepository productRepository,
+            SoldProductRepository soldProductRepository
+    ) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
+        this.soldProductRepository = soldProductRepository;
 
         this.setJsonFileName("orders.json");
     }
@@ -75,6 +91,18 @@ public class OrderTestDataRunner extends TestDataRunner {
         ch.wisv.events.core.model.order.Order order = this.createOrder(jsonObject);
 
         this.orderRepository.save(order);
+
+        order.getProducts().forEach(product -> {
+            SoldProduct soldProduct = new SoldProduct(
+                    product,
+                    order,
+                    order.getCustomer()
+            );
+            soldProduct.setUniqueCode(RandomStringUtils.randomNumeric(6));
+            soldProduct.setStatus((RandomUtils.nextFloat(0, 1) > 0.4) ? SoldProductStatus.SCANNED : SoldProductStatus.OPEN);
+
+            this.soldProductRepository.saveAndFlush(soldProduct);
+        });
     }
 
     /**
@@ -93,8 +121,12 @@ public class OrderTestDataRunner extends TestDataRunner {
 
             List<Product> allProduct = this.productRepository.findAll();
             order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));
+            order.getProducts().forEach(x -> {
+                x.setSold(x.getSold() + 1);
+                this.productRepository.saveAndFlush(x);
+            });
             order.setStatus(OrderStatus.valueOf((String) jsonObject.get("orderStatus")));
-            order.setAmount(10.d);
+            order.setAmount(order.getProducts().stream().mapToDouble(Product::getCost).sum());
 
             return order;
         }

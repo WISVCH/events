@@ -80,6 +80,7 @@ public class EventTestDataRunner extends TestDataRunner {
      */
     private Event createEvent(JSONObject jsonObject) {
         int days = df.getNumberBetween(-10, 10);
+        int years = df.getNumberBetween(0, 2);
 
         Event event = new Event(
                 (String) jsonObject.get("title"),
@@ -88,8 +89,8 @@ public class EventTestDataRunner extends TestDataRunner {
                 ((Long) jsonObject.get("target")).intValue(),
                 ((Long) jsonObject.get("maxSold")).intValue(),
                 (String) jsonObject.get("imageUrl"),
-                LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES),
-                LocalDateTime.now().plusDays(days).plusHours(1).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().minusYears(years).plusDays(days).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().minusYears(years).plusDays(days).plusHours(1).truncatedTo(ChronoUnit.MINUTES),
                 (String) jsonObject.get("shortDescription")
         );
         event.setPublished(EventStatus.PUBLISHED);

@@ -176,6 +176,34 @@ body {
     font-size: 40px;
 }
 
+.dashboard-panel {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    padding: 16px;
+}
+
+.dashboard-panel .dashboard-panel-heading {
+    text-transform: uppercase;
+    margin: 0;
+    color: #777;
+}
+
+.dashboard-panel .dashboard-panel-info-text {
+    color: #777;
+}
+
+.dashboard-panel .dashboard-panel-info-text strong {
+    color: #000;
+}
+
+.dashboard-panel .dashboard-panel-info-text .fa-arrow-up {
+    color: #5cb85c;
+}
+
+.dashboard-panel .dashboard-panel-info-text .fa-arrow-down {
+    color: #d9534f;
+}
+
 .panel-green {
     border-color: #5cb85c;
 }
