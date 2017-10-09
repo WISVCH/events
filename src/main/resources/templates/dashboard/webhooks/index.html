@@ -42,7 +42,6 @@
                     <tr>
                         <th>Payload URL</th>
                         <th>LDAP group</th>
-                        <th>Triggers</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -51,10 +50,6 @@
                     <tr th:each="webhook : ${webhooks}" th:attr="data-key=${webhook.getKey()}">
                         <td th:text="${webhook.getPayloadUrl()}"></td>
                         <td th:text="${webhook.getLdapGroup()}"></td>
-                        <td>
-                           <span th:each="trigger : ${webhook.getWebhookTriggers()}"
-                                 th:text="${trigger.getName()} + ', '"></span>
-                        </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'edit/' + ${webhook.getKey()} + '/'" class="btn btn-info">
@@ -91,7 +86,7 @@
         var table = $('#webhookTable');
         table.DataTable({
             columnDefs: [
-                {width: "120px", targets: 3}
+                {width: "120px", targets: 2}
             ]
         });
 

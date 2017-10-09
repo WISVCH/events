@@ -33,8 +33,7 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <form th:action="@{./}" th:object="${customer}"
-                  method="POST">
+            <form th:action="@{./}" th:object="${customer}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="card">
@@ -68,7 +67,11 @@
                         </div>
 
                         <p class="form-text text-muted">* is a required field!</p>
+                    </div>
+                </div>
 
+                <div class="card mt-3">
+                    <div class="card-body">
                         <div class="form-group">
                             <input type="submit" class="btn btn-danger" value="Save customer">
                         </div>
