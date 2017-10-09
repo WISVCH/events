@@ -76,7 +76,6 @@ dependencies {
     compile 'org.bouncycastle:bcprov-jdk15on:1.52+'
 
     compile 'org.webjars:bootstrap:4.0.0-beta'
-    compile 'org.webjars.bower:bootstrap-show-password:1.0.2'
     compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
     compile 'org.webjars.bower:momentjs:2.10.6'
     compile 'org.webjars.bower:wisvch-bootstrap-theme:0.0.3'

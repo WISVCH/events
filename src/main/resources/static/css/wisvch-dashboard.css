@@ -173,6 +173,21 @@ label {
     color: #40556a
 }
 
+.input-group-addon {
+    border-radius: 0;
+    border: 2px solid #40556a;
+    color: #40556a;
+    background: #ffffff;
+}
+
+.input-group .form-control:not(:last-child) {
+    border-right: 0 !important;
+}
+
+.form-control + .input-group-addon:not(:first-child) {
+    border-left: 2px solid #40556a;
+}
+
 /**
  * Pagination
  */
