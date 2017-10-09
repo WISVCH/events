@@ -61,6 +61,25 @@ public class DashboardWebhookController {
     }
 
     /**
+     * Edit existing vendor [GET "/edit/{key}"].
+     *
+     * @param model Spring model
+     * @param key   key of the vendor
+     * @return path to Thymeleaf template location
+     */
+    @GetMapping("/view/{key}/")
+    public String view(Model model, @PathVariable String key) {
+        try {
+            Webhook webhook = webhookService.getByKey(key);
+            model.addAttribute("webhook", webhook);
+
+            return "dashboard/webhooks/view";
+        } catch (WebhookNotFoundException e) {
+            return "redirect:/dashboard/webhooks/";
+        }
+    }
+
+    /**
      * Create a new vendor [GET "/create/"].
      *
      * @param model Spring model
@@ -72,7 +91,29 @@ public class DashboardWebhookController {
             model.addAttribute("webhook", new Webhook());
         }
 
-        return "dashboard/webhooks/create";
+        return "dashboard/webhooks/webhook";
+    }
+
+    /**
+     * Add a new Webhook.
+     *
+     * @param redirect RedirectAttributes
+     * @param webhook  Webhook with the needed information
+     * @return redirect to other page
+     */
+    @PostMapping("/create/")
+    public String create(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
+        try {
+            webhookService.create(webhook);
+            redirect.addFlashAttribute("success", "Webhook " + webhook.getPayloadUrl() + " has been added!");
+
+            return "redirect:/dashboard/webhooks/";
+        } catch (InvalidWebhookException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("webhook", webhook);
+
+            return "redirect:/dashboard/webhooks/create/";
+        }
     }
 
     /**
@@ -88,31 +129,9 @@ public class DashboardWebhookController {
             Webhook webhook = webhookService.getByKey(key);
             model.addAttribute("webhook", webhook);
 
-            return "dashboard/webhooks/edit";
+            return "dashboard/webhooks/webhook";
         } catch (WebhookNotFoundException e) {
             return "redirect:/dashboard/webhooks/";
-        }
-    }
-
-    /**
-     * Add a new Webhook.
-     *
-     * @param redirect RedirectAttributes
-     * @param model    Webhook with the needed information
-     * @return redirect to other page
-     */
-    @PostMapping("/add")
-    public String add(RedirectAttributes redirect, @ModelAttribute Webhook model) {
-        try {
-            webhookService.create(model);
-            redirect.addFlashAttribute("message", "Webhook has been added!");
-
-            return "redirect:/dashboard/webhooks/";
-        } catch (InvalidWebhookException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("webhook", model);
-
-            return "redirect:/dashboard/webhooks/create/";
         }
     }
 
@@ -120,20 +139,22 @@ public class DashboardWebhookController {
      * Update a existing Webhook.
      *
      * @param redirect RedirectAttributes
-     * @param model    Webhook model with the needed information
+     * @param webhook  Webhook webhook with the needed information
      * @return redirect to edit page
      */
-    @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Webhook model) {
+    @PostMapping("/edit/{key}/")
+    public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
         try {
-            webhookService.update(model);
-
+            webhookService.update(webhook);
             redirect.addFlashAttribute("message", "Webhook changes saves!");
+
+            return "redirect:/dashboard/webhooks/view/" + webhook.getKey() + "/";
         } catch (InvalidWebhookException | WebhookNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-        }
+            redirect.addFlashAttribute("webhook", webhook);
 
-        return "redirect:/dashboard/webhooks/edit/" + model.getKey() + "/";
+            return "redirect:/dashboard/webhooks/edit/" + webhook.getKey() + "/";
+        }
     }
 
     /**
@@ -143,13 +164,13 @@ public class DashboardWebhookController {
      * @param key      Vendor model with the needed information
      * @return redirect to edit page
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping("/delete/{key}/")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
             webhookService.delete(webhook);
 
-            redirect.addFlashAttribute("message", "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
+            redirect.addFlashAttribute("success", "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
 
             return "redirect:/dashboard/webhooks/";
         } catch (WebhookNotFoundException e) {

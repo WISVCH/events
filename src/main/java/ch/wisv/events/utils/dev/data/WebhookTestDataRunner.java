@@ -73,6 +73,7 @@ public class WebhookTestDataRunner extends TestDataRunner {
         webhook.setLdapGroup(LDAPGroup.valueOf((String) jsonObject.get("ldapGroup")));
         webhook.setPayloadUrl((String) jsonObject.get("payloadUrl"));
         webhook.setActive(true);
+        webhook.setSecret("this is a secret!");
 
         return this.addTriggers(webhook, (JSONArray) jsonObject.get("triggers"));
     }
