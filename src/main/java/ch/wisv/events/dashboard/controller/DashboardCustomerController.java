@@ -69,6 +69,27 @@ public class DashboardCustomerController {
     }
 
     /**
+     * Edit an existing customer page. It will redirect the user when the key provided does not belong to any of the
+     * customers available.
+     *
+     * @param model String model
+     * @param key   key of the customer some want to edit
+     * @return path to the customer edit template
+     */
+    @GetMapping("/view/{key}/")
+    public String view(Model model, @PathVariable String key) {
+        try {
+            Customer customer = this.customerService.getByKey(key);
+            model.addAttribute("customer", customer);
+            model.addAttribute("soldProducts", this.soldProductService.getByCustomer(customer));
+
+            return "dashboard/customers/view";
+        } catch (CustomerNotFound e) {
+            return "redirect:/dashboard/customers/";
+        }
+    }
+
+    /**
      * Create a new customer page.
      *
      * @param model String model
@@ -80,7 +101,31 @@ public class DashboardCustomerController {
             model.addAttribute("customer", new Customer());
         }
 
-        return "dashboard/customers/create";
+        return "dashboard/customers/customer";
+    }
+
+    /**
+     * Creates a new customer using the Customer model. It will redirect the user back to the create page when not
+     * all the required field are filled in.
+     *
+     * @param redirect RedirectAttributes for the user feedback
+     * @param model    Customer model
+     * @return redirect
+     */
+    @PostMapping("/create/")
+    public String create(RedirectAttributes redirect, @ModelAttribute Customer model) {
+        try {
+            customerService.create(model);
+            redirect.addFlashAttribute("success", "Customer with name " + model.getName() + "  has been created!");
+
+            return "redirect:/dashboard/customers/";
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("customer", model);
+
+            return "redirect:/dashboard/customers/create/";
+        }
+
     }
 
     /**
@@ -95,56 +140,38 @@ public class DashboardCustomerController {
     public String edit(Model model, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
-            model.addAttribute("customer", customer);
+            if (!model.containsAttribute("customer")) {
+                model.addAttribute("customer", customer);
+            }
             model.addAttribute("products", soldProductService.getByCustomer(customer));
 
-            return "dashboard/customers/edit";
+            return "dashboard/customers/customer";
         } catch (CustomerNotFound e) {
             return "redirect:/dashboard/customers/";
         }
     }
 
     /**
-     * Creates a new customer using the Customer model. It will redirect the user back to the create page when not
-     * all the required field are filled in.
-     *
-     * @param redirect RedirectAttributes for the user feedback
-     * @param model    Customer model
-     * @return redirect
-     */
-    @PostMapping("/add")
-    public String add(RedirectAttributes redirect, @ModelAttribute Customer model) {
-        try {
-            customerService.create(model);
-            redirect.addFlashAttribute("message", "Customer with name " + model.getName() + "  had been added!");
-
-            return "redirect:/dashboard/customers/";
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("customer", model);
-
-            return "redirect:/dashboard/customers/create/";
-        }
-
-    }
-
-    /**
-     * Updates an existing customer using the Customer model. It will show an error when not all the required fields
+     * Updates an existing customer using the Customer customer. It will show an error when not all the required fields
      * are filled in.
      *
      * @param redirect RedirectAttributes for the user feedback
-     * @param model    Customer model
+     * @param customer Customer customer
      * @return redirect
      */
-    @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Customer model) {
+    @PostMapping("/edit/{key}/")
+    public String edit(RedirectAttributes redirect, @ModelAttribute Customer customer) {
         try {
-            customerService.update(model);
-            redirect.addFlashAttribute("message", "Customer changes have been saved!");
+            customerService.update(customer);
+            redirect.addFlashAttribute("success", "Customer changes have been saved!");
+
+            return "redirect:/dashboard/customers/view/" + customer.getKey() + "/";
         } catch (Exception e) {
+            redirect.addFlashAttribute("customer", customer);
             redirect.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/dashboard/customers/edit/" + customer.getKey() + "/";
         }
-        return "redirect:/dashboard/customers/edit/" + model.getKey() + "/";
     }
 
     /**
@@ -156,7 +183,7 @@ public class DashboardCustomerController {
      * @param key      Vendor model
      * @return redirect
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping("/delete/{key}/")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
@@ -171,5 +198,4 @@ public class DashboardCustomerController {
             return "redirect:/dashboard/customers/";
         }
     }
-
 }

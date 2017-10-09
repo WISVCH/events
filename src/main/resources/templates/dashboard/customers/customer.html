@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Customers</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="dashboard/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Create/update customer</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <form th:action="@{./}" th:object="${customer}"
+                  method="POST">
+                <input type="hidden" th:field="*{key}" th:value="*{key}">
+
+                <div class="card">
+                    <h6 class="card-header">Details</h6>
+                    <div class="card-body">
+                        <div class="form">
+                            <div class="form-group">
+                                <label>Name*
+                                    <input type="text" class="form-control" th:value="${customer.getName()}"
+                                           th:field="*{name}" required>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail*
+                                    <input type="text" class="form-control" th:value="${customer.getEmail()}"
+                                           th:field="*{email}" required>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>LDAP username
+                                    <input type="text" class="form-control" th:value="${customer.getChUsername()}"
+                                           th:field="*{chUsername}">
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>RFID token
+                                    <input type="text" class="form-control" th:value="${customer.getRfidToken()}"
+                                           th:field="*{rfidToken}">
+                                </label>
+                            </div>
+                        </div>
+
+                        <p class="form-text text-muted">* is a required field!</p>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-danger" value="Save customer">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+</body>
+</html>

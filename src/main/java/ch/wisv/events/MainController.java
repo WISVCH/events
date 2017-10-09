@@ -41,13 +41,13 @@ public class MainController {
         return "index";
     }
 
-    /**
-     * Default error page.
-     *
-     * @return String
-     */
-    @GetMapping("/error")
-    public String error() {
-        return "error";
-    }
+//    /**
+//     * Default error page.
+//     *
+//     * @return String
+//     */
+//    @GetMapping("/error")
+//    public String error() {
+//        return "error";
+//    }
 }

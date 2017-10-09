@@ -75,12 +75,11 @@ dependencies {
     }
     compile 'org.bouncycastle:bcprov-jdk15on:1.52+'
 
-    compile 'org.webjars:bootstrap:3.3.7-1'
+    compile 'org.webjars:bootstrap:4.0.0-beta'
     compile 'org.webjars.bower:bootstrap-show-password:1.0.2'
     compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
     compile 'org.webjars.bower:momentjs:2.10.6'
     compile 'org.webjars.bower:wisvch-bootstrap-theme:0.0.3'
-    compile 'org.webjars:chartjs:26962ce'
     compile 'org.webjars:font-awesome:4.7.0'
     compile 'org.webjars:jquery:2.1.4'
     compile 'org.webjars.npm:flatpickr:3.0.6'
@@ -89,7 +88,6 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.10'
 
     compile "com.googlecode.json-simple:json-simple:1.1.1"
-    compile 'com.github.darrachequesne:spring-data-jpa-datatables:1.1'
     compile 'net.sf.biweekly:biweekly:0.6.0'
 
     runtime 'org.hsqldb:hsqldb'
