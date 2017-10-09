@@ -135,13 +135,14 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void update(Customer customer) {
-        this.assertIsValidCustomer(customer);
         Customer model = this.getByKey(customer.getKey());
 
         model.setChUsername(customer.getChUsername());
         model.setName(customer.getName());
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
+
+        this.assertIsValidCustomer(model);
 
         this.customerRepository.save(model);
     }
@@ -201,7 +202,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
-        Optional<Customer> optional =  this.customerRepository.findByEmail(customer.getEmail());
+        Optional<Customer> optional = this.customerRepository.findByEmail(customer.getEmail());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();
