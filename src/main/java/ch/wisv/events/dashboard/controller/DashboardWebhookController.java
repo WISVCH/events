@@ -68,13 +68,15 @@ public class DashboardWebhookController {
      * @return path to Thymeleaf template location
      */
     @GetMapping("/view/{key}/")
-    public String view(Model model, @PathVariable String key) {
+    public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
             model.addAttribute("webhook", webhook);
 
             return "dashboard/webhooks/view";
         } catch (WebhookNotFoundException e) {
+            redirect.addFlashAttribute("warning", e.getMessage());
+
             return "redirect:/dashboard/webhooks/";
         }
     }
@@ -124,13 +126,15 @@ public class DashboardWebhookController {
      * @return path to Thymeleaf template location
      */
     @GetMapping("/edit/{key}/")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
             model.addAttribute("webhook", webhook);
 
             return "dashboard/webhooks/webhook";
         } catch (WebhookNotFoundException e) {
+            redirect.addFlashAttribute("waring", e.getMessage());
+
             return "redirect:/dashboard/webhooks/";
         }
     }
@@ -146,7 +150,7 @@ public class DashboardWebhookController {
     public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
         try {
             webhookService.update(webhook);
-            redirect.addFlashAttribute("message", "Webhook changes saves!");
+            redirect.addFlashAttribute("success", "Webhook changes saves!");
 
             return "redirect:/dashboard/webhooks/view/" + webhook.getKey() + "/";
         } catch (InvalidWebhookException | WebhookNotFoundException e) {

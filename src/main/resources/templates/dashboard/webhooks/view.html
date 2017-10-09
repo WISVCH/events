@@ -30,7 +30,7 @@
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>Webhook #[[${webhook.getId()}]]
-                <a class="badge badge-danger" th:href="@{'/dahboard/webhooks/edit/' + ${webhook.getKey()} + '/'}">
+                <a class="badge badge-danger" th:href="@{'/dashboard/webhooks/edit/' + ${webhook.getKey()} + '/'}">
                     <i class="fa fa-edit" aria-hidden="true"></i> Edit
                 </a>
             </h1>
@@ -51,7 +51,8 @@
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label>LDAP group
-                                        <input type="text" class="form-control" th:value="${webhook.getLdapGroup()}"
+                                        <input type="text" class="form-control"
+                                               th:value="${webhook.getLdapGroup().getName()}"
                                                readonly>
                                     </label>
                                 </div>
