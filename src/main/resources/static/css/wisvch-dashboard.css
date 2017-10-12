@@ -70,6 +70,10 @@ div.dataTables_wrapper div.dataTables_filter input {
     border: 3px solid #e7ebf1;
 }
 
+.dataTable tr td {
+    cursor: pointer;
+}
+
 /**
  * Input
  */
@@ -298,4 +302,16 @@ h1 .badge-info, .btn-info {
 .alert-success {
     color: #8ac926 !important;
     border-color: #8ac926 !important;
+}
+
+/**
+ * Progress
+ */
+.progress {
+    border-radius: 0;
+}
+
+.progress .progress-bar {
+    height: 20px;
+    background-color: #058cce;
 }
