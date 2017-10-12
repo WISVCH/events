@@ -12,16 +12,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: #40556a;
+    color: #ef4545;
     transition: color .2s;
     text-decoration: none;
     cursor: pointer
 }
 
 a:hover {
-    color: #ef4545;
+    color: #40556a;
     transition: color .2s;
-    outline-width: 0
+    outline-width: 0;
+    text-decoration: none;
 }
 
 /**
@@ -41,6 +42,10 @@ a:hover {
 .nav-pills .nav-link.active {
     color: #40556a;
     background-color: #e7ebf1;
+}
+
+.nav-pills .nav-item .nav-link {
+    color: #40556a;
 }
 
 /**
