@@ -7,192 +7,135 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" th:href="@{../../favicon.ico}">
+    <link rel="icon" th:href="@{/images/favicon.png}">
 
-    <title>Events - Dashboard</title>
+    <title>CH Events - Dashboard > Orders</title>
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
-          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen"/>
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
-
-
-    <!-- Custom styles for this template -->
+    <link th:href="@{/webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 </head>
 
 <body>
+<nav th:replace="fragments/header :: header"></nav>
+
 <div class="container-fluid">
     <div class="row">
-        <div class="row">
-            <div th:replace="fragments/header :: header">
-                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
-            </div>
-            <div th:replace="dashboard/sidebar :: sidebar"></div>
-        </div>
-    </div>
-    <div class="row">
+        <nav th:replace="dashboard/sidebar :: sidebar"></nav>
 
-        <div class="col-md-offset-2 col-md-10 content-wrapper">
-            <div class="page-header">
-                <h1><samp th:text="'Order #' + ${order.getId()}"></samp></h1>
-            </div>
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Order #[[${order.getId()}]]</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row">
-                <div class="col-sm-12">
-                    <div th:replace="fragments/message :: messages"></div>
-                </div>
-            </div>
-
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-            <div class="row">
-                <div class="col-sm-12 col-md-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Information</h3>
+                <div class="col">
+                    <div class="card mb-5">
+                        <h6 class="card-header">Details</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-sm-12">
+                                    <label>Public reference
+                                        <input type="text" class="form-control" th:value="${order.getPublicReference()}"
+                                               readonly>
+                                    </label>
                                 </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="orderPublicReference" class="control-label">Public
-                                                    reference</label>
-                                                <input type="text" class="form-control" id="orderPublicReference"
-                                                       readonly th:value="${order.getPublicReference()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="orderStatus" class="control-label">Status</label>
-                                                <input type="text" class="form-control" id="orderStatus" readonly
-                                                       th:value="${order.getStatus().toString()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="orderDate" class="control-label">Created at</label>
-                                                <input type="datetime-local" class="form-control" id="orderDate"
-                                                       readonly th:value="${order.getCreationDate()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="orderDate" class="control-label">Created by</label>
-                                                <input type="text" class="form-control"
-                                                       readonly th:value="${order.getCreatedBy()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="orderPaidAt" class="control-label">Paid at</label>
-                                                <input type="datetime-local" class="form-control" id="orderPaidAt"
-                                                       readonly th:value="${order.getPaidDate()}">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Status
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getStatus().toString()}"
+                                               readonly>
+                                    </label>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Customer</h3>
+                                <div class="form-group col-sm-12">
+                                    <label>Created at
+                                        <input type="text" class="form-control" th:value="${order.getCreationDate()}"
+                                               readonly>
+                                    </label>
                                 </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="customerName" class="control-label">Name</label>
-                                                <input type="text" class="form-control" id="customerName" readonly
-                                                       th:value="${order.getCustomer().getName()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="customerEmail" class="control-label">Email</label>
-                                                <input type="text" class="form-control" id="customerEmail" readonly
-                                                       th:value="${order.getCustomer().getEmail()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="customerCHUsername" class="control-label">CH
-                                                    username</label>
-                                                <input type="text" class="form-control" id="customerCHUsername" readonly
-                                                       th:value="${order.getCustomer().getChUsername()}">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Paid at
+                                        <input type="text" class="form-control" th:value="${order.getPaidDate()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Created by
+                                        <input type="text" class="form-control" th:value="${order.getCreatedBy()}"
+                                               readonly>
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Products</h3>
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th class="text-right" style="width: 80px;">Price</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="product : ${order.getProducts()}">
-                                    <td th:text="${product.getTitle()}"></td>
-                                    <td class="text-right"
-                                        th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 0, 'POINT', 2, 'COMMA')}"></td>
-                                </tr>
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>Totaal</th>
-                                    <th class="text-right"
-                                        th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 0, 'POINT', 2, 'COMMA')}"></th>
-                                </tr>
-                                </tfoot>
-                            </table>
+                <div class="col">
+                    <div class="card">
+                        <h6 class="card-header">Customer</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-sm-12">
+                                    <label>Name
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getName()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Email
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getEmail()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>CH username
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getChUsername()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="card">
+                <h6 class="card-header">Products</h6>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="thead-inverse bg-primary">
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-right" style="width: 80px;">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${order.getProducts()}">
+                            <td th:text="${product.getTitle()}"></td>
+                            <td class="text-right"
+                                th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Totaal</th>
+                            <th class="text-right"
+                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 </div>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-<script src="https://use.fontawesome.com/359d25f9da.js"></script>
-<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<!-- jQuery CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
 </body>
 </html>
+
+
