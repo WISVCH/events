@@ -197,17 +197,18 @@ public class CustomerServiceTest extends ServiceTest {
         update.setEmail("test@test.com");
         update.setName("test test");
 
-        Customer mock = mock(Customer.class);
+        Customer mock = new Customer();
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(mock));
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         this.customerService.update(update);
-        verify(mock, times(1)).setName(update.getName());
-        verify(mock, times(1)).setEmail(update.getEmail());
-        verify(mock, times(1)).setChUsername(update.getChUsername());
-        verify(mock, times(1)).setRfidToken(update.getRfidToken());
         verify(repository, times(1)).save(mock);
+
+        assertEquals(update.getName(), mock.getName());
+        assertEquals(update.getEmail(), mock.getEmail());
+        assertEquals(update.getChUsername(), mock.getChUsername());
+        assertEquals(update.getRfidToken(), mock.getRfidToken());
     }
 
     /**
