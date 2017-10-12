@@ -33,7 +33,7 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <form th:action="@{./}" th:object="${webhook}" method="POST" novalidate>
+            <form th:action="@{./}" th:object="${webhook}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="row">
