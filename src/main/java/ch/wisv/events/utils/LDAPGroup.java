@@ -18,8 +18,8 @@ package ch.wisv.events.utils;
  */
 public enum LDAPGroup {
 
-    AKCIE("Akcie"),
-    ANNUCIE("Annucie"),
+    AKCIE("AkCie"),
+    ANNUCIE("AnnuCie"),
     BT("Business Tour"),
     BEHEER("CH Beheer"),
     CHIPCIE("CHipCie"),

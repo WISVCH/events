@@ -1,11 +1,13 @@
 package ch.wisv.events.utils.dev.data;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventCategory;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.utils.LDAPGroup;
+import com.google.common.collect.ImmutableList;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -95,6 +97,7 @@ public class EventTestDataRunner extends TestDataRunner {
         );
         event.setPublished(EventStatus.PUBLISHED);
         event.setOrganizedBy(LDAPGroup.AKCIE);
+        event.setCategories(ImmutableList.of(EventCategory.CAREER));
 
         return event;
     }
