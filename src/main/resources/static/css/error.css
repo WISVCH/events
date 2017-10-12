@@ -1,7 +1,7 @@
 .error-owl-container {
-    position: absolute;
-    left: -80px;
-    top: 360px;
+    position: relative;
+    left: -127px;
+    top: -150px;
     width: 300px;
     height: 300px;
     overflow: hidden;
@@ -12,16 +12,15 @@
 }
 
 div.speech {
-    position: relative;
-    height: 140px;
+    height: 100%;
     text-align: center;
     line-height: 100px;
     background-color: #fff;
-    border: 5px solid rgb(69, 137, 202);
+    border: 5px solid #e7ebf1;
     -webkit-border-radius: 30px;
     -moz-border-radius: 30px;
     border-radius: 30px;
-    color: rgb(69, 137, 202);
+    color: #40556a;
 }
 
 div.speech:before {
@@ -30,9 +29,9 @@ div.speech:before {
     width: 0;
     height: 0;
     left: 30px;
-    top: 130px;
+    bottom: -45px;
     border: 25px solid;
-    border-color: rgb(69, 137, 202) transparent transparent rgb(69, 137, 202);
+    border-color: #e7ebf1 transparent transparent #e7ebf1;
 }
 
 div.speech:after {
@@ -41,7 +40,7 @@ div.speech:after {
     width: 0;
     height: 0;
     left: 36px;
-    top: 130px;
+    bottom: -30px;
     border: 18px solid;
     border-color: #fff transparent transparent #fff;
 }

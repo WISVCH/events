@@ -36,6 +36,7 @@ a:hover {
  * Sidebar
  */
 .sidebar {
+    background: #f3f3f3;
     border-right: 3px solid #e7ebf1;
 }
 
@@ -333,6 +334,7 @@ h1 .badge-info, .btn-info {
 .progress .progress-bar {
     height: 20px;
     background-color: #058cce;
+    line-height: 20px;
 }
 
 /*
