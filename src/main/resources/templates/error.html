@@ -3,75 +3,54 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" th:href="@{../../favicon.ico}">
+    <link rel="icon" th:href="@{/images/favicon.png}">
 
-    <title>Events - Dashboard</title>
+    <title>CH Events - Dashboard > Error</title>
 
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
-          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen"/>
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
-
-    <!-- Custom styles for this template -->
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/error.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 </head>
 
 <body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
 <div class="container-fluid">
     <div class="row">
-        <div class="row">
-            <div th:replace="fragments/header :: header">
-                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="content-wrapper">
-
-            <div class="row" style="margin-top: 100px;">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                    <div class="speech">
-                        <h1><samp>Owl no, something unexpected happened!</samp></h1>
-                        <h3>Please try it again</h3>
+        <main class="col-12 p-5" role="main">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="speech p-5">
+                        <h1 class="display-4 border-bottom-0">Owl no, something unexpected happened!</h1>
+                        <h3 class="text-dark border-bottom-0 mb-0" style="font-weight: 100">Please try it again</h3>
                     </div>
                 </div>
 
-                <div class="col-xs-offset-2 col-xs-8" style="margin-top: 50px;">
-                    <div class="well well-sm text-center">
-                        <h4 style="font-weight: 300;">
-                            Happens again? <a href="https://github.com/WISVCH/events/issues/new">Create an issue!</a>
-                        </h4>
-                    </div>
+                <div class="d-block mx-auto p-5">
+                    <a href="https://github.com/WISVCH/events/issues/new" class="btn btn-danger p-4">
+                        <span style="font-size: 32px;">
+                            <i class="fa fa-github fa-fw"></i> Bug? Create an issue!
+                        </span>
+                    </a>
                 </div>
 
             </div>
 
             <div class="error-owl-container">
-                <img th:src="@{/img/error-owl.svg}" class="error-owl" alt="">
+                <img th:src="@{/images/error-owl.svg}" class="error-owl" alt="">
             </div>
-        </div>
+        </main>
     </div>
 </div>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<!-- jQuery CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.26/jquery.autocomplete.min.js"></script>
 </body>
 </html>
