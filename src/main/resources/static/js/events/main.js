@@ -25,7 +25,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         var products = $("#products");
-        var size = products.children().size();
+        var size = products.children().length;
 
         var removeProductId = $(this).data('product-id');
         var removeProductInput = products.find(":input[value='" + removeProductId + "']");
@@ -101,10 +101,10 @@ $(document).ready(function () {
 
     function addProductToEvent(product_id, product_title) {
         const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
-        const productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger remove-product' data-product-id='{1}'><i class='glyphicon glyphicon-remove'></i></a></td></tr>";
+        const productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger text-white remove-product' data-product-id='{1}'><i class='fa fa-remove'></i></a></td></tr>";
 
         var products = $("#products");
-        var count = products.children().size();
+        var count = products.children().length;
 
         $("#productsTable").append(format(productTableRow, [product_title, product_id]));
         products.append(format(productInput, [count, count, product_id]));

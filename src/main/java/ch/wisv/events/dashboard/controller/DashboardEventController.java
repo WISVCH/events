@@ -118,13 +118,13 @@ public class DashboardEventController {
     public String create(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
             this.eventService.create(event);
-            redirect.addFlashAttribute("message", event.getTitle() + " successfully created!");
+            redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
-            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
+            return "redirect:/dashboard/events/";
         } catch (EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
@@ -150,6 +150,34 @@ public class DashboardEventController {
             return "dashboard/events/event";
         } catch (EventsModelNotFound e) {
             return "redirect:/dashboard/events/";
+        }
+    }
+
+    /**
+     * Post request to update an Event
+     *
+     * @param event    EventRequest model attr.
+     * @param redirect Spring RedirectAttributes
+     * @return redirect
+     */
+    @PostMapping("/edit/{key}/")
+    public String update(RedirectAttributes redirect, @ModelAttribute Event event) {
+        try {
+            this.eventService.update(event);
+            redirect.addFlashAttribute("success", "Event changes saved!");
+
+            if (event.getPublished() == EventStatus.PUBLISHED) {
+                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+            } else {
+                this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
+            }
+
+            return "redirect:/dashboard/events/view/" + event.getKey() + "/";
+        } catch (EventsModelNotFound | EventsInvalidModelException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("event", event);
+
+            return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
         }
     }
 
@@ -184,7 +212,7 @@ public class DashboardEventController {
      * @param key      PathVariable key of the Event
      * @return redirect
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping("/delete/{key}/")
     public String deleteEvent(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Event event = this.eventService.getByKey(key);
@@ -198,32 +226,5 @@ public class DashboardEventController {
 
             return "redirect:/dashboard/events/";
         }
-    }
-
-    /**
-     * Post request to update an Event
-     *
-     * @param event    EventRequest model attr.
-     * @param redirect Spring RedirectAttributes
-     * @return redirect
-     */
-    @PostMapping("/update")
-    public String update(RedirectAttributes redirect, @ModelAttribute Event event) {
-        try {
-            this.eventService.update(event);
-            redirect.addFlashAttribute("message", "Event changes saved!");
-
-            if (event.getPublished() == EventStatus.PUBLISHED) {
-                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
-            } else {
-                this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
-            }
-
-        } catch (EventsModelNotFound | EventsInvalidModelException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("event", event);
-        }
-
-        return "redirect:/dashboard/events/edit/" + event.getKey() + "/";
     }
 }

@@ -30,7 +30,7 @@
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>[[${event.getTitle()}]]
-                <a class="badge badge-info" th:href="@{create/}">
+                <a class="badge badge-info" th:href="@{'/dashboard/events/edit/' + ${event.getKey()} + '/'}">
                     <i class="fa fa-edit" aria-hidden="true"></i> Edit
                 </a>
             </h1>
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label>Description
-                                        <textarea type="text" class="form-control" rows="5" style="height: 100px"
+                                        <textarea type="text" class="form-control" rows="5" style="height: 150px"
                                                   th:text="${event.getDescription()}"
                                                   readonly></textarea>
                                     </label>
@@ -103,15 +103,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                </div>
+                <div class="col">
+                    <div class="card mb-4">
                         <h6 class="card-header">Image</h6>
                         <div class="card-body">
                             <img src="https://images.unsplash.com/photo-1462045504115-6c1d931f07d1?dpr=1&auto=compress,format&fit=crop&w=3451&h=&q=80&cs=tinysrgb&crop="
                                  class="img-thumbnail d-block mx-auto" style="width: 250px;" alt="">
                         </div>
                     </div>
-                </div>
-                <div class="col">
                     <div class="card mb-4">
                         <h6 class="card-header">Options</h6>
                         <div class="card-body">
@@ -135,7 +135,8 @@
                                     <div class="form-check"
                                          th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
                                         <label class="form-check-label custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" th:value="${category}"
+                                            <input type="checkbox" class="custom-control-input" disabled
+                                                   th:value="${category}"
                                                    th:checked="${event.getCategories().contains(category)}">
                                             <span class="custom-control-indicator"></span>
                                             <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
