@@ -116,6 +116,9 @@ public class EventTestDataRunner extends TestDataRunner {
 
             if (optional.isPresent()) {
                 Product product = optional.get();
+                product.setLinked(true);
+
+                this.productRepository.saveAndFlush(product);
 
                 event.addProduct(product);
             }

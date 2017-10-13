@@ -60,6 +60,10 @@ a:hover {
     background-color: inherit;
 }
 
+.thead-small th {
+    padding: .25rem .75rem;
+}
+
 table.table.dataTable {
     border-collapse: collapse !important
 }
@@ -70,6 +74,7 @@ div.dataTables_wrapper div.dataTables_filter label {
 
 div.dataTables_wrapper div.dataTables_filter input {
     width: 300px !important;
+    margin-bottom: 1rem;
 }
 
 .table-bordered td, .table-bordered th {
@@ -154,6 +159,11 @@ select.form-control {
     -webkit-transition: -webkit-box-shadow 0.15s linear;
     transition: -webkit-box-shadow 0.15s linear;
     transition: box-shadow 0.15s linear, -webkit-box-shadow 0.15s linear
+}
+
+.form-control.is-invalid:not(:focus) {
+    border-width: 2px;
+    border-style: solid;
 }
 
 .form-control:disabled, .form-control[readonly], input[readonly] {
