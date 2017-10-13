@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{/images/favicon.png}">
 
-    <title>CH Events - Dashboard > Events</title>
+    <title>CH Events - Dashboard > Products</title>
 
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
@@ -24,17 +24,17 @@
 <body>
 <nav th:replace="fragments/header :: header"></nav>
 
-<!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+<!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
 <div class="container-fluid">
     <div class="row">
         <nav th:replace="dashboard/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Create/update event</h1>
+            <h1>Create/update product</h1>
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <form th:action="@{./}" th:object="${event}" method="POST">
+            <form th:action="@{./}" th:object="${product}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="row">
@@ -45,67 +45,60 @@
                                 <div class="row form">
                                     <div class="form-group col-12">
                                         <label>Title*
-                                            <input type="text" class="form-control" required
-                                                   th:field="*{title}"
-                                                   th:value="${event.getTitle()}">
+                                            <input type="text" class="form-control" th:field="*{title}"
+                                                   th:value="${product.getTitle()}" required>
                                         </label>
                                     </div>
                                     <div class="form-group col-12">
-                                        <label>Short description*
-                                            <input type="text" class="form-control" required
-                                                   th:field="*{shortDescription}"
-                                                   th:value="${event.getShortDescription()}">
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Description*
-                                            <textarea type="text" class="form-control" rows="5" style="height: 150px"
+                                        <label>Description
+                                            <textarea type="text" class="form-control" rows="5" style="height: 50px"
                                                       th:field="*{description}"
-                                                      th:text="${event.getDescription()}" required></textarea>
+                                                      th:text="${product.getDescription()}"></textarea>
                                         </label>
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="form-group col-6">
                                                 <label>Starting time*
-                                                    <input type="datetime-local" class="form-control" required
+                                                    <input type="text" class="form-control"
                                                            placeholder="Click to select a date..."
-                                                           th:field="*{start}"
-                                                           th:value="${event.getStart()}">
+                                                           th:field="*{sellStart}"
+                                                           th:value="${product.getSellStart()}">
                                                 </label>
                                             </div>
                                             <div class="form-group col-6">
                                                 <label>Ending time*
-                                                    <input type="datetime-local" class="form-control"
+                                                    <input type="text" class="form-control"
                                                            placeholder="Click to select a date..."
-                                                           th:field="*{ending}"
-                                                           th:value="${event.getEnding()}">
+                                                           th:field="*{sellEnd}"
+                                                           th:value="${product.getSellEnd()}">
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col-12">
-                                        <label>Location
-                                            <input type="text" class="form-control"
-                                                   th:field="*{location}"
-                                                   th:value="${event.getLocation()}">
-                                        </label>
+                                        <label>Price*</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-fw fa-eur"></i></div>
+                                            <input type="number" step="0.01" class="form-control"
+                                                   th:field="*{cost}" th:value="${product.getCost()}" required>
+                                        </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="form-group col-6">
-                                                <label>Target*
-                                                    <input type="text" class="form-control" required
-                                                           th:field="*{target}"
-                                                           th:value="${event.getTarget()}">
+                                                <label>Available
+                                                    <input type="text" class="form-control" th:field="*{maxSold}"
+                                                           th:value="${product.getMaxSold()}">
                                                 </label>
                                             </div>
                                             <div class="form-group col-6">
-                                                <label>Limit</label>
-                                                <input type="text" class="form-control"
-                                                       th:field="*{maxSold}"
-                                                       th:value="${event.getMaxSold()}">
-                                                <small class="form-text text-muted">Leave blank for no limit.</small>
+                                                <label>Max sold per customer*
+                                                    <input type="text" class="form-control" step="1" min="1" max="25"
+                                                           th:field="*{maxSoldPerCustomer}"
+                                                           th:value="${product.getMaxSoldPerCustomer()}"
+                                                           required>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -115,66 +108,6 @@
                     </div>
                     <div class="col">
                         <div class="card mb-4">
-                            <h6 class="card-header">Image</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="custom-file w-100">
-                                                <input type="file" id="file" class="custom-file-input">
-                                                <span class="custom-file-control"></span>
-                                            </label>
-                                            <small class="form-text text-muted">NOT WORKING!</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <h6 class="card-header">Options</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="form-group col-12">
-                                        <label>Status
-                                            <select name="" id="eventStatus" class="form-control"
-                                                    th:field="*{published}" required>
-                                                <option th:each="state : ${T(ch.wisv.events.core.model.event.EventStatus).values()}"
-                                                        th:selected="${event.published.getId() == state.getId()}"
-                                                        th:value="${state}"
-                                                        th:text="${state.getDisplayName()}">
-                                                </option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Organized by
-                                            <select name="" id="organizedBy" class="form-control"
-                                                    th:field="*{organizedBy}" required>
-                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
-                                                        th:value="${group}"
-                                                        th:text="${group.getName()}">
-                                                </option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label class="mb-2">Categories</label>
-                                        <div class="form-check"
-                                             th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
-                                            <label class="form-check-label custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input"
-                                                       th:field="*{categories}"
-                                                       th:value="${category}"
-                                                       th:checked="${event.getCategories().contains(category)}">
-                                                <span class="custom-control-indicator"></span>
-                                                <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
                             <h6 class="card-header">Products</h6>
                             <div class="card-body">
                                 <a href="#" class="btn btn-danger btn-block mb-4" data-toggle="modal"
@@ -185,26 +118,26 @@
                                 <div id="products">
                                     <input type="hidden" th:field="*{products[__${stat.index}__]}"
                                            th:value="${product.id}"
-                                           th:each="product, stat : ${event.products}">
+                                           th:each="product, stat : ${product.products}">
                                 </div>
 
                                 <table class="table">
                                     <thead class="thead-inverse thead-small bg-primary">
                                     <tr>
-                                        <th>Product</th>
+                                        <th>Name</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody id="productsTable">
-                                    <tr th:if="${event.products.isEmpty()}" id="noProducts">
+                                    <tr th:if="${product.products.isEmpty()}" id="noProducts">
                                         <td colspan="2">No products added to this event.</td>
                                     </tr>
-                                    <tr th:each="product : ${event.products}">
-                                        <td th:text="${product.getTitle()}"></td>
-                                        <td style='width: 40px;'>
-                                            <a class='btn btn-xs btn-danger remove-product text-white'
-                                               th:data-product-id="${product.getId()}">
-                                                <i class='fa fa-remove'></i>
+                                    <tr th:each="product : ${product.products}">
+                                        <td th:text="${product.title}"></td>
+                                        <td style="width: 40px;">
+                                            <a class="btn btn-xs btn-danger remove-product"
+                                               th:data-product-id="${product.id}">
+                                                <i class="fa fa-remove"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -218,7 +151,7 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <div class="form-group mb-0">
-                            <input type="submit" class="btn btn-danger" value="Save event">
+                            <input type="submit" class="btn btn-danger" value="Save product">
                         </div>
                     </div>
                 </div>
@@ -242,8 +175,8 @@
                     <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                            placeholder="Search for a product">
                     <span class="input-group-addon">
-                        <i class="fa fa-fw fa-search"></i>
-                    </span>
+                            <i class="fa fa-fw fa-search"></i>
+                        </span>
                 </div>
                 <small class="form-text text-muted">Start typing to look for a product.</small>
 
@@ -251,22 +184,18 @@
 
                 <h4>Create product</h4>
                 <div class="form-group">
-                    <label>Title*
-                        <input type="text" id="productTitle" class="form-control required" placeholder="Product title">
-                    </label>
+                    <label>Title*</label>
+                    <input type="text" id="productTitle" class="form-control required" placeholder="Product title">
                 </div>
                 <div class="form-group">
-                    <label>Description
-                        <textarea name="product" id="productDescription" placeholder="Description" rows="2"
-                                  class="form-control"></textarea>
-                    </label>
+                    <label for="productDescription">Description</label>
+                    <textarea name="product" id="productDescription" placeholder="Description" rows="2"
+                              class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Price*</label>
                     <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fa fa-fw fa-eur"></i>
-                        </div>
+                        <div class="input-group-addon">&euro;</div>
                         <input type="number" id="productCost" step="0.01" class="form-control required"
                                placeholder="Price of the product">
                     </div>
@@ -277,7 +206,7 @@
                             <label>Available</label>
                             <input type="number" id="maxSold" step="0.01" class="form-control"
                                    placeholder="Amount of tickets that are available">
-                            <small class="form-text text-muted">Leave blank for no limit!</small>
+                            <small class="form-text text-muted">Leave blank for an infinite amount of tickets!</small>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -305,5 +234,5 @@
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/flatpickr/3.0.6/src/flatpickr.js}"></script>
 <script th:src="@{/js/events.js}"></script>
-<script th:src="@{/js/events/main.js}"></script>
+<script th:src="@{/js/products/main.js}"></script>
 </body>

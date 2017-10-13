@@ -10,7 +10,6 @@ import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
-import ch.wisv.events.utils.FormMode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,7 +141,6 @@ public class DashboardEventController {
     @GetMapping("/edit/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            model.addAttribute("mode", FormMode.UPDATE);
             if (!model.containsAttribute("event")) {
                 model.addAttribute("event", this.eventService.getByKey(key));
             }
