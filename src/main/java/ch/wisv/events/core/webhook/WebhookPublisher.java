@@ -13,10 +13,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -85,7 +87,7 @@ public class WebhookPublisher extends Thread {
             JSONObject request = WebhookRequestFactory.generateRequest(this.trigger, this.object);
 
             List<Webhook> webhooks = this.webhookService.getByTrigger(trigger);
-            webhooks.forEach(webhook -> this.request(webhook.getPayloadUrl(), request));
+            webhooks.forEach(webhook -> this.request(webhook, request));
         } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
             e.printStackTrace();
         }
@@ -94,21 +96,23 @@ public class WebhookPublisher extends Thread {
     /**
      * Method request sends out the request to a url.
      *
-     * @param url     of type String
+     * @param webhook of type Webhook
      * @param request of type JSONObject
      */
-    private void request(String url, JSONObject request) {
+    private void request(Webhook webhook, JSONObject request) {
         HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
+        HttpPost httpPost = new HttpPost(webhook.getPayloadUrl());
 
         httpPost.setHeader("Content-type", "application/json");
         httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhook.getSecret()).getBytes()));
         httpPost.setEntity(new StringEntity(request.toJSONString(), "UTF8"));
 
         try {
             HttpResponse response = httpClient.execute(httpPost);
+            String responseBody = EntityUtils.toString(response.getEntity());
 
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK || !responseBody.equals("true")) {
                 // TODO: add monitoring
             }
         } catch (IOException e) {
