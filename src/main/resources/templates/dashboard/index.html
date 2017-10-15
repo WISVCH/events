@@ -47,11 +47,13 @@
                                 </div>
                             </div>
                             <span class="text-dark">
-                                <span th:class="((${increaseEvents} > 0) ? 'text-success' : 'text-danger')">
-                                    <i th:class="'fa fa-arrow-' + ((${increaseEvents} > 0) ? 'up' : 'down')"></i>
-                                    <strong>[[${increaseEvents}]]%</strong>
-                                </span>
-                                [[${increaseEvents} > 0 ? 'more' : 'less']] than last month
+                                <small>
+                                    <span th:class="((${increaseEvents} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${increaseEvents} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${increaseEvents}]]%</strong>
+                                    </span>
+                                    [[${increaseEvents} > 0 ? 'more' : 'less']] than last month
+                                </small>
                             </span>
                         </div>
                     </div>
@@ -70,11 +72,13 @@
                                 </div>
                             </div>
                             <span class="text-dark">
-                                <span th:class="((${increaseCustomers} > 0) ? 'text-success' : 'text-danger')">
-                                    <i th:class="'fa fa-arrow-' + ((${increaseCustomers} > 0) ? 'up' : 'down')"></i>
-                                    <strong>[[${increaseCustomers}]]%</strong>
-                                </span>
-                                [[${increaseCustomers} > 0 ? 'more' : 'less']] than last month
+                                <small>
+                                    <span th:class="((${increaseCustomers} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${increaseCustomers} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${increaseCustomers}]]%</strong>
+                                    </span>
+                                    [[${increaseCustomers} > 0 ? 'more' : 'less']] than last month
+                                </small>
                             </span>
                         </div>
                     </div>
@@ -93,11 +97,13 @@
                                 </div>
                             </div>
                             <span class="text-dark">
-                                <span th:class="((${changeTargetRate} > 0) ? 'text-success' : 'text-danger')">
-                                    <i th:class="'fa fa-arrow-' + ((${changeTargetRate} > 0) ? 'up' : 'down')"></i>
-                                    <strong>[[${changeTargetRate}]]%</strong>
-                                </span>
-                                [[${changeTargetRate} > 0 ? 'more' : 'less']] than previous board
+                                <small>
+                                    <span th:class="((${changeTargetRate} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${changeTargetRate} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${changeTargetRate}]]%</strong>
+                                    </span>
+                                    [[${changeTargetRate} > 0 ? 'more' : 'less']] than previous board
+                                </small>
                             </span>
                         </div>
                     </div>
@@ -116,11 +122,13 @@
                                 </div>
                             </div>
                             <span class="text-dark">
-                                <span th:class="((${changeAttendanceRate} > 0) ? 'text-success' : 'text-danger')">
-                                    <i th:class="'fa fa-arrow-' + ((${changeAttendanceRate} > 0) ? 'up' : 'down')"></i>
-                                    <strong>[[${changeAttendanceRate}]]%</strong>
-                                </span>
-                                [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board
+                                <small>
+                                    <span th:class="((${changeAttendanceRate} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${changeAttendanceRate} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${changeAttendanceRate}]]%</strong>
+                                    </span>
+                                    [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board
+                                </small>
                             </span>
                         </div>
                     </div>
