@@ -3,8 +3,8 @@ package ch.wisv.events.sales.controller;
 import ch.wisv.events.core.exception.EventsSalesAppException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.sales.service.SalesAppProductService;
 import ch.wisv.events.sales.service.SalesAppOrderService;
+import ch.wisv.events.sales.service.SalesAppProductService;
 import ch.wisv.events.sales.service.SalesAppSoldProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -59,9 +59,12 @@ public class SalesAppMainController {
      *
      * @param salesAppEventService       of type SalesAppProductService.
      * @param salesAppSoldProductService of type SalesAppSoldProductService.
-     * @param salesAppOrderService               of type OrderService.
+     * @param salesAppOrderService       of type OrderService.
      */
-    public SalesAppMainController(SalesAppProductService salesAppEventService, SalesAppSoldProductService salesAppSoldProductService, SalesAppOrderService salesAppOrderService) {
+    public SalesAppMainController(SalesAppProductService salesAppEventService,
+            SalesAppSoldProductService salesAppSoldProductService,
+            SalesAppOrderService salesAppOrderService
+    ) {
         this.salesAppEventService = salesAppEventService;
         this.salesAppSoldProductService = salesAppSoldProductService;
         this.salesAppOrderService = salesAppOrderService;
@@ -90,12 +93,16 @@ public class SalesAppMainController {
     @PostMapping("/")
     public String createOrder(RedirectAttributes redirect, @ModelAttribute Order order) {
         try {
+            if (order.getProducts().isEmpty()) {
+                redirect.addFlashAttribute("error", "Order should contain products");
+
+                return "redirect:/sales/";
+            }
+
             Map<Product, Long> productCount = order.getProducts().stream()
                     .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
             productCount.forEach(this.salesAppSoldProductService::assertAmountOfProductLeft);
             this.salesAppOrderService.create(order);
-
-            redirect.addFlashAttribute("order", order);
 
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/rfid/";
         } catch (EventsSalesAppException e) {

@@ -27,13 +27,14 @@
     <div class="row">
         <main class="col p-5" role="main">
             <div class="row mb-5">
-                <div class="d-block mx-auto col-4">
-                    <img th:src="@{/images/logo.svg}" alt="" style="width: 100%;">
+                <div class="d-block mx-auto">
+                    <img th:src="@{/images/ch-logo.png}" alt="" style="width: calc(80vw); max-width: 500px;">
                 </div>
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-2 text-center p-5 m-3" th:each="location : ${locations}"
+                <div class="col-sm-12 col-md-6 col-lg-2 text-center p-sm-1 m-3"
+                     th:each="location : ${locations}"
                      style="font-size: 20px;">
                     <a th:href="@{${location.getUrl()}}" class="text-primary">
                         <i th:classappend="'fa fa-5x ' + ${location.getIcon()}"></i> <br>

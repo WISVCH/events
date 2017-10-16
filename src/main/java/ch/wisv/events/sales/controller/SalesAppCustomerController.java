@@ -3,6 +3,7 @@ package ch.wisv.events.sales.controller;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.EventsInvalidException;
 import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.InvalidCustomerException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.customer.CustomerService;
@@ -109,8 +110,6 @@ public class SalesAppCustomerController {
 
             return "redirect:/sales/";
         } catch (CustomerNotFound e) {
-            redirect.addFlashAttribute("order", order);
-
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
         }
 
@@ -124,20 +123,17 @@ public class SalesAppCustomerController {
      */
     @GetMapping("/create/")
     public String create(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
-        if (!model.containsAttribute("order")) {
-            try {
-                Order order = orderService.getByReference(publicReference);
-
-                model.addAttribute("order", order);
-            } catch (EventsModelNotFound e) {
-                redirect.addFlashAttribute("error", "No order set!");
-
-                return "redirect:/sales/";
+        try {
+            if (!model.containsAttribute("order")) {
+                model.addAttribute("order", this.orderService.getByReference(publicReference));
             }
+
+            return "sales/customer/create";
+        } catch (EventsModelNotFound e) {
+            redirect.addFlashAttribute("error", "No order set!");
+
+            return "redirect:/sales/";
         }
-
-        return "sales/customer/create";
-
     }
 
     /**
@@ -147,10 +143,18 @@ public class SalesAppCustomerController {
      * @return String
      */
     @PostMapping("/create/")
-    public String create(@ModelAttribute Order order) {
-        this.customerService.create(order.getCustomer());
-        this.salesAppOrderService.addCustomerToOrder(order, order.getCustomer());
+    public String create(RedirectAttributes redirect, @ModelAttribute Order order) {
+        try {
+            this.customerService.create(order.getCustomer());
+            this.salesAppOrderService.addCustomerToOrder(order, order.getCustomer());
+            redirect.addFlashAttribute("success", "Customer successfully created!");
 
-        return "redirect:/sales/order/" + order.getPublicReference() + "/";
+            return "redirect:/sales/order/" + order.getPublicReference() + "/";
+        } catch (InvalidCustomerException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("order", order);
+
+            return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
+        }
     }
 }

@@ -261,7 +261,6 @@ h1 .badge {
 h1 .badge, .btn, .btn:hover {
     transition: background-color 0.25s ease-out, color 0.25s ease-out;
     cursor: pointer;
-    border: 3px solid;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
