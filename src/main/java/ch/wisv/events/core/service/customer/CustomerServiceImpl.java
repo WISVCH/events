@@ -187,11 +187,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
-            throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
+            throw new InvalidCustomerException("RFID token is already used!");
         }
 
         if (this.isNotUniqueEmail(customer)) {
-            throw new RFIDTokenAlreadyUsedException("Email address is already used!");
+            throw new InvalidCustomerException("Email address is already used!");
         }
     }
 
