@@ -9,8 +9,8 @@ $(document).ready(function () {
         dateFormat: "Y-m-dTH:i:S",
         time_24hr: true
     };
-    $('#sellStart').flatpickr(config);
-    $('#sellEnd').flatpickr(config);
+    $('#ending').flatpickr(config);
+    $('#start').flatpickr(config);
 
     $('#q').autocomplete({
         serviceUrl: '/events/api/v1/products/search/unused',
@@ -89,10 +89,10 @@ $(document).ready(function () {
 
             } else {
                 if (!$(this).val()) {
-                    $(this).addClass('is-invalid');
+                    $(this).parent().addClass('has-error');
                     fail = true;
                 } else {
-                    $(this).removeClass('is-invalid');
+                    $(this).parent().removeClass('has-error');
                 }
             }
         });
@@ -101,7 +101,7 @@ $(document).ready(function () {
 
     function addProductToEvent(product_id, product_title) {
         const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
-        const productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger remove-product text-white' data-product-id='{1}'><i class='fa fa-remove'></i></a></td></tr>";
+        const productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger text-white remove-product' data-product-id='{1}'><i class='fa fa-remove'></i></a></td></tr>";
 
         var products = $("#products");
         var count = products.children().length;
@@ -119,3 +119,10 @@ $(document).ready(function () {
         });
     }
 });
+
+function format(source, params) {
+    $.each(params, function (i, n) {
+        source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n);
+    });
+    return source;
+}
