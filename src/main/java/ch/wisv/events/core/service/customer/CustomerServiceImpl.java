@@ -3,7 +3,6 @@ package ch.wisv.events.core.service.customer;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
-import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
@@ -166,8 +165,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Will check all the required fields if they are valid.
      *
      * @param customer of type Customer
-     * @throws InvalidCustomerException      when one of the required fields is not valid
-     * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
+     * @throws InvalidCustomerException when one of the required fields is not valid
      */
     private void assertIsValidCustomer(Customer customer) throws InvalidCustomerException {
         if (customer == null) {

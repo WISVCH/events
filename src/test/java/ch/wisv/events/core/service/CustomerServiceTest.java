@@ -3,7 +3,6 @@ package ch.wisv.events.core.service;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
-import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
@@ -179,7 +178,7 @@ public class CustomerServiceTest extends ServiceTest {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        thrown.expect(RFIDTokenAlreadyUsedException.class);
+        thrown.expect(InvalidCustomerException.class);
         thrown.expectMessage("RFID token is already used!");
 
         this.customerService.create(duplicate);
