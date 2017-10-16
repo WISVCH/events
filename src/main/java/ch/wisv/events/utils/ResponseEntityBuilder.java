@@ -23,8 +23,9 @@ public class ResponseEntityBuilder {
      * @return The ResponseEntity in standard CH Events format.
      */
     private static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
-                                                          String message,
-                                                          Object object) {
+            String message,
+            Object object
+    ) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status", httpStatus.toString());
         responseBody.put("timestamp", LocalDateTime.now().toString());
@@ -69,7 +70,8 @@ public class ResponseEntityBuilder {
      * @return The ResponseEntity in standard CH Events format.
      */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
-                                                         String message) {
+            String message
+    ) {
         return createResponseEntity(httpStatus, httpHeaders, message, null);
     }
 }

@@ -74,7 +74,7 @@
                                 <a th:href="'overview/' + ${event.getKey()} + '/'" class="btn btn-success">
                                     <i class="fa fa-fw fa-stack-overflow"></i>
                                 </a>
-                                <a th:href="'delete/' + ${event.getKey()}"
+                                <a th:href="'delete/' + ${event.getKey()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
                                    class="btn btn-danger">
                                     <i class="fa fa-fw fa-remove glyphicon-remove"></i>

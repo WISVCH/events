@@ -111,7 +111,8 @@ public class Product {
      * @param sellEnd     End selling date
      */
     public Product(String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart,
-                   LocalDateTime sellEnd) {
+            LocalDateTime sellEnd
+    ) {
         this();
         this.title = title;
         this.description = description;
