@@ -56,8 +56,8 @@ public class SalesAppPaymentController {
      */
     @PostMapping("/")
     public String payment(RedirectAttributes redirect,
-                          @PathVariable String publicReference,
-                          @RequestParam(value = "payment") String payment
+            @PathVariable String publicReference,
+            @RequestParam(value = "payment") String payment
     ) {
         try {
             Order order = this.orderService.getByReference(publicReference);

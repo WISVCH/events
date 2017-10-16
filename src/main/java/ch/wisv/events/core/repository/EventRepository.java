@@ -59,7 +59,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     /**
      * Find all Event with start between a period of time.
      *
-     * @param after of type LocalDateTime
+     * @param after  of type LocalDateTime
      * @param before of type LocalDateTime
      * @return List<Event>
      */

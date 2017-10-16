@@ -83,8 +83,8 @@ public class SoldProduct {
     /**
      * Constructor SoldProduct creates a new SoldProduct instance.
      *
-     * @param product of type Product
-     * @param order of type Order
+     * @param product  of type Product
+     * @param order    of type Order
      * @param customer of type Customer
      */
     public SoldProduct(Product product, Order order, Customer customer) {

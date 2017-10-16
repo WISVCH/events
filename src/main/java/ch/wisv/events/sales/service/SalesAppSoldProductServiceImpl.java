@@ -47,7 +47,7 @@ public class SalesAppSoldProductServiceImpl implements SalesAppSoldProductServic
     @Override
     public void assertAmountOfProductLeft(Product product, Long integer) {
         Long numberProductSold = this.soldProductRepository.countAllByProduct(product);
-        
+
         if (product.getMaxSold() != null) {
             int numberRemainingProduct = product.getMaxSold() - numberProductSold.intValue();
 

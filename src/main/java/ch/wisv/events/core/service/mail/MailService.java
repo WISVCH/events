@@ -22,11 +22,11 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public interface MailService {
-    
+
     /**
      * Method mail Order to Customer.
      *
      * @param order of type Order
      */
-    void sendOrderToCustomer(Order order,  List<SoldProduct> soldProductList);
+    void sendOrderToCustomer(Order order, List<SoldProduct> soldProductList);
 }
