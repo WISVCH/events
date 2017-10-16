@@ -168,7 +168,7 @@ public class ScanAppProductController {
     ) {
         try {
             Product product = this.productService.getByKey(productKey);
-            this.customerService.getByKey(customerKey);
+            Customer customer = this.customerService.getByKey(customerKey);
 
             ScanResult result = null;
             for (SoldProduct soldProduct : soldProducts) {
@@ -179,7 +179,7 @@ public class ScanAppProductController {
                 }
             }
 
-            return this.createRedirect(redirect, product, result);
+            return this.createRedirect(redirect, product, result, customer);
         } catch (EventsModelNotFound | CustomerNotFound e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
@@ -203,10 +203,10 @@ public class ScanAppProductController {
             if (result == ScanResult.MULTIPLE_PRODUCT) {
                 return "redirect:/scan/product/" + product.getKey() + "/select/" + customer.getKey() + "/";
             } else {
-                return this.createRedirect(redirect, product, result);
+                return this.createRedirect(redirect, product, result, customer);
             }
         } catch (CustomerNotFound e) {
-            redirect.addFlashAttribute("result", e.getMessage());
+            redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 
             return "redirect:/scan/result/";
@@ -224,7 +224,7 @@ public class ScanAppProductController {
     private String handleUniqueCodeRequest(RedirectAttributes redirect, Product product, String uniqueCode) {
         ScanResult result = this.scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
 
-        return this.createRedirect(redirect, product, result);
+        return this.createRedirect(redirect, product, result, null);
     }
 
     /**
@@ -233,11 +233,13 @@ public class ScanAppProductController {
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
      * @param result   of type ScanResult
+     * @param customer
      * @return String
      */
-    private String createRedirect(RedirectAttributes redirect, Product product, ScanResult result) {
+    private String createRedirect(RedirectAttributes redirect, Product product, ScanResult result, Customer customer) {
         redirect.addFlashAttribute("result", result);
         redirect.addFlashAttribute("product", product);
+        redirect.addFlashAttribute("customer", customer);
 
         return "redirect:/scan/result/";
     }
