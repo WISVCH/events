@@ -1,8 +1,7 @@
 package ch.wisv.events.core.model.product;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,21 +10,18 @@ import java.util.Collection;
  * Search Object.
  * Object for search API.
  */
+@Data
 @JsonAutoDetect
 public class Search {
 
     /**
      * Query used for searching.
      */
-    @Getter
-    @Setter
     public String query;
 
     /**
      * Collection of suggested items.
      */
-    @Getter
-    @Setter
     public Collection<SearchItem> suggestions;
 
     /**

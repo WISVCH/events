@@ -48,7 +48,7 @@ public class ProductDefaultResponse {
      * Field cost of the Product
      */
     @Getter
-    private float cost;
+    private Double cost;
 
     /**
      * Constructor ProductDefaultResponse creates a new ProductDefaultResponse instance.

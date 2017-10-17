@@ -1,7 +1,8 @@
 package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,7 +29,8 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-@Table(name="\"order\"")
+@Table(name = "\"order\"")
+@Data
 public class Order {
 
     /**
@@ -41,58 +43,50 @@ public class Order {
      */
     @Id
     @GeneratedValue
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**
      * Field status status of the Order.
      */
-    @Getter
-    @Setter
     private OrderStatus status;
 
     /**
      * Field amount amount of the Order.
      */
-    @Getter
-    @Setter
-    private float amount;
+    private Double amount;
 
     /**
      * Field products list of Products in the Order.
      */
-    @Getter
     @ManyToMany(targetEntity = Product.class)
     private List<Product> products;
 
     /**
      * Field publicReference UUID for public reference.
      */
-    @Getter
-    @Setter
     private String publicReference;
+
+    /**
+     * Field soldBy
+     */
+    private String createdBy;
 
     /**
      * Field creationDate date time on which the order is create.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
     private LocalDateTime creationDate;
 
     /**
      * Field paidDate date time on which the order has been paid.
      */
     @DateTimeFormat(pattern = TIME_FORMAT)
-    @Getter
-    @Setter
     private LocalDateTime paidDate;
 
     /**
      * Field customer customer that order this.
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Customer customer;
 
@@ -107,23 +101,11 @@ public class Order {
     }
 
     /**
-     * Constructor Order creates a new Order instance.
-     *
-     * @param customer of type Customer
-     */
-    public Order(Customer customer) {
-        this();
-        this.customer = customer;
-    }
-
-    /**
      * Add product to Order and create cost to product.
      *
      * @param product Product
      */
     public void addProduct(Product product) {
         this.products.add(product);
-        this.amount += product.getCost();
     }
-
 }

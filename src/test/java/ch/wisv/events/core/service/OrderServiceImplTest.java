@@ -1,34 +1,26 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.app.request.OrderRequest;
-import ch.wisv.events.core.exception.OrderNotFound;
-import ch.wisv.events.core.exception.ProductLimitExceededException;
-import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
-import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderServiceImpl;
-import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -55,28 +47,21 @@ public class OrderServiceImplTest extends ServiceTest {
     private OrderRepository repository;
 
     /**
-     * Mock EventService
-     */
-    @Mock
-    private EventService eventService;
-
-    /**
-     * Mock ProductService
-     */
-    @Mock
-    private ProductService productService;
-
-    /**
      * Mock SoldProductService
      */
     @Mock
     private SoldProductService soldProductService;
 
     /**
+     * Field mailService
+     */
+    @Mock
+    private MailService mailService;
+
+    /**
      * Field service
      */
-    @InjectMocks
-    private OrderService service = new OrderServiceImpl();
+    private OrderService service;
 
     /**
      * Default Order
@@ -85,15 +70,20 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method setUp ...
+     *
      * @throws Exception when
      */
     @Before
     public void setUp() throws Exception {
-        this.order = new Order(mock(Customer.class));
+        this.service = new OrderServiceImpl(repository, mailService, soldProductService);
+
+        this.order = new Order();
+        this.order.setCustomer(mock(Customer.class));
     }
 
     /**
      * Method tearDown ...
+     *
      * @throws Exception when
      */
     @After
@@ -128,6 +118,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Test get by public reference method
+     *
      * @throws Exception when
      */
     @Test
@@ -139,11 +130,12 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Test get by public reference when order does not exists
+     *
      * @throws Exception when
      */
     @Test
     public void testGetByReferenceEmpty() throws Exception {
-        thrown.expect(OrderNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
 
         service.getByReference(this.order.getPublicReference());
@@ -151,11 +143,13 @@ public class OrderServiceImplTest extends ServiceTest {
 
     /**
      * Method testGetOrdersByProduct ...
+     *
      * @throws Exception when
      */
     @Test
     public void testGetOrdersByProduct() throws Exception {
         Product product = new Product();
+        product.setCost(0.d);
         this.order.addProduct(product);
 
         when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
@@ -164,166 +158,18 @@ public class OrderServiceImplTest extends ServiceTest {
     }
 
     /**
-     * Test clone get product orders
-     * @throws Exception
-     */
-    @Test
-    public void testGetOrdersByProductClone() throws Exception {
-        Product product = new Product();
-        Product product1 = new Product(
-                product.getId(),
-                product.getKey(),
-                product.getTitle(),
-                product.getDescription(),
-                product.getCost(),
-                product.getSold(),
-                product.getMaxSold(),
-                product.getSellStart(),
-                product.getSellEnd(),
-                product.getProducts(),
-                product.isLinked()
-        );
-        this.order.addProduct(product);
-        when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
-
-        assertEquals(ImmutableList.of(this.order), service.getOrdersByProduct(product1));
-    }
-
-    /**
      * Method testGetOrdersByProduct ...
+     *
      * @throws Exception when
      */
     @Test
     public void testGetOrdersByProductEmpty() throws Exception {
         Product product = new Product();
+        product.setCost(0.d);
         this.order.addProduct(product);
 
         when(repository.findAll()).thenReturn(ImmutableList.of(new Order()));
 
         assertEquals(ImmutableList.of(), service.getOrdersByProduct(product));
     }
-
-    /**
-     * Method testCreate ...
-     * @throws Exception when
-     */
-    @Test
-    public void testCreate() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 10, LocalDateTime.now(), LocalDateTime.now());
-        HashMap<String, Integer> products = new HashMap<>();
-        products.put(product.getKey(), 2);
-
-        OrderRequest request = new OrderRequest(products);
-        when(productService.getByKey(product.getKey())).thenReturn(product);
-
-        Order temp = service.create(request);
-        verify(repository, times(1)).saveAndFlush(any(Order.class));
-        assertEquals(ImmutableList.of(product, product), temp.getProducts());
-    }
-
-
-    /**
-     * Method testCreate ...
-     * @throws Exception when
-     */
-    @Test
-    public void testCreateException() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        HashMap<String, Integer> products = new HashMap<>();
-        products.put(product.getKey(), 2);
-
-        OrderRequest request = new OrderRequest(products);
-        when(productService.getByKey(product.getKey())).thenReturn(product);
-
-        thrown.expect(ProductLimitExceededException.class);
-        service.create(request);
-    }
-
-    /**
-     * Method testAddCustomerToOrder ...
-     * @throws Exception when
-     */
-    @Test
-    public void testAddCustomerToOrder() throws Exception {
-        Customer customer = Mockito.mock(Customer.class);
-
-        service.addCustomerToOrder(this.order, customer);
-        verify(repository, times(1)).save(this.order);
-    }
-
-    /**
-     * Method testUpdateOrderStatus ...
-     * @throws Exception when
-     */
-    @Test
-    public void testUpdateOrderStatus() throws Exception {
-        Event event = new Event("Test", "test", "test", 10, 10, "path/to/file", LocalDateTime.now(),
-                LocalDateTime.now());
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        this.order.addProduct(product);
-        event.addProduct(product);
-
-        when(eventService.getEventByProductKey(product.getKey())).thenReturn(ImmutableList.of(event));
-
-        service.updateOrderStatus(this.order, OrderStatus.REJECTED);
-
-        verify(repository, times(1)).save(this.order);
-        verify(eventService, times(1)).update(any(Event.class));
-    }
-
-    /**
-     * Method testUpdateOrderStatusToPaid ...
-     * @throws Exception when
-     */
-    @Test
-    public void testUpdateOrderStatusToPaid() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        this.order.addProduct(product);
-
-        service.updateOrderStatus(this.order, OrderStatus.PAID_CASH);
-        verify(soldProductService, times(1)).create(this.order);
-    }
-
-    /**
-     * Method testUpdateOrderStatusToPaid ...
-     * @throws Exception when
-     */
-    @Test
-    public void testUpdateOrderStatusToPaidDouble() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        this.order.addProduct(product);
-        this.order.setStatus(OrderStatus.PAID_CASH);
-
-        service.updateOrderStatus(this.order, OrderStatus.PAID_CASH);
-        verify(soldProductService, times(0)).create(this.order);
-    }
-
-    /**
-     * Method testUpdateOrderStatusToPaid ...
-     * @throws Exception when
-     */
-    @Test
-    public void testUpdateOrderStatusFromPaid() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        this.order.addProduct(product);
-        this.order.setStatus(OrderStatus.PAID_CASH);
-
-        service.updateOrderStatus(this.order, OrderStatus.REJECTED);
-        verify(soldProductService, times(1)).remove(this.order);
-    }
-
-    /**
-     * Method testUpdateOrderStatusToPaid ...
-     * @throws Exception when
-     */
-    @Test
-    public void testUpdateOrderStatusFromPaidDouble() throws Exception {
-        Product product = new Product("Test", "test", 1.f, 1, LocalDateTime.now(), LocalDateTime.now());
-        this.order.addProduct(product);
-        this.order.setStatus(OrderStatus.REJECTED);
-
-        service.updateOrderStatus(this.order, OrderStatus.REJECTED);
-        verify(soldProductService, times(0)).remove(this.order);
-    }
-
 }

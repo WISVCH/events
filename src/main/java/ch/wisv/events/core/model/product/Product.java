@@ -1,8 +1,10 @@
 package ch.wisv.events.core.model.product;
 
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -16,7 +18,6 @@ import java.util.UUID;
  * Product Entity.
  */
 @Entity
-@AllArgsConstructor
 @Data
 public class Product {
 
@@ -25,6 +26,7 @@ public class Product {
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     public Integer id;
 
     /**
@@ -40,23 +42,29 @@ public class Product {
     /**
      * Description of the product.
      */
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     public String description;
 
     /**
      * Price/Cost of the product.
      */
-    public float cost;
+    @NotEmpty
+    public Double cost;
 
     /**
      * Products sold.
      */
-    public int sold;
+    public Integer sold;
 
     /**
      * Maximum number of sold for the product. It is an Integer so it can be NULL.
      */
     public Integer maxSold;
+
+    /**
+     * Field maxSoldPerCustomer
+     */
+    public Integer maxSoldPerCustomer;
 
     /**
      * Start DateTime for selling this product.
@@ -87,6 +95,9 @@ public class Product {
     public Product() {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
+
+        // Set default sold to zero.
+        this.sold = 0;
     }
 
     /**
@@ -99,8 +110,9 @@ public class Product {
      * @param sellStart   Start selling date
      * @param sellEnd     End selling date
      */
-    public Product(String title, String description, float cost, Integer maxSold, LocalDateTime sellStart,
-                   LocalDateTime sellEnd) {
+    public Product(String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart,
+            LocalDateTime sellEnd
+    ) {
         this();
         this.title = title;
         this.description = description;
@@ -119,7 +131,10 @@ public class Product {
     public double calcProgress() {
         if (this.maxSold == null) {
             return 100.d;
+        } else if (this.sold == null) {
+            return 0.d;
         }
+
         return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
     }
 

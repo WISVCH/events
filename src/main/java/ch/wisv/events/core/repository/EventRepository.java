@@ -1,6 +1,8 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -13,15 +15,7 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
-     * Find an Event by ID.
-     *
-     * @param id id of Event
-     * @return Event
-     */
-    Event findById(Integer id);
-
-    /**
-     * Find Events that ending after a certain dateTime, so all upcoming events
+     * Find Events that ending after a certain dateTime, so all upcoming events.
      *
      * @param dateTime DateTime an event should ending after
      * @return list of Events
@@ -29,7 +23,24 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByEndingAfter(LocalDateTime dateTime);
 
     /**
-     * Find an Event by key
+     * Find all Events that are organized by a certain LDAPGroup.
+     *
+     * @param published   of type EventStatus
+     * @param organizedBy of type LDAPGroup
+     * @return List<Event>
+     */
+    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus published, LDAPGroup organizedBy, LocalDateTime ending);
+
+    /**
+     * Method findAllByPublished ...
+     *
+     * @param published of type EventStatus
+     * @return List<Event>
+     */
+    List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
+
+    /**
+     * Find an Event by key.
      *
      * @param key key of an Event
      * @return list of Events
@@ -37,29 +48,20 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Optional<Event> findByKey(String key);
 
     /**
-     * Find all events that are connect to the same Product by Product ID
+     * Find all Event with ending between a period of time.
      *
-     * @param id id of a Product
-     * @return list of Events
-     */
-    List<Event> findAllByProductsId(Integer id);
-
-
-    /**
-     * Method findTop5ByEndingAfterOrderByEnding ...
-     *
-     * @param dateTime of type LocalDateTime
+     * @param start  of type LocalDateTime
+     * @param ending of type LocalDateTime
      * @return List<Event>
      */
-    List<Event> findTop5ByEndingAfterOrderByEnding(LocalDateTime dateTime);
-
+    List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
 
     /**
-     * Method findTop5ByEndingBeforeOrderByEndingDesc ...
+     * Find all Event with start between a period of time.
      *
-     * @param dateTime of type LocalDateTime
+     * @param after  of type LocalDateTime
+     * @param before of type LocalDateTime
      * @return List<Event>
      */
-    List<Event> findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime dateTime);
-
+    List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
 }

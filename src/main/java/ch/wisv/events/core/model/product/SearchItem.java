@@ -1,27 +1,23 @@
 package ch.wisv.events.core.model.product;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * SearchItem Object
  */
+@Data
 @JsonAutoDetect
 public class SearchItem {
 
     /**
      * Title of the Product, for API purpose called value.
      */
-    @Getter
-    @Setter
     public String value;
 
     /**
      * Key of the Product, for API purpose called data.
      */
-    @Getter
-    @Setter
     public Integer data;
 
     /**

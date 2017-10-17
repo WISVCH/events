@@ -2,17 +2,15 @@ package ch.wisv.events.api.controller;
 
 import ch.wisv.events.api.response.EventDefaultResponse;
 import ch.wisv.events.api.response.ProductDefaultResponse;
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.utils.ResponseEntityBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -42,10 +40,9 @@ public class EventRESTController {
      *
      * @return ResponseEntity with all available events
      */
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @GetMapping(value = "")
     public ResponseEntity<?> getAllEvents() {
-        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
-                eventService.getAvailableEvents().stream().map(EventDefaultResponse::new));
+        return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", eventService.getAvailableEvents());
     }
 
     /**
@@ -53,10 +50,10 @@ public class EventRESTController {
      *
      * @return list of all upcoming Events.
      */
-    @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
-    public ResponseEntity<?> getUpcomingEvents() {
+    @GetMapping(value = "/upcoming")
+    public ResponseEntity<?> getUpcomingEvents(Authentication auth) {
         return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
-                eventService.getUpcomingEvents().stream().map(EventDefaultResponse::new));
+                eventService.getUpcomingEvents());
     }
 
     /**
@@ -71,7 +68,7 @@ public class EventRESTController {
             Event event = eventService.getByKey(key);
 
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "", new EventDefaultResponse(event));
-        } catch (EventNotFound e) {
+        } catch (EventsModelNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -88,9 +85,9 @@ public class EventRESTController {
         try {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.OK, "",
                     eventService.getByKey(key).getProducts().stream()
-                                .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) && x.getSellEnd().isAfter(
-                                        LocalDateTime.now())).map(ProductDefaultResponse::new));
-        } catch (EventNotFound e) {
+                            .filter(x -> x.getSellStart().isBefore(LocalDateTime.now()) && x.getSellEnd().isAfter(
+                                    LocalDateTime.now())).map(ProductDefaultResponse::new));
+        } catch (EventsModelNotFound e) {
             return ResponseEntityBuilder.createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

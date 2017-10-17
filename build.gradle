@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.4.RELEASE'
+        springBootVersion = '1.5.7.RELEASE'
     }
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
@@ -20,7 +20,10 @@ jar {
     version = project.hasProperty('buildNumber') ? buildNumber : 'SNAPSHOT'
     archiveName = "${baseName}.${extension}"
     manifest {
-        attributes("Implementation-Title": "Events", "Implementation-Version": version)
+        attributes(
+                "Implementation-Title": "Events",
+                "Implementation-Version": version
+        )
     }
 }
 
@@ -40,52 +43,55 @@ repositories {
 configurations {
     // We're using HikariCP instead
     compile.exclude module: "tomcat-jdbc"
+
     // We're using Log4j2 instead
     compile.exclude module: "spring-boot-starter-logging"
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-devtools")
+    compile 'org.springframework.boot:spring-boot-devtools'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-log4j2'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-tomcat'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
 
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile("org.springframework.boot:spring-boot-starter-log4j2")
-    compile("org.springframework.boot:spring-boot-starter-tomcat")
+    compile 'javax.el:javax.el-api:2.2.5'
 
-    compile("javax.el:javax.el-api:2.2.5")
+    compile 'org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE'
+    compile 'org.thymeleaf:thymeleaf:3.0.0.RELEASE'
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.0.RELEASE'
 
-    compile("org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE")
-    compile("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.0.RELEASE")
+    compile 'com.zaxxer:HikariCP'
+    compile 'com.google.guava:guava'
+    compile 'org.hibernate:hibernate-validator'
+    compile 'org.apache.commons:commons-lang3:3.5'
 
-    compile("com.zaxxer:HikariCP")
-    compile("com.google.guava:guava")
-    compile("org.hibernate:hibernate-validator")
-
-    compile("org.webjars:bootstrap:3.3.7-1")
-    compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
-
-    compile("ch.wisv:wisvch-connect-client:1.2.6.0") {
+    compile('ch.wisv:wisvch-connect-client:1.2.6.0') {
         // Workaround for https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/pull/1084
         exclude module: 'bcprov-jdk15on'
     }
-    compile('org.bouncycastle:bcprov-jdk15on:1.52+')
+    compile 'org.bouncycastle:bcprov-jdk15on:1.52+'
 
-    compile("org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37")
-    compile("org.webjars.bower:momentjs:2.10.6")
-    compile("org.webjars.bower:wisvch-bootstrap-theme:0.0.3")
-    compile("org.webjars:font-awesome:4.7.0")
-    compile("org.webjars:jquery:2.1.4")
-    compile("org.webjars:chartjs:26962ce")
-    compile("org.projectlombok:lombok:1.16.10")
-    compile("com.github.darrachequesne:spring-data-jpa-datatables:1.1")
+    compile 'org.webjars:bootstrap:4.0.0-beta'
+    compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
+    compile 'org.webjars.bower:momentjs:2.10.6'
+    compile 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
+    compile 'org.webjars:font-awesome:4.7.0'
+    compile 'org.webjars:jquery:2.1.4'
+    compile 'org.webjars.npm:flatpickr:3.0.6'
 
-    compile("org.fluttercode.datafactory:datafactory:0.8")
-    compile('net.sf.biweekly:biweekly:0.6.0')
+    compile 'org.flywaydb:flyway-core:4.2.0'
+    compile 'org.projectlombok:lombok:1.16.10'
 
-    runtime("org.hsqldb:hsqldb")
-    runtime("org.postgresql:postgresql")
+    compile "com.googlecode.json-simple:json-simple:1.1.1"
+    compile 'net.sf.biweekly:biweekly:0.6.0'
 
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+    runtime 'org.hsqldb:hsqldb'
+    runtime 'org.postgresql:postgresql'
+
+    compile 'org.fluttercode.datafactory:datafactory:0.8'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

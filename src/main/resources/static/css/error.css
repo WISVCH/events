@@ -1,0 +1,46 @@
+.error-owl-container {
+    position: relative;
+    left: -127px;
+    top: -150px;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+}
+
+.error-owl {
+    width: 300px;
+}
+
+div.speech {
+    height: 100%;
+    text-align: center;
+    line-height: 100px;
+    background-color: #fff;
+    border: 5px solid #e7ebf1;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    color: #40556a;
+}
+
+div.speech:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 30px;
+    bottom: -45px;
+    border: 25px solid;
+    border-color: #e7ebf1 transparent transparent #e7ebf1;
+}
+
+div.speech:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 36px;
+    bottom: -30px;
+    border: 18px solid;
+    border-color: #fff transparent transparent #fff;
+}

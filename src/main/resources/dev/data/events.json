@@ -1,0 +1,52 @@
+[
+  {
+    "title": "T.U.E.S.Day lecture with drinks ING",
+    "shortDescription": "Op 4 april zal ING een borrellezing geven!",
+    "description": "Op 4 april zal ING een borrellezing geven! De lezing begint om 16:00 uur, waarna we rond ongeveer 17:00 uur zullen verplaatsen naar de /Pub. De borrel is vervolgens een ideale gelegenheid om op een informele manier vragen te stellen aan de spreker en werknemers van ING!",
+    "location": "Lecture hall D@ta + /Pub",
+    "target": 50,
+    "maxSold": 100,
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ing_logo-2.png?itok=Tm1Xskao",
+    "productNumber": 1
+  },
+  {
+    "title": "Symposium",
+    "shortDescription": "‘The key to your privacy: The science behind cyber security’",
+    "description": "On Monday the 1st of May, our symposium themed ‘The key to your privacy: The science behind cyber security’ will take place in Theater de Veste, Delft. During the day, there will be two separated tracks and also multiple plenary sessions. At the end of the day, we will finish with a discussion about the ethics behind cyber security, followed by drinks and the possibility to network and share thoughts on the discussed topics.",
+    "location": "Theater de Veste",
+    "target": 50,
+    "maxSold": 100,
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/sympo_slot.png?itok=wS0WI0hy"
+    "productNumber": 2
+  },
+  {
+    "title": "MatCH CH vision Music Festival",
+    "shortDescription": "Show yourself off on the Just Dance Tournament in the /pub",
+    "description": "Ever thought, I am a dancing queen! Do you have the moves like Jagger? Show yourself off on the Just Dance Tournement in the /pub",
+    "location": "/pub",
+    "target": 50,
+    "maxSold": 100,
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/tv-just-dance-ch_0.png?itok=_pNAz-Ba"
+    "productNumber": 4
+  },
+  {
+    "title": "WiFi Rally",
+    "shortDescription": "Solve cryptic puzzles to find your way to a variety of destinations.",
+    "description": "The WiFi will take you on a mesmerizing trip through Europe, with the second WiFi Weekendrally. Solve cryptic puzzles to find your way to a variety of destinations. Get a car, form a team and join us for this wonderful and challenging weekend! The weekend will feature a dinner, drink, sleepover and breakfast.",
+    "location": "Unknown",
+    "target": 50,
+    "maxSold": 100,
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/rallyposterphotoshop.png?itok=tdgvGKIl"
+    "productNumber": 3
+  },
+  {
+    "title": "Annu drinks",
+    "shortDescription": "Buy your yearbook for only 1 euro!",
+    "description": "Join us in the /Pub for some drinks and buy your own yearbook (Annu) for only 1 euro! The yearbook will contain a personal message from every member of the committee AnnuCie.",
+    "location": "/pub",
+    "target": 50,
+    "maxSold": 100,
+    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ch-vignet_3.png?itok=upBfqQpL",
+    "productNumber": 5
+  }
+]

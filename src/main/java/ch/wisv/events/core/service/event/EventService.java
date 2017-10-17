@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.model.event.Event;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,6 +16,15 @@ public interface EventService {
      * @return Collection of Events
      */
     List<Event> getAllEvents();
+
+    /**
+     * Get all Events between a lowerbound and upperbound
+     *
+     * @param lowerbound of type LocalDateTime
+     * @param upperbound of type LocalDateTime
+     * @return List<Event>
+     */
+    List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
 
     /**
      * Get all upcoming Events
@@ -46,14 +56,6 @@ public interface EventService {
     void create(Event event);
 
     /**
-     * Delete a product from an Event
-     *
-     * @param eventId   eventId
-     * @param productId productId
-     */
-    void deleteProductFromEvent(Integer eventId, Integer productId);
-
-    /**
      * Update event by Event
      *
      * @param event Event
@@ -76,17 +78,9 @@ public interface EventService {
     List<Event> getEventByProductKey(String key);
 
     /**
-     * Method soldFivePrevious returns the fivePrevious of this EventService object.
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
      *
-     * @return the fivePrevious (type List<Event>) of this EventService object.
+     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
      */
-    List<Event> soldFivePrevious();
-
-    /**
-     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
-     *
-     * @return the fiveUpcoming (type List<Event>) of this EventService object.
-     */
-    List<Event> soldFiveUpcoming();
-
+    List<Event> getPreviousEventsLastTwoWeeks();
 }

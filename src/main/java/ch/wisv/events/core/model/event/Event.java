@@ -1,13 +1,16 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.AllArgsConstructor;
+import ch.wisv.events.utils.LDAPGroup;
+import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,37 +20,40 @@ import java.util.UUID;
  * Event entity.
  */
 @Entity
-@AllArgsConstructor
-@EqualsAndHashCode
 @Data
 public class Event {
-
-    /**
-     * Date format.
-     */
-    private final String TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**
      * ID of the event, getter only so it can not be changed.
      */
     @Id
     @GeneratedValue
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**
      * Key of the event, getter only so it can not be changed.
      */
+    @NotEmpty
     private String key;
 
     /**
      * Field title title of the Event.
      */
+    @NotEmpty
     private String title;
+
+    /**
+     * Field shortDescription
+     */
+    @NotEmpty
+    private String shortDescription;
 
     /**
      * Field description description of the Event.
      */
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
+    @NotEmpty
     private String description;
 
     /**
@@ -71,12 +77,14 @@ public class Event {
      * Field start starting time of the Event.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @NotNull
     private LocalDateTime start;
 
     /**
      * Field ending ending time of the Event.
      */
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @NotNull
     private LocalDateTime ending;
 
     /**
@@ -87,7 +95,8 @@ public class Event {
     /**
      * Field target target of the amount of tickets sold by this Event.
      */
-    private int target;
+    @NotNull
+    private Integer target;
 
     /**
      * Maximum number of products sold for the event. Its an Integer instead of an int, so the value can be null.
@@ -95,9 +104,21 @@ public class Event {
     private Integer maxSold;
 
     /**
-     * Options for the event.
+     * Publish status of the event.
      */
-    private EventOptions options;
+    private EventStatus published;
+
+    /**
+     * Commission/board which organizes the Event.
+     */
+    private LDAPGroup organizedBy;
+
+    /**
+     * List of all the possible catergories.
+     */
+    @NotNull
+    @ElementCollection
+    private List<EventCategory> categories;
 
     /**
      * Default constructor.
@@ -105,7 +126,9 @@ public class Event {
     public Event() {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
-        this.options = new EventOptions();
+        this.published = EventStatus.NOT_PUBLISHED;
+        this.organizedBy = LDAPGroup.BESTUUR;
+        this.categories = new ArrayList<>();
     }
 
     /**
@@ -115,13 +138,14 @@ public class Event {
      * @param description Description of the Event
      * @param location    Location of the Event
      * @param target      Target of the Event
-     * @param maxSold       Limit of the Event
+     * @param maxSold     Limit of the Event
      * @param imageURL    Path to the Image of the Event
      * @param start       Starting DateTime of the Event
-     * @param ending         Ending DateTime of the Event
+     * @param ending      Ending DateTime of the Event
      */
     public Event(String title, String description, String location, int target, Integer maxSold, String imageURL,
-                 LocalDateTime start, LocalDateTime ending) {
+            LocalDateTime start, LocalDateTime ending, String shortDescription
+    ) {
         this();
         this.title = title;
         this.description = description;
@@ -131,6 +155,7 @@ public class Event {
         this.start = start;
         this.ending = ending;
         this.imageURL = imageURL;
+        this.shortDescription = shortDescription;
     }
 
     /**
@@ -151,5 +176,4 @@ public class Event {
     public double calcProgress() {
         return Math.min(Math.round((((double) this.sold / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }
-
 }

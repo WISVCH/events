@@ -1,7 +1,8 @@
 package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
+@Data
 public class SoldProduct {
 
     /**
@@ -34,45 +36,40 @@ public class SoldProduct {
      */
     @Id
     @GeneratedValue
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**
      * Key of the sold product
      */
-    @Getter
-    @Setter
     private String key;
 
     /**
      * Product that is sold
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Product product;
 
     /**
      * Order of the sold product
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Order order;
 
     /**
      * Customer who bought the product
      */
-    @Getter
-    @Setter
     @ManyToOne
     private Customer customer;
 
     /**
+     * Field uniqueCode
+     */
+    private String uniqueCode;
+
+    /**
      * Status of the sold product
      */
-    @Getter
-    @Setter
     private SoldProductStatus status;
 
     /**
@@ -84,17 +81,17 @@ public class SoldProduct {
     }
 
     /**
-     * Constructor with Customer, Product and Order
+     * Constructor SoldProduct creates a new SoldProduct instance.
      *
-     * @param customer Customer
-     * @param product  Product
-     * @param order    Order
+     * @param product  of type Product
+     * @param order    of type Order
+     * @param customer of type Customer
      */
-    public SoldProduct(Customer customer, Product product, Order order) {
+    public SoldProduct(Product product, Order order, Customer customer) {
         this();
-        this.customer = customer;
+
         this.product = product;
         this.order = order;
+        this.customer = customer;
     }
-
 }

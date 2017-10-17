@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Christiaan Huygens",
+    "email": "huygens@ch.tudelft.nl",
+    "chUsername": "huygens",
+    "rfidToken": "123"
+  },
+  {
+    "name": "Sven Popping",
+    "email": "svenp@ch.tudelft.nl",
+    "chUsername": "svenp",
+    "rfidToken": "333"
+  },
+  {
+    "name": "Sven van Hal",
+    "email": "svenh@ch.tudelft.nl",
+    "chUsername": "svenh",
+    "rfidToken": "222"
+  }
+]

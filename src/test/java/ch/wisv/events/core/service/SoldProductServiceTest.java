@@ -11,7 +11,6 @@ import ch.wisv.events.core.service.product.SoldProductServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Collections;
@@ -48,8 +47,7 @@ public class SoldProductServiceTest extends ServiceTest {
     /**
      * SoldProductService with the mock of the repository
      */
-    @InjectMocks
-    private SoldProductService soldProductService = new SoldProductServiceImpl();
+    private SoldProductService soldProductService;
 
     /**
      * Default instance of the SoldProduct class
@@ -61,6 +59,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        this.soldProductService = new SoldProductServiceImpl(repository);
         soldProduct = new SoldProduct();
 
         soldProduct.setCustomer(mock(Customer.class));
@@ -94,7 +93,7 @@ public class SoldProductServiceTest extends ServiceTest {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.empty());
 
         thrown.expect(SoldProductNotFoundException.class);
-        thrown.expectMessage("Sold Product with key " + this.soldProduct.getKey() +  " is not found!");
+        thrown.expectMessage("SoldProduct with key " + this.soldProduct.getKey() + " is not exists!");
         soldProductService.getByKey(this.soldProduct.getKey());
     }
 
@@ -149,10 +148,10 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProduct() {
-        when(repository.findAllByCustomerAndProduct(any(Customer.class), any(Product.class)))
+        when(repository.findAllByProductAndCustomer(any(Product.class), any(Customer.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
-        List<SoldProduct> temp = soldProductService.getByCustomerAndProduct(mock(Customer.class),
+        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
                 mock(Product.class));
 
         assertEquals(Collections.singletonList(soldProduct), temp);
@@ -163,7 +162,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProductNull() {
-        List<SoldProduct> temp = soldProductService.getByCustomerAndProduct(null, null);
+        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(null, null);
 
         assertEquals(Collections.emptyList(), temp);
     }
@@ -198,12 +197,20 @@ public class SoldProductServiceTest extends ServiceTest {
     @Test
     public void create() {
         Order order = new Order();
-        order.addProduct(new Product());
-        order.addProduct(new Product());
+
+        Product product1 = new Product();
+        product1.setCost(0.d);
+        Product product2 = new Product();
+        product2.setCost(0.d);
+
+        when(repository.findByProductAndUniqueCode(any(Product.class), anyString())).thenReturn(Optional.empty());
+
+        order.addProduct(product1);
+        order.addProduct(product2);
 
         soldProductService.create(order);
 
-        verify(repository,  times(2)).saveAndFlush(any(SoldProduct.class));
+        verify(repository, times(2)).saveAndFlush(any(SoldProduct.class));
     }
 
     /**
@@ -214,18 +221,18 @@ public class SoldProductServiceTest extends ServiceTest {
         Order order = new Order();
 
         soldProductService.create(order);
-        verify(repository,  times(0)).saveAndFlush(any(SoldProduct.class));
+        verify(repository, times(0)).saveAndFlush(any(SoldProduct.class));
     }
 
     /**
-     * Test remove sold products from an order
+     * Test delete sold products from an order
      */
     @Test
     public void remove() {
         when(repository.findAllByOrder(any(Order.class))).thenReturn(Collections.singletonList(this.soldProduct));
 
-        soldProductService.remove(any(Order.class));
-        verify(repository, times(1)).delete(this.soldProduct);
+        soldProductService.delete(any(Order.class));
+        verify(repository, times(1)).delete(Collections.singletonList(this.soldProduct));
     }
 
     /**
@@ -238,5 +245,4 @@ public class SoldProductServiceTest extends ServiceTest {
 
         verify(repository, times(1)).save(this.soldProduct);
     }
-
 }

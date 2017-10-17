@@ -1,12 +1,13 @@
 package ch.wisv.events.core.model.order;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -26,7 +27,7 @@ import java.util.UUID;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Entity
-@EqualsAndHashCode
+@Data
 public class Customer {
 
     /**
@@ -34,49 +35,45 @@ public class Customer {
      */
     @Id
     @GeneratedValue
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     /**
      * Field key UUID of the customer.
      */
-    @Getter
-    @Setter
     private String key;
 
     /**
      * Field name of the customer.
      */
-    @Getter
-    @Setter
     private String name;
 
     /**
      * Field email of the customer.
      */
-    @Getter
-    @Setter
     private String email;
 
     /**
      * Field chUsername of the customer, this will be the ldap username.
      */
-    @Getter
-    @Setter
     private String chUsername;
 
     /**
      * Field rfidToken of the customers pass.
      */
-    @Getter
-    @Setter
     private String rfidToken;
+
+    /**
+     * Field createdAt when th
+     */
+    private LocalDateTime createdAt;
 
     /**
      * Constructor Customer creates a new Customer instance.
      */
     public Customer() {
         this.key = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
     }
 
     /**

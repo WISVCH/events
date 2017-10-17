@@ -1,11 +1,11 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.api.request.ProductDTO;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.exception.ProductInUseException;
-import ch.wisv.events.core.exception.ProductNotFound;
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +37,17 @@ public class ProductServiceImpl implements ProductService {
     /**
      * ProductRepository
      */
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     /**
-     * EventService
+     * Constructor ProductServiceImpl creates a new ProductServiceImpl instance.
+     *
+     * @param productRepository of type ProductRepository
      */
     @Autowired
-    private EventService eventService;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     /**
      * Get all products
@@ -64,8 +67,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAvailableProducts() {
         return productRepository.findAllBySellStartBeforeAndSellEndAfter(LocalDateTime.now(), LocalDateTime.now())
-                                .stream().filter(x -> x.getSold() < x.getMaxSold())
-                                .collect(Collectors.toCollection(ArrayList::new));
+                .stream().filter(x -> x.getSold() < x.getMaxSold())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -80,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with key " + key + " not found!");
+        throw new EventsModelNotFound("Product with key " + key + " not found!");
     }
 
     /**
@@ -95,7 +98,41 @@ public class ProductServiceImpl implements ProductService {
         if (product.isPresent()) {
             return product.get();
         }
-        throw new ProductNotFound("Product with id " + productID + " not found!");
+        throw new EventsModelNotFound("Product with id " + productID + " not found!");
+    }
+
+    /**
+     * Add a new Product using a Product
+     *
+     * @param product of type Product
+     */
+    @Override
+    public Product create(Product product) {
+        if (product.getSellStart() == null) {
+            // Set sell start by default to now.
+            product.setSellStart(LocalDateTime.now());
+        }
+        this.assertIsValidProduct(product);
+
+        return productRepository.saveAndFlush(product);
+    }
+
+    /**
+     * Method create ...
+     *
+     * @param productDTO of type ProductDTO
+     */
+    @Override
+    public Product create(ProductDTO productDTO) {
+        Product product = new Product();
+
+        product.setTitle(productDTO.getTitle());
+        product.setDescription(productDTO.getDescription());
+        product.setCost(productDTO.getCost());
+        product.setMaxSold(productDTO.getMaxSold());
+        product.setMaxSoldPerCustomer(productDTO.getMaxSoldPerCustomer());
+
+        return this.create(product);
     }
 
     /**
@@ -105,30 +142,22 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void update(Product product) {
+        this.assertIsValidProduct(product);
+
         Product model = this.getByKey(product.getKey());
         this.updateLinkedProducts(model.getProducts(), false);
 
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
-        model.setSold(product.getSold());
         model.setCost(product.getCost());
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());
         model.setSellEnd(product.getSellEnd());
         model.setProducts(product.getProducts());
+        model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
 
         this.updateLinkedProducts(model.getProducts(), true);
         productRepository.save(model);
-    }
-
-    /**
-     * Add a new Product using a Product
-     *
-     * @param product of type Product
-     */
-    @Override
-    public void create(Product product) {
-        productRepository.saveAndFlush(product);
     }
 
     /**
@@ -138,10 +167,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void delete(Product product) {
-        List<Event> events = eventService.getEventByProductKey(product.getKey());
-        if (events.size() > 0) {
-            throw new ProductInUseException("Product is already added to an Event");
+        if (product.isLinked()) {
+            throw new ProductInUseException("Product is already added to an Event or Product");
         }
+
         productRepository.delete(product);
     }
 
@@ -158,4 +187,33 @@ public class ProductServiceImpl implements ProductService {
         });
     }
 
+    /**
+     * Method assertIsValidProduct ...
+     *
+     * @param product of type Product
+     */
+    private void assertIsValidProduct(Product product) {
+        if (product.getTitle() == null || product.getTitle().equals("")) {
+            throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
+        }
+        if (product.getSellStart() == null) {
+            throw new EventsInvalidModelException("Starting date for selling is required, and therefore should be " +
+                    "filled in!");
+        }
+        if (product.getSellStart() != null && product.getSellEnd() != null) {
+            if (product.getSellStart().isAfter(product.getSellEnd())) {
+                throw new EventsInvalidModelException("Starting date for selling should be before the ending time");
+            }
+        }
+        if (product.getCost() == null) {
+            throw new EventsInvalidModelException("Price is required, and therefore should be filled in!");
+        }
+        if (product.getProducts().stream().distinct().count() != product.getProducts().size()) {
+            throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
+        }
+        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 ||
+                product.getMaxSoldPerCustomer() > 25) {
+            throw new EventsInvalidModelException("Max sold per customer should be between 1 and 25!");
+        }
+    }
 }

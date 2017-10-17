@@ -3,6 +3,8 @@ package ch.wisv.events.core.repository;
 import ch.wisv.events.core.model.order.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,6 +26,14 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     /**
+     * Method findById ...
+     *
+     * @param customerId of type Integer
+     * @return Optional<Customer>
+     */
+    Optional<Customer> findById(Integer customerId);
+
+    /**
      * Find a customer by its rfidToken.
      *
      * @param token of type String
@@ -39,4 +49,19 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      */
     Optional<Customer> findByKey(String key);
 
+    /**
+     * Find a Customer by its email.
+     *
+     * @param email of type String
+     * @return Optional<Customer>
+     */
+    Optional<Customer> findByEmail(String email);
+
+    /**
+     * Method findAllByCreatedAtAfter ...
+     *
+     * @param after of type LocalDateTime
+     * @return List<Customer>
+     */
+    List<Customer> findAllByCreatedAtAfter(LocalDateTime after);
 }

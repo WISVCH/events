@@ -1,0 +1,86 @@
+[
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "222",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "333",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "222",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "333",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "222",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "333",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "123",
+    "orderStatus": "PAID_CASH"
+  },
+  {
+    "customerRfid": "333",
+    "orderStatus": "PAID_PIN"
+  },
+  {
+    "customerRfid": "222",
+    "orderStatus": "PAID_PIN"
+  }
+]

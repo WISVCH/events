@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Error</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/error.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-12 p-5" role="main">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="speech p-5">
+                        <h1 class="display-4 border-bottom-0">Owl no, something unexpected happened!</h1>
+                        <h3 class="text-dark border-bottom-0 mb-0" style="font-weight: 100">Please try it again</h3>
+                    </div>
+                </div>
+
+                <div class="d-block mx-auto p-5">
+                    <a href="https://github.com/WISVCH/events/issues/new" class="btn btn-danger p-4">
+                        <span style="font-size: 32px;">
+                            <i class="fa fa-github fa-fw"></i> Bug? Create an issue!
+                        </span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="error-owl-container">
+                <img th:src="@{/images/error-owl.svg}" class="error-owl" alt="">
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

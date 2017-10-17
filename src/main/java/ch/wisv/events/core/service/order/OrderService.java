@@ -1,7 +1,5 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.app.request.OrderRequest;
-import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -34,7 +32,6 @@ public interface OrderService {
      */
     List<Order> getAllOrders();
 
-
     /**
      * Method getByReference returns Order with the given Reference.
      *
@@ -42,7 +39,6 @@ public interface OrderService {
      * @return Order
      */
     Order getByReference(String reference);
-
 
     /**
      * Method getOrdersByProduct returns list of orders with a certain product in it.
@@ -53,28 +49,24 @@ public interface OrderService {
     List<Order> getOrdersByProduct(Product product);
 
     /**
-     * Method create creates a new order by OrderRequest.
+     * Method create creates and order.
      *
-     * @param orderRequest of type OrderRequest
-     * @return Order
+     * @param order of type Order
      */
-    Order create(OrderRequest orderRequest);
-
+    void create(Order order);
 
     /**
-     * Method addCustomerToOrder will create a customer to an order.
+     * Method update ...
      *
-     * @param order    of type Order
-     * @param customer of type Customer
+     * @param order of type Order
      */
-    void addCustomerToOrder(Order order, Customer customer);
-
+    void update(Order order);
 
     /**
-     * Method updateOrderStatus will update the order status and update the product count.
+     * Method updateOrderStatus
      *
-     * @param order       of type Order
-     * @param orderStatus of type OrderStatus
+     * @param order  of type Order
+     * @param status of type OrderStatus
      */
-    void updateOrderStatus(Order order, OrderStatus orderStatus);
+    void updateOrderStatus(Order order, OrderStatus status);
 }

@@ -61,6 +61,7 @@ fabric.properties
 
 # Package Files #
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 
@@ -74,4 +75,4 @@ rebel.xml
 .idea
 build/
 bin/
-
+.DS_Store

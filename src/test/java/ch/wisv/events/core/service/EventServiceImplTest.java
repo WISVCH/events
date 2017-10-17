@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -48,13 +47,14 @@ public class EventServiceImplTest extends ServiceTest {
     @Mock
     private ProductService productService;
 
-    @InjectMocks
-    private EventService service = new EventServiceImpl();
+    private EventService service;
 
     private Event event;
 
     @Before
     public void setUp() throws Exception {
+        this.service = new EventServiceImpl(repository, productService);
+
         this.event = new Event(
                 "Test",
                 "test",
@@ -63,7 +63,8 @@ public class EventServiceImplTest extends ServiceTest {
                 10,
                 "path/to/files",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "Short description"
         );
     }
 
@@ -88,7 +89,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEvents() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getUpcomingEvents());
@@ -96,7 +97,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEventsEmpty() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
@@ -104,7 +105,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetUpcomingEventsNotPublished() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.NOT_PUBLISHED);
+        this.event.setPublished(EventStatus.NOT_PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(), service.getUpcomingEvents());
@@ -112,7 +113,7 @@ public class EventServiceImplTest extends ServiceTest {
 
     @Test
     public void testGetAvailableEvents() throws Exception {
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getAvailableEvents());
@@ -150,19 +151,10 @@ public class EventServiceImplTest extends ServiceTest {
     public void testGetByKeyException() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.empty());
 
-        thrown.expect(EventNotFound.class);
+        thrown.expect(EventsModelNotFound.class);
         thrown.expectMessage("Event with key " + this.event.getKey() + " not found.");
 
         service.getByKey(this.event.getKey());
-    }
-
-    @Test
-    public void testDeleteProductFromEvent() throws Exception {
-        when(repository.findOne(anyInt())).thenReturn(this.event);
-        when(productService.getByID(anyInt())).thenReturn(mock(Product.class));
-
-        service.deleteProductFromEvent(1, 1);
-        verify(repository, times(1)).save(any(Event.class));
     }
 
     @Test
@@ -184,41 +176,9 @@ public class EventServiceImplTest extends ServiceTest {
         Product product = new Product();
         this.event.addProduct(product);
 
-        this.event.getOptions().setPublished(EventStatus.PUBLISHED);
+        this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getEventByProductKey(product.getKey()));
     }
-
-    @Test
-    public void testSoldFivePrevious() throws Exception {
-        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(Collections
-                .singletonList(this
-                .event));
-
-        assertEquals(ImmutableList.of(this.event), service.soldFivePrevious());
-    }
-
-    @Test
-    public void testSoldFivePreviousEmpty() throws Exception {
-        when(repository.findTop5ByEndingBeforeOrderByEndingDesc(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.soldFivePrevious());
-    }
-
-    @Test
-    public void testSoldFiveUpcoming() throws Exception {
-        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(Collections
-                .singletonList(this.event));
-
-        assertEquals(ImmutableList.of(this.event), service.soldFiveUpcoming());
-    }
-
-    @Test
-    public void testSoldFiveUpcomingEmpty() throws Exception {
-        when(repository.findTop5ByEndingAfterOrderByEnding(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.soldFiveUpcoming());
-    }
-
 }

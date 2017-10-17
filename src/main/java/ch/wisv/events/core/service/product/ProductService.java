@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.model.product.Product;
 
 import java.util.List;
@@ -44,7 +45,14 @@ public interface ProductService {
      *
      * @param product of type Product
      */
-    void create(Product product);
+    Product create(Product product);
+
+    /**
+     * Method create ...
+     *
+     * @param productDTO of type ProductDTO
+     */
+    Product create(ProductDTO productDTO);
 
     /**
      * Update Product using a Product

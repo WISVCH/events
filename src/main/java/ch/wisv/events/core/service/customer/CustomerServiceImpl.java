@@ -3,15 +3,14 @@ package ch.wisv.events.core.service.customer;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
-import ch.wisv.events.core.exception.RFIDTokenAlreadyUsedException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +36,24 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Field customerRepository.
      */
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     /**
      * Field orderRepository.
      */
+    private final OrderRepository orderRepository;
+
+    /**
+     * Constructor CustomerServiceImpl creates a new CustomerServiceImpl instance.
+     *
+     * @param customerRepository of type CustomerRepository
+     * @param orderRepository    of type OrderRepository
+     */
     @Autowired
-    private OrderRepository orderRepository;
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
+        this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
+    }
 
     /**
      * Get a customer by rfidToken.
@@ -54,11 +63,9 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByRFIDToken(String token) {
-        Optional<Customer> optional = customerRepository.findByRfidToken(token);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new CustomerNotFound("Customer with RFID token " + token + " not found!");
+        Optional<Customer> customer = customerRepository.findByRfidToken(token);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with RFID token " + token + " not found!"));
     }
 
     /**
@@ -72,6 +79,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Method getAllCustomerCreatedAfter ...
+     *
+     * @param after of type LocalDateTime
+     * @return List<Customer>
+     */
+    @Override
+    public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
+        return this.customerRepository.findAllByCreatedAtAfter(after);
+    }
+
+    /**
      * Get a customer by key.
      *
      * @param key key
@@ -79,11 +97,22 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByKey(String key) {
-        Optional<Customer> optional = customerRepository.findByKey(key);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new CustomerNotFound("Customer with key " + key + " not found!");
+        Optional<Customer> customer = customerRepository.findByKey(key);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with key " + key + " not found!"));
+    }
+
+    /**
+     * Get a Customer by email.
+     *
+     * @param email of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getByEmail(String email) {
+        Optional<Customer> customer = this.customerRepository.findByEmail(email);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with email " + email + " not found!"));
     }
 
     /**
@@ -93,18 +122,18 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void create(Customer customer) {
-        this.checkRequiredFields(customer);
-        customerRepository.saveAndFlush(customer);
+        this.assertIsValidCustomer(customer);
+
+        this.customerRepository.saveAndFlush(customer);
     }
 
     /**
-     * Update an existing customer.
+     * Update a existing customer.
      *
      * @param customer customer model
      */
     @Override
     public void update(Customer customer) {
-        this.checkRequiredFields(customer);
         Customer model = this.getByKey(customer.getKey());
 
         model.setChUsername(customer.getChUsername());
@@ -112,7 +141,9 @@ public class CustomerServiceImpl implements CustomerService {
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
 
-        customerRepository.save(model);
+        this.assertIsValidCustomer(model);
+
+        this.customerRepository.save(model);
     }
 
     /**
@@ -126,44 +157,75 @@ public class CustomerServiceImpl implements CustomerService {
         if (orders.size() > 0) {
             throw new CustomerException("Customer has already placed orders, so it can not be deleted!");
         }
-        customerRepository.delete(customer);
+
+        this.customerRepository.delete(customer);
     }
 
     /**
      * Will check all the required fields if they are valid.
      *
-     * @param model of type Customer
-     * @throws InvalidCustomerException      when one of the required fields is not valid
-     * @throws RFIDTokenAlreadyUsedException when the rfid token is already in use
+     * @param customer of type Customer
+     * @throws InvalidCustomerException when one of the required fields is not valid
      */
-    private void checkRequiredFields(Customer model) throws InvalidCustomerException {
-        if (model == null) throw new InvalidCustomerException("Customer can not be null!");
+    private void assertIsValidCustomer(Customer customer) throws InvalidCustomerException {
+        if (customer == null) {
+            throw new InvalidCustomerException("Customer can not be null!");
+        }
 
-        String[][] check = new String[][]{
-                {model.getName(), "name"},
-                {model.getEmail(), "email"},
-                {model.getRfidToken(), "RFID token"}
-        };
-        this.checkFieldsEmpty(check);
+        if (customer.getName() == null || customer.getName().equals("")) {
+            throw new InvalidCustomerException("Name is empty, but a required field, so please fill in this field!");
+        }
 
-        if (customerRepository.findAll().stream().anyMatch(x -> !x.getKey().equals(model.getKey())
-                && x.getRfidToken().equals(model.getRfidToken()))) {
-            throw new RFIDTokenAlreadyUsedException("RFID token is already used!");
+        if (customer.getEmail() == null || customer.getEmail().equals("")) {
+            throw new InvalidCustomerException("Email is empty, but a required field, so please fill in this field!");
+        }
+
+        if (customer.getRfidToken() == null) {
+            throw new InvalidCustomerException("RFID token can not be null.");
+        }
+
+        if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
+            throw new InvalidCustomerException("RFID token is already used!");
+        }
+
+        if (this.isNotUniqueEmail(customer)) {
+            throw new InvalidCustomerException("Email address is already used!");
         }
     }
 
     /**
-     * Checks if the a field in the String[][] is empty. If so it will throw an exception
+     * Method check if given email is not used by another Customer.
      *
-     * @param fields of type String[][]
-     * @throws InvalidCustomerException when one of the fields in empty
+     * @param customer of type Customer
+     * @return boolean
      */
-    private void checkFieldsEmpty(String[][] fields) throws InvalidCustomerException {
-        for (String[] field : fields) {
-            if (field[0] == null || field[0].equals("")) {
-                throw new InvalidCustomerException(StringUtils.capitalize(field[1]) + " is empty, but a required "
-                        + "field, so please fill in this field!");
-            }
+    private boolean isNotUniqueEmail(Customer customer) {
+        Optional<Customer> optional = this.customerRepository.findByEmail(customer.getEmail());
+
+        if (optional.isPresent()) {
+            Customer temp = optional.get();
+
+            return !(customer.getKey().equals(temp.getKey()));
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Method check if given rfidToken is not used by another Customer.
+     *
+     * @param customer of type Customer
+     * @return boolean
+     */
+    private boolean isNotUniqueRfidToken(Customer customer) {
+        Optional<Customer> optional = this.customerRepository.findByRfidToken(customer.getRfidToken());
+
+        if (optional.isPresent()) {
+            Customer temp = optional.get();
+
+            return !(customer.getKey().equals(temp.getKey()));
+        } else {
+            return false;
         }
     }
 }

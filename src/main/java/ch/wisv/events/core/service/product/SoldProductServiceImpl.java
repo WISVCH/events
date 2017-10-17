@@ -1,14 +1,19 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.core.exception.EventsInvalidException;
 import ch.wisv.events.core.exception.SoldProductNotFoundException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
+import com.google.common.base.Strings;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +37,19 @@ import java.util.Optional;
 public class SoldProductServiceImpl implements SoldProductService {
 
     /**
-     * Field soldProductRepository
+     * Field this.soldProductRepository
+     */
+    private final SoldProductRepository soldProductRepository;
+
+    /**
+     * Constructor SoldProductServiceImpl creates a new SoldProductServiceImpl instance.
+     *
+     * @param soldProductRepository of type SoldProductRepository
      */
     @Autowired
-    private SoldProductRepository soldProductRepository;
+    public SoldProductServiceImpl(SoldProductRepository soldProductRepository) {
+        this.soldProductRepository = soldProductRepository;
+    }
 
     /**
      * Get SoldProduct by key
@@ -44,11 +58,12 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public SoldProduct getByKey(String key) {
-        Optional<SoldProduct> optional = this.soldProductRepository.findByKey(key);
-        if (optional.isPresent()) {
-            return optional.get();
+        if (Strings.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException();
         }
-        throw new SoldProductNotFoundException("Sold Product with key " + key + " is not found!");
+
+        return this.soldProductRepository.findByKey(key)
+                .orElseThrow(() -> new SoldProductNotFoundException("SoldProduct with key " + key + " is not exists!"));
     }
 
     /**
@@ -58,7 +73,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public List<SoldProduct> getAll() {
-        return soldProductRepository.findAll();
+        return this.soldProductRepository.findAll();
     }
 
     /**
@@ -69,19 +84,19 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public List<SoldProduct> getByProduct(Product product) {
-        return soldProductRepository.findAllByProduct(product);
+        return this.soldProductRepository.findAllByProduct(product);
     }
 
     /**
-     * Method getByCustomerAndProduct find sold products by customer and products.
+     * Method getAllByCustomerAndProduct find sold products by customer and products.
      *
      * @param customer of type Customer
      * @param product  of type Product
      * @return List<SoldProduct>
      */
     @Override
-    public List<SoldProduct> getByCustomerAndProduct(Customer customer, Product product) {
-        return soldProductRepository.findAllByCustomerAndProduct(customer, product);
+    public List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product) {
+        return this.soldProductRepository.findAllByProductAndCustomer(product, customer);
     }
 
     /**
@@ -92,62 +107,69 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     @Override
     public List<SoldProduct> getByCustomer(Customer customer) {
-        return soldProductRepository.findAllByCustomer(customer);
+        return this.soldProductRepository.findAllByCustomer(customer);
     }
 
     /**
-     * Method create sold products out of an Order
+     * Method create ...
      *
      * @param order of type Order
      */
     @Override
-    public void create(Order order) {
-        for (Product product : order.getProducts()) {
-            SoldProduct sold = new SoldProduct();
+    public List<SoldProduct> create(Order order) {
+        List<SoldProduct> soldProducts = new ArrayList<>();
 
-            sold.setProduct(product);
-            sold.setCustomer(order.getCustomer());
-            sold.setOrder(order);
+        order.getProducts().forEach(product -> {
+            SoldProduct soldProduct = new SoldProduct(
+                    product,
+                    order,
+                    order.getCustomer()
+            );
+            soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
 
-            soldProductRepository.saveAndFlush(sold);
+            soldProducts.add(soldProduct);
 
-            this.createSubProduct(order, product);
-        }
-    }
-
-    /**
-     * Method createSubProduct create a soldproduct item for the sub products of a product
-     *
-     * @param order of type Order
-     * @param product of type Product
-     */
-    private void createSubProduct(Order order, Product product) {
-        product.getProducts().forEach(p -> {
-            SoldProduct soldProduct = new SoldProduct();
-
-            soldProduct.setProduct(p);
-            soldProduct.setCustomer(order.getCustomer());
-            soldProduct.setOrder(order);
-
-            soldProductRepository.saveAndFlush(soldProduct);
-            createSubProduct(order, p);
+            this.soldProductRepository.saveAndFlush(soldProduct);
         });
+
+        return soldProducts;
     }
 
     /**
-     * Method remove SoldProduct of an certain order
+     * Method determineUniqueCode ...
      *
-     * // TODO: also remove sold sub Products
+     * @param sold of type SoldProduct
+     * @return String
+     */
+    private String determineUniqueCode(SoldProduct sold) {
+        String uniqueCode = this.generateUniqueCode();
+
+        while (!this.determineUniquenessCode(sold, uniqueCode)) {
+            uniqueCode = this.generateUniqueCode();
+        }
+
+        return uniqueCode;
+    }
+
+    /**
+     * Method generateUniqueCode ...
+     *
+     * @return String
+     */
+    private String generateUniqueCode() {
+        return RandomStringUtils.randomNumeric(6);
+    }
+
+    /**
+     * Method delete ...
      *
      * @param order of type Order
      */
     @Override
-    public void remove(Order order) {
-        List<SoldProduct> soldProducts = soldProductRepository.findAllByOrder(order);
+    public void delete(Order order) {
+        List<SoldProduct> soldProducts = this.soldProductRepository.findAllByOrder(order);
 
-        for (SoldProduct soldProduct : soldProducts) {
-            soldProductRepository.delete(soldProduct);
-        }
+        this.soldProductRepository.delete(soldProducts);
     }
 
     /**
@@ -158,12 +180,46 @@ public class SoldProductServiceImpl implements SoldProductService {
     @Override
     public void update(SoldProduct soldProduct) {
         SoldProduct model = this.getByKey(soldProduct.getKey());
+
         model.setOrder(soldProduct.getOrder());
         model.setStatus(soldProduct.getStatus());
         model.setProduct(soldProduct.getProduct());
         model.setCustomer(soldProduct.getCustomer());
 
-        soldProductRepository.save(soldProduct);
+        this.soldProductRepository.save(soldProduct);
     }
 
+    /**
+     * Method getAllByEvent ...
+     *
+     * @param event of type Event
+     * @return List<SoldProduct>
+     */
+    @Override
+    public List<SoldProduct> getAllByEvent(Event event) {
+        List<SoldProduct> soldProducts = new ArrayList<>();
+        event.getProducts().forEach(product -> soldProducts.addAll(this.getByProduct(product)));
+
+        return soldProducts;
+    }
+
+    /**
+     * Method determineUniquenessCode ...
+     *
+     * @param soldProduct of type SoldProduct
+     * @param uniqueCode  of type String
+     * @return boolean
+     */
+    private boolean determineUniquenessCode(SoldProduct soldProduct, String uniqueCode) {
+        if (soldProduct.getProduct() == null) {
+            throw new EventsInvalidException("SoldProduct should contain a Product, before calling this method.");
+        }
+
+        Optional<SoldProduct> optional = this.soldProductRepository.findByProductAndUniqueCode(
+                soldProduct.getProduct(),
+                uniqueCode
+        );
+
+        return !optional.isPresent();
+    }
 }

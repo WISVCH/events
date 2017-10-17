@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.exception.EventNotFound;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -38,14 +39,24 @@ public class EventServiceImpl implements EventService {
     /**
      * EventRepository
      */
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     /**
      * ProductRepository
      */
+    private final ProductService productService;
+
+    /**
+     * Constructor EventServiceImpl creates a new EventServiceImpl instance.
+     *
+     * @param eventRepository of type EventRepository
+     * @param productService  of type ProductService
+     */
     @Autowired
-    private ProductService productService;
+    public EventServiceImpl(EventRepository eventRepository, ProductService productService) {
+        this.eventRepository = eventRepository;
+        this.productService = productService;
+    }
 
     /**
      * Get all Events
@@ -58,14 +69,26 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * Get all Events between a lowerbound and upperbound
+     *
+     * @param lowerbound of type LocalDateTime
+     * @param upperbound of type LocalDateTime
+     * @return List<Event>
+     */
+    @Override
+    public List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
+        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerbound, upperbound);
+    }
+
+    /**
      * Get all upcoming Events
      *
      * @return Collection of Events
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getOptions().getPublished()
-                == EventStatus.PUBLISHED).collect(Collectors.toCollection(ArrayList::new));
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -75,8 +98,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream().filter(x -> x.getOptions().getPublished() == EventStatus.PUBLISHED)
-                              .collect(Collectors.toCollection(ArrayList::new));
+        return eventRepository.findAll().stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED).collect(Collectors.toList());
     }
 
     /**
@@ -86,6 +108,9 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void create(Event event) {
+        this.assertIsValidEvent(event);
+        this.updateLinkedProducts(event.getProducts(), true);
+
         eventRepository.saveAndFlush(event);
     }
 
@@ -101,31 +126,19 @@ public class EventServiceImpl implements EventService {
         if (eventOptional.isPresent()) {
             return eventOptional.get();
         }
-        throw new EventNotFound("Event with key " + key + " not found.");
-    }
 
-    /**
-     * Delete a product from an Event
-     *
-     * @param eventId   eventId
-     * @param productId productId
-     */
-    @Override
-    public void deleteProductFromEvent(Integer eventId, Integer productId) {
-        Event event = eventRepository.findOne(eventId);
-
-        Product product = productService.getByID(productId);
-        event.getProducts().remove(product);
-        eventRepository.save(event);
+        throw new EventsModelNotFound("Event with key " + key + " not found.");
     }
 
     /**
      * Update event by Event
      *
-     * @param event
+     * @param event Event
      */
     @Override
     public void update(Event event) {
+        this.assertIsValidEvent(event);
+
         Event update = this.getByKey(event.getKey());
         this.updateLinkedProducts(update.getProducts(), false);
 
@@ -135,11 +148,13 @@ public class EventServiceImpl implements EventService {
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
         update.setEnding(event.getEnding());
-        update.setTarget(event.getTarget());
         update.setMaxSold(event.getMaxSold());
         update.setSold(event.getSold());
-        update.setOptions(event.getOptions());
         update.setProducts(event.getProducts());
+        update.setPublished(event.getPublished());
+        update.setOrganizedBy(event.getOrganizedBy());
+        update.setShortDescription(event.getShortDescription());
+        update.setCategories(event.getCategories());
 
         this.updateLinkedProducts(update.getProducts(), true);
         eventRepository.save(update);
@@ -174,23 +189,13 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Method soldFivePrevious returns the fivePrevious of this EventService object.
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
      *
-     * @return the fivePrevious (type List<Event>) of this EventService object.
+     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
      */
     @Override
-    public List<Event> soldFivePrevious() {
-        return eventRepository.findTop5ByEndingBeforeOrderByEndingDesc(LocalDateTime.now());
-    }
-
-    /**
-     * Method soldFiveUpcoming returns the fiveUpcoming of this EventService object.
-     *
-     * @return the fiveUpcoming (type List<Event>) of this EventService object.
-     */
-    @Override
-    public List<Event> soldFiveUpcoming() {
-        return eventRepository.findTop5ByEndingAfterOrderByEnding(LocalDateTime.now());
+    public List<Event> getPreviousEventsLastTwoWeeks() {
+        return this.eventRepository.findAllByEndingBetween(LocalDateTime.now().minusWeeks(2), LocalDateTime.now());
     }
 
     /**
@@ -206,4 +211,38 @@ public class EventServiceImpl implements EventService {
         });
     }
 
+    /**
+     * Method assertIsValidEvent ...
+     *
+     * @param event of type Event
+     */
+    private void assertIsValidEvent(Event event) {
+        if (event.getTitle() == null || event.getTitle().equals("")) {
+            throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
+        }
+        if (event.getShortDescription() == null || event.getTitle().equals("")) {
+            throw new EventsInvalidModelException("Short description is required, and therefore should be filled in!");
+        }
+        if (event.getDescription() == null || event.getTitle().equals("")) {
+            throw new EventsInvalidModelException("Description is required, and therefore should be filled in!");
+        }
+        if (event.getStart() == null) {
+            throw new EventsInvalidModelException("Starting time is required, and therefore should be filled in!");
+        }
+        if (event.getEnding() == null) {
+            throw new EventsInvalidModelException("Ending time is required, and therefore should be filled in!");
+        }
+        if (event.getStart().isAfter(event.getEnding())) {
+            throw new EventsInvalidModelException("Starting time should be before the ending time");
+        }
+        if (event.getTarget() == null || event.getTarget().equals(0)) {
+            throw new EventsInvalidModelException("Target is required, and therefore should be filled in!");
+        }
+        if (event.getMaxSold() != null && event.getTarget() > event.getMaxSold()) {
+            throw new EventsInvalidModelException("Limit should be greater or equal to the target!");
+        }
+        if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
+            throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
+        }
+    }
 }

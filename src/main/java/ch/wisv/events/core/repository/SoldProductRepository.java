@@ -46,11 +46,11 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
     /**
      * Method findAllByCustomerAndProduct find list of sold products by customer and product.
      *
-     * @param customer of type Customer
      * @param product  of type Product
+     * @param customer of type Customer
      * @return List<SoldProduct>
      */
-    List<SoldProduct> findAllByCustomerAndProduct(Customer customer, Product product);
+    List<SoldProduct> findAllByProductAndCustomer(Product product, Customer customer);
 
     /**
      * Method findAllByCustomer find list of sold products by customer.
@@ -68,4 +68,20 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
      */
     Optional<SoldProduct> findByKey(String key);
 
+    /**
+     * Method countAllByProduct.
+     *
+     * @param product of type Product
+     * @return Long
+     */
+    Long countAllByProduct(Product product);
+
+    /**
+     * Method findAllByProductAndUniqueCode.
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     * @return List<SoldProduct>
+     */
+    Optional<SoldProduct> findByProductAndUniqueCode(Product product, String uniqueCode);
 }

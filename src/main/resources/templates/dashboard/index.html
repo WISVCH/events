@@ -7,395 +7,204 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" th:href="@{../../favicon.ico}">
+    <link rel="icon" th:href="@{/images/favicon.png}">
 
-    <title>Events - Dashboard</title>
+    <title>CH Events - Dashboard</title>
 
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css"
-          th:href="@{/webjars/wisvch-bootstrap-theme/0.0.3/dist/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen"/>
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
-
-    <!-- Custom styles for this template -->
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
 </head>
 
 <body>
-<!--<div th:replace="dashboard/fragments/header :: header">-->
-<!--<nav class="navbar navbar-inverse navbar-fixed-top"></nav>-->
-<!--</div>-->
+<nav th:replace="fragments/header :: header"></nav>
 
+<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
 <div class="container-fluid">
     <div class="row">
-        <div class="row">
-            <div th:replace="fragments/header :: header">
-                <nav class="navbar navbar-inverse navbar-fixed-top"></nav>
+        <nav th:replace="dashboard/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Overview</h1>
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-3">
+                        <h6 class="card-header">Total events</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                <small>no.</small>
+                                [[${totalEvents}]]
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${increaseEvents} + '%'">
+                                </div>
+                            </div>
+                            <span class="text-dark">
+                                <small>
+                                    <span th:class="((${increaseEvents} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${increaseEvents} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${increaseEvents}]]%</strong>
+                                    </span>
+                                    [[${increaseEvents} > 0 ? 'more' : 'less']] than last month
+                                </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-3">
+                        <h6 class="card-header">Total number of customers</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                <small>no.</small>
+                                [[${totalCustomers}]]
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${increaseCustomers} + '%'">
+                                </div>
+                            </div>
+                            <span class="text-dark">
+                                <small>
+                                    <span th:class="((${increaseCustomers} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${increaseCustomers} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${increaseCustomers}]]%</strong>
+                                    </span>
+                                    [[${increaseCustomers} > 0 ? 'more' : 'less']] than last month
+                                </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-3">
+                        <h6 class="card-header">Average target rate</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                [[${averageTargetRate}]]
+                                <small>%</small>
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${averageTargetRate} + '%'">
+                                </div>
+                            </div>
+                            <span class="text-dark">
+                                <small>
+                                    <span th:class="((${changeTargetRate} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${changeTargetRate} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${changeTargetRate}]]%</strong>
+                                    </span>
+                                    [[${changeTargetRate} > 0 ? 'more' : 'less']] than previous board
+                                </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-3">
+                        <h6 class="card-header">Average attendance rate</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                [[${averageAttendanceRate}]]
+                                <small>%</small>
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${averageAttendanceRate} + '%'">
+                                </div>
+                            </div>
+                            <span class="text-dark">
+                                <small>
+                                    <span th:class="((${changeAttendanceRate} > 0) ? 'text-success' : 'text-danger')">
+                                        <i th:class="'fa fa-arrow-' + ((${changeAttendanceRate} > 0) ? 'up' : 'down')"></i>
+                                        <strong>[[${changeAttendanceRate}]]%</strong>
+                                    </span>
+                                    [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board
+                                </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div th:replace="fragments/sidebar :: sidebar"></div>
-        </div>
-        <div th:replace="fragments/sidebar :: sidebar"></div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Upcoming events</h4>
+
+                            <table class="table">
+                                <thead class="thead-inverse bg-primary">
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Progress target</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                                <tr th:each="event : ${upcoming}">
+                                    <td th:text="${event.getTitle()}"></td>
+                                    <td>
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar"
+                                                 th:aria-valuenow="${event.getSold()}"
+                                                 aria-valuemin="0"
+                                                 th:aria-valuemax="${event.getTarget()}"
+                                                 th:style="'width: ' + ${event.calcProgress()} + '%;'"
+                                                 th:text="${event.calcProgress()} + '%'">
+                                                59%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Previous events</h4>
+
+                            <table class="table">
+                                <thead class="thead-inverse bg-primary">
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Attendance rate</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="something : ${previous}">
+                                    <td th:text="${something.key.getTitle()}"></td>
+                                    <td>
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar"
+                                                 th:aria-valuenow="${something.value}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 th:style="'width: ' + ${something.value} + '%;'"
+                                                 th:text="${something.value} + '%'">
+                                                59%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-    <div class="row">
-        <div class="col-sm-offset-3 col-sm-9 col-md-offset-2 col-md-10 content-wrapper">
-            <div class="page-header">
-                <h1><samp>Dashboard</samp>
-                    <small>Statistics Overview</small>
-                </h1>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-calendar fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countEvent}"></div>
-                                    <div>Events created!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a th:href="@{/dashboard/events/}">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-ticket fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countProduct}"></div>
-                                    <div>Products created!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-shopping-cart fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countOrder}"></div>
-                                    <div>Orders created!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-money fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countSold}">26</div>
-                                    <div>Sold tickets!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-barcode fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countSoldScanned}"></div>
-                                    <div>Products scanned!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-2">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <i class="fa fa-users fa-4x"></i>
-                                </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge" th:text="${countCustomer}"></div>
-                                    <div>Customers!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Statistics upcoming Events</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div style="width: 100%;">
-                                <canvas id="comingEvents"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Statistics previous Events</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div style="width: 100%;">
-                                <canvas id="previousEvents"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Statistics</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div style="width: 100%;">
-                                <canvas id="events" width="800" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    window.chartColors = {
-        red: 'rgb(255, 99, 132)',
-        orange: 'rgb(255, 159, 64)',
-        yellow: 'rgb(255, 205, 86)',
-        green: 'rgb(75, 192, 192)',
-        blue: 'rgb(54, 162, 235)',
-        purple: 'rgb(153, 102, 255)',
-        grey: 'rgb(231,233,237)'
-    };
-
-    window.randomScalingFactor = function () {
-        return Math.round(Math.random() * 100);
-    };
-
-    var color = Chart.helpers.color;
-    var previousBarData = {
-        labels: [[${previous}]],
-        datasets: [{
-            label: 'Target',
-            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.blue,
-            borderWidth: 1,
-            data: [[${previousTarget}]]
-        }, {
-            label: 'Sold',
-            backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.green,
-            borderWidth: 1,
-            data: [[${previousSold}]]
-        }, {
-            label: 'Scanned',
-            backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.red,
-            borderWidth: 1,
-            data: [[${previousScanned}]]
-        }]
-    };
-
-    var comingBarData = {
-        labels: [[${upcoming}]],
-        datasets: [{
-            label: 'Target',
-            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.blue,
-            borderWidth: 1,
-            data: [[${upcomingTarget}]]
-        }, {
-            label: 'Sold',
-            backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.green,
-            borderWidth: 1,
-            data: [[${upcomingSold}]]
-        }]
-    };
-
-    var otherData = {
-        labels: [[${events}]],
-        datasets: [
-            {
-                label: 'Sold',
-                backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.green,
-                borderWidth: 1,
-                fill: false,
-                data: [[${eventsSold}]]
-            },
-            {
-                label: 'Target',
-                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.blue,
-                borderWidth: 1,
-                fill: false,
-                data: [[${eventsTarget}]]
-            }
-        ]
-    };
-
-    window.onload = function () {
-        var previous = document.getElementById("previousEvents").getContext("2d");
-        window.myBar = new Chart(previous, {
-            type: 'bar',
-            data: previousBarData,
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'top'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            min: 0,
-                            beginAtZero: true
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontSize: 9
-                        }
-                    }]
-                }
-            }
-        });
-
-        var coming = document.getElementById("comingEvents").getContext("2d");
-        window.myBar = new Chart(coming, {
-            type: 'bar',
-            data: comingBarData,
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'top'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            min: 0,
-                            beginAtZero: true
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontSize: 9
-                        }
-                    }]
-                }
-            },
-            fontSize: "8px"
-        });
-
-        var stats = document.getElementById("events").getContext("2d");
-        window.myLine = new Chart(stats, {
-            type: 'line',
-            data: otherData,
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'top'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            min: 0,
-                            beginAtZero: true
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontSize: 9
-                        }
-                    }]
-                }
-            }
-        })
-
-    };
-    /*]]>*/
-</script>
 </body>
 </html>
