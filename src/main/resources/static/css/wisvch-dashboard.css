@@ -212,27 +212,6 @@ label {
 }
 
 /**
- * Pagination
- */
-ul.pagination .page-item .page-link {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    border: 3px solid #e7ebf1;
-}
-
-ul.pagination .page-item.active .page-link {
-    z-index: 2;
-    color: #fff;
-    background-color: #40556a;
-    border-color: #40556a
-}
-
-ul.pagination .page-item .page-link {
-    color: #40556a;
-}
-
-/**
  * Card
  */
 .card {
