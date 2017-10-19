@@ -1,5 +1,7 @@
 package ch.wisv.events.core.model.event;
 
+import lombok.Getter;
+
 /**
  * Enum EventStatus
  */
@@ -7,11 +9,13 @@ public enum EventCategory {
 
     CAREER("Career"),
     SOCIAL("Social"),
-    EDUCATIONAL("Educational");
+    EDUCATIONAL("Educational"),
+    ASSOCIATION("Association");
 
     /**
      * Display name of the status (for view purpose)
      */
+    @Getter
     private final String displayName;
 
     /**
@@ -21,14 +25,5 @@ public enum EventCategory {
      */
     EventCategory(String displayName) {
         this.displayName = displayName;
-    }
-
-    /**
-     * Get display name of the EventStatus
-     *
-     * @return display name
-     */
-    public String getDisplayName() {
-        return displayName;
     }
 }
