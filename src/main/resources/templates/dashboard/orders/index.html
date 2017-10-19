@@ -83,6 +83,9 @@
     $(document).ready(function () {
         var table = $('#orderTable');
         table.DataTable({
+            order: [
+                [0, "desc"]
+            ],
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "160px", targets: 1},
