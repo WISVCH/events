@@ -38,7 +38,7 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="table-responsive">
-                <table class="table" id="productTable">
+                <table class="table table-striped" id="productTable">
                     <thead class="thead-inverse bg-primary">
                     <tr>
                         <th>Title</th>
@@ -68,15 +68,15 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${product.getKey()} + '/'" class="btn btn-info">
+                                <a th:href="'edit/' + ${product.getKey()} + '/'" class="btn btn-sm btn-info">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a th:href="'overview/' + ${product.getKey()} + '/'" class="btn btn-success">
+                                <a th:href="'overview/' + ${product.getKey()} + '/'" class="btn btn-sm btn-success">
                                     <i class="fa fa-stack-overflow"></i>
                                 </a>
                                 <a th:href="'delete/' + ${product.getKey()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${product.getTitle()} + '?\');'"
-                                   class="btn btn-danger">
+                                   class="btn btn-sm btn-danger">
                                     <i class="fa fa-remove"></i>
                                 </a>
                             </div>
@@ -104,7 +104,8 @@
             ],
             columnDefs: [
                 {width: "60px", targets: 1},
-                {width: "180px", targets: [2, 3, 4]}
+                {width: "180px", targets: [2, 3]},
+                {width: "120px", targets: 4}
             ]
         });
 
@@ -118,8 +119,8 @@
             table.DataTable().search($(this).val()).draw();
         });
 
-        table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/dashboard/products/view/}]] + $(this).data('key') + "/"; +]*/
+        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/dashboard/products/view/}]] + $(this).parent().data('key') + "/"; +]*/
             document.location = link;
         });
     });

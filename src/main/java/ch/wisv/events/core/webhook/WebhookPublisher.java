@@ -76,7 +76,7 @@ public class WebhookPublisher extends Thread {
         this.setTrigger(trigger);
         this.setObject(object);
 
-        this.run();
+        this.start();
     }
 
     /**

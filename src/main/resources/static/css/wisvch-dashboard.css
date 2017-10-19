@@ -212,27 +212,6 @@ label {
 }
 
 /**
- * Pagination
- */
-ul.pagination .page-item .page-link {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    border: 3px solid #e7ebf1;
-}
-
-ul.pagination .page-item.active .page-link {
-    z-index: 2;
-    color: #fff;
-    background-color: #40556a;
-    border-color: #40556a
-}
-
-ul.pagination .page-item .page-link {
-    color: #40556a;
-}
-
-/**
  * Card
  */
 .card {
@@ -270,6 +249,10 @@ h1 .badge, .btn, .btn:hover {
     letter-spacing: 1px;
     border-style: solid;
     border-width: 3px;
+}
+
+.btn-sm, .btn-sm:hover {
+    padding: .1rem 1rem;
 }
 
 h1 .badge-danger, .btn-danger {
@@ -340,12 +323,14 @@ h1 .badge-info, .btn-info {
  */
 .progress {
     border-radius: 0;
+    background-color: #b4b7b9;
 }
 
 .progress .progress-bar {
-    height: 20px;
+    height: 30px;
     background-color: #058cce;
-    line-height: 20px;
+    line-height: 30px;
+    padding-left: .25rem;
 }
 
 /*

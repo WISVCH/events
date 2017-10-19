@@ -37,7 +37,7 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="table-responsive">
-                <table id="eventTable" class="table">
+                <table id="eventTable" class="table table-striped">
                     <thead class="thead-inverse bg-primary">
                     <tr>
                         <th>Title</th>
@@ -68,15 +68,15 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${event.getKey()} + '/'" class="btn btn-info">
+                                <a th:href="'edit/' + ${event.getKey()} + '/'" class="btn btn-sm btn-info">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </a>
-                                <a th:href="'overview/' + ${event.getKey()} + '/'" class="btn btn-success">
+                                <a th:href="'overview/' + ${event.getKey()} + '/'" class="btn btn-sm btn-success">
                                     <i class="fa fa-fw fa-stack-overflow"></i>
                                 </a>
                                 <a th:href="'delete/' + ${event.getKey()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
-                                   class="btn btn-danger">
+                                   class="btn btn-sm btn-danger">
                                     <i class="fa fa-fw fa-remove glyphicon-remove"></i>
                                 </a>
                             </div>
@@ -119,8 +119,8 @@
             table.DataTable().search($(this).val()).draw();
         });
 
-        table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/dashboard/events/view/}]] + $(this).data('key') + "/"; +]*/
+        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/dashboard/events/view/}]] + $(this).parent().data('key') + "/"; +]*/
             document.location = link;
         });
     });

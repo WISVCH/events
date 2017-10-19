@@ -52,12 +52,12 @@
                         <td th:text="${webhook.getLdapGroup()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${webhook.getKey()} + '/'" class="btn btn-info">
+                                <a th:href="'edit/' + ${webhook.getKey()} + '/'" class="btn btn-sm btn-info">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </a>
                                 <a th:href="'delete/' + ${webhook.getKey()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${webhook.getPayloadUrl()} + '?\');'"
-                                   class="btn btn-danger">
+                                   class="btn btn-sm btn-danger">
                                     <i class="fa fa-fw fa-remove"></i>
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
         var table = $('#webhookTable');
         table.DataTable({
             columnDefs: [
-                {width: "120px", targets: 2}
+                {width: "100px", targets: 2}
             ]
         });
 
@@ -94,8 +94,8 @@
             table.DataTable().search($(this).val()).draw();
         });
 
-        table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/dashboard/webhooks/view/}]] + $(this).data('key') + "/"; +]*/
+        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/dashboard/webhooks/view/}]] + $(this).parent().data('key') + "/"; +]*/
             document.location = link;
         });
     });

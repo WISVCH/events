@@ -142,10 +142,10 @@
                             <h4 class="card-title mb-4">Upcoming events</h4>
 
                             <table class="table">
-                                <thead class="thead-inverse bg-primary">
+                                <thead class="thead-inverse table-sm bg-primary">
                                 <tr>
-                                    <th>Event</th>
-                                    <th>Progress target</th>
+                                    <th class="w-50">Event</th>
+                                    <th class="w-50">Progress target</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -176,22 +176,22 @@
                             <h4 class="card-title mb-4">Previous events</h4>
 
                             <table class="table">
-                                <thead class="thead-inverse bg-primary">
+                                <thead class="thead-inverse table-sm bg-primary">
                                 <tr>
-                                    <th>Event</th>
-                                    <th>Attendance rate</th>
+                                    <th class="w-50">Event</th>
+                                    <th class="w-50">Attendance rate</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="something : ${previous}">
-                                    <td th:text="${something.key.getTitle()}"></td>
+                                <tr th:each="event : ${previous}">
+                                    <td th:text="${event.key.getTitle()}"></td>
                                     <td>
                                         <div class="progress" style="margin-bottom: 0;">
                                             <div class="progress-bar" role="progressbar"
-                                                 th:aria-valuenow="${something.value}"
+                                                 th:aria-valuenow="${event.value}"
                                                  aria-valuemin="0" aria-valuemax="100"
-                                                 th:style="'width: ' + ${something.value} + '%;'"
-                                                 th:text="${something.value} + '%'">
+                                                 th:style="'width: ' + ${event.value} + '%;'"
+                                                 th:text="${event.value} + '%'">
                                                 59%
                                             </div>
                                         </div>
