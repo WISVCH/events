@@ -61,7 +61,7 @@
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'delete/' + ${order.getPublicReference()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
-                                   class="btn btn-danger">
+                                   class="btn btn-sm btn-danger">
                                     <i class="fa fa-fw fa-remove"></i>
                                 </a>
                             </div>
@@ -86,7 +86,8 @@
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "160px", targets: 1},
-                {width: "80px", targets: [3, 4, 5]}
+                {width: "80px", targets: [3, 4]},
+                {width: "50px", targets: 5}
             ]
         });
 

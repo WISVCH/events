@@ -272,6 +272,10 @@ h1 .badge, .btn, .btn:hover {
     border-width: 3px;
 }
 
+.btn-sm, .btn-sm:hover {
+    padding: .1rem 1rem;
+}
+
 h1 .badge-danger, .btn-danger {
     border-color: #ef4545;
     background-color: #ef4545;
@@ -340,12 +344,14 @@ h1 .badge-info, .btn-info {
  */
 .progress {
     border-radius: 0;
+    background-color: #b4b7b9;
 }
 
 .progress .progress-bar {
-    height: 20px;
+    height: 30px;
     background-color: #058cce;
-    line-height: 20px;
+    line-height: 30px;
+    padding-left: .25rem;
 }
 
 /*
