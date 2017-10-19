@@ -94,8 +94,8 @@
             table.DataTable().search($(this).val()).draw();
         });
 
-        table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/dashboard/webhooks/view/}]] + $(this).data('key') + "/"; +]*/
+        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/dashboard/webhooks/view/}]] + $(this).parent().data('key') + "/"; +]*/
             document.location = link;
         });
     });
