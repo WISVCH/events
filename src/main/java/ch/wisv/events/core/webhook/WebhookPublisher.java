@@ -2,7 +2,11 @@ package ch.wisv.events.core.webhook;
 
 import ch.wisv.events.core.exception.WebhookRequestFactoryNotFoundException;
 import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.webhook.WebhookService;
 import ch.wisv.events.core.service.webhook.WebhookTaskService;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
@@ -40,16 +44,23 @@ public class WebhookPublisher {
      */
     private final WebhookTaskService webhookTaskService;
 
+    private final EventService productService;
+
     /**
      * Constructor WebhookPublisher creates a new WebhookPublisher instance.
      *
      * @param webhookService     of type WebhookService.
      * @param webhookTaskService of type WebhookTaskService.
+     * @param productService
      */
     @Autowired
-    private WebhookPublisher(WebhookService webhookService, WebhookTaskService webhookTaskService) {
+    private WebhookPublisher(WebhookService webhookService,
+            WebhookTaskService webhookTaskService,
+            EventService productService
+    ) {
         this.webhookService = webhookService;
         this.webhookTaskService = webhookTaskService;
+        this.productService = productService;
     }
 
     /**
@@ -63,14 +74,35 @@ public class WebhookPublisher {
             JSONObject jsonObject = WebhookRequestFactory.generateRequest(webhookTrigger, object);
 
             webhookService.getByTrigger(webhookTrigger).forEach(webhook -> {
-                if (webhook.getLdapGroup() == LDAPGroup.BEHEER) {
+                if (this.isWebhookAuthenticated(object, webhook)) {
                     webhookTaskService.create(webhookTrigger, webhook, jsonObject);
-                } else {
-                    // TODO: auth
                 }
             });
         } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Method isWebhookAuthenticated ...
+     *
+     * @param object  of type Object
+     * @param webhook of type Webhook
+     * @return boolean
+     */
+    private boolean isWebhookAuthenticated(Object object, Webhook webhook) {
+        if (webhook.getLdapGroup() == LDAPGroup.BEHEER) {
+            return true;
+        } else if (object instanceof Event) {
+            if (((Event) object).getOrganizedBy() == webhook.getLdapGroup()) {
+                return true;
+            }
+        } else if (object instanceof Product) {
+            if (productService.getEventByProduct((Product) object).getOrganizedBy() == webhook.getLdapGroup()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

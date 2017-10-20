@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -68,6 +66,23 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll();
     }
 
+
+    /**
+     * Get Event by key
+     *
+     * @param key key of an Event
+     * @return Event
+     */
+    @Override
+    public Event getByKey(String key) {
+        Optional<Event> eventOptional = eventRepository.findByKey(key);
+        if (eventOptional.isPresent()) {
+            return eventOptional.get();
+        }
+
+        throw new EventsModelNotFound("Event with key " + key + " not found.");
+    }
+
     /**
      * Get all Events between a lowerbound and upperbound
      *
@@ -87,7 +102,8 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED)
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
+                .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +114,32 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED).collect(Collectors.toList());
+        return eventRepository.findAll().stream()
+                .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all Events that are connected to the same Product
+     *
+     * @param product of type Product
+     * @return List of Events
+     */
+    @Override
+    public Event getEventByProduct(Product product) {
+        Optional<Event> event = eventRepository.findByProductsContaining(product);
+
+        return event.orElseThrow(() -> new EventsModelNotFound("Event containing product #" + product.getId() + " not found"));
+    }
+
+    /**
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
+     *
+     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     */
+    @Override
+    public List<Event> getPreviousEventsLastTwoWeeks() {
+        return this.eventRepository.findAllByEndingBetween(LocalDateTime.now().minusWeeks(2), LocalDateTime.now());
     }
 
     /**
@@ -114,21 +155,6 @@ public class EventServiceImpl implements EventService {
         eventRepository.saveAndFlush(event);
     }
 
-    /**
-     * Get Event by key
-     *
-     * @param key key of an Event
-     * @return Event
-     */
-    @Override
-    public Event getByKey(String key) {
-        Optional<Event> eventOptional = eventRepository.findByKey(key);
-        if (eventOptional.isPresent()) {
-            return eventOptional.get();
-        }
-
-        throw new EventsModelNotFound("Event with key " + key + " not found.");
-    }
 
     /**
      * Update event by Event
@@ -168,34 +194,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Event event) {
         eventRepository.delete(event);
-    }
-
-    /**
-     * Get all Events that are connected to the same Product
-     *
-     * @param key key of an Product
-     * @return List of Events
-     */
-    @Override
-    public List<Event> getEventByProductKey(String key) {
-        List<Event> events = new ArrayList<>();
-        this.getAllEvents().forEach(x -> x.getProducts().forEach(y -> {
-            if (Objects.equals(y.getKey(), key)) {
-                events.add(x);
-            }
-        }));
-
-        return events;
-    }
-
-    /**
-     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
-     *
-     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
-     */
-    @Override
-    public List<Event> getPreviousEventsLastTwoWeeks() {
-        return this.eventRepository.findAllByEndingBetween(LocalDateTime.now().minusWeeks(2), LocalDateTime.now());
     }
 
     /**

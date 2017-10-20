@@ -238,8 +238,6 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testDelete() throws Exception {
-        when(eventService.getEventByProductKey(this.product.getKey())).thenReturn(Collections.emptyList());
-
         service.delete(this.product);
         verify(repository, times(1)).delete(this.product);
     }
