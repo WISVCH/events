@@ -1,6 +1,9 @@
-package ch.wisv.events.core.webhook;
+package ch.wisv.events.core.repository;
 
-import lombok.Data;
+import ch.wisv.events.core.model.webhook.WebhookTask;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -18,17 +21,12 @@ import lombok.Data;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Data
-public class WebhookRequest {
+public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Integer> {
 
     /**
-     * Field webhookTrigger
+     * Method findAllOrderBy_CreatedAt_Asc ...
+     *
+     * @return List<WebhookTask>
      */
-    private String webhookTrigger;
-
-    /**
-     * Field data
-     */
-    private String data;
-
+    List<WebhookTask> findAllByOrderByCreatedAtAsc();
 }
