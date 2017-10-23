@@ -66,7 +66,7 @@ public class WebhookTaskScheduler {
         List<WebhookTask> webhookTaskList = this.webhookTaskRepository.findAll();
 
         webhookTaskList.forEach(webhookTask -> {
-            log.info("Task #" + webhookTask.getId() + ": " + webhookTask.toString());
+            log.info("Starting WebhookTask #" + webhookTask.getId() + ": " + webhookTask.toString());
             this.sendRequest(webhookTask);
             this.webhookTaskRepository.delete(webhookTask);
         });
@@ -91,10 +91,12 @@ public class WebhookTaskScheduler {
             String responseBody = EntityUtils.toString(response.getEntity());
 
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK || !responseBody.equals("true")) {
-                log.error("Task #" + webhookTask.getId() + ": " + responseBody);
+                log.error("ERROR Task #" + webhookTask.getId() + ": " + responseBody);
             }
         } catch (IOException e) {
-            log.error("Task #" + webhookTask.getId() + ": " + e.getMessage());
+            log.error("IOException Task #" + webhookTask.getId() + ": " + e.getMessage());
         }
+
+        log.info("Finished WebhookTask #" + webhookTask.getId());
     }
 }

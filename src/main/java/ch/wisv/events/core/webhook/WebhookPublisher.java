@@ -78,7 +78,7 @@ public class WebhookPublisher {
 
             webhookService.getByTrigger(webhookTrigger).forEach(webhook -> {
                 if (this.isWebhookAuthenticated(webhook, content)) {
-                    webhookTaskService.create(webhookTrigger, webhook, jsonObject);
+                     webhookTaskService.create(webhookTrigger, webhook, jsonObject);
                 }
             });
         } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {

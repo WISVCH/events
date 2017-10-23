@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookTaskRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
+@Slf4j
 public class WebhookTaskServiceImpl implements WebhookTaskService {
 
     /**
@@ -60,13 +62,14 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
     @Override
     public void create(WebhookTask webhookTask) {
         webhookTaskRepository.saveAndFlush(webhookTask);
+        log.info("Created WebhookTask #" + webhookTask.getId() + ": " + webhookTask.toString());
     }
 
     /**
      * Method create ...
      *
      * @param webhookTrigger of type WebhookTrigger
-     * @param jsonObject         of type Object
+     * @param jsonObject     of type Object
      */
     @Override
     public void create(WebhookTrigger webhookTrigger, Webhook webhook, JSONObject jsonObject) {
