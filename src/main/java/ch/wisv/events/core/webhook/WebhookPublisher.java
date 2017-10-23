@@ -44,37 +44,40 @@ public class WebhookPublisher {
      */
     private final WebhookTaskService webhookTaskService;
 
-    private final EventService productService;
+    /**
+     * Field eventService
+     */
+    private final EventService eventService;
 
     /**
      * Constructor WebhookPublisher creates a new WebhookPublisher instance.
      *
      * @param webhookService     of type WebhookService.
      * @param webhookTaskService of type WebhookTaskService.
-     * @param productService
+     * @param eventService       of type EventService.
      */
     @Autowired
     private WebhookPublisher(WebhookService webhookService,
             WebhookTaskService webhookTaskService,
-            EventService productService
+            EventService eventService
     ) {
         this.webhookService = webhookService;
         this.webhookTaskService = webhookTaskService;
-        this.productService = productService;
+        this.eventService = eventService;
     }
 
     /**
-     * Method createWebhookTask ...
+     * Create all needed Webhook tasks for a certain trigger and content.
      *
-     * @param webhookTrigger of type WebhookTrigger
-     * @param object         of type Object
+     * @param webhookTrigger of type WebhookTrigger.
+     * @param content        of type Object.
      */
-    public void createWebhookTask(WebhookTrigger webhookTrigger, Object object) {
+    public void createWebhookTask(WebhookTrigger webhookTrigger, Object content) {
         try {
-            JSONObject jsonObject = WebhookRequestFactory.generateRequest(webhookTrigger, object);
+            JSONObject jsonObject = WebhookRequestFactory.generateRequest(webhookTrigger, content);
 
             webhookService.getByTrigger(webhookTrigger).forEach(webhook -> {
-                if (this.isWebhookAuthenticated(object, webhook)) {
+                if (this.isWebhookAuthenticated(webhook, content)) {
                     webhookTaskService.create(webhookTrigger, webhook, jsonObject);
                 }
             });
@@ -84,22 +87,29 @@ public class WebhookPublisher {
     }
 
     /**
-     * Method isWebhookAuthenticated ...
+     * Check if a webhook is authenticated to receive the given update.
      *
-     * @param object  of type Object
-     * @param webhook of type Webhook
+     * @param webhook of type Webhook.
+     * @param content of type Object.
      * @return boolean
      */
-    private boolean isWebhookAuthenticated(Object object, Webhook webhook) {
+    private boolean isWebhookAuthenticated(Webhook webhook, Object content) {
         if (webhook.getLdapGroup() == LDAPGroup.BEHEER) {
             return true;
-        } else if (object instanceof Event) {
-            if (((Event) object).getOrganizedBy() == webhook.getLdapGroup()) {
-                return true;
-            }
-        } else if (object instanceof Product) {
-            if (productService.getEventByProduct((Product) object).getOrganizedBy() == webhook.getLdapGroup()) {
-                return true;
+        } else {
+            if (content instanceof Event) {
+                Event event = (Event) content;
+
+                if (webhook.getLdapGroup() == event.getOrganizedBy()) {
+                    return true;
+                }
+            } else if (content instanceof Product) {
+                Product product = (Product) content;
+                Event event = eventService.getEventByProduct(product);
+
+                if (event.getOrganizedBy() == webhook.getLdapGroup()) {
+                    return true;
+                }
             }
         }
 
