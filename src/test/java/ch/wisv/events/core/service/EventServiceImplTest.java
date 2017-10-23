@@ -177,8 +177,8 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.addProduct(product);
 
         this.event.setPublished(EventStatus.PUBLISHED);
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
+        when(repository.findByProductsContaining(any(Product.class))).thenReturn(Optional.of(this.event));
 
-        assertEquals(ImmutableList.of(this.event), service.getEventByProductKey(product.getKey()));
+        assertEquals(this.event, service.getEventByProduct(product));
     }
 }
