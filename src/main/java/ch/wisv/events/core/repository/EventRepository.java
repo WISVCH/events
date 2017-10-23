@@ -2,6 +2,7 @@ package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.utils.LDAPGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -64,4 +65,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return List<Event>
      */
     List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
+
+    /**
+     * Method findByProductsContaining ...
+     *
+     * @param product of type Product
+     * @return Optional<Event>
+     */
+    Optional<Event> findByProductsContaining(Product product);
 }

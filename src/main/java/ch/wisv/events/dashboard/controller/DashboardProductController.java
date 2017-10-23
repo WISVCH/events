@@ -115,8 +115,8 @@ public class DashboardProductController {
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             this.productService.create(product);
+            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
-            this.webhookPublisher.event(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
 
             return "redirect:/dashboard/products/view/" + product.getKey() + "/";
         } catch (EventsInvalidModelException e) {
@@ -158,7 +158,7 @@ public class DashboardProductController {
     public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             this.productService.update(product);
-            this.webhookPublisher.event(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
+            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("success", "Changes have been saved!");
 
             return "redirect:/dashboard/products/view/" + product.getKey() + "/";
@@ -203,8 +203,9 @@ public class DashboardProductController {
         Product product = productService.getByKey(key);
         try {
             this.productService.delete(product);
+            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_DELETE, product);
+
             redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
-            this.webhookPublisher.event(WebhookTrigger.PRODUCT_DELETE, product);
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,10 +73,10 @@ public interface EventService {
     /**
      * Get all Events that are connected to the same Product
      *
-     * @param key key of an Product
+     * @param product of type Product
      * @return List of Events
      */
-    List<Event> getEventByProductKey(String key);
+    Event getEventByProduct(Product product);
 
     /**
      * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.

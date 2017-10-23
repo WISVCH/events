@@ -2,24 +2,18 @@ package ch.wisv.events.core.webhook;
 
 import ch.wisv.events.core.exception.WebhookRequestFactoryNotFoundException;
 import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.webhook.WebhookService;
+import ch.wisv.events.core.service.webhook.WebhookTaskService;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
-import lombok.Setter;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import ch.wisv.events.utils.LDAPGroup;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -38,7 +32,7 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Component
-public class WebhookPublisher extends Thread {
+public class WebhookPublisher {
 
     /**
      * Field webhookService
@@ -46,77 +40,79 @@ public class WebhookPublisher extends Thread {
     private final WebhookService webhookService;
 
     /**
-     * Field trigger
+     * Field webhookTaskService
      */
-    @Setter
-    private WebhookTrigger trigger;
+    private final WebhookTaskService webhookTaskService;
 
     /**
-     * Field object
+     * Field eventService
      */
-    @Setter
-    private Object object;
+    private final EventService eventService;
 
     /**
      * Constructor WebhookPublisher creates a new WebhookPublisher instance.
      *
-     * @param webhookService of type WebhookService.
+     * @param webhookService     of type WebhookService.
+     * @param webhookTaskService of type WebhookTaskService.
+     * @param eventService       of type EventService.
      */
-    private WebhookPublisher(WebhookService webhookService) {
+    @Autowired
+    private WebhookPublisher(WebhookService webhookService,
+            WebhookTaskService webhookTaskService,
+            EventService eventService
+    ) {
         this.webhookService = webhookService;
+        this.webhookTaskService = webhookTaskService;
+        this.eventService = eventService;
     }
 
     /**
-     * Method event set up an event.
+     * Create all needed Webhook tasks for a certain trigger and content.
      *
-     * @param trigger of type WebhookTrigger
-     * @param object  of type Object
+     * @param webhookTrigger of type WebhookTrigger.
+     * @param content        of type Object.
      */
-    public void event(WebhookTrigger trigger, Object object) {
-        this.setTrigger(trigger);
-        this.setObject(object);
-
-        this.start();
-    }
-
-    /**
-     * Method run generates request and send requests to all the webhooks.
-     */
-    public void run() {
+    public void createWebhookTask(WebhookTrigger webhookTrigger, Object content) {
         try {
-            JSONObject request = WebhookRequestFactory.generateRequest(this.trigger, this.object);
+            JSONObject jsonObject = WebhookRequestFactory.generateRequest(webhookTrigger, content);
 
-            List<Webhook> webhooks = this.webhookService.getByTrigger(trigger);
-            webhooks.forEach(webhook -> this.request(webhook, request));
+            webhookService.getByTrigger(webhookTrigger).forEach(webhook -> {
+                if (this.isWebhookAuthenticated(webhook, content)) {
+                     webhookTaskService.create(webhookTrigger, webhook, jsonObject);
+                }
+            });
         } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Method request sends out the request to a url.
+     * Check if a webhook is authenticated to receive the given update.
      *
-     * @param webhook of type Webhook
-     * @param request of type JSONObject
+     * @param webhook of type Webhook.
+     * @param content of type Object.
+     * @return boolean
      */
-    private void request(Webhook webhook, JSONObject request) {
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(webhook.getPayloadUrl());
+    private boolean isWebhookAuthenticated(Webhook webhook, Object content) {
+        if (webhook.getLdapGroup() == LDAPGroup.BEHEER) {
+            return true;
+        } else {
+            if (content instanceof Event) {
+                Event event = (Event) content;
 
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhook.getSecret()).getBytes()));
-        httpPost.setEntity(new StringEntity(request.toJSONString(), "UTF8"));
+                if (webhook.getLdapGroup() == event.getOrganizedBy()) {
+                    return true;
+                }
+            } else if (content instanceof Product) {
+                Product product = (Product) content;
+                Event event = eventService.getEventByProduct(product);
 
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-            String responseBody = EntityUtils.toString(response.getEntity());
-
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK || !responseBody.equals("true")) {
-                // TODO: add monitoring
+                if (event.getOrganizedBy() == webhook.getLdapGroup()) {
+                    return true;
+                }
             }
-        } catch (IOException e) {
-            // TODO: add monitoring
         }
+
+        return false;
     }
 }

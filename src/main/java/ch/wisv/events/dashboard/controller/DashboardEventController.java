@@ -120,7 +120,7 @@ public class DashboardEventController {
             redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
-                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
             return "redirect:/dashboard/events/";
@@ -165,9 +165,9 @@ public class DashboardEventController {
             redirect.addFlashAttribute("success", "Event changes saved!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
-                this.webhookPublisher.event(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             } else {
-                this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
             }
 
             return "redirect:/dashboard/events/view/" + event.getKey() + "/";
@@ -215,8 +215,8 @@ public class DashboardEventController {
         try {
             Event event = this.eventService.getByKey(key);
             this.eventService.delete(event);
+            this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
             redirect.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
-            this.webhookPublisher.event(WebhookTrigger.EVENT_DELETE, event);
 
             return "redirect:/dashboard/events/";
         } catch (EventsModelNotFound e) {
