@@ -1,6 +1,7 @@
 package ch.wisv.events.core.webhook;
 
 import ch.wisv.events.core.model.webhook.WebhookTask;
+import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
 import ch.wisv.events.core.repository.WebhookTaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -41,7 +42,7 @@ public class WebhookTaskScheduler {
     /**
      * Field WEBHOOK_TASK_INTERVAL_SECONDS
      */
-    private final int WEBHOOK_TASK_INTERVAL_SECONDS = 300;
+    private final int WEBHOOK_TASK_INTERVAL_SECONDS = 60;
 
     /**
      * Field webhookTaskRepository
@@ -63,12 +64,11 @@ public class WebhookTaskScheduler {
      */
     @Scheduled(fixedRate = WEBHOOK_TASK_INTERVAL_SECONDS * 1000)
     public void webhookTask() {
-        List<WebhookTask> webhookTaskList = this.webhookTaskRepository.findAll();
+        List<WebhookTask> webhookTaskList = this.webhookTaskRepository.findAllByWebhookTaskStatus(WebhookTaskStatus.PENDING);
 
         webhookTaskList.forEach(webhookTask -> {
             log.info("Starting WebhookTask #" + webhookTask.getId() + ": " + webhookTask.toString());
             this.sendRequest(webhookTask);
-            this.webhookTaskRepository.delete(webhookTask);
         });
     }
 
@@ -92,11 +92,18 @@ public class WebhookTaskScheduler {
 
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK || !responseBody.equals("true")) {
                 log.error("ERROR Task #" + webhookTask.getId() + ": " + responseBody);
+                webhookTask.setWebhookTaskStatus(WebhookTaskStatus.ERROR);
+                webhookTask.setWebhookError(responseBody);
+            } else {
+                webhookTask.setWebhookTaskStatus(WebhookTaskStatus.SUCCESS);
             }
         } catch (IOException e) {
             log.error("IOException Task #" + webhookTask.getId() + ": " + e.getMessage());
+            webhookTask.setWebhookTaskStatus(WebhookTaskStatus.ERROR);
+            webhookTask.setWebhookError(e.getMessage());
         }
 
         log.info("Finished WebhookTask #" + webhookTask.getId());
+        this.webhookTaskRepository.save(webhookTask);
     }
 }

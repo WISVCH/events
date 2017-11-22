@@ -1,10 +1,6 @@
-package ch.wisv.events.core.repository;
+package ch.wisv.events.core.model.webhook;
 
-import ch.wisv.events.core.model.webhook.WebhookTask;
-import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import lombok.Getter;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -22,21 +18,19 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Integer> {
+public enum WebhookTaskStatus {
+
+    PENDING("badge-warning"),
+    SUCCESS("badge-success"),
+    ERROR("badge-danger");
 
     /**
-     * Method findAllOrderBy_CreatedAt_Asc ...
-     *
-     * @return List<WebhookTask>
+     * Badge class;
      */
-    List<WebhookTask> findAllByOrderByCreatedAtAsc();
+    @Getter
+    private final String badgeClass;
 
-    /**
-     * Method findAllByWebhookTaskStatus().
-     *
-     * @param webhookTaskStatus of type WebhookTaskStatus
-     * @return List<WebhookTask>
-     */
-    List<WebhookTask> findAllByWebhookTaskStatus(WebhookTaskStatus webhookTaskStatus);
-
+    WebhookTaskStatus(String badgeClass) {
+        this.badgeClass = badgeClass;
+    }
 }
