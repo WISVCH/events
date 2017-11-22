@@ -46,6 +46,10 @@
                th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/webhooks/') ? 'active':''}">
                 <i class="fa fa-globe fa-fw" aria-hidden="true"></i> Webhooks
             </a>
+            <a th:href="@{/dashboard/tasks/}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard/tasks/') ? 'active':''}">
+                <i class="fa fa-list fa-fw" aria-hidden="true"></i> Tasks
+            </a>
         </li>
     </ul>
 </nav>

@@ -364,3 +364,8 @@ h1 .badge-info, .btn-info {
     display: block;
     border-bottom: 1px solid #000;
 }
+
+.tooltip-inner {
+    max-width: 1200px;
+    text-align: left;
+}

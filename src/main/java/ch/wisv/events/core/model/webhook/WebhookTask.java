@@ -3,10 +3,7 @@ package ch.wisv.events.core.model.webhook;
 import lombok.Data;
 import org.json.simple.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -58,10 +55,22 @@ public class WebhookTask {
     private LocalDateTime createdAt;
 
     /**
+     * Field webhookTaskStatus
+     */
+    private WebhookTaskStatus webhookTaskStatus;
+
+    /**
+     * Field webhookError
+     */
+    @Column(columnDefinition = "TEXT")
+    private String webhookError;
+
+    /**
      * Constructor WebhookTask creates a new WebhookTask instance.
      */
     public WebhookTask() {
         this.createdAt = LocalDateTime.now();
+        this.webhookTaskStatus = WebhookTaskStatus.PENDING;
     }
 
     /**
