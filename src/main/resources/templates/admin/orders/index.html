@@ -49,7 +49,7 @@
                     <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
                         <td th:text="'#' + ${order.getId()}"></td>
                         <td>
-                            <a th:href="@{'/dashboard/customers/view/' + ${order.getCustomer().getKey()} + '/'}"
+                            <a th:href="@{'/administrator/customers/view/' + ${order.getCustomer().getKey()} + '/'}"
                                th:text="${order.getCustomer().getName()}"></a>
                         </td>
                         <td>
@@ -105,7 +105,7 @@
         });
 
         table.find('tbody').on('click', 'tr', function () {
-            /*[+ var link = [[@{/tickets/orders/view/}]] + $(this).data('key') + "/"; +]*/
+            /*[+ var link = [[@{/administrator/orders/view/}]] + $(this).data('key') + "/"; +]*/
             document.location = link;
         });
     });

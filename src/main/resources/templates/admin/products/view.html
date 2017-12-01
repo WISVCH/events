@@ -30,7 +30,7 @@
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>[[${product.getTitle()}]]
-                <a class="badge badge-info" th:href="@{'/dashboard/products/edit/' + ${product.getKey()} +'/'}">
+                <a class="badge badge-info" th:href="@{'/administrator/products/edit/' + ${product.getKey()} +'/'}">
                     <i class="fa fa-edit" aria-hidden="true"></i> Edit
                 </a>
             </h1>
@@ -115,7 +115,7 @@
                                 </tr>
                                 <tr th:each="product : ${product.getProducts()}">
                                     <td>
-                                        <a th:href="@{'/dashboard/products/view/' + ${product.getKey()} + '/'}">
+                                        <a th:href="@{'/administrator/products/view/' + ${product.getKey()} + '/'}">
                                             [[${product.getTitle()}]]
                                         </a>
                                     </td>

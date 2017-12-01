@@ -160,7 +160,7 @@
                                 </tr>
                                 <tr th:each="product : ${event.products}">
                                     <td>
-                                        <a th:href="@{'/dashboard/products/view/' + ${product.getKey()} + '/'}">
+                                        <a th:href="@{'/administrator/products/view/' + ${product.getKey()} + '/'}">
                                             [[${product.getTitle()}]]
                                         </a>
                                     </td>

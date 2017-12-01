@@ -49,15 +49,15 @@
                     <!--/*@thymesVar id="soldProduct" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
                     <tr th:each="soldProduct : ${soldProducts}">
                         <td>
-                            <a th:href="@{'/dashboard/orders/view/' + ${soldProduct.getOrder().getPublicReference()} + '/'}"
+                            <a th:href="@{'/administrator/orders/view/' + ${soldProduct.getOrder().getPublicReference()} + '/'}"
                                th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
                         </td>
                         <td>
-                            <a th:href="@{'/dashboard/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'}"
+                            <a th:href="@{'/administrator/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'}"
                                th:text="${soldProduct.getProduct().getTitle()}"></a>
                         </td>
                         <td>
-                            <a th:href="@{'/dashboard/customers/view/' + ${soldProduct.getCustomer().getKey()} + '/'}"
+                            <a th:href="@{'/administrator/customers/view/' + ${soldProduct.getCustomer().getKey()} + '/'}"
                                th:text="${soldProduct.getCustomer().getName()}"></a>
                         </td>
                         <td th:text="${soldProduct.getCustomer().getEmail()}"></td>
