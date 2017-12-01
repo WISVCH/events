@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -41,6 +42,7 @@ public class Customer {
     /**
      * Field key UUID of the customer.
      */
+    @Column(unique = true)
     private String key;
 
     /**
@@ -51,11 +53,13 @@ public class Customer {
     /**
      * Field email of the customer.
      */
+    @Column(unique = true)
     private String email;
 
     /**
      * Field chUsername of the customer, this will be the ldap username.
      */
+    @Column(unique = true)
     private String chUsername;
 
     /**

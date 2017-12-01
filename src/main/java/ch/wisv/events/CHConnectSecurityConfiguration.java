@@ -118,6 +118,7 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
             }
             return ImmutableSet.of();
         });
+
         return authenticationProvider;
     }
 

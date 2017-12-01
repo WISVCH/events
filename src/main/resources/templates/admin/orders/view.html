@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Orders</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Order #[[${order.getId()}]]</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-5">
+                        <h6 class="card-header">Details</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-sm-12">
+                                    <label>Public reference
+                                        <input type="text" class="form-control" th:value="${order.getPublicReference()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Status
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getStatus().toString()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Created at
+                                        <input type="text" class="form-control" th:value="${order.getCreationDate()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Paid at
+                                        <input type="text" class="form-control" th:value="${order.getPaidDate()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Created by
+                                        <input type="text" class="form-control" th:value="${order.getCreatedBy()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <h6 class="card-header">Customer</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-sm-12">
+                                    <label>Name
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getName()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Email
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getEmail()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>CH username
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getCustomer().getChUsername()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h6 class="card-header">Products</h6>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="thead-inverse bg-primary">
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-right" style="width: 80px;">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${order.getProducts()}">
+                            <td th:text="${product.getTitle()}"></td>
+                            <td class="text-right"
+                                th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Totaal</th>
+                            <th class="text-right"
+                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
+
+

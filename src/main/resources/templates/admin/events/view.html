@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>[[${event.getTitle()}]]
+                <a class="badge badge-info" th:href="@{'/administrator/events/edit/' + ${event.getKey()} + '/'}">
+                    <i class="fa fa-edit" aria-hidden="true"></i> Edit
+                </a>
+            </h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-4">
+                        <h6 class="card-header">Information</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-12">
+                                    <label>Short description
+                                        <input type="text" class="form-control"
+                                               th:value="${event.getShortDescription()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Description
+                                        <textarea type="text" class="form-control" rows="5" style="height: 150px"
+                                                  th:text="${event.getDescription()}"
+                                                  readonly></textarea>
+                                    </label>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Image</label>
+                                    <img src="https://images.unsplash.com/photo-1425668273332-3a46ab26b161?dpr=1&auto=compress,format&fit=crop&w=3453&h=&q=80&cs=tinysrgb&crop="
+                                         class="img-thumbnail d-block" style="height: 150px;" alt="">
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="form-group col-6">
+                                            <label>Starting time
+                                                <input type="text" class="form-control"
+                                                       th:value="${event.getStart().toString()}"
+                                                       readonly>
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label>Ending time
+                                                <input type="text" class="form-control"
+                                                       th:value="${event.getEnding().toString()}"
+                                                       readonly>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Location
+                                        <input type="text" class="form-control"
+                                               th:value="${event.getLocation()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="form-group col-6">
+                                            <label>Target
+                                                <input type="text" class="form-control"
+                                                       th:value="${event.getTarget()}"
+                                                       readonly>
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label>Limit
+                                                <input type="text" class="form-control"
+                                                       th:value="${event.getMaxSold()}"
+                                                       readonly>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-4">
+                        <h6 class="card-header">Options</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-12">
+                                    <label>Status
+                                        <input type="text" class="form-control"
+                                               th:value="${event.getPublished().getDisplayName()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Organized by
+                                        <input type="text" class="form-control"
+                                               th:value="${event.getOrganizedBy().getName()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label class="mb-2">Categories</label>
+                                    <div class="form-check"
+                                         th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
+                                        <label class="form-check-label custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" disabled
+                                                   th:value="${category}"
+                                                   th:checked="${event.getCategories().contains(category)}">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h6 class="card-header">Products</h6>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead class="thead-inverse thead-small bg-primary">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Sold</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${event.products.isEmpty()}" id="noProducts">
+                                    <td colspan="2">No products added to this event.</td>
+                                </tr>
+                                <tr th:each="product : ${event.products}">
+                                    <td>
+                                        <a th:href="@{'/dashboard/products/view/' + ${product.getKey()} + '/'}">
+                                            [[${product.getTitle()}]]
+                                        </a>
+                                    </td>
+                                    <td style="width: 120px;" th:text="${product.getSold()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>

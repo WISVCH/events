@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.customer;
 
+import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.CustomerException;
 import ch.wisv.events.core.exception.CustomerNotFound;
 import ch.wisv.events.core.exception.InvalidCustomerException;
@@ -86,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
-        return this.customerRepository.findAllByCreatedAtAfter(after);
+        return customerRepository.findAllByCreatedAtAfter(after);
     }
 
     /**
@@ -103,6 +104,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Get a customer by CH username.
+     *
+     * @param username username
+     * @return Customer
+     */
+    @Override
+    public Customer getByChUsername(String username) {
+        Optional<Customer> customer = customerRepository.findByChUsername(username);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with username " + username + " not found!"));
+    }
+
+    /**
      * Get a Customer by email.
      *
      * @param email of type String
@@ -110,7 +124,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByEmail(String email) {
-        Optional<Customer> customer = this.customerRepository.findByEmail(email);
+        Optional<Customer> customer = customerRepository.findByEmail(email);
 
         return customer.orElseThrow(() -> new CustomerNotFound("Customer with email " + email + " not found!"));
     }
@@ -124,7 +138,25 @@ public class CustomerServiceImpl implements CustomerService {
     public void create(Customer customer) {
         this.assertIsValidCustomer(customer);
 
-        this.customerRepository.saveAndFlush(customer);
+        customerRepository.saveAndFlush(customer);
+    }
+
+    /**
+     * Add a new customer by ChUserInfo.
+     *
+     * @param userInfo of type CHUserInfo
+     */
+    @Override
+    public Customer createByChUserInfo(CHUserInfo userInfo) {
+        Customer customer = new Customer(
+                userInfo.getName(),
+                userInfo.getEmail(),
+                userInfo.getLdapUsername(),
+                ""
+        );
+        this.create(customer);
+
+        return customer;
     }
 
     /**
@@ -143,7 +175,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         this.assertIsValidCustomer(model);
 
-        this.customerRepository.save(model);
+        customerRepository.save(model);
     }
 
     /**
@@ -158,7 +190,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerException("Customer has already placed orders, so it can not be deleted!");
         }
 
-        this.customerRepository.delete(customer);
+        customerRepository.delete(customer);
     }
 
     /**
@@ -200,7 +232,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
-        Optional<Customer> optional = this.customerRepository.findByEmail(customer.getEmail());
+        Optional<Customer> optional = customerRepository.findByEmail(customer.getEmail());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();
@@ -218,7 +250,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueRfidToken(Customer customer) {
-        Optional<Customer> optional = this.customerRepository.findByRfidToken(customer.getRfidToken());
+        Optional<Customer> optional = customerRepository.findByRfidToken(customer.getRfidToken());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();

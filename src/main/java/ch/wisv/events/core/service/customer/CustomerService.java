@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.customer;
 
+import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.model.order.Customer;
 
 import java.time.LocalDateTime;
@@ -55,6 +56,14 @@ public interface CustomerService {
     Customer getByKey(String key);
 
     /**
+     * Get a customer by CH username.
+     *
+     * @param username username
+     * @return Customer
+     */
+    Customer getByChUsername(String username);
+
+    /**
      * Get a Customer by email.
      *
      * @param email of type String
@@ -75,6 +84,13 @@ public interface CustomerService {
      * @param customer customer model
      */
     void create(Customer customer);
+
+    /**
+     * Add a new customer by ChUserInfo.
+     *
+     * @param userInfo of type CHUserInfo
+     */
+    Customer createByChUserInfo(CHUserInfo userInfo);
 
     /**
      * Delete a customer.

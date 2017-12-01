@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Products</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Products
+                <a class="badge badge-danger" th:href="@{create/}">
+                    <i class="fa fa-plus" aria-hidden="true"></i> New
+                </a>
+            </h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="table-responsive">
+                <table class="table table-striped" id="productTable">
+                    <thead class="thead-inverse bg-primary">
+                    <tr>
+                        <th>Title</th>
+                        <th>Cost</th>
+                        <th>Sold/Available</th>
+                        <th>Progress max sold</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${products}" th:attr="data-key=${product.getKey()}">
+                        <td th:text="${product.getTitle()}"></td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td>
+                            <span class="badge badge-success" th:text="'Sold: ' + ${product.getSold()}"></span>
+                            <span class="badge badge-info" th:text="'Available: ' + ${product.getMaxSold()}"></span>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${product.sold}"
+                                     aria-valuemin="0"
+                                     th:aria-valuemax="${product.maxSold}"
+                                     th:style="'width: ' + ${product.calcProgress()} + '%;'"
+                                     th:text="${product.calcProgress()} + '%'">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a th:href="'edit/' + ${product.getKey()} + '/'" class="btn btn-sm btn-info">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a th:href="'overview/' + ${product.getKey()} + '/'" class="btn btn-sm btn-success">
+                                    <i class="fa fa-stack-overflow"></i>
+                                </a>
+                                <a th:href="'delete/' + ${product.getKey()} + '/'"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${product.getTitle()} + '?\');'"
+                                   class="btn btn-sm btn-danger">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        var table = $('#productTable');
+        table.DataTable({
+            pageLength: 100,
+            order: [
+                [0, "asc"]
+            ],
+            columnDefs: [
+                {width: "60px", targets: 1},
+                {width: "180px", targets: [2, 3]},
+                {width: "120px", targets: 4}
+            ]
+        });
+
+        var dataTablesFilter = $('.dataTables_filter');
+        dataTablesFilter.empty(); // clears the content generated
+        dataTablesFilter.append('<label>' +
+            '<input type="search" id="dataTableFilter" class="form-control" placeholder="Search..." ' +
+            'aria-controls="productTable"></label>');
+
+        $("#dataTableFilter").on('keyup', function () {
+            table.DataTable().search($(this).val()).draw();
+        });
+
+        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/tickets/products/view/}]] + $(this).parent().data('key') + "/"; +]*/
+            document.location = link;
+        });
+    });
+</script>
+</body>
