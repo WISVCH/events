@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Controller
-@RequestMapping("/administator/webhooks")
+@RequestMapping("/administrator/webhooks")
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardWebhookController {
 
@@ -183,5 +183,4 @@ public class DashboardWebhookController {
             return "redirect:/administrator/webhooks/";
         }
     }
-
 }
