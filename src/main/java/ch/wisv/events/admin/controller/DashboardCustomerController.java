@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Controller
-    @RequestMapping(value = "/administrator/customers")
+@RequestMapping(value = "/administrator/customers")
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardCustomerController {
 
@@ -144,7 +144,7 @@ public class DashboardCustomerController {
             }
             model.addAttribute("products", soldProductService.getByCustomer(customer));
 
-            return "tickets/customers/customer";
+            return "admin/customers/customer";
         } catch (CustomerNotFound e) {
             return "redirect:/administrator/customers/";
         }
