@@ -10,21 +10,13 @@ $(document).ready(function () {
     });
 
     $("#orderForm").on('submit', function () {
-        const productInput = '<input type="hidden" id="products%s.key" name="products[%s].key" value="%s">';
+        const orderProduct = '<input type="hidden" name="products[%s]" value="%s">';
 
         var count = 0;
         $.each(storage.get('tickets'), function (index, ticket) {
-            for (var i = 0; i < ticket.amount; i++) {
-                $("#products").append(
-                    vsprintf(productInput, [
-                        count,
-                        count,
-                        ticket.key
-                    ])
-                );
+            $("#products").append(vsprintf(orderProduct, [ticket.key, ticket.amount]));
 
-                count++;
-            }
+            count++;
         });
 
         storage.set('tickets', []);

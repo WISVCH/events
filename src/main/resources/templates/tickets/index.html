@@ -112,8 +112,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                <form method="POST" id="orderForm" th:action="@{/checkout/}" th:object="${order}">
-                    <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
+                <form method="POST" id="orderForm" th:action="@{/checkout/}" th:object="${orderProduct}">
                     <div id="products"></div>
 
                     <button type="submit" class="btn btn-secondary" id="checkoutShoppingBasket">
