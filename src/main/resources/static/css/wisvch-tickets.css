@@ -1,0 +1,23 @@
+.ticket-overview thead th {
+    padding: 0.25rem 0.75rem;
+}
+
+.ticket-overview tbody td {
+    padding: 0.5rem 0.75rem;
+}
+
+.ticket-overview thead th:nth-child(2),
+.ticket-overview thead th:nth-child(3) {
+    width: 10rem;
+}
+
+.ticket-overview tbody td:nth-child(2),
+.ticket-overview thead th:nth-child(2) {
+    text-align: center;
+}
+
+.ticket-overview tbody td:nth-child(3),
+.ticket-overview tfoot th:nth-child(2),
+.ticket-overview thead th:nth-child(3) {
+    text-align: right;
+}
