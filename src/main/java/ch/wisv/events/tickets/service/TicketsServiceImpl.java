@@ -114,6 +114,8 @@ public class TicketsServiceImpl implements TicketsService {
             case "CANCELLED":
                 order.setStatus(OrderStatus.CANCELLED);
                 break;
+            default:
+                throw new EventsException("Unknown what to do with status " + status);
         }
 
         return order;

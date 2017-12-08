@@ -195,6 +195,7 @@ public class TicketsController {
             order.setCustomer(ticketsService.getCurrentCustomer());
             order.setCreatedBy("events-online");
 
+            orderService.assertIsValidForCustomer(order);
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/";
