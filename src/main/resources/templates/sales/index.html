@@ -24,26 +24,36 @@
 <nav th:replace="fragments/header :: header"></nav>
 
 <div class="container-fluid">
+
     <div class="row">
         <main class="col-12 ml-auto p-5" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
+            <!--/*@thymesVar id="products" type="List<ch.wisv.events.core.model.product.Product>"*/-->
             <div class="row">
-                <form id="orderForm" class="w-100" th:if="${products.size() > 0}" th:action="@{./}" th:object="${order}"
-                      method="POST">
-                    <div class="card mb-4" th:each="product : ${products}">
-                        <h6 class="card-header" th:text="${product.title}"></h6>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <div class="input-group-addon decrease">
-                                    <i class="fa fa-minus fa-fw"></i>
-                                </div>
-                                <input type="number" class="form-control" step="1"
-                                       style="text-align: center"
-                                       min="0" th:max="${product.getMaxSoldPerCustomer()}"
-                                       th:attr="data-product-id=${product.getId()}">
-                                <div class="input-group-addon increase">
-                                    <i class="fa fa-plus fa-fw"></i>
+
+                <!--/*@thymesVar id="orderProductDTO" type="ch.wisv.events.core.model.order.OrderProductDTO"*/-->
+                <form id="orderForm" class="w-100" th:if="${products.size() > 0}" th:action="@{./}"
+                      th:object="${orderProductDTO}" method="POST">
+
+                    <input type="hidden" th:field="*{key}" th:value="*{key}">
+
+                    <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+                    <div class="col" th:each="product : ${products}">
+                        <div class="card mb-4">
+                            <h6 class="card-header" th:text="${product.getTitle()}"></h6>
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <div class="input-group-addon decrease">
+                                        <i class="fa fa-minus fa-fw"></i>
+                                    </div>
+                                    <input type="number" class="form-control" step="1"
+                                           style="text-align: center"
+                                           min="0" th:max="${product.getMaxSoldPerCustomer()}"
+                                           th:attr="data-product-key=${product.getKey()}">
+                                    <div class="input-group-addon increase">
+                                        <i class="fa fa-plus fa-fw"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -69,5 +79,6 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
 <script th:src="@{/js/sales/script.min.js}"></script>
 </body>

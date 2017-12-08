@@ -28,42 +28,37 @@
         <main class="col-12 ml-auto p-5" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
-            <div class="row">
-                <div class="col-12 text-center mt-5">
-                    <h3 class="border-bottom-0">Scan RFID- or NFC card</h3>
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
+            <form th:action="@{./}" th:object="${customer}" method="POST" id="formScan">
+                <div class="row">
+                    <div class="col-12 text-center mt-5">
+                        <h3 class="border-bottom-0">Scan RFID- or NFC card</h3>
 
-                    <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
-                    <form th:action="@{./}" th:object="${order}" method="POST" id="formScan">
-                        <input type="hidden" th:field="*{publicReference}" th:value="*{publicReference}">
-                        <input type="hidden" th:field="*{customer.rfidToken}" id="rfidToken">
-
+                        <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
                         <input type="submit" style="display: none;">
-                    </form>
 
 
-                    <h1 class="border-bottom-0" style="font-weight: 100;">or</h1>
+                        <h1 class="border-bottom-0" style="font-weight: 100;">or</h1>
+                        <h3 class="border-bottom-0">Fill in an email address</h3>
+                    </div>
 
-                    <h3 class="border-bottom-0">Fill in an email address</h3>
-                </div>
-
-                <div class="col-12 text-center">
-                    <form th:action="@{./}" th:object="${order}" method="POST">
+                    <div class="col-12 text-center">
                         <div class="form-group">
-                            <input type="email" class="form-control input-lg" th:field="*{customer.email}"
+                            <input type="email" class="form-control input-lg" th:field="*{email}"
                                    placeholder="Email address">
                         </div>
 
                         <button type="submit" class="btn btn-lg btn-block btn-danger">Submit</button>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
 
-            <div class="fixed-bottom m-3">
-                <a th:href="@{'/sales/order/' + ${order.getPublicReference()} + '/customer/create/'}"
-                   class="btn btn-lg btn-link btn-block">
-                    Create new user (without rfid!)
-                </a>
-            </div>
+            <!--<div class="fixed-bottom m-3">-->
+            <!--<a th:href="@{'/sales/order/' + ${order.getPublicReference()} + '/customer/create/'}"-->
+            <!--class="btn btn-lg btn-link btn-block">-->
+            <!--Create new user (without rfid!)-->
+            <!--</a>-->
+            <!--</div>-->
         </main>
     </div>
 </div>

@@ -53,7 +53,8 @@
                                th:text="${order.getCustomer().getName()}"></a>
                         </td>
                         <td>
-                            <span th:each="product : ${order.getProducts()}" th:text="${product.title} + ', '"></span>
+                            <span th:each="orderProduct : ${order.getOrderProducts()}"
+                                  th:text="${orderProduct.getProduct().getTitle()} + ' (' + ${orderProduct.getAmount()} + 'x), '"></span>
                         </td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
                         <td th:text="${order.getStatus().toString()}"></td>

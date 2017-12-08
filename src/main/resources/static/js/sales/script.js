@@ -18,15 +18,15 @@ $(document).ready(function () {
     });
 
     $("#orderForm").on('submit', function () {
-        const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
-        var count = 0;
+        const orderProduct = '<input type="hidden" name="products[{0}]" value="{1}">';
 
         $("input[type=number]").each(function () {
-            for (var i = 0; i < parseInt($(this).val()); i++) {
-                var productId = $(this).data('product-id');
-
-                $("#products").append(format(productInput, [count, count, productId]));
-                count++;
+            if ($(this).val() > 0) {
+                $("#products").append(format(orderProduct, [
+                        $(this).data('product-key'),
+                        $(this).val()
+                    ]
+                ));
             }
         });
     });

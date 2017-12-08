@@ -2,32 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-<div th:fragment="messages">
-    <div class="row">
-        <div class="col">
-            <div th:if="${error}" class="alert alert-danger w-100" role="alert">
-                <span class="fa fa-exclamation" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>
-                <strong>ERROR:</strong> <span th:text="${error}"></span>
-            </div>
-            <div th:if="${warning}" class="alert alert-warning w-100" role="alert">
-                <span class="fa fa-exclamation" aria-hidden="true"></span>
-                <span class="sr-only">Warning:</span>
-                <strong>WARNING:</strong> <span th:text="${warning}"></span>
-            </div>
-            <div th:if="${message}" class="alert alert-info w-100" role="alert">
-                <span class="fa fa-info" aria-hidden="true"></span>
-                <span class="sr-only">Message:</span>
-                <strong>INFO:</strong> <span th:text="${message}"></span>
-            </div>
-            <div th:if="${success}" class="alert alert-success w-100" role="alert">
-                <span class="fa fa-check" aria-hidden="true"></span>
-                <span class="sr-only">Success:</span>
-                <strong>SUCCESS:</strong> <span th:text="${success}"></span>
-            </div>
+<div class="row" th:fragment="messages">
+    <div class="col">
+        <div th:if="${error}" class="alert alert-danger w-100" role="alert">
+            <span class="fa fa-exclamation" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <strong>ERROR:</strong> <span th:text="${error}"></span>
+        </div>
+        <div th:if="${warning}" class="alert alert-warning w-100" role="alert">
+            <span class="fa fa-exclamation" aria-hidden="true"></span>
+            <span class="sr-only">Warning:</span>
+            <strong>WARNING:</strong> <span th:text="${warning}"></span>
+        </div>
+        <div th:if="${message}" class="alert alert-info w-100" role="alert">
+            <span class="fa fa-info" aria-hidden="true"></span>
+            <span class="sr-only">Message:</span>
+            <strong>INFO:</strong> <span th:text="${message}"></span>
+        </div>
+        <div th:if="${success}" class="alert alert-success w-100" role="alert">
+            <span class="fa fa-check" aria-hidden="true"></span>
+            <span class="sr-only">Success:</span>
+            <strong>SUCCESS:</strong> <span th:text="${success}"></span>
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>
