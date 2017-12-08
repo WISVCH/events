@@ -1,6 +1,9 @@
 package ch.wisv.events.core.model.order;
 
-import lombok.Getter;
+import lombok.Data;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -18,22 +21,23 @@ import lombok.Getter;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public enum OrderStatus {
+@Data
+public class OrderProductDTO {
 
-    OPEN(false),
-    PAID_CASH(true),
-    PAID_PIN(true),
-    PAID_IDEAL(true),
-    REJECTED(false),
-    CANCELLED(false),
-    REFUNDED(false),
-    CLOSED(false),
-    WAITING(false);
+    /**
+     * Key of this OrderProductDTO.
+     */
+    String key;
 
-    @Getter
-    private final boolean paid;
+    /**
+     * Field product should contain Product keys and number of tickets of that product.
+     */
+    HashMap<String, Long> products;
 
-    OrderStatus(boolean paid) {
-        this.paid = paid;
+    /**
+     * Constructor.
+     */
+    public OrderProductDTO() {
+        this.key = UUID.randomUUID().toString();
     }
 }

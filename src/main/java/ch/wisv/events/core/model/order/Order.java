@@ -1,6 +1,5 @@
 package ch.wisv.events.core.model.order;
 
-import ch.wisv.events.core.model.product.Product;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -59,12 +58,13 @@ public class Order {
     /**
      * Field products list of Products in the Order.
      */
-    @ManyToMany(targetEntity = Product.class)
-    private List<Product> products;
+    @ManyToMany(targetEntity = OrderProduct.class)
+    private List<OrderProduct> orderProducts;
 
     /**
      * Field publicReference UUID for public reference.
      */
+    @Column(unique = true)
     private String publicReference;
 
     /**
@@ -95,17 +95,17 @@ public class Order {
      */
     public Order() {
         this.status = OrderStatus.OPEN;
-        this.products = new ArrayList<>();
         this.creationDate = LocalDateTime.now();
         this.publicReference = UUID.randomUUID().toString();
+        this.orderProducts = new ArrayList<>();
     }
 
     /**
-     * Add product to Order and create cost to product.
+     * Add OrderProduct to the Order.
      *
-     * @param product Product
+     * @param orderProduct of type OrderProduct.
      */
-    public void addProduct(Product product) {
-        this.products.add(product);
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
     }
 }

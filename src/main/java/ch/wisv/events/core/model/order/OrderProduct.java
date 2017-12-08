@@ -3,13 +3,14 @@ package ch.wisv.events.core.model.order;
 import ch.wisv.events.core.model.product.Product;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.util.UUID;
+import javax.validation.constraints.NotNull;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -27,12 +28,13 @@ import java.util.UUID;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@NoArgsConstructor
 @Entity
 @Data
-public class SoldProduct {
+public class OrderProduct {
 
     /**
-     * ID of the sold product
+     * Field id.
      */
     @Id
     @GeneratedValue
@@ -40,54 +42,33 @@ public class SoldProduct {
     private Integer id;
 
     /**
-     * Key of the sold product
-     */
-    private String key;
-
-    @ManyToOne
-    private Order order;
-
-    /**
-     * Product that is sold
+     * Field product.
      */
     @ManyToOne
     private Product product;
 
     /**
-     * Customer who bought the product
+     * Field price.
      */
-    @ManyToOne
-    private Customer customer;
+    @NotNull
+    private Double price;
 
     /**
-     * Field uniqueCode
+     * Field amount.
      */
-    private String uniqueCode;
+    @NotNull
+    private Long amount;
 
     /**
-     * Status of the sold product
-     */
-    private SoldProductStatus status;
-
-    /**
-     * Default constructor
-     */
-    public SoldProduct() {
-        this.key = UUID.randomUUID().toString();
-        this.status = SoldProductStatus.OPEN;
-    }
-
-    /**
-     * Constructor SoldProduct creates a new SoldProduct instance.
+     * Construct of a OrderProduct.
      *
-     * @param product  of type Product
-     * @param order    of type Order
-     * @param customer of type Customer
+     * @param product of type Product
+     * @param price   of type Double
+     * @param amount  of type Long
      */
-    public SoldProduct(Product product, Order order, Customer customer) {
-        this();
-        this.order = order;
+    public OrderProduct(Product product, Double price, Long amount) {
         this.product = product;
-        this.customer = customer;
+        this.price = price;
+        this.amount = amount;
     }
 }

@@ -3,13 +3,13 @@ package ch.wisv.events.core.service;
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderServiceImpl;
+import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
-import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +47,12 @@ public class OrderServiceImplTest extends ServiceTest {
     private OrderRepository repository;
 
     /**
+     * Mock OrderProductRepository
+     */
+    @Mock
+    private OrderProductRepository orderProductRepository;
+
+    /**
      * Mock SoldProductService
      */
     @Mock
@@ -57,6 +63,12 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Mock
     private MailService mailService;
+
+    /**
+     * Field mailService
+     */
+    @Mock
+    private ProductService productService;
 
     /**
      * Field service
@@ -75,7 +87,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        this.service = new OrderServiceImpl(repository, mailService, soldProductService);
+        this.service = new OrderServiceImpl(repository, orderProductRepository, mailService, soldProductService, productService);
 
         this.order = new Order();
         this.order.setCustomer(mock(Customer.class));
@@ -139,37 +151,5 @@ public class OrderServiceImplTest extends ServiceTest {
         when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
 
         service.getByReference(this.order.getPublicReference());
-    }
-
-    /**
-     * Method testGetOrdersByProduct ...
-     *
-     * @throws Exception when
-     */
-    @Test
-    public void testGetOrdersByProduct() throws Exception {
-        Product product = new Product();
-        product.setCost(0.d);
-        this.order.addProduct(product);
-
-        when(repository.findAll()).thenReturn(ImmutableList.of(this.order, new Order()));
-
-        assertEquals(ImmutableList.of(this.order), service.getOrdersByProduct(product));
-    }
-
-    /**
-     * Method testGetOrdersByProduct ...
-     *
-     * @throws Exception when
-     */
-    @Test
-    public void testGetOrdersByProductEmpty() throws Exception {
-        Product product = new Product();
-        product.setCost(0.d);
-        this.order.addProduct(product);
-
-        when(repository.findAll()).thenReturn(ImmutableList.of(new Order()));
-
-        assertEquals(ImmutableList.of(), service.getOrdersByProduct(product));
     }
 }

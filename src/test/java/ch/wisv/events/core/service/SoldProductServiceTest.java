@@ -3,6 +3,7 @@ package ch.wisv.events.core.service;
 import ch.wisv.events.core.exception.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
@@ -205,8 +206,8 @@ public class SoldProductServiceTest extends ServiceTest {
 
         when(repository.findByProductAndUniqueCode(any(Product.class), anyString())).thenReturn(Optional.empty());
 
-        order.addProduct(product1);
-        order.addProduct(product2);
+        order.addOrderProduct(new OrderProduct(product1, 0.d, 1L));
+        order.addOrderProduct(new OrderProduct(product2, 0.d, 1L));
 
         soldProductService.create(order);
 

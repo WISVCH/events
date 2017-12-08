@@ -1,8 +1,8 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
-import ch.wisv.events.core.model.product.Product;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ import java.util.List;
  */
 public interface OrderService {
 
-
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
@@ -39,14 +38,6 @@ public interface OrderService {
      * @return Order
      */
     Order getByReference(String reference);
-
-    /**
-     * Method getOrdersByProduct returns list of orders with a certain product in it.
-     *
-     * @param product of type Product
-     * @return List<Order>
-     */
-    List<Order> getOrdersByProduct(Product product);
 
     /**
      * Method create creates and order.
@@ -69,4 +60,26 @@ public interface OrderService {
      * @param status of type OrderStatus
      */
     void updateOrderStatus(Order order, OrderStatus status);
+
+    /**
+     * Assert if the Order is valid.
+     *
+     * @param order of type Order
+     */
+    void assertIsValid(Order order);
+
+    /**
+     * Assert if the Order is valid for a Customer.
+     *
+     * @param order of type order.
+     */
+    void assertIsValidForCustomer(Order order);
+
+    /**
+     * Create an Order form a OrderProductDTO.
+     *
+     * @param orderProductDTO of type OrderProductDTO
+     * @return Order
+     */
+    Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO);
 }

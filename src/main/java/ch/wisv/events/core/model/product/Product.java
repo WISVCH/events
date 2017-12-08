@@ -32,6 +32,7 @@ public class Product {
     /**
      * Key of the product, getter only so it can not be changed.
      */
+    @Column(unique = true)
     public String key;
 
     /**
