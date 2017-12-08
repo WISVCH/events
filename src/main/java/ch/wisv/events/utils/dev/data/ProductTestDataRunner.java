@@ -55,7 +55,6 @@ public class ProductTestDataRunner extends TestDataRunner {
     @Override
     protected void loop(JSONObject jsonObject) {
         Product product = this.createProduct(jsonObject);
-        product.setMaxSoldPerCustomer(25);
 
         this.productRepository.save(product);
     }
@@ -78,6 +77,7 @@ public class ProductTestDataRunner extends TestDataRunner {
                 LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES)
         );
         product.setKey((String) jsonObject.get("key"));
+        product.setMaxSoldPerCustomer(((Long) jsonObject.get("maxSoldPerCustomer")).intValue());
 
         return product;
     }
