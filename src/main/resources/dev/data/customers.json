@@ -1,3 +1,14 @@
 [
-
+  {
+    "name": "Sven Popping",
+    "email": "svenp@ch.tudelft.nl",
+    "chUserman": "svenp",
+    "rfidToken": "3061a041"
+  },
+  {
+    "name": "Test",
+    "email": "test@ch.tudelft.nl",
+    "chUserman": "test",
+    "rfidToken": "123"
+  }
 ]
