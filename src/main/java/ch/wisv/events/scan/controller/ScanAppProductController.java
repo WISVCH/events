@@ -197,7 +197,7 @@ public class ScanAppProductController {
      */
     private String handleRfidTokenRequest(RedirectAttributes redirect, Product product, String rfidToken) {
         try {
-            Customer customer = customerService.getByRFIDToken(rfidToken);
+            Customer customer = customerService.getByRfidToken(rfidToken);
             ScanResult result = scanAppSoldProductService.scanByProductAndCustomer(product, customer);
 
             if (result == ScanResult.MULTIPLE_PRODUCT) {

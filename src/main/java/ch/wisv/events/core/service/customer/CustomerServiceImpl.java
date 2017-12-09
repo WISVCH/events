@@ -57,19 +57,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Get a customer by rfidToken.
-     *
-     * @param token of type String
-     * @return Customer
-     */
-    @Override
-    public Customer getByRFIDToken(String token) {
-        Optional<Customer> customer = customerRepository.findByRfidToken(token);
-
-        return customer.orElseThrow(() -> new CustomerNotFound("Customer with RFID token " + token + " not found!"));
-    }
-
-    /**
      * Get all customers.
      *
      * @return list of all customers
@@ -127,6 +114,19 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customer = customerRepository.findByEmail(email);
 
         return customer.orElseThrow(() -> new CustomerNotFound("Customer with email " + email + " not found!"));
+    }
+
+    /**
+     * Get a customer by rfidToken.
+     *
+     * @param token of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getByRfidToken(String token) {
+        Optional<Customer> customer = customerRepository.findByRfidToken(token);
+
+        return customer.orElseThrow(() -> new CustomerNotFound("Customer with RFID token " + token + " not found!"));
     }
 
     /**
@@ -214,6 +214,10 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (customer.getRfidToken() == null) {
             throw new InvalidCustomerException("RFID token can not be null.");
+        }
+
+        if (customer.getCreatedAt() == null) {
+            throw new InvalidCustomerException("Customer should contain a created at timestamp.");
         }
 
         if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {

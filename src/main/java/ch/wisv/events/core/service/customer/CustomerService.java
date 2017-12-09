@@ -40,14 +40,6 @@ public interface CustomerService {
     List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
 
     /**
-     * Get a customer by rfidToken.
-     *
-     * @param token of type String
-     * @return Customer
-     */
-    Customer getByRFIDToken(String token);
-
-    /**
      * Get a customer by key.
      *
      * @param key key
@@ -70,6 +62,14 @@ public interface CustomerService {
      * @return Customer
      */
     Customer getByEmail(String email);
+
+    /**
+     * Get a customer by rfidToken.
+     *
+     * @param token of type String
+     * @return Customer
+     */
+    Customer getByRfidToken(String token);
 
     /**
      * Update a existing customer.

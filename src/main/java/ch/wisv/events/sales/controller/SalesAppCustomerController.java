@@ -90,7 +90,7 @@ public class SalesAppCustomerController {
             if (customer.getEmail() != null && !customer.getEmail().equals("")) {
                 customer = customerService.getByEmail(customer.getEmail());
             } else {
-                customer = customerService.getByRFIDToken(customer.getRfidToken());
+                customer = customerService.getByRfidToken(customer.getRfidToken());
             }
 
             order.setCustomer(customer);
