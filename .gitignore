@@ -70,6 +70,7 @@ hs_err_pid*
 
 ### Custom ###
 application.properties
+!application-test.yml
 rebel.xml
 .gradle*
 .idea
