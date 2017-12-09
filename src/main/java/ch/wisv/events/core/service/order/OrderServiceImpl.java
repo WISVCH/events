@@ -140,8 +140,11 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * Method updateOrderStatus
-     *  @param order  of type Order
+     *
+     * @param order  of type Order
      * @param status of type OrderStatus
+     *
+     * //TODO: update the creation of SoldProducts and sold count.
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) {
@@ -163,7 +166,6 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(status);
         this.update(order);
-
     }
 
     /**
@@ -200,15 +202,15 @@ public class OrderServiceImpl implements OrderService {
             throw new EventsInvalidModelException("Order amount can not be negative");
         }
 
-        if (order.getOrderProducts().isEmpty()) {
-            throw new EventsInvalidModelException("OrderProducts list can not be null");
+        if (order.getOrderProducts() == null || order.getOrderProducts().isEmpty()) {
+            throw new EventsInvalidModelException("OrderProducts list can not be null or empty");
         }
 
         if (order.getCreationDate() == null) {
             throw new EventsInvalidModelException("Order creation date can not be null");
         }
 
-        if (order.getCreatedBy() == null) {
+        if (order.getCreatedBy() == null || order.getCreatedBy().equals("")) {
             throw new EventsInvalidModelException("Order created by can not be null");
         }
     }

@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.order;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@AllArgsConstructor
 @Entity
 @Table(name = "\"order\"")
 @Data
