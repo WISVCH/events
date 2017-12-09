@@ -1,0 +1,32 @@
+############## Test properties #############################################################
+
+spring:
+    datasource:
+        driverClassName: org.hsqldb.jdbc.JDBCDriver
+        url: jdbc:hsqldb:mem:events
+        username: sa
+        password:
+
+    data.jpa.repositories.enabled: true
+
+    jpa:
+        show-sql: false
+        database-platform: org.hibernate.dialect.HSQLDialect
+        generate-ddl: true
+        hibernate.ddl-auto: create-drop
+
+        properties.hibernate.default_schema: public
+
+server:
+    context-path: /events
+
+wisvch.connect:
+    issuerUri: https://connect.ch.tudelft.nl/
+    clientUri: http://localhost:8080/events
+
+    admin-groups: dienst2
+
+# CH Payments Configuration
+wisvch.payments:
+    issuerUri: http://localhost:9000/payments
+    clientUri: http://localhost:8080/events

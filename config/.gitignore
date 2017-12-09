@@ -3,3 +3,4 @@
 # Except this file
 !.gitignore
 !application.yml.example
+!application-test.yml
