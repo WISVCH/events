@@ -192,7 +192,7 @@ public class TicketsController {
     public String checkout(RedirectAttributes redirect, @ModelAttribute OrderProductDTO orderProductDTO) {
         try {
             if (orderProductDTO.getProducts().isEmpty()) {
-                redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
+                redirect.addFlashAttribute("error", "Shopping basket can not be empty!");
 
                 return REDIRECT_HOME;
             }

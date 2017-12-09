@@ -1,8 +1,10 @@
-package ch.wisv.events.core.model.order;
+package ch.wisv.events;
 
-import lombok.Data;
-
-import java.util.HashMap;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,18 +22,10 @@ import java.util.HashMap;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Data
-public class OrderProductDTO {
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ActiveProfiles("test")
+public class ControllerTest {
 
-    /**
-     * Field product should contain Product keys and number of tickets of that product.
-     */
-    HashMap<String, Long> products;
-
-    /**
-     * Constructor.
-     */
-    public OrderProductDTO() {
-        this.products = new HashMap<String, Long>();
-    }
+    protected MockMvc mockMvc;
 }
