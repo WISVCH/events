@@ -1,7 +1,6 @@
 package ch.wisv.events.sales.controller;
 
 import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,8 +54,7 @@ public class SalesAppOrderController {
     @GetMapping("/")
     public String overview(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
-            Order order = this.orderService.getByReference(publicReference);
-            model.addAttribute("order", order);
+            model.addAttribute("order", orderService.getByReference(publicReference));
 
             return "sales/order/index";
         } catch (EventsModelNotFound e) {
@@ -74,11 +72,9 @@ public class SalesAppOrderController {
      * @return String
      */
     @GetMapping("/{ending}/")
-    public String complete(RedirectAttributes redirect, @PathVariable String publicReference,
-            @PathVariable String ending
-    ) {
+    public String complete(RedirectAttributes redirect, @PathVariable String publicReference, @PathVariable String ending) {
         try {
-            this.orderService.getByReference(publicReference);
+            orderService.getByReference(publicReference);
 
             return "sales/order/" + ending;
         } catch (EventsModelNotFound e) {

@@ -8,7 +8,6 @@ import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.sales.service.SalesAppOrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,26 +46,18 @@ public class SalesAppCustomerController {
     private final CustomerService customerService;
 
     /**
-     * Field salesAppOrderService
-     */
-    private final SalesAppOrderService salesAppOrderService;
-
-    /**
      * Constructor SalesController creates a new SalesController instance.
      *
-     * @param orderService         of type OrderService
-     * @param customerService      of type CustomerService
-     * @param salesAppOrderService of type SalesAppOrderService
+     * @param orderService    of type OrderService
+     * @param customerService of type CustomerService
      */
-    public SalesAppCustomerController(OrderService orderService, CustomerService customerService, SalesAppOrderService salesAppOrderService) {
+    public SalesAppCustomerController(OrderService orderService, CustomerService customerService) {
         this.orderService = orderService;
         this.customerService = customerService;
-        this.salesAppOrderService = salesAppOrderService;
     }
 
-
     /**
-     * Method customer ...
+     * GetMapping "/sales/order/{publicReference}/customer/rfid/" show the view to scan a rfid card.
      *
      * @param model of type Model
      * @return String
@@ -74,8 +65,8 @@ public class SalesAppCustomerController {
     @GetMapping("/rfid/")
     public String customer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
-            Order order = this.orderService.getByReference(publicReference);
-            model.addAttribute("order", order);
+            orderService.getByReference(publicReference);
+            model.addAttribute("customer", new Customer());
 
             return "sales/customer/rfid";
         } catch (EventsModelNotFound e) {
@@ -86,75 +77,82 @@ public class SalesAppCustomerController {
     }
 
     /**
-     * Method customer ...
+     * PostMapping "/sales/order/{publicReference}/customer/rfid/".
      *
-     * @param order of type Model
+     * @param customer        of type Customer
+     * @param publicReference of type String
      * @return String
      */
     @PostMapping("/rfid/")
-    public String addCustomerToOrder(RedirectAttributes redirect, Order order) {
+    public String addCustomerToOrder(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String publicReference) {
         try {
-            Customer customer;
-            if (order.getCustomer().getRfidToken() != null) {
-                customer = this.customerService.getByRFIDToken(order.getCustomer().getRfidToken());
-            } else if (order.getCustomer().getEmail() != null) {
-                customer = this.customerService.getByEmail(order.getCustomer().getEmail());
+            Order order = orderService.getByReference(publicReference);
+            if (customer.getEmail() != null && !customer.getEmail().equals("")) {
+                customer = customerService.getByEmail(customer.getEmail());
             } else {
-                throw new EventsInvalidException("Invalid request!");
+                customer = customerService.getByRFIDToken(customer.getRfidToken());
             }
 
-            this.salesAppOrderService.addCustomerToOrder(order, customer);
+            order.setCustomer(customer);
+            orderService.assertIsValidForCustomer(order);
+            orderService.update(order);
 
-        } catch (EventsModelNotFound e) {
+            return "redirect:/sales/order/" + order.getPublicReference() + "/";
+        } catch (EventsModelNotFound | EventsInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";
         } catch (CustomerNotFound e) {
-            return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
-        }
+            redirect.addFlashAttribute("customer", customer);
 
-        return "redirect:/sales/order/" + order.getPublicReference() + "/";
+            return "redirect:/sales/order/" + publicReference + "/customer/create/";
+        }
     }
 
     /**
-     * Method index shows the index and check if the user has granted products.
+     * GetMapping "/sales/order/{publicReference}/customer/create/" shows view of customer create.
      *
      * @return String
      */
     @GetMapping("/create/")
     public String create(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
-            if (!model.containsAttribute("order")) {
-                model.addAttribute("order", this.orderService.getByReference(publicReference));
+            orderService.getByReference(publicReference);
+            if (!model.containsAttribute("customer")) {
+                model.addAttribute("customer", new Customer());
             }
 
             return "sales/customer/create";
         } catch (EventsModelNotFound e) {
-            redirect.addFlashAttribute("error", "No order set!");
+            redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";
         }
     }
 
     /**
-     * Method createOrder ...
+     * PostMapping "/sales/order/{publicReference}/customer/create/" creates a new customer.
      *
-     * @param order of type Order
+     * @param customer        of type Customer
+     * @param publicReference of type String
      * @return String
      */
     @PostMapping("/create/")
-    public String create(RedirectAttributes redirect, @ModelAttribute Order order) {
+    public String create(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String publicReference) {
         try {
-            this.customerService.create(order.getCustomer());
-            this.salesAppOrderService.addCustomerToOrder(order, order.getCustomer());
+            Order order = orderService.getByReference(publicReference);
+            customerService.create(customer);
+            order.setCustomer(customer);
+            orderService.update(order);
+
             redirect.addFlashAttribute("success", "Customer successfully created!");
 
             return "redirect:/sales/order/" + order.getPublicReference() + "/";
         } catch (InvalidCustomerException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("order", order);
+            redirect.addFlashAttribute("customer", customer);
 
-            return "redirect:/sales/order/" + order.getPublicReference() + "/customer/create/";
+            return "redirect:/sales/order/" + publicReference + "/customer/create/";
         }
     }
 }

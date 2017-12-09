@@ -85,7 +85,7 @@ public class ScanAppProductController {
     @GetMapping("/{productKey}/")
     public String rfid(Model model, RedirectAttributes redirect, @PathVariable String productKey) {
         try {
-            Product product = this.productService.getByKey(productKey);
+            Product product = productService.getByKey(productKey);
             model.addAttribute("product", product);
 
             return "scan/product/rfid";
@@ -111,7 +111,7 @@ public class ScanAppProductController {
             @RequestParam(value = "rfidToken") String rfidToken,
             @RequestParam(value = "uniqueCode") String uniqueCode
     ) {
-        Product product = this.productService.getByKey(productKey);
+        Product product = productService.getByKey(productKey);
 
         if (uniqueCode.equals("")) {
             return this.handleRfidTokenRequest(redirect, product, rfidToken);
@@ -167,12 +167,12 @@ public class ScanAppProductController {
             @RequestParam(value = "soldProducts") List<SoldProduct> soldProducts
     ) {
         try {
-            Product product = this.productService.getByKey(productKey);
-            Customer customer = this.customerService.getByKey(customerKey);
+            Product product = productService.getByKey(productKey);
+            Customer customer = customerService.getByKey(customerKey);
 
             ScanResult result = null;
             for (SoldProduct soldProduct : soldProducts) {
-                ScanResult temp = this.scanAppSoldProductService.scanSoldProduct(soldProduct);
+                ScanResult temp = scanAppSoldProductService.scanSoldProduct(soldProduct);
 
                 if (result != ScanResult.ALREADY_SCANNED) {
                     result = temp;
@@ -197,8 +197,8 @@ public class ScanAppProductController {
      */
     private String handleRfidTokenRequest(RedirectAttributes redirect, Product product, String rfidToken) {
         try {
-            Customer customer = this.customerService.getByRFIDToken(rfidToken);
-            ScanResult result = this.scanAppSoldProductService.scanByProductAndCustomer(product, customer);
+            Customer customer = customerService.getByRFIDToken(rfidToken);
+            ScanResult result = scanAppSoldProductService.scanByProductAndCustomer(product, customer);
 
             if (result == ScanResult.MULTIPLE_PRODUCT) {
                 return "redirect:/scan/product/" + product.getKey() + "/select/" + customer.getKey() + "/";
@@ -222,7 +222,7 @@ public class ScanAppProductController {
      * @return String
      */
     private String handleUniqueCodeRequest(RedirectAttributes redirect, Product product, String uniqueCode) {
-        ScanResult result = this.scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
+        ScanResult result = scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
 
         return this.createRedirect(redirect, product, result, null);
     }
@@ -233,7 +233,7 @@ public class ScanAppProductController {
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
      * @param result   of type ScanResult
-     * @param customer
+     * @param customer of type Customer
      * @return String
      */
     private String createRedirect(RedirectAttributes redirect, Product product, ScanResult result, Customer customer) {

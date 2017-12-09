@@ -119,17 +119,14 @@ public class SoldProductServiceImpl implements SoldProductService {
     public List<SoldProduct> create(Order order) {
         List<SoldProduct> soldProducts = new ArrayList<>();
 
-        order.getProducts().forEach(product -> {
-            SoldProduct soldProduct = new SoldProduct(
-                    product,
-                    order,
-                    order.getCustomer()
-            );
-            soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
+        order.getOrderProducts().forEach(orderProduct -> {
+            for (int i = 0; i < orderProduct.getAmount(); i++) {
+                SoldProduct soldProduct = new SoldProduct(orderProduct.getProduct(), order, order.getCustomer());
+                soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
 
-            soldProducts.add(soldProduct);
-
-            this.soldProductRepository.saveAndFlush(soldProduct);
+                soldProductRepository.saveAndFlush(soldProduct);
+                soldProducts.add(soldProduct);
+            }
         });
 
         return soldProducts;

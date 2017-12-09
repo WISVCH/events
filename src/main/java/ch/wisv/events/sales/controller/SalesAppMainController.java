@@ -1,11 +1,12 @@
 package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.core.exception.EventsSalesAppException;
+import ch.wisv.events.core.exception.EventsInvalidException;
+import ch.wisv.events.core.exception.EventsInvalidModelException;
+import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.sales.service.SalesAppOrderService;
+import ch.wisv.events.core.model.order.OrderProductDTO;
+import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.sales.service.SalesAppProductService;
-import ch.wisv.events.sales.service.SalesAppSoldProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -45,29 +43,19 @@ public class SalesAppMainController {
     private final SalesAppProductService salesAppEventService;
 
     /**
-     * Field salesAppSoldProductService
+     * Field orderService
      */
-    private final SalesAppSoldProductService salesAppSoldProductService;
-
-    /**
-     * Field salesAppOrderService
-     */
-    private final SalesAppOrderService salesAppOrderService;
+    private final OrderService orderService;
 
     /**
      * Constructor SalesController creates a new SalesController instance.
      *
-     * @param salesAppEventService       of type SalesAppProductService.
-     * @param salesAppSoldProductService of type SalesAppSoldProductService.
-     * @param salesAppOrderService       of type OrderService.
+     * @param salesAppEventService of type SalesAppProductService
+     * @param orderService         of type OrderService
      */
-    public SalesAppMainController(SalesAppProductService salesAppEventService,
-            SalesAppSoldProductService salesAppSoldProductService,
-            SalesAppOrderService salesAppOrderService
-    ) {
+    public SalesAppMainController(SalesAppProductService salesAppEventService, OrderService orderService) {
         this.salesAppEventService = salesAppEventService;
-        this.salesAppSoldProductService = salesAppSoldProductService;
-        this.salesAppOrderService = salesAppOrderService;
+        this.orderService = orderService;
     }
 
     /**
@@ -77,8 +65,8 @@ public class SalesAppMainController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("products", this.salesAppEventService.getAllGrantedProducts());
-        model.addAttribute("order", new Order());
+        model.addAttribute("products", salesAppEventService.getAllGrantedProducts());
+        model.addAttribute("orderProductDTO", new OrderProductDTO());
 
         return "sales/index";
     }
@@ -86,26 +74,25 @@ public class SalesAppMainController {
     /**
      * Method createOrder ...
      *
-     * @param redirect of type RedirectAttributes
-     * @param order    of type Order
+     * @param redirect        of type RedirectAttributes
+     * @param orderProductDTO of type OrderProductDTO
      * @return String
      */
     @PostMapping("/")
-    public String createOrder(RedirectAttributes redirect, @ModelAttribute Order order) {
+    public String createOrder(RedirectAttributes redirect, @ModelAttribute OrderProductDTO orderProductDTO) {
+        if (orderProductDTO.getProducts().isEmpty()) {
+            redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
+
+            return "redirect:/sales/";
+        }
+
         try {
-            if (order.getProducts().isEmpty()) {
-                redirect.addFlashAttribute("error", "Order should contain products");
-
-                return "redirect:/sales/";
-            }
-
-            Map<Product, Long> productCount = order.getProducts().stream()
-                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-            productCount.forEach(this.salesAppSoldProductService::assertAmountOfProductLeft);
-            this.salesAppOrderService.create(order);
+            Order order = orderService.createOrderByOrderProductDTO(orderProductDTO);
+            order.setCreatedBy("test");
+            orderService.create(order);
 
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/rfid/";
-        } catch (EventsSalesAppException e) {
+        } catch (EventsModelNotFound | EventsInvalidException | EventsInvalidModelException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";

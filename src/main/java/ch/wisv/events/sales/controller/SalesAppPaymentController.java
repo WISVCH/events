@@ -1,5 +1,6 @@
 package ch.wisv.events.sales.controller;
 
+import ch.wisv.events.core.exception.EventsInvalidException;
 import ch.wisv.events.core.exception.EventsModelNotFound;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -49,7 +50,7 @@ public class SalesAppPaymentController {
     }
 
     /**
-     * Method overview ...
+     * /sales/payment/order/{publicReference}
      *
      * @param redirect of type RedirectAttributes
      * @return String
@@ -60,21 +61,20 @@ public class SalesAppPaymentController {
             @RequestParam(value = "payment") String payment
     ) {
         try {
-            Order order = this.orderService.getByReference(publicReference);
+            Order order = orderService.getByReference(publicReference);
             OrderStatus status = PaymentOption.getStatusByValue(payment);
 
-            this.orderService.updateOrderStatus(order, status);
+            orderService.updateOrderStatus(order, status);
 
-            if (status == OrderStatus.CANCELLED) {
-                return "redirect:/sales/order/" + order.getPublicReference() + "/cancelled/";
-            } else {
+            if (status.isPaid()) {
                 return "redirect:/sales/order/" + order.getPublicReference() + "/complete/";
+            } else {
+                return "redirect:/sales/order/" + order.getPublicReference() + "/cancelled/";
             }
-
-        } catch (EventsModelNotFound e) {
+        } catch (EventsModelNotFound | EventsInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/order/" + publicReference + "/";
+            return "redirect:/sales/";
         }
     }
 }
