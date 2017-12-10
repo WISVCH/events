@@ -1,7 +1,7 @@
 package ch.wisv.events.tickets.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -123,8 +123,7 @@ public class TicketsControllerTest {
         orderProductDTO.setProducts(products);
 
         // Set up mock calls
-        String exception = "Product with key key not found!";
-        when(orderService.createOrderByOrderProductDTO(orderProductDTO)).thenThrow(new ProductNotFound(exception));
+        when(orderService.createOrderByOrderProductDTO(orderProductDTO)).thenThrow(new ProductNotFoundException("key key"));
 
         // Perform call
         mockMvc.perform(post("/checkout/")
@@ -134,7 +133,7 @@ public class TicketsControllerTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
-                .andExpect(flash().attribute("error", is(exception)));
+                .andExpect(flash().attribute("error", is("Product with key key not found!")));
     }
 
     @Test
@@ -154,7 +153,7 @@ public class TicketsControllerTest {
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(customer);
         when(orderService.createOrderByOrderProductDTO(orderProductDTO)).thenReturn(order);
-        doThrow(new EventsInvalidException("Invalid order")).when(orderService).assertIsValidForCustomer(order);
+        doThrow(new OrderInvalidException("Invalid order")).when(orderService).assertIsValidForCustomer(order);
         doNothing().when(orderService).create(order);
 
         // Perform call
