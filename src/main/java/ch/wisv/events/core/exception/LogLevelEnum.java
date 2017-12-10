@@ -1,5 +1,7 @@
 package ch.wisv.events.core.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
  * <p>
@@ -16,7 +18,7 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-//@Slf4j
+@Slf4j
 public enum LogLevelEnum {
 
     ERROR,
@@ -26,22 +28,19 @@ public enum LogLevelEnum {
     TRACE;
 
     public void logMessage(String message) {
-        //
+        switch (this) {
+            case ERROR:
+                log.error(message);
+                break;
+            case WARN:
+                log.warn(message);
+                break;
+            case INFO:
+                log.info(message);
+                break;
+            default:
+                log.debug(message);
+                break;
+        }
     }
-
-//    ERROR(log::error),
-//    WARN(log::warn),
-//    INFO(log::info),
-//    DEBUG(log::debug),
-//    TRACE(log::trace);
-//
-//    private final Consumer<String> logger;
-//
-//    LogLevelEnum(Consumer<String> logger) {
-//        this.logger = logger;
-//    }
-//
-//    public void logMessage(String message) {
-//        logger.accept(message);
-//    }
 }
