@@ -1,7 +1,8 @@
 package ch.wisv.events.core.webhook;
 
-import ch.wisv.events.core.exception.WebhookRequestFactoryNotFoundException;
-import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.exception.runtime.WebhookRequestFactoryNotFoundException;
+import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.Webhook;
@@ -78,11 +79,10 @@ public class WebhookPublisher {
 
             webhookService.getByTrigger(webhookTrigger).forEach(webhook -> {
                 if (this.isWebhookAuthenticated(webhook, content)) {
-                     webhookTaskService.create(webhookTrigger, webhook, jsonObject);
+                    webhookTaskService.create(webhookTrigger, webhook, jsonObject);
                 }
             });
-        } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect e) {
-            e.printStackTrace();
+        } catch (WebhookRequestFactoryNotFoundException | WebhookRequestObjectIncorrect ignored) {
         }
     }
 
@@ -105,10 +105,12 @@ public class WebhookPublisher {
                 }
             } else if (content instanceof Product) {
                 Product product = (Product) content;
-                Event event = eventService.getEventByProduct(product);
-
-                if (event.getOrganizedBy() == webhook.getLdapGroup()) {
-                    return true;
+                try {
+                    Event event = eventService.getEventByProduct(product);
+                    if (event.getOrganizedBy() == webhook.getLdapGroup()) {
+                        return true;
+                    }
+                } catch (EventNotFoundException ignored) {
                 }
             }
         }

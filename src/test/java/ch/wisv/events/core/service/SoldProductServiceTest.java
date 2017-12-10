@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.core.exception.SoldProductNotFoundException;
+import ch.wisv.events.core.exception.normal.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -80,7 +80,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by key
      */
     @Test
-    public void testGetByKey() {
+    public void testGetByKey() throws Exception {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.of(this.soldProduct));
 
         assertEquals(this.soldProduct, soldProductService.getByKey(this.soldProduct.getKey()));
@@ -90,7 +90,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by key
      */
     @Test
-    public void testGetByKeyEmpty() {
+    public void testGetByKeyEmpty() throws Exception {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.empty());
 
         thrown.expect(SoldProductNotFoundException.class);
@@ -102,7 +102,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get all method with response
      */
     @Test
-    public void getAll() {
+    public void getAll() throws Exception {
         when(repository.findAll()).thenReturn(Collections.singletonList(soldProduct));
 
         assertEquals(Collections.singletonList(soldProduct), soldProductService.getAll());
@@ -113,7 +113,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get all method with response
      */
     @Test
-    public void getAllEmpty() {
+    public void getAllEmpty() throws Exception {
         when(repository.findAll()).thenReturn(Collections.emptyList());
 
         assertEquals(Collections.emptyList(), soldProductService.getAll());
@@ -124,7 +124,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get sold product by product
      */
     @Test
-    public void getByProduct() {
+    public void getByProduct() throws Exception {
         when(repository.findAllByProduct(any(Product.class))).thenReturn(
                 Collections.singletonList(soldProduct));
 
@@ -137,7 +137,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Method get sold product by when product is not there
      */
     @Test
-    public void getByProductNull() {
+    public void getByProductNull() throws Exception {
         when(repository.findAllByProduct(any(Product.class))).thenReturn(Collections.emptyList());
         List<SoldProduct> temp = soldProductService.getByProduct(null);
 
@@ -148,7 +148,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by customer and product
      */
     @Test
-    public void getByCustomerAndProduct() {
+    public void getByCustomerAndProduct() throws Exception {
         when(repository.findAllByProductAndCustomer(any(Product.class), any(Customer.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
@@ -162,7 +162,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by customer and product null
      */
     @Test
-    public void getByCustomerAndProductNull() {
+    public void getByCustomerAndProductNull() throws Exception {
         List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(null, null);
 
         assertEquals(Collections.emptyList(), temp);
@@ -172,7 +172,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by customer
      */
     @Test
-    public void getByCustomer() {
+    public void getByCustomer() throws Exception {
         when(repository.findAllByCustomer(any(Customer.class)))
                 .thenReturn(Collections.singletonList(soldProduct));
 
@@ -185,7 +185,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test get by customer when customer is null
      */
     @Test
-    public void getByCustomerNull() {
+    public void getByCustomerNull() throws Exception {
         when(repository.findAllByCustomer(this.soldProduct.getCustomer())).thenReturn(Collections.emptyList());
         List<SoldProduct> temp = soldProductService.getByCustomer(null);
 
@@ -196,7 +196,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test create method
      */
     @Test
-    public void create() {
+    public void create() throws Exception {
         Order order = new Order();
 
         Product product1 = new Product();
@@ -218,7 +218,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test create method when order has no products
      */
     @Test
-    public void createOrderNotProducts() {
+    public void createOrderNotProducts() throws Exception {
         Order order = new Order();
 
         soldProductService.create(order);
@@ -229,7 +229,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test delete sold products from an order
      */
     @Test
-    public void remove() {
+    public void remove() throws Exception {
         when(repository.findAllByOrder(any(Order.class))).thenReturn(Collections.singletonList(this.soldProduct));
 
         soldProductService.delete(any(Order.class));
@@ -240,7 +240,7 @@ public class SoldProductServiceTest extends ServiceTest {
      * Test update method
      */
     @Test
-    public void update() {
+    public void update() throws Exception {
         when(repository.findByKey(this.soldProduct.getKey())).thenReturn(Optional.of(this.soldProduct));
         soldProductService.update(this.soldProduct);
 

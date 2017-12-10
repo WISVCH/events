@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.runtime;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,12 +18,12 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class WebhookNotFoundException extends Throwable {
+public class WebhookRequestObjectIncorrect extends EventsRuntimeException {
 
     /**
-     * Constructor WebhookNotFoundException creates a new WebhookNotFoundException instance.
+     * WebhookRequestObjectIncorrect exception.
      */
-    public WebhookNotFoundException() {
-        super("Webhook not found!");
+    public WebhookRequestObjectIncorrect() {
+        super(LogLevelEnum.WARN, "Webhook request object is incorrect!");
     }
 }

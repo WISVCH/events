@@ -1,7 +1,7 @@
 package ch.wisv.events.scan.controller;
 
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
@@ -89,7 +89,7 @@ public class ScanAppProductController {
             model.addAttribute("product", product);
 
             return "scan/product/rfid";
-        } catch (EventsModelNotFound e) {
+        } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/scan/";
@@ -111,16 +111,22 @@ public class ScanAppProductController {
             @RequestParam(value = "rfidToken") String rfidToken,
             @RequestParam(value = "uniqueCode") String uniqueCode
     ) {
-        Product product = productService.getByKey(productKey);
+        try {
+            Product product = productService.getByKey(productKey);
 
-        if (uniqueCode.equals("")) {
-            return this.handleRfidTokenRequest(redirect, product, rfidToken);
-        } else if (!uniqueCode.equals("")) {
-            return this.handleUniqueCodeRequest(redirect, product, uniqueCode);
-        } else {
-            redirect.addFlashAttribute("error", "Invalid request");
+            if (uniqueCode.equals("")) {
+                return this.handleRfidTokenRequest(redirect, product, rfidToken);
+            } else if (!uniqueCode.equals("")) {
+                return this.handleUniqueCodeRequest(redirect, product, uniqueCode);
+            } else {
+                redirect.addFlashAttribute("error", "Invalid request");
 
-            return "redirect:/scan/product/" + productKey + "/";
+                return "redirect:/scan/product/" + productKey + "/";
+            }
+        } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/scan/";
         }
     }
 
@@ -134,8 +140,8 @@ public class ScanAppProductController {
     @GetMapping("/{productKey}/select/{customerKey}/")
     public String select(Model model, RedirectAttributes redirect, @PathVariable String productKey, @PathVariable String customerKey) {
         try {
-            Product product = this.productService.getByKey(productKey);
-            Customer customer = this.customerService.getByKey(customerKey);
+            Product product = productService.getByKey(productKey);
+            Customer customer = customerService.getByKey(customerKey);
 
             List<SoldProduct> soldProducts = this.scanAppSoldProductService.getAllByProductAndCustomer(product, customer);
             soldProducts = soldProducts.stream().filter(x -> x.getStatus() != SoldProductStatus.SCANNED).collect(Collectors.toList());
@@ -144,7 +150,7 @@ public class ScanAppProductController {
             model.addAttribute("soldProducts", soldProducts);
 
             return "scan/product/select";
-        } catch (EventsModelNotFound | CustomerNotFound e) {
+        } catch (ProductNotFoundException | CustomerNotFoundException e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/scan/";
@@ -180,7 +186,7 @@ public class ScanAppProductController {
             }
 
             return this.createRedirect(redirect, product, result, customer);
-        } catch (EventsModelNotFound | CustomerNotFound e) {
+        } catch (ProductNotFoundException | CustomerNotFoundException e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/scan/";
@@ -205,7 +211,7 @@ public class ScanAppProductController {
             } else {
                 return this.createRedirect(redirect, product, result, customer);
             }
-        } catch (CustomerNotFound e) {
+        } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 

@@ -1,8 +1,9 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -101,9 +103,9 @@ public class OrderServiceImpl implements OrderService {
      * @return Order
      */
     @Override
-    public Order getByReference(String reference) {
+    public Order getByReference(String reference) throws OrderNotFoundException {
         return orderRepository.findByPublicReference(reference).orElseThrow(() ->
-                new EventsModelNotFound("Order with reference " + reference + " not found!"));
+                new OrderNotFoundException("reference " + reference));
     }
 
     /**
@@ -112,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void create(Order order) {
+    public void create(Order order) throws OrderInvalidException {
         this.setOrderAmount(order);
 
         order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
@@ -128,9 +130,9 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void update(Order order) {
+    public void update(Order order) throws OrderInvalidException {
         if (order.getId() == null) {
-            throw new EventsInvalidException("This object is new so can not be updated");
+            throw new OrderCannotUpdateException();
         }
 
         this.assertIsValid(order);
@@ -143,11 +145,11 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order  of type Order
      * @param status of type OrderStatus
-     *
-     * //TODO: update the creation of SoldProducts and sold count.
+     *               <p>
+     *               //TODO: update the creation of SoldProducts and sold count.
      */
     @Override
-    public void updateOrderStatus(Order order, OrderStatus status) {
+    public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         if (status == OrderStatus.REFUNDED) {
             order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().setSold(
                     orderProduct.getProduct().getSold() - 1
@@ -175,14 +177,15 @@ public class OrderServiceImpl implements OrderService {
      * @return Order
      */
     @Override
-    public Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) {
+    public Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException {
         Order order = new Order();
-        orderProductDTO.getProducts().forEach((productKey, amount) -> {
-            if (amount > 0) {
-                Product product = productService.getByKey(productKey);
-                order.addOrderProduct(new OrderProduct(product, product.getCost(), amount));
+
+        for (Map.Entry<String, Long> values : orderProductDTO.getProducts().entrySet()) {
+            if (values.getValue() > 0) {
+                Product product = productService.getByKey(values.getKey());
+                order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));
             }
-        });
+        }
 
         return order;
     }
@@ -193,25 +196,25 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order.
      */
     @Override
-    public void assertIsValid(Order order) {
+    public void assertIsValid(Order order) throws OrderInvalidException {
         if (order.getAmount() == null) {
-            throw new EventsInvalidModelException("Order amount can not be null");
+            throw new OrderInvalidException("Order amount can not be null");
         }
 
         if (order.getAmount() < 0) {
-            throw new EventsInvalidModelException("Order amount can not be negative");
+            throw new OrderInvalidException("Order amount can not be negative");
         }
 
         if (order.getOrderProducts() == null || order.getOrderProducts().isEmpty()) {
-            throw new EventsInvalidModelException("OrderProducts list can not be null or empty");
+            throw new OrderInvalidException("OrderProducts list can not be null or empty");
         }
 
         if (order.getCreationDate() == null) {
-            throw new EventsInvalidModelException("Order creation date can not be null");
+            throw new OrderInvalidException("Order creation date can not be null");
         }
 
         if (order.getCreatedBy() == null || order.getCreatedBy().equals("")) {
-            throw new EventsInvalidModelException("Order created by can not be null");
+            throw new OrderInvalidException("Order created by can not be null");
         }
     }
 
@@ -221,13 +224,13 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order.
      */
     @Override
-    public void assertIsValidForCustomer(Order order) {
+    public void assertIsValidForCustomer(Order order) throws OrderInvalidException {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             List<SoldProduct> soldProductsCustomers = soldProductService.getAllByCustomerAndProduct(order.getCustomer(), orderProduct.getProduct());
             Integer limitProductOrder = orderProduct.getProduct().getMaxSoldPerCustomer() - soldProductsCustomers.size();
 
             if (orderProduct.getAmount() > limitProductOrder) {
-                throw new EventsInvalidException(order.getCustomer().getName() + " can only buy " + limitProductOrder + " more of " + orderProduct
+                throw new OrderInvalidException(order.getCustomer().getName() + " can only buy " + limitProductOrder + " more of " + orderProduct
                         .getProduct().getTitle() + "(s) before reaching limit");
             }
         }
@@ -251,7 +254,7 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order of type Order
      */
-    private void assertEnoughProductsLeft(Order order) {
+    private void assertEnoughProductsLeft(Order order) throws OrderInvalidException {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             Integer soldProductsCount = soldProductService.getByProduct(orderProduct.getProduct()).size();
 
@@ -259,7 +262,7 @@ public class OrderServiceImpl implements OrderService {
                 Integer productsLeftCount = orderProduct.getProduct().getMaxSold() - soldProductsCount;
 
                 if (orderProduct.getAmount() > productsLeftCount) {
-                    throw new EventsInvalidException("Only " + productsLeftCount + " items left of " + orderProduct.getProduct().getTitle());
+                    throw new OrderInvalidException("Only " + productsLeftCount + " items left of " + orderProduct.getProduct().getTitle());
                 }
             }
         }

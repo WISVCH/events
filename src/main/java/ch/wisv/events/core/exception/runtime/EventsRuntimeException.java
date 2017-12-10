@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.runtime;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,9 +18,10 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class ProductLimitExceededException extends RuntimeException {
+public class EventsRuntimeException extends RuntimeException {
 
-    public ProductLimitExceededException(String message) {
+    public EventsRuntimeException(LogLevelEnum logEnum, String message) {
         super(message);
+        logEnum.logMessage(message);
     }
 }

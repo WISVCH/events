@@ -1,8 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.exception.normal.ProductInvalidException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.product.ProductService;
@@ -79,10 +78,10 @@ public class DashboardProductController {
     @GetMapping("/view/{key}/")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            model.addAttribute("product", this.productService.getByKey(key));
+            model.addAttribute("product", productService.getByKey(key));
 
             return "admin/products/view";
-        } catch (EventsModelNotFound e) {
+        } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/administrator/products/";
@@ -114,12 +113,12 @@ public class DashboardProductController {
     @PostMapping("/create/")
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
-            this.productService.create(product);
-            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
+            productService.create(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
 
             return "redirect:/administrator/products/view/" + product.getKey() + "/";
-        } catch (EventsInvalidModelException e) {
+        } catch (ProductInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 
@@ -138,11 +137,11 @@ public class DashboardProductController {
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("product")) {
-                model.addAttribute("product", this.productService.getByKey(key));
+                model.addAttribute("product", productService.getByKey(key));
             }
 
             return "admin/products/product";
-        } catch (EventsModelNotFound e) {
+        } catch (ProductNotFoundException e) {
             return "redirect:/administrator/products/";
         }
     }
@@ -157,12 +156,12 @@ public class DashboardProductController {
     @PostMapping("/edit/{key}/")
     public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
-            this.productService.update(product);
-            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
+            productService.update(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("success", "Changes have been saved!");
 
             return "redirect:/administrator/products/view/" + product.getKey() + "/";
-        } catch (EventsModelNotFound | EventsInvalidModelException e) {
+        } catch (ProductNotFoundException | ProductInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 
@@ -186,7 +185,7 @@ public class DashboardProductController {
             model.addAttribute("product", product);
 
             return "admin/products/overview";
-        } catch (ProductNotFound e) {
+        } catch (ProductNotFoundException e) {
             return "redirect:/administrator/products/";
         }
     }
@@ -200,13 +199,13 @@ public class DashboardProductController {
      */
     @GetMapping("/delete/{key}/")
     public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
-        Product product = productService.getByKey(key);
         try {
-            this.productService.delete(product);
-            this.webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_DELETE, product);
+            Product product = productService.getByKey(key);
+            productService.delete(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_DELETE, product);
 
             redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
-        } catch (RuntimeException e) {
+        } catch (ProductNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 

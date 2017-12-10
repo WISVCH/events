@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.normal;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,14 +18,14 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventsInvalidException extends RuntimeException {
+public class WebhookNotFoundException extends EventsException {
 
     /**
-     * Constructor EventsInvalidException creates a new EventsInvalidException instance.
+     * WebhookNotFoundException.
      *
      * @param message of type String
      */
-    public EventsInvalidException(String message) {
-        super(message);
+    public WebhookNotFoundException(String message) {
+        super(LogLevelEnum.WARN, "SoldProduct with " + message + " not found!");
     }
 }

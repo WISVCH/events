@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.normal;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,14 +18,14 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class CustomerException extends RuntimeException {
+public class WebhookInvalidException extends EventsException {
 
     /**
-     * Constructor CustomerException creates a new CustomerException instance.
+     * WebhookInvalidException.
      *
      * @param message of type String
      */
-    public CustomerException(String message) {
-        super(message);
+    public WebhookInvalidException(String message) {
+        super(LogLevelEnum.WARN, message);
     }
 }

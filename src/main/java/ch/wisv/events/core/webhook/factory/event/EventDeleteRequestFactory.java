@@ -1,10 +1,12 @@
 package ch.wisv.events.core.webhook.factory.event;
 
 
-import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
 import org.json.simple.JSONObject;
+
+;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'

@@ -1,7 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.InvalidWebhookException;
-import ch.wisv.events.core.exception.WebhookNotFoundException;
+import ch.wisv.events.core.exception.normal.WebhookInvalidException;
+import ch.wisv.events.core.exception.normal.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.service.webhook.WebhookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@ public class DashboardWebhookController {
             redirect.addFlashAttribute("success", "Webhook " + webhook.getPayloadUrl() + " has been added!");
 
             return "redirect:/administrator/webhooks/";
-        } catch (InvalidWebhookException e) {
+        } catch (WebhookInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("webhook", webhook);
 
@@ -153,7 +153,7 @@ public class DashboardWebhookController {
             redirect.addFlashAttribute("success", "Webhook changes saves!");
 
             return "redirect:/administrator/webhooks/view/" + webhook.getKey() + "/";
-        } catch (InvalidWebhookException | WebhookNotFoundException e) {
+        } catch (WebhookInvalidException | WebhookNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("webhook", webhook);
 

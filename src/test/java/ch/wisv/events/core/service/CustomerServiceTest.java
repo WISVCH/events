@@ -1,9 +1,9 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.core.exception.CustomerException;
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.InvalidCustomerException;
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
@@ -75,7 +75,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get all customers
      */
     @Test
-    public void testGetAllCustomers() {
+    public void testGetAllCustomers() throws Exception {
         when(repository.findAll()).thenReturn(Collections.singletonList(this.customer));
 
         assertEquals(Collections.singletonList(this.customer), customerService.getAllCustomers());
@@ -85,7 +85,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get all customers with an empty list
      */
     @Test
-    public void testGetAllCustomersEmpty() {
+    public void testGetAllCustomersEmpty() throws Exception {
         when(repository.findAll()).thenReturn(Collections.emptyList());
 
         assertEquals(Collections.emptyList(), customerService.getAllCustomers());
@@ -95,7 +95,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get all customers with an empty list
      */
     @Test
-    public void testGetAllCustomersCreatedAfter() {
+    public void testGetAllCustomersCreatedAfter() throws Exception {
         LocalDateTime time = LocalDateTime.now();
         when(repository.findAllByCreatedAtAfter(time)).thenReturn(Collections.singletonList(this.customer));
 
@@ -106,7 +106,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get by key method
      */
     @Test
-    public void testGetByKey() {
+    public void testGetByKey() throws Exception {
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(this.customer));
 
         assertEquals(this.customer, customerService.getByKey(this.customer.getKey()));
@@ -116,8 +116,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get by key not found
      */
     @Test
-    public void testGetByKeyNotFound() {
-        thrown.expect(CustomerNotFound.class);
+    public void testGetByKeyNotFound() throws Exception {
+        thrown.expect(CustomerNotFoundException.class);
         thrown.expectMessage("Customer with key key not found!");
         when(repository.findByKey(anyString())).thenReturn(Optional.empty());
 
@@ -128,51 +128,29 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get by key method
      */
     @Test
-    public void testGetByChUserName() {
-        when(repository.findByChUsername(this.customer.getChUsername())).thenReturn(Optional.of(this.customer));
+    public void testGetByChUserName() throws Exception {
+        when(repository.findByChUsernameOrEmail(customer.getChUsername(), customer.getChUsername())).thenReturn(Optional.of(this.customer));
 
-        assertEquals(this.customer, customerService.getByChUsername(this.customer.getChUsername()));
+        assertEquals(this.customer, customerService.getByChUsernameOrEmail(this.customer.getChUsername()));
     }
 
     /**
      * Test get by key not found
      */
     @Test
-    public void testGetByChUserNameNotFound() {
-        thrown.expect(CustomerNotFound.class);
-        thrown.expectMessage("Customer with username testt not found!");
-        when(repository.findByChUsername(anyString())).thenReturn(Optional.empty());
+    public void testGetByChUserNameNotFound() throws Exception {
+        thrown.expect(CustomerNotFoundException.class);
+        thrown.expectMessage("Customer with username or email testt not found!");
+        when(repository.findByChUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.empty());
 
-        customerService.getByChUsername("testt");
+        customerService.getByChUsernameOrEmail("testt");
     }
 
     /**
      * Test get by key method
      */
     @Test
-    public void testGetByEmail() {
-        when(repository.findByEmail(this.customer.getEmail())).thenReturn(Optional.of(this.customer));
-
-        assertEquals(this.customer, customerService.getByEmail(this.customer.getEmail()));
-    }
-
-    /**
-     * Test get by key not found
-     */
-    @Test
-    public void testGetByEmailNotFound() {
-        thrown.expect(CustomerNotFound.class);
-        thrown.expectMessage("Customer with email test@test.com not found!");
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-        customerService.getByEmail("test@test.com");
-    }
-
-    /**
-     * Test get by key method
-     */
-    @Test
-    public void testGetByRFIDToken() {
+    public void testGetByRFIDToken() throws Exception {
         when(repository.findByRfidToken(this.customer.getRfidToken())).thenReturn(Optional.of(this.customer));
 
         assertEquals(this.customer, customerService.getByRfidToken(this.customer.getRfidToken()));
@@ -182,9 +160,9 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get by key not found
      */
     @Test
-    public void testGetByRFIDTokenNotFound() {
-        thrown.expect(CustomerNotFound.class);
-        thrown.expectMessage("Customer with RFID token 123 not found!");
+    public void testGetByRFIDTokenNotFound() throws Exception {
+        thrown.expect(CustomerNotFoundException.class);
+        thrown.expectMessage("Customer with rfid token 123 not found!");
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         customerService.getByRfidToken("123");
@@ -194,7 +172,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method and verify that saveAndFlush is called once
      */
     @Test
-    public void testCreate() {
+    public void testCreate() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
@@ -206,8 +184,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method and verify that saveAndFlush is called once
      */
     @Test
-    public void testCreateNull() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateNull() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Customer can not be null!");
 
         customerService.create(null);
@@ -217,8 +195,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when name is null
      */
     @Test
-    public void testCreateMissingName() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateMissingName() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Name is empty, but a required field, so please fill in this field!");
         this.customer.setName(null);
 
@@ -229,8 +207,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when email is null
      */
     @Test
-    public void testCreateMissingEmail() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateMissingEmail() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Email is empty, but a required field, so please fill in this field!");
         this.customer.setEmail(null);
 
@@ -241,8 +219,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when email is null
      */
     @Test
-    public void testCreateMissingRfidToken() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateMissingRfidToken() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("RFID token can not be null.");
         this.customer.setRfidToken(null);
 
@@ -253,8 +231,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when email is null
      */
     @Test
-    public void testCreateMissingCreatedAt() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateMissingCreatedAt() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Customer should contain a created at timestamp.");
         this.customer.setCreatedAt(null);
 
@@ -265,12 +243,12 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when RFID token is null
      */
     @Test
-    public void testCreateAlreadyUsedRFIDToken() {
+    public void testCreateAlreadyUsedRFIDToken() throws Exception {
         Customer duplicate = new Customer("Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", this.customer.getRfidToken());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        thrown.expect(InvalidCustomerException.class);
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("RFID token is already used!");
 
         customerService.create(duplicate);
@@ -280,12 +258,12 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when RFID token is null
      */
     @Test
-    public void testCreateAlreadyUsedEmail() {
+    public void testCreateAlreadyUsedEmail() throws Exception {
         Customer duplicate = new Customer("Constantijn Huygens", this.customer.getEmail(), "constantijnh", this.customer.getRfidToken() + "0");
         when(repository.findByEmail(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
-        thrown.expect(InvalidCustomerException.class);
+        thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Email address is already used!");
 
         customerService.create(duplicate);
@@ -295,7 +273,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test update method
      */
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         Customer update = new Customer();
         update.setKey(this.customer.getKey());
         update.setRfidToken("123");
@@ -321,7 +299,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test if create by ChUserInfo
      */
     @Test
-    public void testCreateByChUserInfo() {
+    public void testCreateByChUserInfo() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
@@ -341,8 +319,8 @@ public class CustomerServiceTest extends ServiceTest {
      * Test if create by ChUserInfo
      */
     @Test
-    public void testCreateByChUserInfoAssertion() {
-        thrown.expect(InvalidCustomerException.class);
+    public void testCreateByChUserInfoAssertion() throws Exception {
+        thrown.expect(CustomerInvalidException.class);
         CHUserInfo userInfo = new CHUserInfo();
         userInfo.setName(null);
         userInfo.setEmail(null);
@@ -355,7 +333,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test delete method when customer did not place an order
      */
     @Test
-    public void testDelete() {
+    public void testDelete() throws Exception {
         when(orderRepository.findByCustomer(this.customer)).thenReturn(Collections.emptyList());
 
         customerService.delete(this.customer);
@@ -366,10 +344,10 @@ public class CustomerServiceTest extends ServiceTest {
      * Test delete when customer placed an order
      */
     @Test
-    public void testDeleteCustomerPlacedOrders() {
+    public void testDeleteCustomerPlacedOrders() throws Exception {
         when(orderRepository.findByCustomer(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
 
-        thrown.expect(CustomerException.class);
+        thrown.expect(CustomerAlreadyPlacedOrdersException.class);
         thrown.expectMessage("Customer has already placed orders, so it can not be deleted!");
 
         customerService.delete(this.customer);

@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.runtime;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,8 +18,12 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventsException extends RuntimeException {
-    public EventsException(String message) {
-        super(message);
+public class WebhookRequestFactoryNotFoundException extends EventsRuntimeException {
+
+    /**
+     * WebhookRequestFactoryNotFoundException exception.
+     */
+    public WebhookRequestFactoryNotFoundException() {
+        super(LogLevelEnum.WARN, "Webhook request factory has not been found!");
     }
 }

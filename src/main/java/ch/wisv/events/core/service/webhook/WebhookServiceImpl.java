@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.webhook;
 
-import ch.wisv.events.core.exception.InvalidWebhookException;
-import ch.wisv.events.core.exception.WebhookNotFoundException;
+import ch.wisv.events.core.exception.normal.WebhookInvalidException;
+import ch.wisv.events.core.exception.normal.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookRepository;
@@ -65,7 +65,7 @@ public class WebhookServiceImpl implements WebhookService {
     public Webhook getByKey(String key) throws WebhookNotFoundException {
         Optional<Webhook> webhookOptional = this.repository.findByKey(key);
 
-        return webhookOptional.orElseThrow(WebhookNotFoundException::new);
+        return webhookOptional.orElseThrow(() -> new WebhookNotFoundException("key " + key));
     }
 
     /**
@@ -85,7 +85,7 @@ public class WebhookServiceImpl implements WebhookService {
      * @param model of type Webhook
      */
     @Override
-    public void create(Webhook model) throws InvalidWebhookException {
+    public void create(Webhook model) throws WebhookInvalidException {
         this.assertIsValidWebhook(model);
 
         this.repository.saveAndFlush(model);
@@ -98,7 +98,7 @@ public class WebhookServiceImpl implements WebhookService {
      * @param model of type Webhook
      */
     @Override
-    public void update(Webhook model) throws WebhookNotFoundException, InvalidWebhookException {
+    public void update(Webhook model) throws WebhookNotFoundException, WebhookInvalidException {
         Webhook webhook = this.getByKey(model.getKey());
         webhook.setPayloadUrl(model.getPayloadUrl());
         webhook.setWebhookTriggers(model.getWebhookTriggers());
@@ -124,15 +124,15 @@ public class WebhookServiceImpl implements WebhookService {
      * Method assertIsValidWebhook ...
      *
      * @param model of type Webhook
-     * @throws InvalidWebhookException when
+     * @throws WebhookInvalidException when
      */
-    private void assertIsValidWebhook(Webhook model) throws InvalidWebhookException {
+    private void assertIsValidWebhook(Webhook model) throws WebhookInvalidException {
         if (model.getPayloadUrl() == null || model.getPayloadUrl().equals("")) {
-            throw new InvalidWebhookException("Payload URL can not be empty!");
+            throw new WebhookInvalidException("Payload URL can not be empty!");
         }
 
         if (model.getLdapGroup() == null) {
-            throw new InvalidWebhookException("LDAP group can not be null!");
+            throw new WebhookInvalidException("LDAP group can not be null!");
         }
     }
 }

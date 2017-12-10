@@ -1,7 +1,7 @@
 package ch.wisv.events.core.webhook.factory.event;
 
 
-import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventCategory;
 import ch.wisv.events.core.model.product.Product;

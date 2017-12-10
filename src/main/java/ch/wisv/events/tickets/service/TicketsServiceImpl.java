@@ -1,13 +1,15 @@
 package ch.wisv.events.tickets.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.EventsException;
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -65,21 +67,18 @@ public class TicketsServiceImpl implements TicketsService {
 
             if (oidcAuth.getUserInfo() instanceof CHUserInfo) {
                 CHUserInfo userInfo = (CHUserInfo) oidcAuth.getUserInfo();
-
                 try {
-                    return customerService.getByChUsername(userInfo.getLdapUsername());
-                } catch (CustomerNotFound e) {
+                    return customerService.getByChUsernameOrEmail(userInfo.getLdapUsername());
+                } catch (CustomerNotFoundException e) {
                     try {
-                        return customerService.getByEmail(userInfo.getEmail());
-                    } catch (CustomerNotFound ignored) {
+                        customerService.createByChUserInfo(userInfo);
+                    } catch (CustomerInvalidException ignored) {
                     }
-
-                    return customerService.createByChUserInfo(userInfo);
                 }
             }
         }
 
-        throw new EventsException("Invalid authentication");
+        throw new AccessDeniedException("Invalid authentication");
     }
 
     /**
@@ -101,7 +100,7 @@ public class TicketsServiceImpl implements TicketsService {
      * @return Order
      */
     @Override
-    public Order updateOrderStatus(Order order, String paymentsReference) {
+    public Order updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown {
         String status = paymentsService.getPaymentsOrderStatus(paymentsReference);
 
         switch (status) {
@@ -115,7 +114,7 @@ public class TicketsServiceImpl implements TicketsService {
                 order.setStatus(OrderStatus.CANCELLED);
                 break;
             default:
-                throw new EventsException("Unknown what to do with status " + status);
+                throw new PaymentsStatusUnknown(status);
         }
 
         return order;

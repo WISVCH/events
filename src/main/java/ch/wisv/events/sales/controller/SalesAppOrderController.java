@@ -1,6 +1,6 @@
 package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ public class SalesAppOrderController {
             model.addAttribute("order", orderService.getByReference(publicReference));
 
             return "sales/order/index";
-        } catch (EventsModelNotFound e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";
@@ -77,7 +77,7 @@ public class SalesAppOrderController {
             orderService.getByReference(publicReference);
 
             return "sales/order/" + ending;
-        } catch (EventsModelNotFound e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";
