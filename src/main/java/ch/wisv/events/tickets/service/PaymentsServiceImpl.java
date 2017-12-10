@@ -1,6 +1,6 @@
 package ch.wisv.events.tickets.service;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
+import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -78,7 +78,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         } catch (IOException ignored) {
         }
 
-        throw new EventsInvalidException("Failed to get the order status!");
+        throw new PaymentsConnectionException();
     }
 
     /**
@@ -119,6 +119,6 @@ public class PaymentsServiceImpl implements PaymentsService {
         } catch (IOException ignored) {
         }
 
-        throw new EventsInvalidException("CH Payments returned an exception.");
+        throw new PaymentsConnectionException();
     }
 }

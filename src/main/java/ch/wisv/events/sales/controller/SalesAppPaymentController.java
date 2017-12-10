@@ -1,7 +1,7 @@
 package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.sales.PaymentOption;
@@ -71,7 +71,7 @@ public class SalesAppPaymentController {
             } else {
                 return "redirect:/sales/order/" + order.getPublicReference() + "/cancelled/";
             }
-        } catch (EventsModelNotFound | EventsInvalidException e) {
+        } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";

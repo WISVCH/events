@@ -1,6 +1,6 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.CustomerNotFound;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.product.SoldProductService;
@@ -83,7 +83,7 @@ public class DashboardCustomerController {
             model.addAttribute("soldProducts", soldProductService.getByCustomer(customer));
 
             return "admin/customers/view";
-        } catch (CustomerNotFound e) {
+        } catch (CustomerNotFoundException e) {
             return "redirect:/administrator/customers/";
         }
     }
@@ -145,7 +145,7 @@ public class DashboardCustomerController {
             model.addAttribute("products", soldProductService.getByCustomer(customer));
 
             return "admin/customers/customer";
-        } catch (CustomerNotFound e) {
+        } catch (CustomerNotFoundException e) {
             return "redirect:/administrator/customers/";
         }
     }
@@ -191,7 +191,7 @@ public class DashboardCustomerController {
             redirect.addFlashAttribute("message", "Customer with name " + customer.getName() + " has been deleted!");
 
             return "redirect:/administrator/customers/";
-        } catch (RuntimeException e) {
+        } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/administrator/customers/";

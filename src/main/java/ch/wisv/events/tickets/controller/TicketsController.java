@@ -1,8 +1,9 @@
 package ch.wisv.events.tickets.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -50,6 +51,7 @@ public class TicketsController {
      * Field orderService
      */
     private final OrderService orderService;
+    private final String REDIRECT_HOME = "redirect:/";
 
     /**
      * Constructor TicketsController.
@@ -97,31 +99,33 @@ public class TicketsController {
             } else {
                 throw new AccessDeniedException("Access denied!");
             }
-        } catch (EventsModelNotFound | AccessDeniedException e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     /**
      * GetMapping for "/cancel/{key}".
      *
-     * @param key of type String
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      * @return String
      */
     @GetMapping("/cancel/{key}/")
-    public String cancel(@PathVariable String key) {
+    public String cancel(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
 
             if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
                 orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
             }
-        } catch (EventsModelNotFound ignored) {
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     /**
@@ -141,7 +145,7 @@ public class TicketsController {
             } else {
                 throw new AccessDeniedException("Access denied!");
             }
-        } catch (EventsModelNotFound | EventsInvalidException | AccessDeniedException e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
 
@@ -168,8 +172,10 @@ public class TicketsController {
 
                 return "tickets/complete";
             }
-        } catch (EventsModelNotFound | EventsInvalidException | AccessDeniedException e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
+        } catch (PaymentsStatusUnknown e) {
+            redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
         }
 
         return "redirect:/checkout/" + key + "/";
@@ -188,7 +194,7 @@ public class TicketsController {
             if (orderProductDTO.getProducts().isEmpty()) {
                 redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
 
-                return "redirect:/";
+                return REDIRECT_HOME;
             }
 
             Order order = orderService.createOrderByOrderProductDTO(orderProductDTO);
@@ -199,10 +205,10 @@ public class TicketsController {
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/";
-        } catch (ProductNotFound | EventsInvalidException e) {
+        } catch (OrderInvalidException | ProductNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_HOME;
         }
     }
 }

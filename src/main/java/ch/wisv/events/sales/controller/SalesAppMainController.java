@@ -1,8 +1,7 @@
 package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.service.order.OrderService;
@@ -88,11 +87,11 @@ public class SalesAppMainController {
 
         try {
             Order order = orderService.createOrderByOrderProductDTO(orderProductDTO);
-            order.setCreatedBy("test");
+            order.setCreatedBy("test"); // TODO: change to creators name
             orderService.create(order);
 
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/rfid/";
-        } catch (EventsModelNotFound | EventsInvalidException | EventsInvalidModelException e) {
+        } catch (OrderInvalidException | ProductNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";

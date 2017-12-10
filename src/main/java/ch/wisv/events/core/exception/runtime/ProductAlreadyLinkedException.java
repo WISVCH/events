@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.runtime;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,15 +18,12 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EventsModelNotFound extends RuntimeException {
+public class ProductAlreadyLinkedException extends EventsRuntimeException {
 
     /**
-     * Constructor EventsModelNotFound creates a new EventsModelNotFound instance.
-     *
-     * @param message of type String
+     * ProductAlreadyLinkedException exception.
      */
-    public EventsModelNotFound(String message) {
-        super(message);
+    public ProductAlreadyLinkedException() {
+        super(LogLevelEnum.ERROR, "Product is already added to an Event or Product");
     }
-
 }

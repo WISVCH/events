@@ -1,5 +1,6 @@
 package ch.wisv.events.scan.service;
 
+import ch.wisv.events.core.exception.normal.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -41,7 +42,7 @@ public interface ScanAppSoldProductService {
      * @param uniqueCode of type String
      * @return SoldProduct
      */
-    SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode);
+    SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode) throws SoldProductNotFoundException;
 
     /**
      * Method scanByProductAndUniqueCode ...

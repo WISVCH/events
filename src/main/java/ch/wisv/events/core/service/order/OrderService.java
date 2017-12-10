@@ -1,5 +1,8 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -37,21 +40,21 @@ public interface OrderService {
      * @param reference of type String
      * @return Order
      */
-    Order getByReference(String reference);
+    Order getByReference(String reference) throws OrderNotFoundException;
 
     /**
      * Method create creates and order.
      *
      * @param order of type Order
      */
-    void create(Order order);
+    void create(Order order) throws OrderInvalidException;
 
     /**
      * Method update ...
      *
      * @param order of type Order
      */
-    void update(Order order);
+    void update(Order order) throws OrderInvalidException;
 
     /**
      * Method updateOrderStatus
@@ -59,21 +62,21 @@ public interface OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      */
-    void updateOrderStatus(Order order, OrderStatus status);
+    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
 
     /**
      * Assert if the Order is valid.
      *
      * @param order of type Order
      */
-    void assertIsValid(Order order);
+    void assertIsValid(Order order) throws OrderInvalidException;
 
     /**
      * Assert if the Order is valid for a Customer.
      *
      * @param order of type order.
      */
-    void assertIsValidForCustomer(Order order);
+    void assertIsValidForCustomer(Order order) throws OrderInvalidException;
 
     /**
      * Create an Order form a OrderProductDTO.
@@ -81,5 +84,5 @@ public interface OrderService {
      * @param orderProductDTO of type OrderProductDTO
      * @return Order
      */
-    Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO);
+    Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException;
 }

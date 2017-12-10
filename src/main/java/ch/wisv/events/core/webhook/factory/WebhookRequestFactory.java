@@ -1,7 +1,7 @@
 package ch.wisv.events.core.webhook.factory;
 
-import ch.wisv.events.core.exception.WebhookRequestFactoryNotFoundException;
-import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.exception.runtime.WebhookRequestFactoryNotFoundException;
+import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.webhook.factory.event.EventCreateUpdateRequestFactory;
 import ch.wisv.events.core.webhook.factory.event.EventDeleteRequestFactory;
@@ -46,9 +46,7 @@ public abstract class WebhookRequestFactory {
      * @param object  of type Object
      * @return JSONObject
      */
-    public static JSONObject generateRequest(WebhookTrigger trigger,
-            Object object
-    ) throws WebhookRequestFactoryNotFoundException, WebhookRequestObjectIncorrect {
+    public static JSONObject generateRequest(WebhookTrigger trigger, Object object) throws WebhookRequestFactoryNotFoundException, WebhookRequestObjectIncorrect {
         WebhookRequestFactory factory = determineFactory(trigger);
         JSONObject request = factory.getRequestData(object);
         request.put("trigger", trigger.getTag());

@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.runtime;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,14 +18,12 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SoldProductNotFoundException extends RuntimeException {
+public class OrderCannotUpdateException extends EventsRuntimeException {
 
     /**
-     * Constructor SoldProductNotFoundException creates a new SoldProductNotFoundException instance.
-     *
-     * @param mess of type String
+     * OrderCannotUpdateException exception.
      */
-    public SoldProductNotFoundException(String mess) {
-        super(mess);
+    public OrderCannotUpdateException() {
+        super(LogLevelEnum.ERROR, "This object is new so can not be updated");
     }
 }

@@ -1,12 +1,11 @@
 package ch.wisv.events.scan.service;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.SoldProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
-import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.scan.object.ScanResult;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +40,8 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
      * Constructor ScanAppSoldProductServiceImpl creates a new ScanAppSoldProductServiceImpl instance.
      *
      * @param soldProductRepository of type SoldProductRepository
-     * @param customerService       of type CustomerService
      */
-    public ScanAppSoldProductServiceImpl(SoldProductRepository soldProductRepository, CustomerService customerService) {
+    public ScanAppSoldProductServiceImpl(SoldProductRepository soldProductRepository) {
         this.soldProductRepository = soldProductRepository;
     }
 
@@ -67,10 +65,10 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
      * @return SoldProduct
      */
     @Override
-    public SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode) {
+    public SoldProduct getByProductAndUniqueCode(Product product, String uniqueCode) throws SoldProductNotFoundException {
         Optional<SoldProduct> soldProduct = this.soldProductRepository.findByProductAndUniqueCode(product, uniqueCode);
 
-        return soldProduct.orElseThrow(() -> new EventsModelNotFound("Model does not exist"));
+        return soldProduct.orElseThrow(() -> new SoldProductNotFoundException("Model does not exist"));
     }
 
     /**
@@ -85,8 +83,8 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
         try {
             SoldProduct soldProduct = this.getByProductAndUniqueCode(product, uniqueCode);
 
-            return scanSoldProduct(soldProduct);
-        } catch (EventsModelNotFound e) {
+            return this.scanSoldProduct(soldProduct);
+        } catch (SoldProductNotFoundException e) {
             return ScanResult.PRODUCT_NOT_EXISTS;
         }
     }

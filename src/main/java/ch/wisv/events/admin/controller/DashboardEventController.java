@@ -1,7 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.EventInvalidException;
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.SoldProduct;
@@ -81,10 +81,10 @@ public class DashboardEventController {
     @GetMapping("/view/{key}/")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            model.addAttribute("event", this.eventService.getByKey(key));
+            model.addAttribute("event", eventService.getByKey(key));
 
             return "admin/events/view";
-        } catch (EventsModelNotFound e) {
+        } catch (EventNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/administrator/events/";
@@ -116,7 +116,7 @@ public class DashboardEventController {
     @PostMapping("/create/")
     public String create(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
-            this.eventService.create(event);
+            eventService.create(event);
             redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
@@ -124,7 +124,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/administrator/events/";
-        } catch (EventsInvalidModelException e) {
+        } catch (EventInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
@@ -142,11 +142,11 @@ public class DashboardEventController {
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("event")) {
-                model.addAttribute("event", this.eventService.getByKey(key));
+                model.addAttribute("event", eventService.getByKey(key));
             }
 
             return "admin/events/event";
-        } catch (EventsModelNotFound e) {
+        } catch (EventNotFoundException e) {
             return "redirect:/administrator/events/";
         }
     }
@@ -161,7 +161,7 @@ public class DashboardEventController {
     @PostMapping("/edit/{key}/")
     public String update(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
-            this.eventService.update(event);
+            eventService.update(event);
             redirect.addFlashAttribute("success", "Event changes saved!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
@@ -171,7 +171,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/administrator/events/view/" + event.getKey() + "/";
-        } catch (EventsModelNotFound | EventsInvalidModelException e) {
+        } catch (EventNotFoundException | EventInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
@@ -189,7 +189,7 @@ public class DashboardEventController {
     @GetMapping("/overview/{key}/")
     public String overview(Model model, @PathVariable String key) {
         try {
-            Event event = this.eventService.getByKey(key);
+            Event event = eventService.getByKey(key);
 
             List<SoldProduct> soldProduct = new ArrayList<>();
             event.getProducts().forEach(x -> soldProduct.addAll(this.soldProductService.getByProduct(x)));
@@ -198,7 +198,7 @@ public class DashboardEventController {
             model.addAttribute("soldProducts", soldProduct);
 
             return "admin/events/overview";
-        } catch (EventsModelNotFound e) {
+        } catch (EventNotFoundException e) {
             return "redirect:/administrator/events/";
         }
     }
@@ -213,13 +213,13 @@ public class DashboardEventController {
     @GetMapping("/delete/{key}/")
     public String deleteEvent(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Event event = this.eventService.getByKey(key);
-            this.eventService.delete(event);
-            this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
+            Event event = eventService.getByKey(key);
+            eventService.delete(event);
+            webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
             redirect.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
 
             return "redirect:/administrator/events/";
-        } catch (EventsModelNotFound e) {
+        } catch (EventNotFoundException e) {
             redirect.addFlashAttribute("message", "Event has not been deleted, because it does not exists!");
 
             return "redirect:/administrator/events/";

@@ -1,6 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
@@ -37,6 +38,7 @@ public class DashboardOrderController {
      * OrderService.
      */
     private final OrderService orderService;
+    private final String REDIRECT_ORDERS_OVERVIEW = "redirect:/administrator/orders/";
 
     /**
      * Default constructor
@@ -70,12 +72,12 @@ public class DashboardOrderController {
     @GetMapping("/view/{key}/")
     public String edit(Model model, @PathVariable String key) {
         try {
-            Order order = this.orderService.getByReference(key);
+            Order order = orderService.getByReference(key);
             model.addAttribute("order", order);
 
             return "admin/orders/view";
-        } catch (EventsModelNotFound e) {
-            return "redirect:/administrator/orders/";
+        } catch (OrderNotFoundException e) {
+            return REDIRECT_ORDERS_OVERVIEW;
         }
     }
 
@@ -89,13 +91,14 @@ public class DashboardOrderController {
     @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Order order = this.orderService.getByReference(key);
-            this.orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+            Order order = orderService.getByReference(key);
+            orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
             redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
-        } catch (EventsModelNotFound ignored) {
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/administrator/orders/";
+        return REDIRECT_ORDERS_OVERVIEW;
     }
 }

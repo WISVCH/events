@@ -1,8 +1,8 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
@@ -164,7 +164,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByReferenceEmpty() throws Exception {
-        thrown.expect(EventsModelNotFound.class);
+        thrown.expect(OrderNotFoundException.class);
         when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
 
         service.getByReference(this.order.getPublicReference());
@@ -182,7 +182,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testCreateNotEnoughTickets() throws Exception {
-        thrown.expect(EventsInvalidException.class);
+        thrown.expect(OrderInvalidException.class);
 
         when(soldProductService.getByProduct(this.product)).thenReturn(ImmutableList.of(new SoldProduct(), new SoldProduct()));
         when(this.product.getMaxSold()).thenReturn(2);
@@ -210,7 +210,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testUpdateNewOrder() throws Exception {
-        thrown.expect(EventsInvalidException.class);
+        thrown.expect(OrderCannotUpdateException.class);
         thrown.expectMessage("This object is new so can not be updated");
 
         service.update(new Order());
@@ -224,7 +224,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidAmountNull() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order amount can not be null");
 
         this.order.setAmount(null);
@@ -233,7 +233,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidAmountNegative() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order amount can not be negative");
 
         this.order.setAmount(-1.d);
@@ -242,7 +242,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidNoProducts() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("OrderProducts list can not be null");
 
         this.order.setOrderProducts(Collections.emptyList());
@@ -251,7 +251,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidProductsNull() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("OrderProducts list can not be null");
 
         this.order.setOrderProducts(null);
@@ -260,7 +260,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidCreationDateNull() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order creation date can not be null");
 
         this.order.setCreationDate(null);
@@ -269,7 +269,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidCreatedByNull() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order created by can not be null");
 
         this.order.setCreatedBy(null);
@@ -278,7 +278,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsValidCreatedByEmpty() throws Exception {
-        thrown.expect(EventsInvalidModelException.class);
+        thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order created by can not be null");
 
         this.order.setCreatedBy("");
@@ -297,7 +297,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testAssertIsNotValidForCustomer() throws Exception {
-        thrown.expect(EventsInvalidException.class);
+        thrown.expect(OrderInvalidException.class);
 
         Customer customer = mock(Customer.class);
         this.order.setCustomer(customer);

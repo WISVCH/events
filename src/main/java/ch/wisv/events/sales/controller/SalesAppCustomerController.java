@@ -1,9 +1,9 @@
 package ch.wisv.events.sales.controller;
 
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.exception.InvalidCustomerException;
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.customer.CustomerService;
@@ -34,6 +34,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("hasRole('USER')")
 @RequestMapping("/sales/order/{publicReference}/customer")
 public class SalesAppCustomerController {
+
+    private final String REDIRECT_SALES_HOME = "redirect:/sales/";
+    private final String REDIRECT_CUSTOMER_CREATE = "redirect:/sales/order/%s/customer/create/";
+    private final String REDIRECT_ORDER_OVERVIEW = "redirect:/sales/order/%s/";
 
     /**
      * Field orderService
@@ -69,10 +73,10 @@ public class SalesAppCustomerController {
             model.addAttribute("customer", new Customer());
 
             return "sales/customer/rfid";
-        } catch (EventsModelNotFound e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
+            return REDIRECT_SALES_HOME;
         }
     }
 
@@ -88,7 +92,7 @@ public class SalesAppCustomerController {
         try {
             Order order = orderService.getByReference(publicReference);
             if (customer.getEmail() != null && !customer.getEmail().equals("")) {
-                customer = customerService.getByEmail(customer.getEmail());
+                customer = customerService.getByChUsernameOrEmail(customer.getEmail());
             } else {
                 customer = customerService.getByRfidToken(customer.getRfidToken());
             }
@@ -97,15 +101,15 @@ public class SalesAppCustomerController {
             orderService.assertIsValidForCustomer(order);
             orderService.update(order);
 
-            return "redirect:/sales/order/" + order.getPublicReference() + "/";
-        } catch (EventsModelNotFound | EventsInvalidException e) {
+            return String.format(REDIRECT_ORDER_OVERVIEW, order.getPublicReference());
+        } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
-        } catch (CustomerNotFound e) {
+            return REDIRECT_SALES_HOME;
+        } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute("customer", customer);
 
-            return "redirect:/sales/order/" + publicReference + "/customer/create/";
+            return String.format(REDIRECT_CUSTOMER_CREATE, publicReference);
         }
     }
 
@@ -123,10 +127,10 @@ public class SalesAppCustomerController {
             }
 
             return "sales/customer/create";
-        } catch (EventsModelNotFound e) {
+        } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
+            return REDIRECT_SALES_HOME;
         }
     }
 
@@ -147,12 +151,16 @@ public class SalesAppCustomerController {
 
             redirect.addFlashAttribute("success", "Customer successfully created!");
 
-            return "redirect:/sales/order/" + order.getPublicReference() + "/";
-        } catch (InvalidCustomerException e) {
+            return String.format(REDIRECT_ORDER_OVERVIEW, order.getPublicReference());
+        } catch (CustomerInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("customer", customer);
 
-            return "redirect:/sales/order/" + publicReference + "/customer/create/";
+            return String.format(REDIRECT_CUSTOMER_CREATE, publicReference);
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
+            return REDIRECT_SALES_HOME;
         }
     }
 }

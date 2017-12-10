@@ -1,4 +1,6 @@
-package ch.wisv.events.core.exception;
+package ch.wisv.events.core.exception.normal;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,10 +18,14 @@ package ch.wisv.events.core.exception;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class CustomerNotFound extends RuntimeException {
+public class OrderInvalidException extends EventsException {
 
-    public CustomerNotFound(String message) {
-        super(message);
+    /**
+     * OrderInvalidException.
+     *
+     * @param message of type String
+     */
+    public OrderInvalidException(String message) {
+        super(LogLevelEnum.WARN, message);
     }
-
 }
