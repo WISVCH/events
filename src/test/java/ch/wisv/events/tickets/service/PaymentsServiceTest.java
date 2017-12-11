@@ -1,12 +1,8 @@
-package ch.wisv.events.core.service;
+package ch.wisv.events.tickets.service;
 
-import ch.wisv.events.EventsApplicationTest;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ch.wisv.events.ServiceTest;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -24,15 +20,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public abstract class ServiceTest {
+public class PaymentsServiceTest extends ServiceTest {
+    @Before
+    public void setUp() throws Exception {
+    }
 
-    /**
-     * ExpectedException Object
-     */
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    @Test
+    public void getPaymentsOrderStatus() throws Exception {
+    }
+
+    @Test
+    public void getPaymentsMollieUrl() throws Exception {
+    }
 
 }

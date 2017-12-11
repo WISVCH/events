@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
+import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
