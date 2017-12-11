@@ -1,6 +1,5 @@
-package ch.wisv.events.core.service;
+package ch.wisv.events;
 
-import ch.wisv.events.EventsApplicationTest;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;

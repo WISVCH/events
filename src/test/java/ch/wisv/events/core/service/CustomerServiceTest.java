@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.connect.common.model.CHUserInfo;
+import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
@@ -131,7 +132,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetByChUserName() throws Exception {
         when(repository.findByChUsernameOrEmail(customer.getChUsername(), customer.getChUsername())).thenReturn(Optional.of(this.customer));
 
-        assertEquals(this.customer, customerService.getByChUsernameOrEmail(this.customer.getChUsername()));
+        assertEquals(this.customer, customerService.getByChUsernameOrEmail(this.customer.getChUsername(), this.customer.getChUsername()));
     }
 
     /**
@@ -140,10 +141,10 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testGetByChUserNameNotFound() throws Exception {
         thrown.expect(CustomerNotFoundException.class);
-        thrown.expectMessage("Customer with username or email testt not found!");
+        thrown.expectMessage("Customer with username or email testt, testt not found!");
         when(repository.findByChUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.empty());
 
-        customerService.getByChUsernameOrEmail("testt");
+        customerService.getByChUsernameOrEmail("testt", "testt");
     }
 
     /**

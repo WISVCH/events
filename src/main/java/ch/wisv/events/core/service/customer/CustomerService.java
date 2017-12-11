@@ -52,10 +52,11 @@ public interface CustomerService {
     /**
      * Get a customer by CH username or Email.
      *
-     * @param query of type String
+     * @param username of type String
+     * @param email    of type String
      * @return Customer
      */
-    Customer getByChUsernameOrEmail(String query) throws CustomerNotFoundException;
+    Customer getByChUsernameOrEmail(String username, String email) throws CustomerNotFoundException;
 
     /**
      * Get a customer by rfidToken.

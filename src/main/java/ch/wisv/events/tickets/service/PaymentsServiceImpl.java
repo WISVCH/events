@@ -54,6 +54,24 @@ public class PaymentsServiceImpl implements PaymentsService {
     @NotNull
     private String clientUri;
 
+    private HttpClient httpClient;
+
+    /**
+     * Default constructor.
+     */
+    public PaymentsServiceImpl() {
+        this.httpClient = HttpClients.createDefault();
+    }
+
+    /**
+     * Constructor with own HttpClient.
+     *
+     * @param httpClient of type HttpClient
+     */
+    public PaymentsServiceImpl(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     /**
      * Get the Order status of Payments.
      *
@@ -63,17 +81,18 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Override
     public String getPaymentsOrderStatus(String paymentsReference) {
         try {
-            HttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(issuerUri + "/api/orders/" + paymentsReference);
             httpGet.setHeader("Accept", "application/json");
 
-            HttpResponse response = httpClient.execute(httpGet);
+            HttpResponse response = this.httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                JSONObject responseObject = (JSONObject) JSONValue.parse(EntityUtils.toString(response.getEntity()));
+                JSONObject responseObject = (JSONObject) JSONValue.parse(EntityUtils.toString(entity));
 
-                return (String) responseObject.get("status");
+                if (responseObject.containsKey("status")) {
+                    return (String) responseObject.get("status");
+                }
             }
         } catch (IOException ignored) {
         }
@@ -90,7 +109,6 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Override
     public String getPaymentsMollieUrl(Order order) {
         try {
-            HttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
 
             JSONObject object = new JSONObject();
@@ -106,7 +124,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             httpPost.setHeader("Accept", "application/json");
             httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
 
-            HttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = this.httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {

@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service;
 
+import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
 import ch.wisv.events.core.model.product.Product;

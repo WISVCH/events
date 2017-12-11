@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service;
 
+import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;

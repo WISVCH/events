@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service;
 
+import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
