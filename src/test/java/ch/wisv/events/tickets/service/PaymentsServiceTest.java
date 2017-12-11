@@ -1,7 +1,6 @@
 package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.ServiceTest;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -21,9 +20,6 @@ import org.junit.Test;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class PaymentsServiceTest extends ServiceTest {
-    @Before
-    public void setUp() throws Exception {
-    }
 
     @Test
     public void getPaymentsOrderStatus() throws Exception {

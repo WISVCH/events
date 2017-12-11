@@ -26,6 +26,6 @@ public class PaymentsStatusUnknown extends EventsException {
      * @param status of type String
      */
     public PaymentsStatusUnknown(String status) {
-        super(LogLevelEnum.ERROR, "Payments status " + status + "is unknown!");
+        super(LogLevelEnum.ERROR, "Payments status " + status + " is unknown!");
     }
 }

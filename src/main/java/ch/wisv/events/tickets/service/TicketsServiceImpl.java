@@ -68,10 +68,10 @@ public class TicketsServiceImpl implements TicketsService {
             if (oidcAuth.getUserInfo() instanceof CHUserInfo) {
                 CHUserInfo userInfo = (CHUserInfo) oidcAuth.getUserInfo();
                 try {
-                    return customerService.getByChUsernameOrEmail(userInfo.getLdapUsername());
+                    return customerService.getByChUsernameOrEmail(userInfo.getLdapUsername(), userInfo.getEmail());
                 } catch (CustomerNotFoundException e) {
                     try {
-                        customerService.createByChUserInfo(userInfo);
+                        return customerService.createByChUserInfo(userInfo);
                     } catch (CustomerInvalidException ignored) {
                     }
                 }
