@@ -4,6 +4,7 @@ import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -92,6 +93,7 @@ public class TicketsController {
     public String checkout(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
+
             if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
                 model.addAttribute("order", order);
 
@@ -116,11 +118,9 @@ public class TicketsController {
     @GetMapping("/cancel/{key}/")
     public String cancel(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Order order = orderService.getByReference(key);
+            Order order = this.getOrderByKeyAndAuthCustomer(key);
 
-            if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
-                orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
-            }
+            orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
@@ -138,18 +138,18 @@ public class TicketsController {
     @GetMapping("/payment/{key}/")
     public String payment(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            Order order = orderService.getByReference(key);
+            Order order = this.getOrderByKeyAndAuthCustomer(key);
 
-            if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
-                return "redirect:" + ticketsService.getPaymentsMollieUrl(order);
-            } else {
-                throw new AccessDeniedException("Access denied!");
-            }
+            return "redirect:" + ticketsService.getPaymentsMollieUrl(order);
         } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-        }
 
-        return "redirect:/checkout/" + key + "/";
+            return REDIRECT_HOME;
+        } catch (PaymentsConnectionException e) {
+            redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
+
+            return "redirect:/checkout/" + key + "/";
+        }
     }
 
     /**
@@ -164,21 +164,37 @@ public class TicketsController {
     @GetMapping("/complete/{key}/")
     public String complete(Model model, RedirectAttributes redirect, @PathVariable String key, @RequestParam("reference") String paymentsReference) {
         try {
-            Order order = orderService.getByReference(key);
+            Order order = this.getOrderByKeyAndAuthCustomer(key);
+            order = ticketsService.updateOrderStatus(order, paymentsReference);
+            model.addAttribute("order", order);
 
-            if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
-                order = ticketsService.updateOrderStatus(order, paymentsReference);
-                model.addAttribute("order", order);
-
-                return "tickets/complete";
-            }
+            return "tickets/complete";
         } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-        } catch (PaymentsStatusUnknown e) {
-            redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
-        }
 
-        return "redirect:/checkout/" + key + "/";
+            return REDIRECT_HOME;
+        } catch (PaymentsStatusUnknown | PaymentsConnectionException e) {
+            redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
+
+            return "redirect:/checkout/" + key + "/";
+        }
+    }
+
+    /**
+     * Get an Order by its keys and auth if Customer is auth to see this Order.
+     *
+     * @param key of type String
+     * @return Order
+     * @throws OrderNotFoundException when the Order is not found.
+     */
+    private Order getOrderByKeyAndAuthCustomer(String key) throws OrderNotFoundException {
+        Order order = orderService.getByReference(key);
+
+        if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
+            return order;
+        } else {
+            throw new AccessDeniedException("Access denied!");
+        }
     }
 
     /**
