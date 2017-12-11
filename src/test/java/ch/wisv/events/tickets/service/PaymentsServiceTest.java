@@ -2,6 +2,7 @@ package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.ServiceTest;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
@@ -14,6 +15,8 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
+=======
+>>>>>>> Add TicketsService tests
 import org.junit.Test;
 import org.mockito.Mock;
 
