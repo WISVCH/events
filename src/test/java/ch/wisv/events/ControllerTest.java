@@ -1,12 +1,16 @@
-package ch.wisv.events.core.service;
+package ch.wisv.events;
 
-import ch.wisv.events.EventsApplicationTest;
+import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.tickets.service.TicketsService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -24,15 +28,22 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-public abstract class ServiceTest {
+public abstract class ControllerTest {
 
-    /**
-     * ExpectedException Object
-     */
+    @Autowired
+    protected MockMvc mockMvc;
+
+    @MockBean
+    protected ProductService productService;
+
+    @MockBean
+    protected TicketsService ticketsService;
+
+    @MockBean
+    protected OrderService orderService;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
 }

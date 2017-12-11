@@ -3,7 +3,6 @@ package ch.wisv.events.core.model.order;
 import lombok.Data;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -25,11 +24,6 @@ import java.util.UUID;
 public class OrderProductDTO {
 
     /**
-     * Key of this OrderProductDTO.
-     */
-    String key;
-
-    /**
      * Field product should contain Product keys and number of tickets of that product.
      */
     HashMap<String, Long> products;
@@ -38,6 +32,6 @@ public class OrderProductDTO {
      * Constructor.
      */
     public OrderProductDTO() {
-        this.key = UUID.randomUUID().toString();
+        this.products = new HashMap<String, Long>();
     }
 }

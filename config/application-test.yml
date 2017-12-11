@@ -20,6 +20,8 @@ spring:
 server:
     context-path: /events
 
+security.basic.enabled: false
+
 wisvch.connect:
     issuerUri: https://connect.ch.tudelft.nl/
     clientUri: http://localhost:8080/events
