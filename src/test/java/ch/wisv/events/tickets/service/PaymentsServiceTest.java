@@ -1,6 +1,7 @@
 package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.ServiceTest;
+<<<<<<< HEAD
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
@@ -24,6 +25,10 @@ import java.util.UUID;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+=======
+import org.junit.Before;
+import org.junit.Test;
+>>>>>>> Move ServiceTest class
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
