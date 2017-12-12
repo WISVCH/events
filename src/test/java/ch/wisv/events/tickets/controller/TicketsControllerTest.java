@@ -287,7 +287,7 @@ public class TicketsControllerTest extends ControllerTest {
     @Test
     public void testGetPaymentAccessDenied() throws Exception {
         thrown.expect(NestedServletException.class);
-        x
+
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
