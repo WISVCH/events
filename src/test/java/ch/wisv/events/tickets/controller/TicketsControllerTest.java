@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -189,14 +190,15 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Test
     public void testGetCheckoutAccessDenied() throws Exception {
+        thrown.expect(NestedServletException.class);
+
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
         mockMvc.perform(get("/checkout/" + this.order.getPublicReference() + "/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("exception/access-denied"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -235,14 +237,15 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Test
     public void testGetCancelAccessDenied() throws Exception {
+        thrown.expect(NestedServletException.class);
+
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
         mockMvc.perform(get("/cancel/" + this.order.getPublicReference() + "/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("exception/access-denied"));
+                .andExpect(status().is4xxClientError());
 
         verify(orderService, times(0)).updateOrderStatus(this.order, OrderStatus.CANCELLED);
     }
@@ -283,14 +286,15 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Test
     public void testGetPaymentAccessDenied() throws Exception {
+        thrown.expect(NestedServletException.class);
+        x
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
         mockMvc.perform(get("/payment/" + this.order.getPublicReference() + "/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("exception/access-denied"));
+                .andExpect(status().is4xxClientError());
 
         verify(ticketsService, times(0)).getPaymentsMollieUrl(this.order);
     }
@@ -355,6 +359,7 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Test
     public void testGetCompleteAccessDenied() throws Exception {
+        thrown.expect(NestedServletException.class);
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
@@ -363,8 +368,7 @@ public class TicketsControllerTest extends ControllerTest {
 
         // Perform call
         mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/").param("reference", key))
-                .andExpect(status().isOk())
-                .andExpect(view().name("exception/access-denied"));
+                .andExpect(status().is4xxClientError());
 
         verify(ticketsService, times(0)).updateOrderStatus(this.order, key);
     }
