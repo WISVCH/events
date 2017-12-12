@@ -2,7 +2,6 @@ package ch.wisv.events;
 
 import ch.wisv.connect.client.CHUserInfoFetcher;
 import ch.wisv.connect.common.model.CHUserInfo;
-import ch.wisv.events.core.exception.runtime.UserNotInBetaException;
 import com.google.common.collect.ImmutableSet;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
 import org.mitre.openid.connect.client.OIDCAuthenticationProvider;
@@ -121,7 +120,7 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
                 } else if (properties.getBetaUsers().stream().anyMatch(info.getLdapUsername()::contains)) {
                     return ImmutableSet.of(ROLE_USER);
                 } else {
-                    throw new UserNotInBetaException();
+                    return ImmutableSet.of();
                 }
             }
             throw new AccessDeniedException("Invalid user info!");
