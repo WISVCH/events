@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Controller
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class TicketsController {
 
     /**
