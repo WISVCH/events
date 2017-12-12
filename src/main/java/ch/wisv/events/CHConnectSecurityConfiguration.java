@@ -2,6 +2,7 @@ package ch.wisv.events;
 
 import ch.wisv.connect.client.CHUserInfoFetcher;
 import ch.wisv.connect.common.model.CHUserInfo;
+import ch.wisv.events.core.exception.runtime.UserNotInBetaException;
 import com.google.common.collect.ImmutableSet;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
 import org.mitre.openid.connect.client.OIDCAuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -113,10 +115,16 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
         authenticationProvider.setAuthoritiesMapper((idToken, userInfo) -> {
             if (userInfo instanceof CHUserInfo) {
                 CHUserInfo info = (CHUserInfo) userInfo;
-                return properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains) ?
-                        ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
+
+                if (properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains)) {
+                    return ImmutableSet.of(ROLE_ADMIN, ROLE_USER);
+                } else if (properties.getBetaUsers().stream().anyMatch(info.getLdapUsername()::contains)) {
+                    return ImmutableSet.of(ROLE_USER);
+                } else {
+                    throw new UserNotInBetaException();
+                }
             }
-            return ImmutableSet.of();
+            throw new AccessDeniedException("Invalid user info!");
         });
 
         return authenticationProvider;
