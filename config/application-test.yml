@@ -27,6 +27,7 @@ wisvch.connect:
     clientUri: http://localhost:8080/events
 
     admin-groups: dienst2
+    beta-users: test
 
 # CH Payments Configuration
 wisvch.payments:
