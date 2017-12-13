@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getAvailableProducts() {
-        return productRepository.findALlBySellStartBefore(LocalDateTime.now())
+        return productRepository.findAllBySellStartBefore(LocalDateTime.now())
                 .stream().filter(product -> {
                     if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
                         return false;
