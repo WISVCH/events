@@ -112,19 +112,21 @@
                         <thead class="thead-inverse bg-primary">
                         <tr>
                             <th>Item</th>
+                            <th class="text-right" style="width: 80px;">Amount</th>
                             <th class="text-right" style="width: 80px;">Price</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="product : ${order.getProducts()}">
-                            <td th:text="${product.getTitle()}"></td>
+                        <tr th:each="product : ${order.getOrderProducts()}">
+                            <td th:text="${product.getProduct().getTitle()}"></td>
+                            <td th:text="${product.getAmount()}"></td>
                             <td class="text-right"
-                                th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
+                                th:text="'€ ' + ${#numbers.formatDecimal(product.getPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
                         </tr>
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th>Totaal</th>
+                            <th colspan="2">Totaal</th>
                             <th class="text-right"
                                 th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
                         </tr>

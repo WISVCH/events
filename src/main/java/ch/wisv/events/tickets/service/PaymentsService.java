@@ -1,6 +1,7 @@
 package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.core.model.order.Order;
+import org.apache.http.client.methods.HttpPost;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -35,4 +36,12 @@ public interface PaymentsService {
      * @return String
      */
     String getPaymentsMollieUrl(Order order);
+
+    /**
+     * Create a HttpPost to create a Payments Order request
+     *
+     * @param order of type Order
+     * @return HttpPost
+     */
+    HttpPost createPaymentsOrderHttpPost(Order order);
 }

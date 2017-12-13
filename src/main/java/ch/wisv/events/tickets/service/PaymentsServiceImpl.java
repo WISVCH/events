@@ -54,6 +54,9 @@ public class PaymentsServiceImpl implements PaymentsService {
     @NotNull
     private String clientUri;
 
+    /**
+     * Field httpClient
+     */
     private HttpClient httpClient;
 
     /**
@@ -109,20 +112,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Override
     public String getPaymentsMollieUrl(Order order) {
         try {
-            HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
-
-            JSONObject object = new JSONObject();
-            object.put("name", order.getCustomer().getName());
-            object.put("email", order.getCustomer().getEmail());
-            object.put("returnUrl", clientUri + "/complete/" + order.getPublicReference() + "/");
-
-            JSONArray jsonArray = new JSONArray();
-            order.getOrderProducts().forEach(orderProduct -> jsonArray.add(orderProduct.getProduct().getKey()));
-            object.put("productKeys", jsonArray);
-
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+            HttpPost httpPost = this.createPaymentsOrderHttpPost(order);
 
             HttpResponse response = this.httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
@@ -138,5 +128,34 @@ public class PaymentsServiceImpl implements PaymentsService {
         }
 
         throw new PaymentsConnectionException();
+    }
+
+    /**
+     * Create a HttpPost to create a Payments Order request
+     *
+     * @param order of type Order
+     * @return HttpPost
+     */
+    public HttpPost createPaymentsOrderHttpPost(Order order) {
+        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
+
+        JSONObject object = new JSONObject();
+        object.put("name", order.getCustomer().getName());
+        object.put("email", order.getCustomer().getEmail());
+        object.put("returnUrl", clientUri + "/status/" + order.getPublicReference() + "/");
+        object.put("mailConfirmation", false);
+
+        JSONArray jsonArray = new JSONArray();
+        order.getOrderProducts().forEach(orderProduct -> {
+            for (int i = 0; i < orderProduct.getAmount(); i++) {
+                jsonArray.add(orderProduct.getProduct().getKey());
+            }
+        });
+        object.put("productKeys", jsonArray);
+
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+        return httpPost;
     }
 }
