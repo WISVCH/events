@@ -3,11 +3,13 @@ package ch.wisv.events.tickets.service;
 import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.order.OrderService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -44,14 +46,24 @@ public class TicketsServiceImpl implements TicketsService {
     private final PaymentsService paymentsService;
 
     /**
+     * OrderService orderService.
+     */
+    private final OrderService orderService;
+
+    /**
      * Constructor.
      *
      * @param customerService of type CustomerService
      * @param paymentsService of type PaymentsService
+     * @param orderService    of type OrderService
      */
-    public TicketsServiceImpl(CustomerService customerService, PaymentsService paymentsService) {
+    public TicketsServiceImpl(CustomerService customerService,
+            PaymentsService paymentsService,
+            OrderService orderService
+    ) {
         this.customerService = customerService;
         this.paymentsService = paymentsService;
+        this.orderService = orderService;
     }
 
     /**
@@ -100,23 +112,21 @@ public class TicketsServiceImpl implements TicketsService {
      * @return Order
      */
     @Override
-    public Order updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown {
+    public void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
         String status = paymentsService.getPaymentsOrderStatus(paymentsReference);
 
         switch (status) {
             case "WAITING":
-                order.setStatus(OrderStatus.WAITING);
+                orderService.updateOrderStatus(order, OrderStatus.WAITING);
                 break;
             case "PAID":
-                order.setStatus(OrderStatus.PAID_IDEAL);
+                orderService.updateOrderStatus(order, OrderStatus.PAID_IDEAL);
                 break;
             case "CANCELLED":
-                order.setStatus(OrderStatus.CANCELLED);
+                orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
                 break;
             default:
                 throw new PaymentsStatusUnknown(status);
         }
-
-        return order;
     }
 }

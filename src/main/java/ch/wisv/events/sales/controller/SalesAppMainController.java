@@ -1,5 +1,6 @@
 package ch.wisv.events.sales.controller;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
@@ -91,7 +92,7 @@ public class SalesAppMainController {
             orderService.create(order);
 
             return "redirect:/sales/order/" + order.getPublicReference() + "/customer/rfid/";
-        } catch (OrderInvalidException | ProductNotFoundException e) {
+        } catch (OrderInvalidException | ProductNotFoundException | EventNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/";

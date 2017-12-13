@@ -4,10 +4,12 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderServiceImpl;
@@ -75,6 +77,12 @@ public class OrderServiceImplTest extends ServiceTest {
     private ProductService productService;
 
     /**
+     * Field eventService
+     */
+    @Mock
+    private EventService eventService;
+
+    /**
      * Field service
      */
     private OrderService service;
@@ -96,7 +104,7 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        this.service = new OrderServiceImpl(repository, orderProductRepository, mailService, soldProductService, productService);
+        this.service = new OrderServiceImpl(repository, orderProductRepository, mailService, soldProductService, productService, eventService);
 
         this.product = mock(Product.class);
 
@@ -173,7 +181,10 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testCreate() throws Exception {
+        Event event = mock(Event.class);
+        when(event.getMaxSold()).thenReturn(25);
         when(this.product.getMaxSold()).thenReturn(25);
+        when(eventService.getEventByProduct(this.product)).thenReturn(event);
 
         service.create(this.order);
 
@@ -185,8 +196,25 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testCreateNotEnoughTickets() throws Exception {
         thrown.expect(OrderInvalidException.class);
 
+        Event event = mock(Event.class);
+        when(event.getMaxSold()).thenReturn(25);
         when(soldProductService.getByProduct(this.product)).thenReturn(ImmutableList.of(new SoldProduct(), new SoldProduct()));
+        when(eventService.getEventByProduct(this.product)).thenReturn(event);
         when(this.product.getMaxSold()).thenReturn(2);
+        when(this.product.getTitle()).thenReturn("Title");
+
+        service.create(this.order);
+    }
+
+    @Test
+    public void testCreateNotEnoughEventTickets() throws Exception {
+        thrown.expect(OrderInvalidException.class);
+
+        Event event = mock(Event.class);
+        when(event.getMaxSold()).thenReturn(2);
+        when(soldProductService.getByProduct(this.product)).thenReturn(ImmutableList.of(new SoldProduct(), new SoldProduct()));
+        when(eventService.getEventByProduct(this.product)).thenReturn(event);
+        when(this.product.getMaxSold()).thenReturn(25);
         when(this.product.getTitle()).thenReturn("Title");
 
         service.create(this.order);
@@ -205,6 +233,7 @@ public class OrderServiceImplTest extends ServiceTest {
                 this.order.getPaidDate(),
                 this.order.getCustomer()
         );
+        when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
         service.update(order);
         verify(repository, times(1)).saveAndFlush(order);
     }
@@ -213,6 +242,7 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testUpdateNewOrder() throws Exception {
         thrown.expect(OrderCannotUpdateException.class);
         thrown.expectMessage("This object is new so can not be updated");
+        when(repository.findByPublicReference(any(String.class))).thenReturn(Optional.empty());
 
         service.update(new Order());
     }

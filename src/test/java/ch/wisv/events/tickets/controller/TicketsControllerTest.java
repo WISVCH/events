@@ -3,7 +3,6 @@ package ch.wisv.events.tickets.controller;
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.*;
@@ -254,6 +253,7 @@ public class TicketsControllerTest extends ControllerTest {
     public void testGetPayment() throws Exception {
         // Set customer
         this.order.setCustomer(this.customer);
+        this.order.setAmount(1.0d);
 
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
@@ -266,6 +266,26 @@ public class TicketsControllerTest extends ControllerTest {
                 .andExpect(redirectedUrl("url.to.payments"));
 
         verify(ticketsService, times(1)).getPaymentsMollieUrl(this.order);
+    }
+
+    @Test
+    public void testGetPaymentFreeOrder() throws Exception {
+        // Set customer
+        this.order.setCustomer(this.customer);
+        this.order.setAmount(0.0d);
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
+        when(ticketsService.getPaymentsMollieUrl(this.order)).thenReturn("url.to.payments");
+        doNothing().when(orderService).updateOrderStatus(this.order, OrderStatus.PAID_IDEAL);
+
+        // Perform call
+        mockMvc.perform(get("/payment/" + this.order.getPublicReference() + "/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/complete/" + this.order.getPublicReference() + "/"));
+
+        verify(orderService, times(1)).updateOrderStatus(this.order, OrderStatus.PAID_IDEAL);
     }
 
     @Test
@@ -303,7 +323,7 @@ public class TicketsControllerTest extends ControllerTest {
     public void testGetPaymentPaymentsFails() throws Exception {
         // Set customer
         this.order.setCustomer(this.customer);
-        String key = UUID.randomUUID().toString();
+        this.order.setAmount(1.0d);
 
         // Set up mock calls
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
@@ -320,6 +340,97 @@ public class TicketsControllerTest extends ControllerTest {
     }
 
     @Test
+    public void testGetStatus() throws Exception {
+        // Set customer
+        this.order.setCustomer(this.customer);
+        this.order.setStatus(OrderStatus.PAID_IDEAL);
+        String key = UUID.randomUUID().toString();
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
+        doNothing().when(ticketsService).updateOrderStatus(this.order, key);
+
+        // Perform call
+        mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/complete/" + this.order.getPublicReference() + "/"));
+
+        verify(ticketsService, times(1)).updateOrderStatus(this.order, key);
+    }
+
+    @Test
+    public void testGetStatusWaiting() throws Exception {
+        // Set customer
+        this.order.setCustomer(this.customer);
+        this.order.setStatus(OrderStatus.WAITING);
+        String key = UUID.randomUUID().toString();
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
+        doNothing().when(ticketsService).updateOrderStatus(this.order, key);
+
+        // Perform call
+        mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/complete/" + this.order.getPublicReference() + "/"));
+
+        verify(ticketsService, times(6)).updateOrderStatus(this.order, key);
+    }
+
+    @Test
+    public void testGetStatusOrderNotFound() throws Exception {
+        // Set customer
+        this.order.setCustomer(this.customer);
+        String key = UUID.randomUUID().toString();
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
+
+        // Perform call
+        mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(flash().attribute("error", is("Order with key " + this.order.getPublicReference() + " not found!")));
+    }
+
+    @Test
+    public void testGetStatusPaymentsFails() throws Exception {
+        // Set customer
+        this.order.setCustomer(this.customer);
+        String key = UUID.randomUUID().toString();
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
+        doThrow(new PaymentsConnectionException()).when(ticketsService).updateOrderStatus(this.order, key);
+
+        // Perform call
+        mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/checkout/" + this.order.getPublicReference() + "/"))
+                .andExpect(flash().attribute("error", is("Something went wrong trying to fetch the payment status.")));
+    }
+
+    @Test
+    public void testGetStatusAccessDenied() throws Exception {
+        thrown.expect(NestedServletException.class);
+        String key = UUID.randomUUID().toString();
+
+        // Set up mock calls
+        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
+
+        // Perform call
+        mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
+                .andExpect(status().is4xxClientError());
+
+        verify(ticketsService, times(0)).updateOrderStatus(this.order, key);
+    }
+
+    @Test
     public void testGetComplete() throws Exception {
         // Set customer
         this.order.setCustomer(this.customer);
@@ -329,15 +440,10 @@ public class TicketsControllerTest extends ControllerTest {
         when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
-        this.order.setStatus(OrderStatus.WAITING);
-        when(ticketsService.updateOrderStatus(this.order, key)).thenReturn(this.order);
-
         // Perform call
-        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/").param("reference", key))
+        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/complete"));
-
-        verify(ticketsService, times(1)).updateOrderStatus(this.order, key);
     }
 
     @Test
@@ -351,7 +457,7 @@ public class TicketsControllerTest extends ControllerTest {
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
-        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/").param("reference", key))
+        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
                 .andExpect(flash().attribute("error", is("Order with key " + this.order.getPublicReference() + " not found!")));
@@ -367,29 +473,9 @@ public class TicketsControllerTest extends ControllerTest {
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
-        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/").param("reference", key))
+        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/"))
                 .andExpect(status().is4xxClientError());
 
         verify(ticketsService, times(0)).updateOrderStatus(this.order, key);
-    }
-
-    @Test
-    public void testGetCompletePaymentsFails() throws Exception {
-        // Set customer
-        this.order.setCustomer(this.customer);
-        String key = UUID.randomUUID().toString();
-
-        // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
-        when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
-        when(ticketsService.updateOrderStatus(this.order, key)).thenThrow(new PaymentsStatusUnknown(""));
-
-        // Perform call
-        mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/").param("reference", key))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + this.order.getPublicReference() + "/"))
-                .andExpect(flash().attribute("error", is("Something went wrong trying to fetch the payment status.")));
-
-        verify(ticketsService, times(1)).updateOrderStatus(this.order, key);
     }
 }

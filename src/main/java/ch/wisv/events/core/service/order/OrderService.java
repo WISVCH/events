@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
@@ -47,7 +48,7 @@ public interface OrderService {
      *
      * @param order of type Order
      */
-    void create(Order order) throws OrderInvalidException;
+    void create(Order order) throws OrderInvalidException, EventNotFoundException;
 
     /**
      * Method update ...
@@ -58,8 +59,7 @@ public interface OrderService {
 
     /**
      * Method updateOrderStatus
-     *
-     * @param order  of type Order
+     *  @param order  of type Order
      * @param status of type OrderStatus
      */
     void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;

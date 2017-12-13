@@ -1,13 +1,16 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.SoldProductService;
@@ -64,6 +67,11 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
 
     /**
+     * Field eventService
+     */
+    private final EventService eventService;
+
+    /**
      * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
      *
      * @param orderRepository        of type OrderRepository
@@ -71,19 +79,22 @@ public class OrderServiceImpl implements OrderService {
      * @param mailService            of type MailService
      * @param soldProductService     of type SoldProductService
      * @param productService         of type ProductService
+     * @param eventService           of type EventService
      */
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
             OrderProductRepository orderProductRepository,
             MailService mailService,
             SoldProductService soldProductService,
-            ProductService productService
+            ProductService productService,
+            EventService eventService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
         this.mailService = mailService;
         this.soldProductService = soldProductService;
         this.productService = productService;
+        this.eventService = eventService;
     }
 
     /**
@@ -114,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void create(Order order) throws OrderInvalidException {
+    public void create(Order order) throws OrderInvalidException, EventNotFoundException {
         this.setOrderAmount(order);
 
         order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
@@ -131,13 +142,18 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void update(Order order) throws OrderInvalidException {
-        if (order.getId() == null) {
+        try {
+            Order update = this.getByReference(order.getPublicReference());
+            update.setStatus(order.getStatus());
+            update.setCustomer(order.getCustomer());
+            update.setPaidDate(order.getPaidDate());
+
+            this.assertIsValid(order);
+
+            orderRepository.saveAndFlush(order);
+        } catch (OrderNotFoundException e) {
             throw new OrderCannotUpdateException();
         }
-
-        this.assertIsValid(order);
-
-        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -146,27 +162,30 @@ public class OrderServiceImpl implements OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      *               <p>
-     *               //TODO: update the creation of SoldProducts and sold count.
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
-        if (status == OrderStatus.REFUNDED) {
+        OrderStatus oldOrderStatus = order.getStatus();
+        order.setStatus(status);
+
+        if (oldOrderStatus != status && status == OrderStatus.REFUNDED) {
             order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().setSold(
                     orderProduct.getProduct().getSold() - 1
             ));
 
             soldProductService.delete(order);
-        } else if (!order.getStatus().isPaid() && status.isPaid()) {
-            order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().setSold(
-                    orderProduct.getProduct().getSold() + 1
-            ));
-            order.setPaidDate(LocalDateTime.now());
-            List<SoldProduct> soldProducts = soldProductService.create(order);
+        } else {
+            if (!oldOrderStatus.isPaid() && status.isPaid()) {
+                order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().setSold(
+                        orderProduct.getProduct().getSold() + 1
+                ));
+                order.setPaidDate(LocalDateTime.now());
+                List<SoldProduct> soldProducts = soldProductService.create(order);
 
-            mailService.sendOrderToCustomer(order, soldProducts);
+                mailService.sendOrderToCustomer(order, soldProducts);
+            }
         }
 
-        order.setStatus(status);
         this.update(order);
     }
 
@@ -254,17 +273,36 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order of type Order
      */
-    private void assertEnoughProductsLeft(Order order) throws OrderInvalidException {
+    private void assertEnoughProductsLeft(Order order) throws OrderInvalidException, EventNotFoundException {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             Integer soldProductsCount = soldProductService.getByProduct(orderProduct.getProduct()).size();
+            Event event = eventService.getEventByProduct(orderProduct.getProduct());
+            int soldNow = orderProduct.getAmount().intValue();
 
-            if (orderProduct.getProduct().getMaxSold() != null) {
-                Integer productsLeftCount = orderProduct.getProduct().getMaxSold() - soldProductsCount;
-
-                if (orderProduct.getAmount() > productsLeftCount) {
-                    throw new OrderInvalidException("Only " + productsLeftCount + " items left of " + orderProduct.getProduct().getTitle());
-                }
+            if (this.isSoldProductCountAboveMaxSold(event.getMaxSold(), soldProductsCount, soldNow)) {
+                throw new OrderInvalidException("Only " + (event.getMaxSold() - soldProductsCount) + " items left of " + orderProduct.getProduct().getTitle());
+            } else if (this.isSoldProductCountAboveMaxSold(orderProduct.getProduct().getMaxSold(), soldProductsCount, soldNow)) {
+                throw new OrderInvalidException("Only " + (orderProduct.getProduct().getMaxSold() - soldProductsCount) + " items left of " + orderProduct.getProduct().getTitle());
             }
         }
+    }
+
+    /**
+     * Is the SoldProduct count above the max sold of a product or event.
+     *
+     * @param maxSold           of type Integer
+     * @param soldProductsCount of type Integer
+     * @return boolean
+     */
+    private boolean isSoldProductCountAboveMaxSold(Integer maxSold, Integer soldProductsCount, Integer soldNow) {
+        if (maxSold != null) {
+            Integer productsLeftCount = maxSold - soldProductsCount;
+
+            if (soldNow > productsLeftCount) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
