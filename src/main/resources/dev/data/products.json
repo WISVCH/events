@@ -3,30 +3,40 @@
     "title": "T.U.E.S.Day lecture ticket",
     "description": "Ticket for the T.U.E.S.Day lecture.",
     "cost": 0.00,
-    "maxSold": 100
+    "maxSold": 5,
+    "maxSoldPerCustomer": 1,
+    "key": "dd729c96-dacf-4eab-a2e8-19d2a1ad917c"
   },
   {
     "title": "Symposium ticket",
     "description": "Ticket for the Symposium.",
     "cost": 5.00,
-    "maxSold": 100
+    "maxSold": 5,
+    "maxSoldPerCustomer": 5,
+    "key": "cfc66e3d-cf77-441d-a04a-9e81bd3e1117"
   },
   {
     "title": "WIFI Rally ticket",
     "description": "Ticket for the WIFI Rally.",
     "cost": 15.00,
-    "maxSold": 100
+    "maxSold": 5,
+    "maxSoldPerCustomer": 1,
+    "key": "f0d3a2a5-150e-4799-8679-db6778edb2a9"
   },
   {
     "title": "MatCH ticket",
     "description": "Ticket for the MatCH activity.",
     "cost": 3.00,
-    "maxSold": 100
+    "maxSold": 5,
+    "maxSoldPerCustomer": 5,
+    "key": "48b068ab-f4c9-46f7-bcf0-15b2f60bd1b6"
   },
   {
     "title": "Annuarium",
     "description": "",
     "cost": 1.00,
-    "maxSold": 250
+    "maxSold": 250,
+    "maxSoldPerCustomer": 25,
+    "key": "7a5b9158-a9e4-40f5-ad7f-586092274e63"
   }
 ]

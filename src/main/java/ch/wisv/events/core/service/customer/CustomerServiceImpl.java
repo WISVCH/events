@@ -1,8 +1,9 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.events.core.exception.CustomerException;
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.InvalidCustomerException;
+import ch.wisv.connect.common.model.CHUserInfo;
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
@@ -56,19 +57,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Get a customer by rfidToken.
-     *
-     * @param token of type String
-     * @return Customer
-     */
-    @Override
-    public Customer getByRFIDToken(String token) {
-        Optional<Customer> customer = customerRepository.findByRfidToken(token);
-
-        return customer.orElseThrow(() -> new CustomerNotFound("Customer with RFID token " + token + " not found!"));
-    }
-
-    /**
      * Get all customers.
      *
      * @return list of all customers
@@ -86,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
-        return this.customerRepository.findAllByCreatedAtAfter(after);
+        return customerRepository.findAllByCreatedAtAfter(after);
     }
 
     /**
@@ -96,23 +84,37 @@ public class CustomerServiceImpl implements CustomerService {
      * @return Customer
      */
     @Override
-    public Customer getByKey(String key) {
+    public Customer getByKey(String key) throws CustomerNotFoundException {
         Optional<Customer> customer = customerRepository.findByKey(key);
 
-        return customer.orElseThrow(() -> new CustomerNotFound("Customer with key " + key + " not found!"));
+        return customer.orElseThrow(() -> new CustomerNotFoundException("key " + key));
     }
 
     /**
-     * Get a Customer by email.
+     * Get a customer by CH username.
      *
-     * @param email of type String
+     * @param username username
+     * @param email
      * @return Customer
      */
     @Override
-    public Customer getByEmail(String email) {
-        Optional<Customer> customer = this.customerRepository.findByEmail(email);
+    public Customer getByChUsernameOrEmail(String username, String email) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByChUsernameOrEmail(username, email);
 
-        return customer.orElseThrow(() -> new CustomerNotFound("Customer with email " + email + " not found!"));
+        return customer.orElseThrow(() -> new CustomerNotFoundException("username or email " + username + ", " + email));
+    }
+
+    /**
+     * Get a customer by rfidToken.
+     *
+     * @param token of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getByRfidToken(String token) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByRfidToken(token);
+
+        return customer.orElseThrow(() -> new CustomerNotFoundException("rfid token " + token));
     }
 
     /**
@@ -121,10 +123,28 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer customer model
      */
     @Override
-    public void create(Customer customer) {
+    public void create(Customer customer) throws CustomerInvalidException {
         this.assertIsValidCustomer(customer);
 
-        this.customerRepository.saveAndFlush(customer);
+        customerRepository.saveAndFlush(customer);
+    }
+
+    /**
+     * Add a new customer by ChUserInfo.
+     *
+     * @param userInfo of type CHUserInfo
+     */
+    @Override
+    public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
+        Customer customer = new Customer(
+                userInfo.getName(),
+                userInfo.getEmail(),
+                userInfo.getLdapUsername(),
+                ""
+        );
+        this.create(customer);
+
+        return customer;
     }
 
     /**
@@ -133,7 +153,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer customer model
      */
     @Override
-    public void update(Customer customer) {
+    public void update(Customer customer) throws CustomerInvalidException, CustomerNotFoundException {
         Customer model = this.getByKey(customer.getKey());
 
         model.setChUsername(customer.getChUsername());
@@ -143,7 +163,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         this.assertIsValidCustomer(model);
 
-        this.customerRepository.save(model);
+        customerRepository.save(model);
     }
 
     /**
@@ -155,41 +175,45 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(Customer customer) {
         List<Order> orders = orderRepository.findByCustomer(customer);
         if (orders.size() > 0) {
-            throw new CustomerException("Customer has already placed orders, so it can not be deleted!");
+            throw new CustomerAlreadyPlacedOrdersException();
         }
 
-        this.customerRepository.delete(customer);
+        customerRepository.delete(customer);
     }
 
     /**
      * Will check all the required fields if they are valid.
      *
      * @param customer of type Customer
-     * @throws InvalidCustomerException when one of the required fields is not valid
+     * @throws CustomerInvalidException when one of the required fields is not valid
      */
-    private void assertIsValidCustomer(Customer customer) throws InvalidCustomerException {
+    private void assertIsValidCustomer(Customer customer) throws CustomerInvalidException {
         if (customer == null) {
-            throw new InvalidCustomerException("Customer can not be null!");
+            throw new CustomerInvalidException("Customer can not be null!");
         }
 
         if (customer.getName() == null || customer.getName().equals("")) {
-            throw new InvalidCustomerException("Name is empty, but a required field, so please fill in this field!");
+            throw new CustomerInvalidException("Name is empty, but a required field, so please fill in this field!");
         }
 
         if (customer.getEmail() == null || customer.getEmail().equals("")) {
-            throw new InvalidCustomerException("Email is empty, but a required field, so please fill in this field!");
+            throw new CustomerInvalidException("Email is empty, but a required field, so please fill in this field!");
         }
 
         if (customer.getRfidToken() == null) {
-            throw new InvalidCustomerException("RFID token can not be null.");
+            throw new CustomerInvalidException("RFID token can not be null.");
+        }
+
+        if (customer.getCreatedAt() == null) {
+            throw new CustomerInvalidException("Customer should contain a created at timestamp.");
         }
 
         if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
-            throw new InvalidCustomerException("RFID token is already used!");
+            throw new CustomerInvalidException("RFID token is already used!");
         }
 
         if (this.isNotUniqueEmail(customer)) {
-            throw new InvalidCustomerException("Email address is already used!");
+            throw new CustomerInvalidException("Email address is already used!");
         }
     }
 
@@ -200,7 +224,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
-        Optional<Customer> optional = this.customerRepository.findByEmail(customer.getEmail());
+        Optional<Customer> optional = customerRepository.findByEmail(customer.getEmail());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();
@@ -218,7 +242,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueRfidToken(Customer customer) {
-        Optional<Customer> optional = this.customerRepository.findByRfidToken(customer.getRfidToken());
+        Optional<Customer> optional = customerRepository.findByRfidToken(customer.getRfidToken());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();

@@ -1,5 +1,8 @@
 package ch.wisv.events.core.service.customer;
 
+import ch.wisv.connect.common.model.CHUserInfo;
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 
 import java.time.LocalDateTime;
@@ -39,42 +42,50 @@ public interface CustomerService {
     List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
 
     /**
-     * Get a customer by rfidToken.
-     *
-     * @param token of type String
-     * @return Customer
-     */
-    Customer getByRFIDToken(String token);
-
-    /**
      * Get a customer by key.
      *
      * @param key key
      * @return Customer
      */
-    Customer getByKey(String key);
+    Customer getByKey(String key) throws CustomerNotFoundException;
 
     /**
-     * Get a Customer by email.
+     * Get a customer by CH username or Email.
      *
-     * @param email of type String
+     * @param username of type String
+     * @param email    of type String
      * @return Customer
      */
-    Customer getByEmail(String email);
+    Customer getByChUsernameOrEmail(String username, String email) throws CustomerNotFoundException;
 
     /**
-     * Update a existing customer.
+     * Get a customer by rfidToken.
      *
-     * @param customer customer model
+     * @param query of type String
+     * @return Customer
      */
-    void update(Customer customer);
+    Customer getByRfidToken(String query) throws CustomerNotFoundException;
 
     /**
      * Add a new customer.
      *
      * @param customer customer model
      */
-    void create(Customer customer);
+    void create(Customer customer) throws CustomerInvalidException;
+
+    /**
+     * Add a new customer by ChUserInfo.
+     *
+     * @param userInfo of type CHUserInfo
+     */
+    Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException;
+
+    /**
+     * Update a existing customer.
+     *
+     * @param customer customer model
+     */
+    void update(Customer customer) throws CustomerInvalidException, CustomerNotFoundException;
 
     /**
      * Delete a customer.

@@ -1,7 +1,8 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.core.exception.EventsModelNotFound;
-import ch.wisv.events.core.exception.ProductInUseException;
+import ch.wisv.events.ServiceTest;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
@@ -159,37 +160,11 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByKeyEmpty() throws Exception {
-        thrown.expect(EventsModelNotFound.class);
+        thrown.expect(ProductNotFoundException.class);
         thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
 
         when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());
         service.getByKey(this.product.getKey());
-    }
-
-    /**
-     * Test get product by key
-     *
-     * @throws Exception when..
-     */
-    @Test
-    public void testGetById() throws Exception {
-        when(repository.findById(this.product.getId())).thenReturn(Optional.of(this.product));
-
-        assertEquals(this.product, service.getByID(this.product.getId()));
-    }
-
-    /**
-     * Test get product by key empty
-     *
-     * @throws Exception when..
-     */
-    @Test
-    public void testGetByIdEmpty() throws Exception {
-        thrown.expect(EventsModelNotFound.class);
-        thrown.expectMessage("Product with id " + this.product.getId() + " not found!");
-
-        when(repository.findById(this.product.getId())).thenReturn(Optional.empty());
-        service.getByID(this.product.getId());
     }
 
     /**
@@ -212,7 +187,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testUpdateEmpty() throws Exception {
-        thrown.expect(EventsModelNotFound.class);
+        thrown.expect(ProductNotFoundException.class);
         thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
 
         when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());
@@ -249,7 +224,7 @@ public class ProductServiceImplTest extends ServiceTest {
      */
     @Test
     public void testDeleteProductAddedToEvent() throws Exception {
-        thrown.expect(ProductInUseException.class);
+        thrown.expect(ProductAlreadyLinkedException.class);
         thrown.expectMessage("Product is already added to an Event");
 
         this.product.setLinked(true);

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Products</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Sold ticket [[${product.getTitle()}]]</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="table-responsive">
+                <table id="soldProductTable" class="table table-hover">
+                    <thead class="thead-inverse bg-primary">
+                    <tr>
+                        <th>Order</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--/*@thymesVar id="soldProduct" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
+                    <tr th:each="soldProduct : ${soldProducts}">
+                        <td>
+                            <a th:href="@{'/administrator/orders/view/' + ${soldProduct.getOrder().getPublicReference()} + '/'}"
+                               th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
+                        </td>
+                        <td>
+                            <a th:href="@{'/administrator/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'}"
+                               th:text="${soldProduct.getProduct().getTitle()}"></a>
+                        </td>
+                        <td>
+                            <a th:href="@{'/administrator/customers/view/' + ${soldProduct.getCustomer().getKey()} + '/'}"
+                               th:text="${soldProduct.getCustomer().getName()}"></a>
+                        </td>
+                        <td th:text="${soldProduct.getCustomer().getEmail()}"></td>
+                        <td th:text="${soldProduct.getStatus().toString()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        var table = $('#soldProductTable');
+        table.DataTable({
+            pageLength: 100,
+            order: [
+                [0, "desc"]
+            ]
+        });
+
+        var dataTablesFilter = $('.dataTables_filter');
+        dataTablesFilter.empty(); // clears the content generated
+        dataTablesFilter.append('<label>' +
+            '<input type="search" id="dataTableFilter" class="form-control" placeholder="Search..." ' +
+            'aria-controls="soldProductTable"></label>');
+
+        $("#dataTableFilter").on('keyup', function () {
+            table.DataTable().search($(this).val()).draw();
+        });
+    });
+</script>
+</body>

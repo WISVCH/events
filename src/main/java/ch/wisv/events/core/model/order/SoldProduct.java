@@ -44,17 +44,14 @@ public class SoldProduct {
      */
     private String key;
 
+    @ManyToOne
+    private Order order;
+
     /**
      * Product that is sold
      */
     @ManyToOne
     private Product product;
-
-    /**
-     * Order of the sold product
-     */
-    @ManyToOne
-    private Order order;
 
     /**
      * Customer who bought the product
@@ -89,9 +86,8 @@ public class SoldProduct {
      */
     public SoldProduct(Product product, Order order, Customer customer) {
         this();
-
-        this.product = product;
         this.order = order;
+        this.product = product;
         this.customer = customer;
     }
 }

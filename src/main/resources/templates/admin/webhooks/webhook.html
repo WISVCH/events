@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Webhooks</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Create/update webhook</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <form th:action="@{./}" th:object="${webhook}" method="POST">
+                <input type="hidden" th:field="*{key}" th:value="*{key}">
+
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <h6 class="card-header">Details</h6>
+                            <div class="card-body">
+                                <div class="row form">
+                                    <div class="form-group col-sm-12">
+                                        <label>Payload URL*
+                                            <input type="text" class="form-control"
+                                                   th:value="${webhook.getPayloadUrl()}"
+                                                   th:field="*{payloadUrl}"
+                                                   required>
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label>LDAP group*
+                                            <select class="mb-0 form-control" th:field="*{ldapGroup}" required>
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                        th:value="${group}"
+                                                        th:text="${group.getName()}">
+                                                </option>
+                                            </select>
+                                            <small class="form-text text-muted">
+                                                Choose CH Beheer when it should always send an update.
+                                            </small>
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label>Secret
+                                            <input type="password" id="secret" class="form-control"
+                                                   th:field="*{secret}" th:value="${webhook.getSecret()}"
+                                                   data-toggle="password">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <p class="mt-3 mb-0 form-text text-muted">* is a required field!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card">
+                            <h6 class="card-header">Triggers</h6>
+                            <div class="card-body">
+                                <!--/*@thymesVar id="webhookTrigger" type="ch.wisv.events.core.model.webhook.WebhookTrigger"*/-->
+                                <div class="row">
+                                    <div class="col-sm-6"
+                                         th:each="webhookTrigger : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="checkbox" th:field="*{webhookTriggers}"
+                                                       th:value="${webhookTrigger}">
+                                            </div>
+                                            <div class="col-10">
+                                                <h6 style="letter-spacing: 0"
+                                                    th:text="${webhookTrigger.getName()}"></h6>
+                                                <p class="text-sm text-gray"
+                                                   th:text="${webhookTrigger.getDescription()}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            <input type="submit" class="btn btn-danger" value="Save webhook">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-show-password.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#secret").password('hide');
+    });
+</script>
+</body>
+</html>

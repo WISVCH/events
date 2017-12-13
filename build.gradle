@@ -56,7 +56,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-tomcat'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-mail'
-    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+    compile 'org.springframework.boot:spring-boot-configuration-processor'
 
     compile 'javax.el:javax.el-api:2.2.5'
 
@@ -79,6 +79,7 @@ dependencies {
     compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
     compile 'org.webjars.bower:momentjs:2.10.6'
     compile 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
+    compile 'org.webjars:sprintf.js:1.0.0'
     compile 'org.webjars:font-awesome:4.7.0'
     compile 'org.webjars.npm:flatpickr:3.0.6'
 
@@ -93,4 +94,5 @@ dependencies {
 
     compile 'org.fluttercode.datafactory:datafactory:0.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'com.tngtech.java:junit-dataprovider:1.5.0'
 }

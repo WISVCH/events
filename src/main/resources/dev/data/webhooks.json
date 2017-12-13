@@ -8,5 +8,13 @@
       "PRODUCT_CREATE_UPDATE",
       "PRODUCT_DELETE"
     ]
+  },
+  {
+    "ldapGroup": "BEHEER",
+    "payloadUrl": "http://localhost:9000/payments/api/chevents/sync/product/",
+    "triggers": [
+      "PRODUCT_CREATE_UPDATE",
+      "PRODUCT_DELETE"
+    ]
   }
 ]

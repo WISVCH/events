@@ -1,0 +1,341 @@
+.page-container {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto
+}
+
+.page-header {
+    z-index: 1;
+    background-color: #fff
+}
+
+body.menu-open .page-header {
+    background-color: #40556a
+}
+
+.logo-wrapper {
+    position: relative
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .logo-wrapper {
+        padding-left: 15px
+    }
+}
+
+@media screen and (min-width: 81.25em) {
+    .logo-wrapper .logo {
+        margin-top: 0
+    }
+
+    .logo-wrapper .logo img {
+        height: 110px
+    }
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .wisv-header {
+        height: 5.625rem
+    }
+
+    .wisv-header.left {
+        width: 100%;
+        background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 52px -180px repeat-x;
+        position: relative;
+        z-index: 3
+    }
+
+    .wisv-header.left::before, .wisv-header.left::after {
+        display: table;
+        content: ' '
+    }
+
+    .wisv-header.left::after {
+        clear: both
+    }
+
+    .wisv-header.right {
+        width: 50%;
+        float: right;
+    }
+
+    .wisv-header.right .center {
+        margin-left: -40.625rem
+    }
+}
+
+@media screen and (min-width: 73.75em) and (max-width: 81.1875em) {
+    .wisv-header.right .center {
+        margin-left: -100%
+    }
+}
+
+.top-bar {
+    font-family: Noto Sans, Lato, "Helvetica Neue", sans-serif;
+    position: relative;
+    z-index: 10
+}
+
+.top-bar .top-bar-right {
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) -93px -90px no-repeat
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .top-bar .top-bar-right {
+        padding-left: 65px;
+        padding-right: 15px
+    }
+}
+
+@media screen and (min-width: 73.75em) and (max-width: 81.1875em) {
+    .top-bar .top-bar-right {
+        padding-left: 30px
+    }
+}
+
+.top-bar .menu {
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x
+}
+
+.top-bar .menu > li:first-child {
+    padding-left: 0
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .top-bar .menu > li {
+        padding: 0 .9rem;
+        vertical-align: middle;
+        height: 5.625rem
+    }
+
+    .top-bar .menu > li:last-child {
+        padding-right: 0
+    }
+}
+
+@media screen and (min-width: 81.25em) and (max-width: 93.6875em) {
+    .top-bar .menu > li:first-child {
+        padding-left: 0
+    }
+}
+
+.top-bar .menu > li a {
+    color: #40556a;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px
+}
+
+.top-bar .menu > li a:hover, .top-bar .menu > li a:focus {
+    color: #ef4545
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .top-bar .menu > li a {
+        border-bottom: 3px solid transparent;
+        border-top: 3px solid transparent;
+        padding-left: .2rem;
+        padding-right: .2rem
+    }
+
+    .top-bar .menu > li a.active {
+        border-bottom-color: #40556a
+    }
+
+    .top-bar .menu > li a.login-button {
+        color: #fff;
+        font-size: 1rem;
+        padding: .3rem 1.75rem;
+        border-bottom-color: #ef4545;
+        border-top-color: #ef4545
+    }
+
+    .top-bar .menu > li a.login-button.account-button {
+        padding-left: 1rem;
+        padding-right: 1rem
+    }
+
+    .top-bar .menu > li a.login-button:hover, .top-bar .menu > li a.login-button:focus {
+        color: #ef4545
+    }
+}
+
+@media screen and (max-width: 73.6875em) {
+    .top-bar .menu > li a, .top-bar .menu > li .login-button {
+        background: #40556a;
+        color: #fff;
+        border: none;
+        border-bottom: 1px solid #e7ebf1;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        letter-spacing: 0;
+        font-size: 1rem;
+        text-align: left
+    }
+
+    .top-bar .menu > li a:hover, .top-bar .menu > li a:focus, .top-bar .menu > li .login-button:hover, .top-bar .menu > li .login-button:focus {
+        color: #40556a;
+        background: #fff
+    }
+}
+
+@media screen and (min-width: 73.75em) and (max-width: 81.1875em) {
+    .top-bar .menu > li a {
+        font-size: .9375rem;
+        padding-left: .2rem;
+        padding-right: .2rem
+    }
+
+    .top-bar .menu > li a.login-button {
+        font-size: .9375rem;
+        padding-left: .5rem;
+        padding-right: .5rem
+    }
+
+    .top-bar .menu > li a.login-button.account-button {
+        padding-left: .5rem;
+        padding-right: .5rem
+    }
+}
+
+.title-bar {
+    font-family: Noto Sans, Lato, "Helvetica Neue", sans-serif;
+    z-index: 2;
+    position: relative;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 -115px repeat-x;
+    background-size: 121px auto
+}
+
+.title-bar .column, .title-bar .columns {
+    height: 55px
+}
+
+.title-bar a.logo-small {
+    float: left;
+    position: relative;
+    padding: 4px 0;
+    margin-left: 10px;
+    z-index: 10
+}
+
+@media print, screen and (min-width: 40em) {
+    .title-bar a.logo-small {
+        margin-left: 15px
+    }
+}
+
+.title-bar a.logo-small img {
+    width: 150px;
+    max-width: none;
+    z-index: 10
+}
+
+@media screen and (min-width: 40em) and (max-width: 73.6875em) {
+    .title-bar a.logo-small img {
+        width: auto;
+        max-height: 70px
+    }
+}
+
+.title-bar a.login-button {
+    display: none;
+    font-size: 1rem;
+    color: #fff;
+    font-size: 1rem;
+    padding: .3rem 1.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: .6875rem 1.5rem 0 0
+}
+
+.title-bar .bg-left {
+    z-index: 2;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 no-repeat;
+    background-position: right 0;
+}
+
+.title-bar .bg-right {
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
+    z-index: 1
+}
+
+.title-bar .bg-left, .title-bar .bg-right {
+    background-size: 121px auto
+}
+
+.wisv-menu-icon {
+    outline: 0 none;
+    height: 56px
+}
+
+@media screen and (min-width: 40em) and (max-width: 73.6875em) {
+    .title-bar a.login-button {
+        display: block;
+        float: left
+    }
+
+    .top-bar .login-button {
+        display: none
+    }
+}
+
+.page-title {
+    position: relative;
+    z-index: 1;
+    background-color: #40556a;
+    background-size: cover;
+    background-position: center;
+    margin-top: -22px;
+    padding: 6px 0 16px
+}
+
+.page-title .column, .page-title .columns, .page-title .col {
+    padding-top: 1rem
+}
+
+@media print, screen and (min-width: 73.75em) {
+    .page-title {
+        margin-top: -35px;
+        padding: 35px 0 0
+    }
+
+    .page-title .column, .page-title .columns, .page-title .col {
+        padding-top: 0;
+        padding-bottom: 6px;
+        height: 14.1875rem
+    }
+}
+
+.page-title.dotted-border::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 6px;
+    position: absolute;
+    bottom: 0px;
+    background: url(../images/dotted-border.png) center top repeat-x;
+    background-size: 23px auto
+}
+
+.page-title h1 {
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin: 0;
+    border-bottom: 0;
+}
+
+@media print, screen and (min-width: 40em) {
+    .page-title .column, .page-title .columns, .page-title .col {
+        display: table;
+        height: 12rem
+    }
+
+    .page-title .column h1, .page-title .columns h1, .page-title .col h1 {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 0 10rem
+    }
+}

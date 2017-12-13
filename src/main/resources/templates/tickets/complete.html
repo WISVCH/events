@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+
+<div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}">
+    <nav th:replace="tickets/fragments/header :: header ('Thanks for ordering!', 'events_header.jpg')"></nav>
+</div>
+
+<div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).WAITING}">
+    <nav th:replace="tickets/fragments/header :: header ('Waiting for the payment', 'events_header.jpg')"></nav>
+</div>
+
+<div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CANCELLED}">
+    <nav th:replace="tickets/fragments/header :: header ('Order cancelled', 'events_header.jpg')"></nav>
+</div>
+
+<div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CLOSED}">
+    <nav th:replace="tickets/fragments/header :: header ('Order closed', 'events_header.jpg')"></nav>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col p-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row justify-content-center">
+                <div class="col-4 text-center"
+                     th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).WAITING}">
+                    <i class="fa fa-fw fa-4x fa-spinner fa-spin mb-4"></i>
+                    <p>Please wait a few seconds for the order to be completed!</p>
+                </div>
+                <div class="col-4 text-center"
+                     th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}">
+                    <img class="img-thumbnail mb-4" th:src="@{/images/happy-owl.jpg}" style="height: 300px" alt="">
+                    <div class="col mb-5" style="font-size: 20px">
+                        Thanks for ordering your tickets! Within a few minutes you will receive an
+                        e-mail with the information about your order. If you have any questions do not hesitate to ask
+                        the board.
+                    </div>
+
+                    <div class="col">
+                        <a href="https://ch.tudelft.nl/" class="btn btn-secondary">
+                            <i class="fa fa-fw fa-arrow-left"></i>
+                            Back to the homepage
+                        </a>
+                    </div>
+                </div>
+                <div class="col-4 text-center"
+                     th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CANCELLED}">
+                    <img class="img-thumbnail mb-4" th:src="@{/images/sad-owl.jpg}" style="height: 300px" alt="">
+                    <div class="col mb-5" style="font-size: 20px">
+                        Order has been successfully cancelled!
+                    </div>
+
+                    <div class="col">
+                        <a href="https://ch.tudelft.nl/" class="btn btn-secondary">
+                            <i class="fa fa-fw fa-arrow-left"></i>
+                            Back to the homepage
+                        </a>
+                    </div>
+                </div>
+                <div class="col-4 text-center"
+                     th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CLOSED}">
+                    <img class="img-thumbnail mb-4" th:src="@{/images/sad-owl.jpg}" style="height: 300px" alt="">
+                    <div class="col mb-5" style="font-size: 20px">
+                        Your order has been closed due to an error! If any money has been withdrawn from your account
+                        please contact the board by emailing to
+                        <a href="mailto:board@ch.tudelft.nl">board@ch.tudelft.nl</a>
+                        or swing by at the association area.
+                    </div>
+
+                    <div class="col">
+                        <a href="https://ch.tudelft.nl/" class="btn btn-secondary">
+                            <i class="fa fa-fw fa-arrow-left"></i>
+                            Back to the homepage
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+</body>
+

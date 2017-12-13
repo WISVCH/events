@@ -42,7 +42,14 @@ public class CHConnectConfiguration {
     /**
      * Groups that are admin in the system
      */
+    @NotNull
     private List<String> adminGroups;
+
+    /**
+     * List of all the users that are allowed in the beta
+     */
+    @NotNull
+    private List<String> betaUsers;
 
     private RegisteredClient registeredClient;
 
@@ -77,6 +84,14 @@ public class CHConnectConfiguration {
 
     public void setAdminGroups(List<String> adminGroups) {
         this.adminGroups = adminGroups;
+    }
+
+    public List<String> getBetaUsers() {
+        return betaUsers;
+    }
+
+    public void setBetaUsers(List<String> betaUsers) {
+        this.betaUsers = betaUsers;
     }
 
     @Bean

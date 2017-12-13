@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="tickets/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col p-5" role="main">
+            <div class="row mb-5">
+                <div class="col-9">
+                    <h1>Checkout</h1>
+                </div>
+            </div>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col mb-5">
+                    <table class="table ticket-overview">
+                        <thead class="thead-inverse bg-primary">
+                        <tr>
+                            <th>Article</th>
+                            <th>Amount</th>
+                            <th>Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="orderProduct : ${order.getOrderProducts()}">
+                            <td th:text="${orderProduct.getProduct().getTitle()}"></td>
+                            <td th:text="${orderProduct.getAmount()}"></td>
+                            <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice() * orderProduct.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        </tr>
+                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}">
+                            <td>Transaction fee</td>
+                            <td>1</td>
+                            <td>&euro; 0,35</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}">
+                            <th colspan="2">Total</th>
+                            <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount() + 0.35, 1, 'POINT', 2, 'COMMA')}"></th>
+                        </tr>
+                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() == 0}">
+                            <th colspan="2">Total</th>
+                            <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="button-group float-right">
+                        <a th:href="@{'/cancel/' + ${order.getPublicReference()} + '/'}" class="btn btn-light">
+                            Cancel
+                        </a>
+                        <a th:href="@{'/payment/' + ${order.getPublicReference()} + '/'}" class="btn btn-secondary">
+                            Payment
+                            <i class="fa fa-fw fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>

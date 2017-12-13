@@ -1,5 +1,7 @@
 body {
     font-family: Lato, "Helvetica Neue", sans-serif;
+    max-width: calc(100vw);
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -7,7 +9,6 @@ h1, h2, h3, h4, h5, h6 {
     font-style: normal;
     color: #40556a;
     text-rendering: optimizeLegibility;
-    letter-spacing: 2px;
     font-weight: 500;
 }
 
@@ -253,6 +254,7 @@ h1 .badge, .btn, .btn:hover {
 
 .btn-sm, .btn-sm:hover {
     padding: .1rem 1rem;
+    font-size: 10px;
 }
 
 h1 .badge-danger, .btn-danger {

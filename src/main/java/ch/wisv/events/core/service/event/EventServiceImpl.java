@@ -1,7 +1,9 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.exception.EventsInvalidModelException;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.EventInvalidException;
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductInvalidException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -66,23 +68,6 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll();
     }
 
-
-    /**
-     * Get Event by key
-     *
-     * @param key key of an Event
-     * @return Event
-     */
-    @Override
-    public Event getByKey(String key) {
-        Optional<Event> eventOptional = eventRepository.findByKey(key);
-        if (eventOptional.isPresent()) {
-            return eventOptional.get();
-        }
-
-        throw new EventsModelNotFound("Event with key " + key + " not found.");
-    }
-
     /**
      * Get all Events between a lowerbound and upperbound
      *
@@ -120,16 +105,29 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * Get Event by key
+     *
+     * @param key key of an Event
+     * @return Event
+     */
+    @Override
+    public Event getByKey(String key) throws EventNotFoundException {
+        Optional<Event> event = eventRepository.findByKey(key);
+
+        return event.orElseThrow(() -> new EventNotFoundException("key " + key));
+    }
+
+    /**
      * Get all Events that are connected to the same Product
      *
      * @param product of type Product
      * @return List of Events
      */
     @Override
-    public Event getEventByProduct(Product product) {
+    public Event getEventByProduct(Product product) throws EventNotFoundException {
         Optional<Event> event = eventRepository.findByProductsContaining(product);
 
-        return event.orElseThrow(() -> new EventsModelNotFound("Event containing product #" + product.getId() + " not found"));
+        return event.orElseThrow(() -> new EventNotFoundException("containing product #" + product.getId()));
     }
 
     /**
@@ -148,7 +146,7 @@ public class EventServiceImpl implements EventService {
      * @param event Event
      */
     @Override
-    public void create(Event event) {
+    public void create(Event event) throws EventInvalidException {
         this.assertIsValidEvent(event);
         this.updateLinkedProducts(event.getProducts(), true);
 
@@ -162,9 +160,7 @@ public class EventServiceImpl implements EventService {
      * @param event Event
      */
     @Override
-    public void update(Event event) {
-        this.assertIsValidEvent(event);
-
+    public void update(Event event) throws EventNotFoundException, EventInvalidException {
         Event update = this.getByKey(event.getKey());
         this.updateLinkedProducts(update.getProducts(), false);
 
@@ -182,6 +178,7 @@ public class EventServiceImpl implements EventService {
         update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
 
+        this.assertIsValidEvent(event);
         this.updateLinkedProducts(update.getProducts(), true);
         eventRepository.save(update);
     }
@@ -204,8 +201,11 @@ public class EventServiceImpl implements EventService {
      */
     private void updateLinkedProducts(List<Product> products, boolean linked) {
         products.forEach(p -> {
-            p.setLinked(linked);
-            productService.update(p);
+            try {
+                p.setLinked(linked);
+                productService.update(p);
+            } catch (ProductNotFoundException | ProductInvalidException ignored) {
+            }
         });
     }
 
@@ -214,33 +214,33 @@ public class EventServiceImpl implements EventService {
      *
      * @param event of type Event
      */
-    private void assertIsValidEvent(Event event) {
+    private void assertIsValidEvent(Event event) throws EventInvalidException {
         if (event.getTitle() == null || event.getTitle().equals("")) {
-            throw new EventsInvalidModelException("Title is required, and therefore should be filled in!");
+            throw new EventInvalidException("Title is required, and therefore should be filled in!");
         }
         if (event.getShortDescription() == null || event.getTitle().equals("")) {
-            throw new EventsInvalidModelException("Short description is required, and therefore should be filled in!");
+            throw new EventInvalidException("Short description is required, and therefore should be filled in!");
         }
         if (event.getDescription() == null || event.getTitle().equals("")) {
-            throw new EventsInvalidModelException("Description is required, and therefore should be filled in!");
+            throw new EventInvalidException("Description is required, and therefore should be filled in!");
         }
         if (event.getStart() == null) {
-            throw new EventsInvalidModelException("Starting time is required, and therefore should be filled in!");
+            throw new EventInvalidException("Starting time is required, and therefore should be filled in!");
         }
         if (event.getEnding() == null) {
-            throw new EventsInvalidModelException("Ending time is required, and therefore should be filled in!");
+            throw new EventInvalidException("Ending time is required, and therefore should be filled in!");
         }
         if (event.getStart().isAfter(event.getEnding())) {
-            throw new EventsInvalidModelException("Starting time should be before the ending time");
+            throw new EventInvalidException("Starting time should be before the ending time");
         }
         if (event.getTarget() == null || event.getTarget().equals(0)) {
-            throw new EventsInvalidModelException("Target is required, and therefore should be filled in!");
+            throw new EventInvalidException("Target is required, and therefore should be filled in!");
         }
         if (event.getMaxSold() != null && event.getTarget() > event.getMaxSold()) {
-            throw new EventsInvalidModelException("Limit should be greater or equal to the target!");
+            throw new EventInvalidException("Limit should be greater or equal to the target!");
         }
         if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
-            throw new EventsInvalidModelException("It is not possible to add the same product twice or more!");
+            throw new EventInvalidException("It is not possible to add the same product twice or more!");
         }
     }
 }

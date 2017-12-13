@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -113,11 +114,18 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
         authenticationProvider.setAuthoritiesMapper((idToken, userInfo) -> {
             if (userInfo instanceof CHUserInfo) {
                 CHUserInfo info = (CHUserInfo) userInfo;
-                return properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains) ?
-                        ImmutableSet.of(ROLE_ADMIN, ROLE_USER) : ImmutableSet.of(ROLE_USER);
+
+                if (properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains)) {
+                    return ImmutableSet.of(ROLE_ADMIN, ROLE_USER);
+                } else if (properties.getBetaUsers().stream().anyMatch(info.getLdapUsername()::contains)) {
+                    return ImmutableSet.of(ROLE_USER);
+                } else {
+                    return ImmutableSet.of();
+                }
             }
-            return ImmutableSet.of();
+            throw new AccessDeniedException("Invalid user info!");
         });
+
         return authenticationProvider;
     }
 

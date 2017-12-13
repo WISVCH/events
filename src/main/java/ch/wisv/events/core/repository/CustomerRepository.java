@@ -64,4 +64,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * @return List<Customer>
      */
     List<Customer> findAllByCreatedAtAfter(LocalDateTime after);
+
+    /**
+     * Find a Customer by its username or email.
+     *
+     * @param username of type String
+     * @param email    of type String
+     * @return Optional<Customer>
+     */
+    Optional<Customer> findByChUsernameOrEmail(String username, String email);
 }

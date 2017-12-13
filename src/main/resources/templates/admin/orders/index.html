@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Dashboard > Orders</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Orders</h1>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="table-responsive">
+                <table id="orderTable" class="table table-striped">
+                    <thead class="thead-inverse bg-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Product(s)</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+                    <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
+                        <td th:text="'#' + ${order.getId()}"></td>
+                        <td>
+                            <a th:href="@{'/administrator/customers/view/' + ${order.getCustomer().getKey()} + '/'}"
+                               th:text="${order.getCustomer().getName()}"></a>
+                        </td>
+                        <td>
+                            <span th:each="orderProduct : ${order.getOrderProducts()}"
+                                  th:text="${orderProduct.getProduct().getTitle()} + ' (' + ${orderProduct.getAmount()} + 'x), '"></span>
+                        </td>
+                        <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="${order.getStatus().toString()}"></td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a th:href="'delete/' + ${order.getPublicReference()} + '/'"
+                                   th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
+                                   class="btn btn-sm btn-danger">
+                                    <i class="fa fa-fw fa-remove"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        var table = $('#orderTable');
+        table.DataTable({
+            order: [
+                [0, "desc"]
+            ],
+            columnDefs: [
+                {width: "20px", targets: 0},
+                {width: "160px", targets: 1},
+                {width: "80px", targets: [3, 4]},
+                {width: "50px", targets: 5}
+            ]
+        });
+
+        var dataTablesFilter = $('.dataTables_filter');
+        dataTablesFilter.empty(); // clears the content generated
+        dataTablesFilter.append('<label>' +
+            '<input type="search" id="dataTableFilter" class="form-control" placeholder="Search..." ' +
+            'aria-controls="orderTable"></label>');
+
+        $("#dataTableFilter").on('keyup', function () {
+            table.DataTable().search($(this).val()).draw();
+        });
+
+        table.find('tbody').on('click', 'tr', function () {
+            /*[+ var link = [[@{/administrator/orders/view/}]] + $(this).data('key') + "/"; +]*/
+            document.location = link;
+        });
+    });
+</script>
+</body>
+</html>

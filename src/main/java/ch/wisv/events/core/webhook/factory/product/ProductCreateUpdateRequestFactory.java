@@ -1,7 +1,7 @@
 package ch.wisv.events.core.webhook.factory.product;
 
 
-import ch.wisv.events.core.exception.WebhookRequestObjectIncorrect;
+import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
 import org.json.simple.JSONObject;
@@ -38,6 +38,7 @@ public class ProductCreateUpdateRequestFactory extends WebhookRequestFactory {
             jsonObject.put("title", product.getTitle());
             jsonObject.put("description", product.getDescription());
             jsonObject.put("price", product.getCost());
+            jsonObject.put("organizedBy", "BESTUUR"); // TODO: https://github.com/WISVCH/events/issues/153
 
             return jsonObject;
         } else {

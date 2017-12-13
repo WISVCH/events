@@ -1,7 +1,7 @@
 package ch.wisv.events.scan.controller;
 
-import ch.wisv.events.core.exception.CustomerNotFound;
-import ch.wisv.events.core.exception.EventsModelNotFound;
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
@@ -85,11 +85,11 @@ public class ScanAppProductController {
     @GetMapping("/{productKey}/")
     public String rfid(Model model, RedirectAttributes redirect, @PathVariable String productKey) {
         try {
-            Product product = this.productService.getByKey(productKey);
+            Product product = productService.getByKey(productKey);
             model.addAttribute("product", product);
 
             return "scan/product/rfid";
-        } catch (EventsModelNotFound e) {
+        } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/scan/";
@@ -111,16 +111,22 @@ public class ScanAppProductController {
             @RequestParam(value = "rfidToken") String rfidToken,
             @RequestParam(value = "uniqueCode") String uniqueCode
     ) {
-        Product product = this.productService.getByKey(productKey);
+        try {
+            Product product = productService.getByKey(productKey);
 
-        if (uniqueCode.equals("")) {
-            return this.handleRfidTokenRequest(redirect, product, rfidToken);
-        } else if (!uniqueCode.equals("")) {
-            return this.handleUniqueCodeRequest(redirect, product, uniqueCode);
-        } else {
-            redirect.addFlashAttribute("error", "Invalid request");
+            if (uniqueCode.equals("")) {
+                return this.handleRfidTokenRequest(redirect, product, rfidToken);
+            } else if (!uniqueCode.equals("")) {
+                return this.handleUniqueCodeRequest(redirect, product, uniqueCode);
+            } else {
+                redirect.addFlashAttribute("error", "Invalid request");
 
-            return "redirect:/scan/product/" + productKey + "/";
+                return "redirect:/scan/product/" + productKey + "/";
+            }
+        } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/scan/";
         }
     }
 
@@ -134,8 +140,8 @@ public class ScanAppProductController {
     @GetMapping("/{productKey}/select/{customerKey}/")
     public String select(Model model, RedirectAttributes redirect, @PathVariable String productKey, @PathVariable String customerKey) {
         try {
-            Product product = this.productService.getByKey(productKey);
-            Customer customer = this.customerService.getByKey(customerKey);
+            Product product = productService.getByKey(productKey);
+            Customer customer = customerService.getByKey(customerKey);
 
             List<SoldProduct> soldProducts = this.scanAppSoldProductService.getAllByProductAndCustomer(product, customer);
             soldProducts = soldProducts.stream().filter(x -> x.getStatus() != SoldProductStatus.SCANNED).collect(Collectors.toList());
@@ -144,7 +150,7 @@ public class ScanAppProductController {
             model.addAttribute("soldProducts", soldProducts);
 
             return "scan/product/select";
-        } catch (EventsModelNotFound | CustomerNotFound e) {
+        } catch (ProductNotFoundException | CustomerNotFoundException e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/scan/";
@@ -167,12 +173,12 @@ public class ScanAppProductController {
             @RequestParam(value = "soldProducts") List<SoldProduct> soldProducts
     ) {
         try {
-            Product product = this.productService.getByKey(productKey);
-            Customer customer = this.customerService.getByKey(customerKey);
+            Product product = productService.getByKey(productKey);
+            Customer customer = customerService.getByKey(customerKey);
 
             ScanResult result = null;
             for (SoldProduct soldProduct : soldProducts) {
-                ScanResult temp = this.scanAppSoldProductService.scanSoldProduct(soldProduct);
+                ScanResult temp = scanAppSoldProductService.scanSoldProduct(soldProduct);
 
                 if (result != ScanResult.ALREADY_SCANNED) {
                     result = temp;
@@ -180,7 +186,7 @@ public class ScanAppProductController {
             }
 
             return this.createRedirect(redirect, product, result, customer);
-        } catch (EventsModelNotFound | CustomerNotFound e) {
+        } catch (ProductNotFoundException | CustomerNotFoundException e) {
             redirect.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/scan/";
@@ -197,15 +203,15 @@ public class ScanAppProductController {
      */
     private String handleRfidTokenRequest(RedirectAttributes redirect, Product product, String rfidToken) {
         try {
-            Customer customer = this.customerService.getByRFIDToken(rfidToken);
-            ScanResult result = this.scanAppSoldProductService.scanByProductAndCustomer(product, customer);
+            Customer customer = customerService.getByRfidToken(rfidToken);
+            ScanResult result = scanAppSoldProductService.scanByProductAndCustomer(product, customer);
 
             if (result == ScanResult.MULTIPLE_PRODUCT) {
                 return "redirect:/scan/product/" + product.getKey() + "/select/" + customer.getKey() + "/";
             } else {
                 return this.createRedirect(redirect, product, result, customer);
             }
-        } catch (CustomerNotFound e) {
+        } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 
@@ -222,7 +228,7 @@ public class ScanAppProductController {
      * @return String
      */
     private String handleUniqueCodeRequest(RedirectAttributes redirect, Product product, String uniqueCode) {
-        ScanResult result = this.scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
+        ScanResult result = scanAppSoldProductService.scanByProductAndUniqueCode(product, uniqueCode);
 
         return this.createRedirect(redirect, product, result, null);
     }
@@ -233,7 +239,7 @@ public class ScanAppProductController {
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
      * @param result   of type ScanResult
-     * @param customer
+     * @param customer of type Customer
      * @return String
      */
     private String createRedirect(RedirectAttributes redirect, Product product, ScanResult result, Customer customer) {

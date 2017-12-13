@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.webhook;
 
-import ch.wisv.events.core.exception.InvalidWebhookException;
-import ch.wisv.events.core.exception.WebhookNotFoundException;
+import ch.wisv.events.core.exception.normal.WebhookInvalidException;
+import ch.wisv.events.core.exception.normal.WebhookNotFoundException;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 
@@ -53,14 +53,14 @@ public interface WebhookService {
      *
      * @param model of type Webhook
      */
-    void create(Webhook model) throws InvalidWebhookException;
+    void create(Webhook model) throws WebhookInvalidException;
 
     /**
      * Method update an existing Webhook.
      *
      * @param model of type Webhook
      */
-    void update(Webhook model) throws WebhookNotFoundException, InvalidWebhookException;
+    void update(Webhook model) throws WebhookNotFoundException, WebhookInvalidException;
 
 
     /**

@@ -1,14 +1,13 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.core.exception.EventsInvalidException;
-import ch.wisv.events.core.exception.SoldProductNotFoundException;
+import ch.wisv.events.core.exception.normal.SoldProductNotFoundException;
+import ch.wisv.events.core.exception.runtime.SoldProductDoesNotContainProductException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,11 +56,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      * @return SoldProduct
      */
     @Override
-    public SoldProduct getByKey(String key) {
-        if (Strings.isNullOrEmpty(key)) {
-            throw new IllegalArgumentException();
-        }
-
+    public SoldProduct getByKey(String key) throws SoldProductNotFoundException {
         return this.soldProductRepository.findByKey(key)
                 .orElseThrow(() -> new SoldProductNotFoundException("SoldProduct with key " + key + " is not exists!"));
     }
@@ -119,17 +114,14 @@ public class SoldProductServiceImpl implements SoldProductService {
     public List<SoldProduct> create(Order order) {
         List<SoldProduct> soldProducts = new ArrayList<>();
 
-        order.getProducts().forEach(product -> {
-            SoldProduct soldProduct = new SoldProduct(
-                    product,
-                    order,
-                    order.getCustomer()
-            );
-            soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
+        order.getOrderProducts().forEach(orderProduct -> {
+            for (int i = 0; i < orderProduct.getAmount(); i++) {
+                SoldProduct soldProduct = new SoldProduct(orderProduct.getProduct(), order, order.getCustomer());
+                soldProduct.setUniqueCode(this.determineUniqueCode(soldProduct));
 
-            soldProducts.add(soldProduct);
-
-            this.soldProductRepository.saveAndFlush(soldProduct);
+                soldProductRepository.saveAndFlush(soldProduct);
+                soldProducts.add(soldProduct);
+            }
         });
 
         return soldProducts;
@@ -178,7 +170,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      * @param soldProduct of type SoldProduct
      */
     @Override
-    public void update(SoldProduct soldProduct) {
+    public void update(SoldProduct soldProduct) throws SoldProductNotFoundException {
         SoldProduct model = this.getByKey(soldProduct.getKey());
 
         model.setOrder(soldProduct.getOrder());
@@ -212,7 +204,7 @@ public class SoldProductServiceImpl implements SoldProductService {
      */
     private boolean determineUniquenessCode(SoldProduct soldProduct, String uniqueCode) {
         if (soldProduct.getProduct() == null) {
-            throw new EventsInvalidException("SoldProduct should contain a Product, before calling this method.");
+            throw new SoldProductDoesNotContainProductException();
         }
 
         Optional<SoldProduct> optional = this.soldProductRepository.findByProductAndUniqueCode(

@@ -1,5 +1,7 @@
 package ch.wisv.events.core.model.order;
 
+import lombok.Getter;
+
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
  * <p>
@@ -18,12 +20,20 @@ package ch.wisv.events.core.model.order;
  */
 public enum OrderStatus {
 
-    OPEN,
-    PAID_CASH,
-    PAID_PIN,
-    REJECTED,
-    CANCELLED,
-    REFUNDED,
-    CLOSED;
+    OPEN(false),
+    PAID_CASH(true),
+    PAID_PIN(true),
+    PAID_IDEAL(true),
+    REJECTED(false),
+    CANCELLED(false),
+    REFUNDED(false),
+    CLOSED(false),
+    WAITING(false);
 
+    @Getter
+    private final boolean paid;
+
+    OrderStatus(boolean paid) {
+        this.paid = paid;
+    }
 }

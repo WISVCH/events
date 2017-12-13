@@ -1,8 +1,12 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
-import ch.wisv.events.core.model.product.Product;
 
 import java.util.List;
 
@@ -24,7 +28,6 @@ import java.util.List;
  */
 public interface OrderService {
 
-
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
@@ -38,35 +41,48 @@ public interface OrderService {
      * @param reference of type String
      * @return Order
      */
-    Order getByReference(String reference);
-
-    /**
-     * Method getOrdersByProduct returns list of orders with a certain product in it.
-     *
-     * @param product of type Product
-     * @return List<Order>
-     */
-    List<Order> getOrdersByProduct(Product product);
+    Order getByReference(String reference) throws OrderNotFoundException;
 
     /**
      * Method create creates and order.
      *
      * @param order of type Order
      */
-    void create(Order order);
+    void create(Order order) throws OrderInvalidException, EventNotFoundException;
 
     /**
      * Method update ...
      *
      * @param order of type Order
      */
-    void update(Order order);
+    void update(Order order) throws OrderInvalidException;
 
     /**
      * Method updateOrderStatus
-     *
-     * @param order  of type Order
+     *  @param order  of type Order
      * @param status of type OrderStatus
      */
-    void updateOrderStatus(Order order, OrderStatus status);
+    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
+
+    /**
+     * Assert if the Order is valid.
+     *
+     * @param order of type Order
+     */
+    void assertIsValid(Order order) throws OrderInvalidException;
+
+    /**
+     * Assert if the Order is valid for a Customer.
+     *
+     * @param order of type order.
+     */
+    void assertIsValidForCustomer(Order order) throws OrderInvalidException;
+
+    /**
+     * Create an Order form a OrderProductDTO.
+     *
+     * @param orderProductDTO of type OrderProductDTO
+     * @return Order
+     */
+    Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException;
 }

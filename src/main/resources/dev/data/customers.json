@@ -1,20 +1,14 @@
 [
   {
-    "name": "Christiaan Huygens",
-    "email": "huygens@ch.tudelft.nl",
-    "chUsername": "huygens",
-    "rfidToken": "123"
-  },
-  {
     "name": "Sven Popping",
     "email": "svenp@ch.tudelft.nl",
-    "chUsername": "svenp",
-    "rfidToken": "333"
+    "chUserman": "svenp",
+    "rfidToken": "3061a041"
   },
   {
-    "name": "Sven van Hal",
-    "email": "svenh@ch.tudelft.nl",
-    "chUsername": "svenh",
-    "rfidToken": "222"
+    "name": "Test",
+    "email": "test@ch.tudelft.nl",
+    "chUserman": "test",
+    "rfidToken": "123"
   }
 ]

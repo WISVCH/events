@@ -1,11 +1,9 @@
 package ch.wisv.events.api.controller;
 
 import ch.wisv.events.api.request.ProductDTO;
-import ch.wisv.events.api.response.ProductDefaultResponse;
-import ch.wisv.events.core.exception.ProductNotFound;
+import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.product.Search;
-import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
@@ -32,61 +29,28 @@ public class ProductRESTController {
     private final ProductService productService;
 
     /**
-     * EventService.
-     */
-    private final EventService eventService;
-
-    /**
      * Default constructor.
      *
      * @param productService ProductService
-     * @param eventService   EventService
      */
-    public ProductRESTController(ProductService productService, EventService eventService) {
+    public ProductRESTController(ProductService productService) {
         this.productService = productService;
-        this.eventService = eventService;
-    }
-
-    /**
-     * Get request to get all all products.
-     *
-     * @return List of all Products
-     */
-    @GetMapping(value = "")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getAllProducts() {
-        return createResponseEntity(HttpStatus.OK, "",
-                productService.getAvailableProducts().stream().map(ProductDefaultResponse::new));
     }
 
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity createProduct(HttpServletRequest request, @Validated @RequestBody ProductDTO product) {
-        Product created = this.productService.create(product);
-
-        JSONObject json = new JSONObject();
-        json.put("product_id", created.getId());
-        json.put("product_key", created.getKey());
-        json.put("product_title", created.getTitle());
-
-        return createResponseEntity(HttpStatus.CREATED, "Product successfullly created", json);
-    }
-
-    /**
-     * Method getProductByKey get product by key.
-     *
-     * @param key of type String
-     * @return ResponseEntity<?>
-     */
-    @GetMapping(value = "/{key}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getProductByKey(@PathVariable String key) {
+    public ResponseEntity createProduct(@Validated @RequestBody ProductDTO product) {
         try {
-            Product product = productService.getByKey(key);
+            Product created = productService.create(product);
 
-            return createResponseEntity(HttpStatus.OK, "", new ProductDefaultResponse(product));
-        } catch (ProductNotFound e) {
-            return createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
+            JSONObject json = new JSONObject();
+            json.put("product_id", created.getId());
+            json.put("product_key", created.getKey());
+            json.put("product_title", created.getTitle());
+
+            return createResponseEntity(HttpStatus.CREATED, "Product successfullly created", json);
+        } catch (ProductInvalidException e) {
+            return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
