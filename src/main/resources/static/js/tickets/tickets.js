@@ -1,6 +1,10 @@
 $(document).ready(function () {
     var storage = Storages.localStorage;
     var shoppingBasket = storage.get('tickets');
+    if (shoppingBasket === null) {
+        storage.set('tickets', []);
+        shoppingBasket = [];
+    }
 
     createShoppingBasketTable(shoppingBasket);
 
@@ -36,8 +40,6 @@ $(document).ready(function () {
                 "amount": 1
             });
         }
-
-        console.log(shoppingBasket);
 
         storage.set('tickets', shoppingBasket);
         createShoppingBasketTable(shoppingBasket);
