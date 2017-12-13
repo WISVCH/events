@@ -1,9 +1,6 @@
 package ch.wisv.events.tickets.controller;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
-import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.normal.*;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
@@ -17,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -140,8 +139,14 @@ public class TicketsController {
         try {
             Order order = this.getOrderByKeyAndAuthCustomer(key);
 
+            if (order.getAmount() == 0.d && order.getOrderProducts().size() > 0) {
+                orderService.updateOrderStatus(order, OrderStatus.PAID_IDEAL);
+
+                return "redirect:/complete/" + order.getPublicReference() + "/";
+            }
+
             return "redirect:" + ticketsService.getPaymentsMollieUrl(order);
-        } catch (OrderNotFoundException e) {
+        } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return REDIRECT_HOME;
@@ -155,21 +160,23 @@ public class TicketsController {
     /**
      * GetMapping for "/complete/{key}/". Redirect from mollie payments.
      *
-     * @param model             of type Model
      * @param redirect          of type RedirectAttributes
      * @param key               of type String
      * @param paymentsReference of type String
      * @return String
      */
-    @GetMapping("/complete/{key}/")
-    public String complete(Model model, RedirectAttributes redirect, @PathVariable String key, @RequestParam("reference") String paymentsReference) {
+    @GetMapping("/status/{key}/")
+    public String status(RedirectAttributes redirect, @PathVariable String key, @RequestParam("reference") String paymentsReference) {
         try {
             Order order = this.getOrderByKeyAndAuthCustomer(key);
-            order = ticketsService.updateOrderStatus(order, paymentsReference);
-            model.addAttribute("order", order);
+            ticketsService.updateOrderStatus(order, paymentsReference);
 
-            return "tickets/complete";
-        } catch (OrderNotFoundException e) {
+            if (order.getStatus() == OrderStatus.WAITING) {
+                this.retryFetchOrderStatus(order, paymentsReference);
+            }
+
+            return "redirect:/complete/" + order.getPublicReference() + "/";
+        } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return REDIRECT_HOME;
@@ -177,6 +184,53 @@ public class TicketsController {
             redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
 
             return "redirect:/checkout/" + key + "/";
+        }
+    }
+
+    /**
+     * Retry fetching the OrderStatus when the OrderStatus is WAITING.
+     *
+     * @param order             of type Order
+     * @param paymentsReference of type String
+     * @throws PaymentsStatusUnknown when the status that Payments gives is unknown.
+     * @throws OrderInvalidException when the order is valid.
+     */
+    private void retryFetchOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
+        int count = 0;
+        int maxCount = 5;
+        while (order.getStatus() == OrderStatus.WAITING && count < maxCount) {
+            try {
+                sleep(500);
+                ticketsService.updateOrderStatus(order, paymentsReference);
+            } catch (InterruptedException ignored) {
+            }
+            count++;
+        }
+
+        // Close Order when the OrderStatus has not been changes
+        if (count == maxCount) {
+            orderService.updateOrderStatus(order, OrderStatus.CLOSED);
+        }
+    }
+
+    /**
+     * GetMapping for "/complete/{key}/".
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     * @return String
+     */
+    @GetMapping("/complete/{key}/")
+    public String complete(Model model, RedirectAttributes redirect, @PathVariable String key) {
+        try {
+            model.addAttribute("order", this.getOrderByKeyAndAuthCustomer(key));
+
+            return "tickets/complete";
+        } catch (OrderNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
+            return REDIRECT_HOME;
         }
     }
 
@@ -221,7 +275,7 @@ public class TicketsController {
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/";
-        } catch (OrderInvalidException | ProductNotFoundException e) {
+        } catch (OrderInvalidException | ProductNotFoundException | EventNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return REDIRECT_HOME;
