@@ -31,6 +31,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     /**
      * Find Products by after selling date and before
      */
-    Collection<Product> findAllBySellStartBeforeAndSellEndAfter(LocalDateTime sellStart, LocalDateTime sellEnd);
+    Collection<Product> findAllBySellStartBefore(LocalDateTime sellStart);
 
 }
