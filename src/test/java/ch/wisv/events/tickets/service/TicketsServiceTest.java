@@ -4,12 +4,14 @@ import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.order.OrderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -47,6 +49,9 @@ public class TicketsServiceTest extends ServiceTest {
 
     @MockBean
     public CustomerService customerService;
+
+    @MockBean
+    public OrderService orderService;
 
     @Autowired
     public TicketsService ticketsService;
@@ -150,13 +155,14 @@ public class TicketsServiceTest extends ServiceTest {
         runUpdateOrderStatus("CANCELLED", OrderStatus.CANCELLED);
     }
 
-    private void runUpdateOrderStatus(String paymentsStatus, OrderStatus orderStatus) throws PaymentsStatusUnknown {
+    private void runUpdateOrderStatus(String paymentsStatus, OrderStatus orderStatus) throws PaymentsStatusUnknown, OrderInvalidException {
         String reference = UUID.randomUUID().toString();
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn(paymentsStatus);
+        doNothing().when(orderService).updateOrderStatus(this.order, orderStatus);
 
-        Order returnOrder = ticketsService.updateOrderStatus(this.order, reference);
+        ticketsService.updateOrderStatus(this.order, reference);
 
-        assertEquals(returnOrder.getStatus(), orderStatus);
+        verify(orderService, times(1)).updateOrderStatus(this.order, orderStatus);
     }
 
     @Test

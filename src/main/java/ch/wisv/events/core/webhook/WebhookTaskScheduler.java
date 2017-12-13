@@ -90,12 +90,12 @@ public class WebhookTaskScheduler {
             HttpResponse response = httpClient.execute(httpPost);
             String responseBody = EntityUtils.toString(response.getEntity());
 
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK || !responseBody.equals("true")) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                webhookTask.setWebhookTaskStatus(WebhookTaskStatus.SUCCESS);
+            } else {
                 log.error("ERROR Task #" + webhookTask.getId() + ": " + responseBody);
                 webhookTask.setWebhookTaskStatus(WebhookTaskStatus.ERROR);
                 webhookTask.setWebhookError(responseBody);
-            } else {
-                webhookTask.setWebhookTaskStatus(WebhookTaskStatus.SUCCESS);
             }
         } catch (IOException e) {
             log.error("IOException Task #" + webhookTask.getId() + ": " + e.getMessage());

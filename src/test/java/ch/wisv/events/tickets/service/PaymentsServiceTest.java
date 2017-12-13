@@ -4,6 +4,9 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
+import ch.wisv.events.core.model.product.Product;
+import com.google.common.collect.ImmutableList;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
@@ -12,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -54,7 +58,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsOrderStatus() throws Exception {
+    public void testGetPaymentsOrderStatus() throws Exception {
         String paymentsReference = UUID.randomUUID().toString();
 
         HttpResponse httpResponse = this.createHttpResponse("{\"status\": \"PAID\"}");
@@ -64,7 +68,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsOrderStatusRandomResponse() throws Exception {
+    public void testGetPaymentsOrderStatusRandomResponse() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         String paymentsReference = UUID.randomUUID().toString();
 
@@ -75,7 +79,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsOrderStatusIoException() throws Exception {
+    public void testGetPaymentsOrderStatusIoException() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         String paymentsReference = UUID.randomUUID().toString();
 
@@ -85,7 +89,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsMollieUrl() throws Exception {
+    public void testGetPaymentsMollieUrl() throws Exception {
         Order order = new Order();
         order.setCustomer(new Customer("San Tanino", "sant@ch.tudelft.nl", "sant", ""));
 
@@ -98,7 +102,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsMollieUrlNoUrl() throws Exception {
+    public void testGetPaymentsMollieUrlNoUrl() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         Order order = new Order();
         order.setCustomer(new Customer("San Tanino", "sant@ch.tudelft.nl", "sant", ""));
@@ -110,7 +114,7 @@ public class PaymentsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getPaymentsMollieUrlIoException() throws Exception {
+    public void testGetPaymentsMollieUrlIoException() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         Order order = new Order();
         order.setCustomer(new Customer("San Tanino", "sant@ch.tudelft.nl", "sant", ""));
@@ -118,6 +122,31 @@ public class PaymentsServiceTest extends ServiceTest {
         when(httpClient.execute(any(HttpPost.class))).thenThrow(new IOException());
 
         paymentsService.getPaymentsMollieUrl(order);
+    }
+
+    @Test
+    public void testCreatePaymentsOrderHttpPost() throws Exception {
+        Order order = mock(Order.class);
+        Customer customer = mock(Customer.class);
+        Product product = mock(Product.class);
+        OrderProduct orderProduct = new OrderProduct(product, 1.d, 2L);
+        String key = "994153c6-9cca-48c8-9693-0b07dd19d141";
+        String productKey = "ef4153c6-9693-48c8-48c8-0b07dd19d141";
+
+        when(order.getCustomer()).thenReturn(customer);
+        when(order.getPublicReference()).thenReturn(key);
+        when(order.getOrderProducts()).thenReturn(ImmutableList.of(orderProduct));
+        when(product.getKey()).thenReturn(productKey);
+        when(customer.getName()).thenReturn("U il");
+        when(customer.getEmail()).thenReturn("uil@hoo.hoo");
+
+        HttpPost post = paymentsService.createPaymentsOrderHttpPost(order);
+
+        String entity = "{\"productKeys\":[\"ef4153c6-9693-48c8-48c8-0b07dd19d141\",\"ef4153c6-9693-48c8-48c8-0b07dd19d141\"],\"name\":\"U il\"," +
+                "\"returnUrl\":\"null\\/status\\/994153c6-9cca-48c8-9693-0b07dd19d141\\/\"," +
+                "\"email\":\"uil@hoo.hoo\"}";
+
+        assertEquals(entity, EntityUtils.toString(post.getEntity()));
     }
 
     private HttpResponse createHttpResponse(String response) throws Exception {
