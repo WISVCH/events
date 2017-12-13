@@ -1,5 +1,6 @@
 package ch.wisv.events.tickets.service;
 
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
@@ -39,10 +40,8 @@ public interface TicketsService {
 
     /**
      * Update the status of the Order via the Payments API.
-     *
-     * @param order             of type Order
+     *  @param order             of type Order
      * @param paymentsReference of type String
-     * @return Order
      */
-    Order updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown;
+    void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException;
 }
