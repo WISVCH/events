@@ -38,6 +38,7 @@ public class ProductCreateUpdateRequestFactory extends WebhookRequestFactory {
             jsonObject.put("title", product.getTitle());
             jsonObject.put("description", product.getDescription());
             jsonObject.put("price", product.getCost());
+            jsonObject.put("organizedBy", "BESTUUR"); // TODO: https://github.com/WISVCH/events/issues/153
 
             return jsonObject;
         } else {
