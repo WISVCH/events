@@ -4,6 +4,7 @@ import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
@@ -151,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
 
             orderRepository.saveAndFlush(order);
         } catch (OrderNotFoundException e) {
-            throw new OrderInvalidException("Order should be created first");
+            throw new OrderCannotUpdateException();
         }
     }
 
@@ -298,7 +299,7 @@ public class OrderServiceImpl implements OrderService {
             Integer productsLeftCount = maxSold - soldProductsCount;
 
             if (soldNow > productsLeftCount) {
-                return false;
+                return true;
             }
         }
 

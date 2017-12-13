@@ -233,6 +233,7 @@ public class OrderServiceImplTest extends ServiceTest {
                 this.order.getPaidDate(),
                 this.order.getCustomer()
         );
+        when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
         service.update(order);
         verify(repository, times(1)).saveAndFlush(order);
     }
@@ -241,6 +242,7 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testUpdateNewOrder() throws Exception {
         thrown.expect(OrderCannotUpdateException.class);
         thrown.expectMessage("This object is new so can not be updated");
+        when(repository.findByPublicReference(any(String.class))).thenReturn(Optional.empty());
 
         service.update(new Order());
     }

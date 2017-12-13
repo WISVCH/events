@@ -143,8 +143,7 @@ public class PaymentsServiceTest extends ServiceTest {
         HttpPost post = paymentsService.createPaymentsOrderHttpPost(order);
 
         String entity = "{\"productKeys\":[\"ef4153c6-9693-48c8-48c8-0b07dd19d141\",\"ef4153c6-9693-48c8-48c8-0b07dd19d141\"],\"name\":\"U il\"," +
-                "\"returnUrl\":\"null\\/status\\/994153c6-9cca-48c8-9693-0b07dd19d141\\/\"," +
-                "\"email\":\"uil@hoo.hoo\"}";
+                "\"mailConfirmation\":false,\"returnUrl\":\"null\\/status\\/994153c6-9cca-48c8-9693-0b07dd19d141\\/\",\"email\":\"uil@hoo.hoo\"}";
 
         assertEquals(entity, EntityUtils.toString(post.getEntity()));
     }
