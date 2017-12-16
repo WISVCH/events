@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.gradle.build-scan' version '1.11'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -95,4 +99,9 @@ dependencies {
     compile 'org.fluttercode.datafactory:datafactory:0.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.tngtech.java:junit-dataprovider:1.5.0'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
 }
