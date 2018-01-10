@@ -53,20 +53,57 @@
             </div>
 
             <div class="row justify-content-left">
-                <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-                <div class="col-lg-3 mb-3" th:each="product: ${products}">
+                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                <div class="mb-3" th:each="event: ${events}" th:if="${event.getProducts().size() > 0}"
+                     th:classappend="'col-lg-' + (${event.getProducts().size()} * 3) + ' col-md-' + (${event.getProducts().size()} * 6)">
                     <div class="card">
                         <div class="card-body bt-3">
-                            <h5 class="card-title" th:text="${product.getTitle()}"></h5>
-                            <p class="card-text" th:text="${product.getDescription()}"></p>
-                            <h6 th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></h6>
+                            <div class="row">
+                                <h5 class="col card-title mb-0" th:text="${event.getTitle()}"></h5>
+                            </div>
 
-                            <small>Max [[${product.getMaxSoldPerCustomer()}]] tickets per person.</small>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
+                                    <div class="badge badge-secondary" th:each="cat : ${event.getCategories()}"
+                                         th:text="${cat.getDisplayName()}"></div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <i class="fa fa-clock-o fa-fw"></i>
+                                    <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <i class="fa fa-info fa-fw"></i>
+                                    <span th:text="${event.getShortDescription()}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div th:classappend="'col-md-' + ${(12 / event.getProducts().size())} + ' col-12'"
+                                     th:each="product : ${event.getProducts()}" class="mb-2">
+                                    <div class="card">
+                                        <div class="card-body bt-3">
+                                            <h5 class="card-title" th:text="${product.getTitle()}"></h5>
+                                            <p class="card-text" th:text="${product.getDescription()}"></p>
+                                            <h6 th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></h6>
+
+                                            <small>Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
+                                            </small>
+                                        </div>
+                                        <a class="btn btn-primary add-to-shopping-basket" style="color: #ffffff;"
+                                           th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}">
+                                            Add to basket
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <a class="btn btn-primary add-to-shopping-basket" style="color: #ffffff;"
-                           th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}">
-                            Add to basket
-                        </a>
                     </div>
                 </div>
             </div>

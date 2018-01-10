@@ -5,8 +5,8 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.tickets.service.TicketsService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,9 +38,9 @@ import static java.lang.Thread.sleep;
 public class TicketsController {
 
     /**
-     * Field productService
+     * Field eventService.
      */
-    private final ProductService productService;
+    private final EventService eventService;
 
     /**
      * Field ticketsService
@@ -51,17 +51,21 @@ public class TicketsController {
      * Field orderService
      */
     private final OrderService orderService;
+
+    /**
+     * Redirects
+     */
     private final String REDIRECT_HOME = "redirect:/";
 
     /**
      * Constructor TicketsController.
      *
-     * @param productService of type ProductService
-     * @param ticketService  of type TicketsService
-     * @param orderService   of type OrderService
+     * @param eventService  of type EventService
+     * @param ticketService of type TicketsService
+     * @param orderService  of type OrderService
      */
-    public TicketsController(ProductService productService, TicketsService ticketService, OrderService orderService) {
-        this.productService = productService;
+    public TicketsController(EventService eventService, TicketsService ticketService, OrderService orderService) {
+        this.eventService = eventService;
         this.ticketsService = ticketService;
         this.orderService = orderService;
     }
@@ -73,7 +77,7 @@ public class TicketsController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("products", productService.getAvailableProducts());
+        model.addAttribute("events", eventService.getUpcomingEvents());
         model.addAttribute("customer", ticketsService.getCurrentCustomer());
         model.addAttribute("orderProduct", new OrderProductDTO());
 
