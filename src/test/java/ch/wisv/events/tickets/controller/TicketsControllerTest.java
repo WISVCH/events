@@ -5,6 +5,7 @@ import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
@@ -46,6 +47,8 @@ public class TicketsControllerTest extends ControllerTest {
 
     private Customer customer;
 
+    private Event event;
+
     private Product product;
 
     private Order order;
@@ -55,7 +58,9 @@ public class TicketsControllerTest extends ControllerTest {
     @Before
     public void setUp() throws Exception {
         this.customer = new Customer("Sven Popping", "test@ch.tudelft.nl", "test", "123");
+        this.event = new Event("title event", "description", "location", 10, 10, "", LocalDateTime.now(), LocalDateTime.now(), "short description");
         this.product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now(), LocalDateTime.now());
+        this.event.addProduct(this.product);
 
         HashMap<String, Long> products = new HashMap<>();
         products.put(this.product.getKey(), 2L);
@@ -70,14 +75,14 @@ public class TicketsControllerTest extends ControllerTest {
     @Test
     public void testGetIndex() throws Exception {
         when(ticketsService.getCurrentCustomer()).thenReturn(customer);
-        when(productService.getAvailableProducts()).thenReturn(ImmutableList.of(product));
+        when(eventService.getUpcomingEvents()).thenReturn(ImmutableList.of(event));
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/index"))
                 .andExpect(model().attribute("orderProduct", hasProperty("products", is(new HashMap<String, Long>()))))
                 .andExpect(model().attribute("customer", is(customer)))
-                .andExpect(model().attribute("products", is(ImmutableList.of(product))));
+                .andExpect(model().attribute("events", is(ImmutableList.of(event))));
     }
 
     @Test
