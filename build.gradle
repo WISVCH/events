@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.8.RELEASE'
+        springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -8,6 +8,10 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
+}
+
+plugins {
+    id 'com.gradle.build-scan' version '1.11'
 }
 
 apply plugin: 'java'
@@ -95,4 +99,9 @@ dependencies {
     compile 'org.fluttercode.datafactory:datafactory:0.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.tngtech.java:junit-dataprovider:1.5.0'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
 }
