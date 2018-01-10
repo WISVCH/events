@@ -46,12 +46,12 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row justify-content-center">
-                <div class="col-4 text-center"
+                <div class="col-12 col-md-6 text-center"
                      th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).WAITING}">
                     <i class="fa fa-fw fa-4x fa-spinner fa-spin mb-4"></i>
                     <p>Please wait a few seconds for the order to be completed!</p>
                 </div>
-                <div class="col-4 text-center"
+                <div class="col-12 col-md-6 text-center"
                      th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}">
                     <img class="img-thumbnail mb-4" th:src="@{/images/happy-owl.jpg}" style="height: 300px" alt="">
                     <div class="col mb-5" style="font-size: 20px">
@@ -67,7 +67,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-4 text-center"
+                <div class="col-12 col-md-6 text-center"
                      th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CANCELLED}">
                     <img class="img-thumbnail mb-4" th:src="@{/images/sad-owl.jpg}" style="height: 300px" alt="">
                     <div class="col mb-5" style="font-size: 20px">
@@ -81,7 +81,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-4 text-center"
+                <div class="col-12 col-md-6 text-center"
                      th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CLOSED}">
                     <img class="img-thumbnail mb-4" th:src="@{/images/sad-owl.jpg}" style="height: 300px" alt="">
                     <div class="col mb-5" style="font-size: 20px">
