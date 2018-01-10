@@ -1,7 +1,7 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.tickets.service.TicketsService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -36,7 +36,7 @@ public abstract class ControllerTest {
     protected MockMvc mockMvc;
 
     @MockBean
-    protected ProductService productService;
+    protected EventService eventService;
 
     @MockBean
     protected TicketsService ticketsService;
