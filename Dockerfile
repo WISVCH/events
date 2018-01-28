@@ -1,4 +1,4 @@
-FROM wisvch/alpine-java:8_server-jre_unlimited
-ADD build/libs/events.jar /srv/events.jar
-WORKDIR /srv
-CMD "/srv/events.jar"
+FROM wisvch/spring-boot-base:1
+COPY ./build/libs/events.jar /srv/events.jar
+USER spring-boot
+CMD ["/srv/events.jar"]
