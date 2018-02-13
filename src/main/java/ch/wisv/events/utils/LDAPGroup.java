@@ -43,6 +43,7 @@ public enum LDAPGroup {
     SYMPOSIUM("Symposiumcommissie"),
     VERDIEPCIE("VerdiepCie"),
     W3CIE("W3Cie"),
+    WHISCO("WhisCo"),
     WIFI("WiFi"),
     BESTUUR("Bestuur"),
     VOORZITTER("Voorzitter"),
