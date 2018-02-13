@@ -73,11 +73,7 @@ dependencies {
     compile 'org.hibernate:hibernate-validator'
     compile 'org.apache.commons:commons-lang3:3.5'
 
-    compile('ch.wisv:wisvch-connect-client:1.2.6.0') {
-        // Workaround for https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/pull/1084
-        exclude module: 'bcprov-jdk15on'
-    }
-    compile 'org.bouncycastle:bcprov-jdk15on:1.52+'
+    compile 'ch.wisv:wisvch-connect-client:1.3.1.7'
 
     compile 'org.webjars:bootstrap:4.0.0-beta'
     compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
