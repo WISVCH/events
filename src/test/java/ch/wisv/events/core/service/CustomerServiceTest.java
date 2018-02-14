@@ -69,7 +69,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void setUp() throws Exception {
         customerService = new CustomerServiceImpl(repository, orderRepository);
 
-        this.customer = new Customer("Christiaan Huygens", "events@ch.tudelft.nl", "christiaanh", "12345678");
+        this.customer = new Customer("", "Christiaan Huygens", "events@ch.tudelft.nl", "christiaanh", "12345678");
     }
 
     /**
@@ -141,7 +141,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testGetByChUserNameNotFound() throws Exception {
         thrown.expect(CustomerNotFoundException.class);
-        thrown.expectMessage("Customer with username or email testt, testt not found!");
+        thrown.expectMessage("Customer with email testt not found!");
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         customerService.getByEmail("testt");
@@ -245,7 +245,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testCreateAlreadyUsedRFIDToken() throws Exception {
-        Customer duplicate = new Customer("Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", this.customer.getRfidToken());
+        Customer duplicate = new Customer("", "Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", this.customer.getRfidToken());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
@@ -260,7 +260,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testCreateAlreadyUsedEmail() throws Exception {
-        Customer duplicate = new Customer("Constantijn Huygens", this.customer.getEmail(), "constantijnh", this.customer.getRfidToken() + "0");
+        Customer duplicate = new Customer("", "Constantijn Huygens", this.customer.getEmail(), "constantijnh", this.customer.getRfidToken() + "0");
         when(repository.findByEmail(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 

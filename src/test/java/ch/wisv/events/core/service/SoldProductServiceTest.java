@@ -150,7 +150,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProduct() throws Exception {
-        when(repository.findAllByProductAndCustomer(any(Product.class), any(Customer.class)))
+        when(repository.findAllByProductAndCustomerAndStatusNotIn(any(Product.class), any(Customer.class), any()))
                 .thenReturn(Collections.singletonList(soldProduct));
 
         List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
