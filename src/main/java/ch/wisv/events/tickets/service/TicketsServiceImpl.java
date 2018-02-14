@@ -74,23 +74,86 @@ public class TicketsServiceImpl implements TicketsService {
     @Override
     public Customer getCurrentCustomer() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof OIDCAuthenticationToken) {
-            OIDCAuthenticationToken oidcAuth = ((OIDCAuthenticationToken) auth);
+        CHUserInfo userInfo = this.getChUserInfo(auth);
 
-            if (oidcAuth.getUserInfo() instanceof CHUserInfo) {
-                CHUserInfo userInfo = (CHUserInfo) oidcAuth.getUserInfo();
-                try {
-                    return customerService.getByChUsernameOrEmail(userInfo.getLdapUsername(), userInfo.getEmail());
-                } catch (CustomerNotFoundException e) {
-                    try {
-                        return customerService.createByChUserInfo(userInfo);
-                    } catch (CustomerInvalidException ignored) {
-                    }
-                }
-            }
+        try {
+            Customer customer = this.getCustomerByCHUserInfo(userInfo);
+            this.updateCustomerInfo(customer, userInfo);
+
+            return customer;
+        } catch (CustomerInvalidException | CustomerNotFoundException e) {
+            throw new AccessDeniedException("Invalid authentication");
+        }
+    }
+
+    /**
+     * Update Customer Info with the information provided by CHUserInfo.
+     *
+     * @param customer of type Customer.
+     * @param userInfo of type CHUserInfo.
+     * @throws CustomerInvalidException  when the Customer is invalid.
+     * @throws CustomerNotFoundException when the Customer does not exists.
+     */
+    private void updateCustomerInfo(Customer customer, CHUserInfo userInfo) throws CustomerInvalidException, CustomerNotFoundException {
+        if (customer.getSub() == null || customer.getSub().equals("")) {
+            customer.setSub(userInfo.getSub());
         }
 
-        throw new AccessDeniedException("Invalid authentication");
+        if (customer.getChUsername() == null || customer.getChUsername().equals("")) {
+            customer.setChUsername(userInfo.getLdapUsername());
+        }
+
+        if (customer.getChUsername() == null || customer.getEmail().equals("")) {
+            customer.setEmail(userInfo.getEmail());
+        }
+
+        customerService.update(customer);
+    }
+
+    /**
+     * Get a Customer by CHUserInfo.
+     *
+     * @param userInfo of type CHUserInfo.
+     * @return Customer
+     * @throws CustomerInvalidException when the CHUserInfo will result in an invalid
+     */
+    private Customer getCustomerByCHUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
+        try {
+            return customerService.getBySub(userInfo.getSub());
+        } catch (CustomerNotFoundException ignored) {
+        }
+
+        try {
+            return customerService.getByUsername(userInfo.getLdapUsername());
+        } catch (CustomerNotFoundException ignored) {
+        }
+
+        try {
+            return customerService.getByEmail(userInfo.getEmail());
+        } catch (CustomerNotFoundException ignored) {
+        }
+
+        return customerService.createByChUserInfo(userInfo);
+    }
+
+    /**
+     * Get CHUserInfo from a Authentication object.
+     *
+     * @param auth of type Authentication.
+     * @return CHUserInfo
+     */
+    private CHUserInfo getChUserInfo(Authentication auth) {
+        if (!(auth instanceof OIDCAuthenticationToken)) {
+            throw new AccessDeniedException("Invalid authentication");
+        }
+
+        OIDCAuthenticationToken oidcToken = (OIDCAuthenticationToken) auth;
+
+        if (!(oidcToken.getUserInfo() instanceof CHUserInfo)) {
+            throw new AccessDeniedException("Invalid UserInfo object");
+        }
+
+        return (CHUserInfo) oidcToken.getUserInfo();
     }
 
     /**

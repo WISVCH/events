@@ -245,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void assertIsValidForCustomer(Order order) throws OrderInvalidException {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
-            List<SoldProduct> soldProductsCustomers = soldProductService.getAllByCustomerAndProduct(order.getCustomer(), orderProduct.getProduct());
+            List<SoldProduct> soldProductsCustomers = soldProductService.getAllByCustomerAndProduct(order.getCustomer(), orderProduct.getProduct(), null);
             Integer limitProductOrder = orderProduct.getProduct().getMaxSoldPerCustomer() - soldProductsCustomers.size();
 
             if (orderProduct.getAmount() > limitProductOrder) {

@@ -91,17 +91,42 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Get a Customer by its sub.
+     *
+     * @param sub of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getBySub(String sub) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findBySub(sub);
+
+        return customer.orElseThrow(() -> new CustomerNotFoundException("sub" + sub));
+    }
+
+    /**
+     * Get a customer by CH username or Email.
+     *
+     * @param username of type String
+     * @return Customer
+     */
+    @Override
+    public Customer getByUsername(String username) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByChUsername(username);
+
+        return customer.orElseThrow(() -> new CustomerNotFoundException("username" + username));
+    }
+
+    /**
      * Get a customer by CH username.
      *
-     * @param username username
      * @param email
      * @return Customer
      */
     @Override
-    public Customer getByChUsernameOrEmail(String username, String email) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByChUsernameOrEmail(username, email);
+    public Customer getByEmail(String email) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByEmail(email);
 
-        return customer.orElseThrow(() -> new CustomerNotFoundException("username or email " + username + ", " + email));
+        return customer.orElseThrow(() -> new CustomerNotFoundException("email " + email));
     }
 
     /**
@@ -137,6 +162,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
         Customer customer = new Customer(
+                userInfo.getSub(),
                 userInfo.getName(),
                 userInfo.getEmail(),
                 userInfo.getLdapUsername(),

@@ -92,7 +92,7 @@ public class SalesAppCustomerController {
         try {
             Order order = orderService.getByReference(publicReference);
             if (customer.getEmail() != null && !customer.getEmail().equals("")) {
-                customer = customerService.getByChUsernameOrEmail(customer.getEmail(), customer.getEmail());
+                customer = customerService.getByEmail(customer.getEmail());
             } else {
                 customer = customerService.getByRfidToken(customer.getRfidToken());
             }

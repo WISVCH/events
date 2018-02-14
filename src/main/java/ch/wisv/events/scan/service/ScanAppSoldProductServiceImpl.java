@@ -54,7 +54,7 @@ public class ScanAppSoldProductServiceImpl implements ScanAppSoldProductService 
      */
     @Override
     public List<SoldProduct> getAllByProductAndCustomer(Product product, Customer customer) {
-        return this.soldProductRepository.findAllByProductAndCustomer(product, customer);
+        return this.soldProductRepository.findAllByProductAndCustomerAndStatusNotIn(product, customer, null);
     }
 
     /**

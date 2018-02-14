@@ -3,6 +3,7 @@ package ch.wisv.events.core.repository;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -50,7 +51,7 @@ public interface SoldProductRepository extends JpaRepository<SoldProduct, Intege
      * @param customer of type Customer
      * @return List<SoldProduct>
      */
-    List<SoldProduct> findAllByProductAndCustomer(Product product, Customer customer);
+    List<SoldProduct> findAllByProductAndCustomerAndStatusNotIn(Product product, Customer customer, List<SoldProductStatus> status);
 
     /**
      * Method findAllByCustomer find list of sold products by customer.

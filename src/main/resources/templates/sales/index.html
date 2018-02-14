@@ -36,8 +36,6 @@
                 <form id="orderForm" class="w-100" th:if="${products.size() > 0}" th:action="@{./}"
                       th:object="${orderProductDTO}" method="POST">
 
-                    <input type="hidden" th:field="*{key}" th:value="*{key}">
-
                     <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
                     <div class="col" th:each="product : ${products}">
                         <div class="card mb-4">

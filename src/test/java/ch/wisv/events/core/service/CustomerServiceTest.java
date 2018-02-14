@@ -130,9 +130,9 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testGetByChUserName() throws Exception {
-        when(repository.findByChUsernameOrEmail(customer.getChUsername(), customer.getChUsername())).thenReturn(Optional.of(this.customer));
+        when(repository.findByEmail(customer.getChUsername())).thenReturn(Optional.of(this.customer));
 
-        assertEquals(this.customer, customerService.getByChUsernameOrEmail(this.customer.getChUsername(), this.customer.getChUsername()));
+        assertEquals(this.customer, customerService.getByEmail(this.customer.getChUsername()));
     }
 
     /**
@@ -142,9 +142,9 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetByChUserNameNotFound() throws Exception {
         thrown.expect(CustomerNotFoundException.class);
         thrown.expectMessage("Customer with username or email testt, testt not found!");
-        when(repository.findByChUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        customerService.getByChUsernameOrEmail("testt", "testt");
+        customerService.getByEmail("testt");
     }
 
     /**
