@@ -55,7 +55,7 @@ spring:
 
 # CH Connect Configuration
 wisvch.connect:
-  issuerUri: https://connect.ch.tudelft.nl/
+  issuerUri: https://connect.ch.tudelft.nl
   clientUri: http://localhost:8080/events
 
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
