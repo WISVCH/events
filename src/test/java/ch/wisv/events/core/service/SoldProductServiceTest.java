@@ -150,11 +150,11 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProduct() throws Exception {
-        when(repository.findAllByProductAndCustomer(any(Product.class), any(Customer.class)))
+        when(repository.findAllByProductAndCustomerAndStatusNotIn(any(Product.class), any(Customer.class), any()))
                 .thenReturn(Collections.singletonList(soldProduct));
 
         List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(mock(Customer.class),
-                mock(Product.class));
+                mock(Product.class), null);
 
         assertEquals(Collections.singletonList(soldProduct), temp);
     }
@@ -164,7 +164,7 @@ public class SoldProductServiceTest extends ServiceTest {
      */
     @Test
     public void getByCustomerAndProductNull() throws Exception {
-        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(null, null);
+        List<SoldProduct> temp = soldProductService.getAllByCustomerAndProduct(null, null, null);
 
         assertEquals(Collections.emptyList(), temp);
     }

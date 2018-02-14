@@ -79,7 +79,9 @@ public class TicketsServiceTest extends ServiceTest {
         userInfo.setLdapUsername("sant");
         SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
 
-        when(customerService.getByChUsernameOrEmail(userInfo.getLdapUsername(), userInfo.getEmail())).thenReturn(new Customer(userInfo.getName(),
+        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByEmail(userInfo.getEmail())).thenReturn(new Customer("", userInfo.getName(),
                 userInfo.getEmail(), userInfo.getLdapUsername(), ""));
 
         Customer customer = ticketsService.getCurrentCustomer();
@@ -97,12 +99,15 @@ public class TicketsServiceTest extends ServiceTest {
         userInfo.setLdapUsername("sant");
         SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
 
-        when(customerService.getByChUsernameOrEmail(userInfo.getLdapUsername(), userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.createByChUserInfo(userInfo)).thenReturn(new Customer(userInfo.getName(), userInfo.getEmail(), userInfo
+        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByEmail(userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.createByChUserInfo(userInfo)).thenReturn(new Customer(null, userInfo.getName(), userInfo.getEmail(), userInfo
                 .getLdapUsername(), ""));
 
         Customer customer = ticketsService.getCurrentCustomer();
 
+        assertEquals(userInfo.getSub(), customer.getSub());
         assertEquals(userInfo.getName(), customer.getName());
         assertEquals(userInfo.getEmail(), customer.getEmail());
         assertEquals(userInfo.getLdapUsername(), customer.getChUsername());
@@ -118,7 +123,9 @@ public class TicketsServiceTest extends ServiceTest {
         userInfo.setLdapUsername("sant");
         SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
 
-        when(customerService.getByChUsernameOrEmail(userInfo.getLdapUsername(), userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
+        when(customerService.getByEmail(userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
         when(customerService.createByChUserInfo(userInfo)).thenThrow(new CustomerInvalidException(""));
 
         ticketsService.getCurrentCustomer();

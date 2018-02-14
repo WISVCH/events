@@ -6,8 +6,10 @@ import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.SoldProductRepository;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,11 +89,16 @@ public class SoldProductServiceImpl implements SoldProductService {
      *
      * @param customer of type Customer
      * @param product  of type Product
+     * @param filter   of type List<SoldProductStatus>
      * @return List<SoldProduct>
      */
     @Override
-    public List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product) {
-        return this.soldProductRepository.findAllByProductAndCustomer(product, customer);
+    public List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product, List<SoldProductStatus> filter) {
+        if (filter == null) {
+            return this.soldProductRepository.findAllByProductAndCustomerAndStatusNotIn(product, customer, ImmutableList.of());
+        } else {
+            return this.soldProductRepository.findAllByProductAndCustomerAndStatusNotIn(product, customer, filter);
+        }
     }
 
     /**

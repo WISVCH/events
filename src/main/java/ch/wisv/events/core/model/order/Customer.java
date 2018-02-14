@@ -46,6 +46,12 @@ public class Customer {
     private String key;
 
     /**
+     * Field sub is the OIDC auth unique ID.
+     */
+    @Column(unique = true)
+    private String sub;
+
+    /**
      * Field name of the customer.
      */
     private String name;
@@ -83,13 +89,15 @@ public class Customer {
     /**
      * Constructor Customer creates a new Customer instance.
      *
+     * @param sub        of type String
      * @param name       of type String
      * @param email      of type String
      * @param chUsername of type String
      * @param rfidToken  of type String
      */
-    public Customer(String name, String email, String chUsername, String rfidToken) {
+    public Customer(String sub, String name, String email, String chUsername, String rfidToken) {
         this();
+        this.sub = sub;
         this.name = name;
         this.email = email;
         this.chUsername = chUsername;

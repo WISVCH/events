@@ -50,13 +50,28 @@ public interface CustomerService {
     Customer getByKey(String key) throws CustomerNotFoundException;
 
     /**
+     * Get a Customer by its sub.
+     *
+     * @param sub of type String
+     * @return Customer
+     */
+    Customer getBySub(String sub) throws CustomerNotFoundException;
+
+    /**
      * Get a customer by CH username or Email.
      *
      * @param username of type String
+     * @return Customer
+     */
+    Customer getByUsername(String username) throws CustomerNotFoundException;
+
+    /**
+     * Get a customer by Email.
+     *
      * @param email    of type String
      * @return Customer
      */
-    Customer getByChUsernameOrEmail(String username, String email) throws CustomerNotFoundException;
+    Customer getByEmail(String email) throws CustomerNotFoundException;
 
     /**
      * Get a customer by rfidToken.

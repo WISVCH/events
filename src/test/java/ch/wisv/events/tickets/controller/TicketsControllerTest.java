@@ -57,7 +57,7 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        this.customer = new Customer("Sven Popping", "test@ch.tudelft.nl", "test", "123");
+        this.customer = new Customer("", "Sven Popping", "test@ch.tudelft.nl", "test", "123");
         this.event = new Event("title event", "description", "location", 10, 10, "", LocalDateTime.now(), LocalDateTime.now(), "short description");
         this.product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now(), LocalDateTime.now());
         this.event.addProduct(this.product);

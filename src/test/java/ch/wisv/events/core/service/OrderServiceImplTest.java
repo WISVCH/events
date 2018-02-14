@@ -321,7 +321,7 @@ public class OrderServiceImplTest extends ServiceTest {
         Customer customer = mock(Customer.class);
         this.order.setCustomer(customer);
         when(this.product.getMaxSoldPerCustomer()).thenReturn(1);
-        when(soldProductService.getAllByCustomerAndProduct(customer, this.product)).thenReturn(Collections.emptyList());
+        when(soldProductService.getAllByCustomerAndProduct(customer, this.product, null)).thenReturn(Collections.emptyList());
 
         service.assertIsValidForCustomer(this.order);
     }
@@ -334,7 +334,7 @@ public class OrderServiceImplTest extends ServiceTest {
         this.order.setCustomer(customer);
 
         when(this.product.getMaxSoldPerCustomer()).thenReturn(1);
-        when(soldProductService.getAllByCustomerAndProduct(customer, this.product)).thenReturn(Collections.singletonList(new SoldProduct()));
+        when(soldProductService.getAllByCustomerAndProduct(customer, this.product, null)).thenReturn(Collections.singletonList(new SoldProduct()));
 
         service.assertIsValidForCustomer(this.order);
     }

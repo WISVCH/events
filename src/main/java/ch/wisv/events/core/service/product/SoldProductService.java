@@ -5,6 +5,7 @@ import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
 
 import java.util.List;
@@ -55,9 +56,10 @@ public interface SoldProductService {
      *
      * @param customer of type Customer
      * @param product  of type Product
+     * @param filter   of type List<SoldProductStatus>
      * @return List<SoldProduct>
      */
-    List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product);
+    List<SoldProduct> getAllByCustomerAndProduct(Customer customer, Product product, List<SoldProductStatus> filter);
 
     /**
      * Method getByCustomer find sold products by customer
