@@ -14,17 +14,30 @@ In order to run this project you need to have the following tool installed:
 - [mailcatcher](https://mailcatcher.me/), mailcatcher creates a mailserver locally on your pc. All mail sent from the API is cought here, you end 
 up with a mailbox with every outgoing mailaddress. Unix-like systems: gem install mailcatcher. Windows users can try
 mailcatcher as well, but [Papercut](https://github.com/changemakerstudios/papercut) has an easier installation.
+- [lombok](https://github.com/mplushnikov/lombok-intellij-plugin), lombok allowes users to uses annotations to create getters, setters, etc. All the things needed in a data class.
+There is a lombok IntelliJ plugin which you should install.
 
-### Installation
+### Clone and setup
 
-1. Clone this project into a folder you link via `git clone git@github.com:WISVCH/events.git`
-2. Import the project using IntelliJ IDEA, we recommend using [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/) ([free for students](https://www.jetbrains.com/student/)) because it includes support for Spring.
-
-![Gradle import](/images/import_project_gradle.png)
-![Gradle import](/images/enable_auto_import.png)
-
-2. [Import project from Gradle model](https://www.jetbrains.com/idea/help/importing-project-from-gradle-model.html)
-3. [Install the lombok plugin](https://github.com/mplushnikov/lombok-intellij-plugin)
-4. Duplicate the file `config/application.yml.example` and change its name to `config/application.yml`
-5. Add a CH-LDAP-group you are in to the events.admin.groups in the configuration file(config/application.properties)
+1. Clone this project into a folder you link via `git clone git@github.com:WISVCH/events.git`.
+2. Import the project using IntelliJ IDEA, we recommend using [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/) ([free for students](https://www.jetbrains.com/student/)) because it includes support for Spring. ![Gradle import](/images/import_steps.png)
+3. Enable annotation processing `Preferences > Build, Execution, Depolyment > Compiler > Annotiation Processing`.
+4. Create an PostgreSQL database ([Tutorial PostgreSQL database](https://www.postgresqltutorial.com/postgresql-create-database/)). 
+5. Duplicate the file `config/application.yml.example` and change its name to `config/application.yml` and change:
+    1. Replace `<MyDb>` with the name of the database you just created.
+    2. Replace `<MyDbUser>` with the database user.
+    3. Replace `<MyDbPassword>` with the password of the database user.
+    4. Replace `<MyLDAPgroup>` with a committee you are in (e.g. akcie, choco)
+        - **Note:** if you are not in a committee you can use `users` as LDAPgroup
 6. Start the project by right-clicking `EventsApplication` and clicking 'Run'
+
+
+### Running test
+
+The test of the project can be run via the command
+
+```
+./gradlew test
+```
+
+Or by right-clicking the test folder and selecting `Run 'All the test'`

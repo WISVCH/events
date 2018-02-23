@@ -17,8 +17,8 @@ title: Documentation CH events
 email: svenp@ch.tudelft.nl
 description: >- # this means to ignore newlines until "baseurl:"
   Documentation for the CH events project
-baseurl: "https://wisvch.github.io/events" # the subpath of your site, e.g. /blog
-url: "https://wisvch.github.io/events" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: /events # the subpath of your site, e.g. /blog
+url: /events # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: WISVCH
 github_username:  WISVCH
 
