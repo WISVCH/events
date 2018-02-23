@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.product;
+package ch.wisv.events.core.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;

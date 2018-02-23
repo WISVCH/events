@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.order;
 
+import ch.wisv.events.core.model.customer.Customer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

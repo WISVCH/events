@@ -2,7 +2,7 @@ package ch.wisv.events.scan.controller;
 
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;

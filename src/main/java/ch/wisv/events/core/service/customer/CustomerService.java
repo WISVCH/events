@@ -3,7 +3,7 @@ package ch.wisv.events.core.service.customer;
 import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 
 import java.time.LocalDateTime;
 import java.util.List;

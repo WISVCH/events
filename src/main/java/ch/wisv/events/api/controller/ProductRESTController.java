@@ -3,7 +3,7 @@ package ch.wisv.events.api.controller;
 import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.model.product.Search;
+import ch.wisv.events.core.util.Search;
 import ch.wisv.events.core.service.product.ProductService;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;

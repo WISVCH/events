@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.order;
+package ch.wisv.events.core.model.customer;
 
 import lombok.AccessLevel;
 import lombok.Data;

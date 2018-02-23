@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.sales;
+package ch.wisv.events.core.util;
 
 import ch.wisv.events.core.model.order.OrderStatus;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;

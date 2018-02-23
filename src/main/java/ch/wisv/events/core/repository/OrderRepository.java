@@ -1,6 +1,6 @@
 package ch.wisv.events.core.repository;
 
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 

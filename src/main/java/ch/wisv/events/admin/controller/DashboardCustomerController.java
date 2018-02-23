@@ -1,7 +1,7 @@
 package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.product.SoldProductService;
 import org.springframework.beans.factory.annotation.Autowired;

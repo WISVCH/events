@@ -28,7 +28,7 @@
         <main class="col-12 ml-auto p-5" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
-            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
             <div class="row">
                 <form th:action="@{./}" th:object="${customer}" method="POST" class="w-100">
                     <input type="hidden" th:value="*{getRfidToken()}" th:field="*{rfidToken}" required>

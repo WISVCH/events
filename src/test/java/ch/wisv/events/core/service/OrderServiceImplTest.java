@@ -4,6 +4,7 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.*;
 import ch.wisv.events.core.model.product.Product;
