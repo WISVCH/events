@@ -1,0 +1,132 @@
+.container {
+  margin: 0 auto;
+  width: calc(90vw);
+}
+
+main {
+  display: block;
+  margin: 0 auto;
+  width: calc(90vw);
+}
+
+main {
+  min-height: calc(100vh - 87px - 6rem);
+
+  * {
+    vertical-align: top;
+  }
+
+  nav {
+    display: inline-block;
+    width: 20%;
+
+    ul {
+      list-style: none;
+      padding: 0 0 0 1rem;
+
+      li {
+        text-decoration: none;
+      }
+    }
+  }
+
+  section {
+    display: inline-block;
+    width: 79%
+  }
+}
+
+.nav {
+  box-shadow: 0 2px 2px -2px $shadow-color;
+  overflow: auto;
+  background-color: $blue;
+
+  &-container {
+    width: calc(90vw);
+    margin: 1rem auto;
+    padding: 0 1rem;
+    position: relative;
+    text-align: center;
+  }
+
+  &-title {
+    @include transition(all .2s ease-out);
+    color: $white;
+    display: inline-block;
+    margin: 0;
+    padding-right: .2rem;
+
+    &:hover,
+    &:focus {
+      opacity: .6;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  li {
+    @include transition(all .2s ease-out);
+    color: $default-color;
+    display: inline-block;
+    opacity: .6;
+    padding: 0 2rem 0 0;
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+  }
+
+  a {
+    color: $default-color;
+    font-family: $sans-serif;
+  }
+}
+
+@media (min-width: 600px) {
+  .nav {
+    &-container {
+      text-align: left;
+    }
+
+    ul {
+      bottom: 0;
+      position: absolute;
+      right: 1rem;
+    }
+  }
+}
+
+footer {
+  font-family: $serif-secondary;
+  padding: 2rem 0;
+  text-align: center;
+  background: $grey-2;
+  position: relative;
+  margin-top: 2rem;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 6px;
+    position: absolute;
+    top: -6px;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/dotted-border.png) 0 -10px repeat-x;
+    background-size: 23px auto;
+  }
+
+  span {
+    color: $default-color;
+    font-size: .8rem;
+  }
+}
