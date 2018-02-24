@@ -1,9 +1,6 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.core.exception.normal.EventNotFoundException;
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
-import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.normal.*;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -48,35 +45,7 @@ public interface OrderService {
      *
      * @param order of type Order
      */
-    void create(Order order) throws OrderInvalidException, EventNotFoundException;
-
-    /**
-     * Method update ...
-     *
-     * @param order of type Order
-     */
-    void update(Order order) throws OrderInvalidException;
-
-    /**
-     * Method updateOrderStatus
-     *  @param order  of type Order
-     * @param status of type OrderStatus
-     */
-    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
-
-    /**
-     * Assert if the Order is valid.
-     *
-     * @param order of type Order
-     */
-    void assertIsValid(Order order) throws OrderInvalidException;
-
-    /**
-     * Assert if the Order is valid for a Customer.
-     *
-     * @param order of type order.
-     */
-    void assertIsValidForCustomer(Order order) throws OrderInvalidException;
+    void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException, OrderExceedCustomerLimitException;
 
     /**
      * Create an Order form a OrderProductDTO.
@@ -85,4 +54,20 @@ public interface OrderService {
      * @return Order
      */
     Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException;
+
+    /**
+     * Update the Order status.
+     *
+     * @param order  of type Order
+     * @param status of type OrderStatus
+     */
+    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
+
+    /**
+     * Method updateOrderStatusPaid
+     *
+     * @param order of type Order
+     */
+    void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException;
+
 }

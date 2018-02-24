@@ -1,7 +1,7 @@
 package ch.wisv.events.core.service.mail;
 
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.SoldProduct;
+import ch.wisv.events.core.model.ticket.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailPreparationException;
@@ -90,13 +90,13 @@ public class MailServiceImpl implements MailService {
      * @param order of type Order
      */
     @Override
-    public void sendOrderToCustomer(Order order, List<SoldProduct> soldProductList) {
+    public void sendOrderConfirmation(Order order, List<Ticket> tickets) {
         final Context ctx = new Context(new Locale("en"));
         ctx.setVariable("order", order);
-        ctx.setVariable("soldProducts", soldProductList);
+        ctx.setVariable("tickets", tickets);
 
         this.sendMailWithContent(
-                order.getCustomer().getEmail(),
+                order.getOwner().getEmail(),
                 "Order overview",
                 this.templateEngine.process("mail/order", ctx)
         );

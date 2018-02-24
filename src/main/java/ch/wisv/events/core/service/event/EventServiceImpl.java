@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
      * @return Collection of Events
      */
     @Override
-    public List<Event> getAllEvents() {
+    public List<Event> getAll() {
         return eventRepository.findAll();
     }
 
@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
      * @return List<Event>
      */
     @Override
-    public List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
+    public List<Event> getAllBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
         return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerbound, upperbound);
     }
 
@@ -86,20 +86,8 @@ public class EventServiceImpl implements EventService {
      * @return Collection of Events
      */
     @Override
-    public List<Event> getUpcomingEvents() {
+    public List<Event> getUpcoming() {
         return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
-                .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Get all available events
-     *
-     * @return Collection of Events
-     */
-    @Override
-    public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream()
                 .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toList());
     }
@@ -124,7 +112,7 @@ public class EventServiceImpl implements EventService {
      * @return List of Events
      */
     @Override
-    public Event getEventByProduct(Product product) throws EventNotFoundException {
+    public Event getByProduct(Product product) throws EventNotFoundException {
         Optional<Event> event = eventRepository.findByProductsContaining(product);
 
         return event.orElseThrow(() -> new EventNotFoundException("containing product #" + product.getId()));

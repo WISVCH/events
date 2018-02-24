@@ -18,7 +18,7 @@ public interface EventService {
      *
      * @return Collection of Events
      */
-    List<Event> getAllEvents();
+    List<Event> getAll();
 
     /**
      * Get all Events between a lowerbound and upperbound
@@ -27,21 +27,14 @@ public interface EventService {
      * @param upperbound of type LocalDateTime
      * @return List<Event>
      */
-    List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
+    List<Event> getAllBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
 
     /**
      * Get all upcoming Events
      *
      * @return Collection of Events
      */
-    List<Event> getUpcomingEvents();
-
-    /**
-     * Get all available events
-     *
-     * @return Collection of Events
-     */
-    List<Event> getAvailableEvents();
+    List<Event> getUpcoming();
 
     /**
      * Get Event by key
@@ -57,7 +50,7 @@ public interface EventService {
      * @param product of type Product
      * @return List of Events
      */
-    Event getEventByProduct(Product product) throws EventNotFoundException;
+    Event getByProduct(Product product) throws EventNotFoundException;
 
     /**
      * Add a new Event by a EventRequest
