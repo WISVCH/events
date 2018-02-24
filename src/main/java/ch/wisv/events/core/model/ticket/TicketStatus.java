@@ -1,8 +1,4 @@
-package ch.wisv.events.core.model.order;
-
-import lombok.Data;
-
-import java.util.HashMap;
+package ch.wisv.events.core.model.ticket;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,18 +16,8 @@ import java.util.HashMap;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Data
-public class OrderProductDTO {
+enum TicketStatus {
 
-    /**
-     * Field product should contain Product keys and number of tickets of that product.
-     */
-    HashMap<String, Long> products;
+    OPEN;
 
-    /**
-     * Constructor.
-     */
-    public OrderProductDTO() {
-        this.products = new HashMap<>();
-    }
 }

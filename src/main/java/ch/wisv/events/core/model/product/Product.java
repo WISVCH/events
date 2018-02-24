@@ -139,4 +139,12 @@ public class Product {
         return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
     }
 
+    /**
+     * Increase sold count by amount.
+     *
+     * @param amount of type Integer
+     */
+    public void increaseSold(Integer amount) {
+        this.sold += amount;
+    }
 }

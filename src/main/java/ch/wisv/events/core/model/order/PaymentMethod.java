@@ -1,8 +1,4 @@
-package ch.wisv.events.sales.service;
-
-import ch.wisv.events.core.model.product.Product;
-
-import java.util.List;
+package ch.wisv.events.core.model.order;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,12 +16,10 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface SalesAppProductService {
+public enum PaymentMethod {
 
-    /**
-     * Method getAllGrantedProducts returns the allGrantedProducts of this SalesAppProductService object.
-     *
-     * @return the allGrantedProducts (type List<Product>) of this SalesAppProductService object.
-     */
-    List<Product> getAllGrantedProducts();
+    CASH,       // User paid his order with cash
+    CARD,       // User paid his order by card
+    MOLLIE,     // User paid his order via mollie
+    FREE;       // User paid his order is free
 }

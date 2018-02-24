@@ -1,7 +1,5 @@
 package ch.wisv.events.core.model.order;
 
-import lombok.Getter;
-
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
  * <p>
@@ -20,20 +18,11 @@ import lombok.Getter;
  */
 public enum OrderStatus {
 
-    OPEN(false),
-    PAID_CASH(true),
-    PAID_PIN(true),
-    PAID_IDEAL(true),
-    REJECTED(false),
-    CANCELLED(false),
-    REFUNDED(false),
-    CLOSED(false),
-    WAITING(false);
+    ANONYMOUS,  // Initial creating status
+    ASSIGNED,   // Has a User assigned
+    PENDING,    // Sent to the payment provider
+    PAID,       // Confirmed paid by payment provider
+    EXPIRED,    // Payment attempted, but expired
+    CANCELLED   // Payment attempted, but manually cancelled
 
-    @Getter
-    private final boolean paid;
-
-    OrderStatus(boolean paid) {
-        this.paid = paid;
-    }
 }

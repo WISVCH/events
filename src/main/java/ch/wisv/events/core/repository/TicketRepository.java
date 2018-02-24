@@ -1,11 +1,11 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.customer.Customer;
-import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.ticket.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -23,22 +23,38 @@ import java.util.Optional;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     /**
-     * Method findOneByPublicReference find Order by public reference.
+     * Find all Ticket by Product and Customer
      *
-     * @param publicReference of type String
-     * @return Optional<Order>
+     * @param product of type Product
+     * @param owner   of type Customer
+     * @return List<Ticket>
      */
-    Optional<Order> findOneByPublicReference(String publicReference);
+    List<Ticket> findAllByProductAndOwner(Product product, Customer owner);
 
     /**
-     * Method findAllByOwner find Order by Customer.
+     * Find all Ticket by Product
+     *
+     * @param product of type Product
+     * @return List<Ticket>
+     */
+    List<Ticket> findAllByProduct(Product product);
+
+    /**
+     * Find all Ticket by Customer
      *
      * @param owner of type Customer
-     * @return List<Order>
+     * @return List<Ticket>
      */
-    List<Order> findAllByOwner(Customer owner);
+    List<Ticket> findAllByOwner(Customer owner);
 
+    /**
+     * Count all Ticket by Product
+     *
+     * @param product of type Product
+     * @return int
+     */
+    int countTicketsByProduct(Product product);
 }
