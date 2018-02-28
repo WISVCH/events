@@ -15,6 +15,7 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,6 +168,7 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException {
         OrderStatus beforeStatus = order.getStatus();
         order.setStatus(OrderStatus.PAID);
+        order.setPaidAt(LocalDateTime.now());
 
         List<Ticket> tickets = this.createTicketIfPaid(order);
         if (beforeStatus != OrderStatus.PAID && order.getStatus() == OrderStatus.PAID) {

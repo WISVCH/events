@@ -5,7 +5,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.repository.SoldProductRepository;
+import ch.wisv.events.core.repository.TicketRepository;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -51,9 +51,9 @@ public class OrderTestDataRunner extends TestDataRunner {
     private final ProductRepository productRepository;
 
     /**
-     * Field soldProductRepository
+     * Field ticketRepository
      */
-    private final SoldProductRepository soldProductRepository;
+    private final TicketRepository ticketRepository;
 
     /**
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
@@ -61,17 +61,17 @@ public class OrderTestDataRunner extends TestDataRunner {
      * @param orderRepository       of type OrderRepository
      * @param customerRepository    of type CustomerRepository
      * @param productRepository     of type ProductRepository
-     * @param soldProductRepository of type SoldProductRepository
+     * @param ticketRepository of type TicketRepository
      */
     public OrderTestDataRunner(OrderRepository orderRepository,
             CustomerRepository customerRepository,
             ProductRepository productRepository,
-            SoldProductRepository soldProductRepository
+            TicketRepository ticketRepository
     ) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
-        this.soldProductRepository = soldProductRepository;
+        this.ticketRepository = ticketRepository;
 
         this.setJsonFileName("orders.json");
     }
@@ -96,7 +96,7 @@ public class OrderTestDataRunner extends TestDataRunner {
 //            soldProduct.setUniqueCode(RandomStringUtils.randomNumeric(6));
 //            soldProduct.setStatus((RandomUtils.nextFloat(0, 1) > 0.4) ? SoldProductStatus.SCANNED : SoldProductStatus.OPEN);
 //
-//            this.soldProductRepository.saveAndFlush(soldProduct);
+//            this.ticketReposiotorysaveAndFlush(soldProduct);
 //        });
     }
 
@@ -112,7 +112,7 @@ public class OrderTestDataRunner extends TestDataRunner {
 
         if (customer.isPresent()) {
             ch.wisv.events.core.model.order.Order order = new ch.wisv.events.core.model.order.Order();
-            order.setCustomer(customer.get());
+            order.setOwner(customer.get());
 
             List<Product> allProduct = this.productRepository.findAll();
 //            order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));

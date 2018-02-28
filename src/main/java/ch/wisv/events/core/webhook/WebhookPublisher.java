@@ -106,7 +106,7 @@ public class WebhookPublisher {
             } else if (content instanceof Product) {
                 Product product = (Product) content;
                 try {
-                    Event event = eventService.getEventByProduct(product);
+                    Event event = eventService.getByProduct(product);
                     if (event.getOrganizedBy() == webhook.getLdapGroup()) {
                         return true;
                     }

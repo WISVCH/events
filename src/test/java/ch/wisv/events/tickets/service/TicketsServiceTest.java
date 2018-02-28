@@ -4,7 +4,7 @@ import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.customer.Customer;
@@ -149,12 +149,12 @@ public class TicketsServiceTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusWaiting() throws Exception {
-        runUpdateOrderStatus("WAITING", OrderStatus.WAITING);
+        runUpdateOrderStatus("WAITING", OrderStatus.PENDING);
     }
 
     @Test
     public void testUpdateOrderStatusPaid() throws Exception {
-        runUpdateOrderStatus("PAID", OrderStatus.PAID_IDEAL);
+        runUpdateOrderStatus("PAID", OrderStatus.PAID);
     }
 
     @Test
@@ -162,14 +162,14 @@ public class TicketsServiceTest extends ServiceTest {
         runUpdateOrderStatus("CANCELLED", OrderStatus.CANCELLED);
     }
 
-    private void runUpdateOrderStatus(String paymentsStatus, OrderStatus orderStatus) throws PaymentsStatusUnknown, OrderInvalidException {
+    private void runUpdateOrderStatus(String paymentsStatus, OrderStatus orderStatus) throws EventsException {
         String reference = UUID.randomUUID().toString();
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn(paymentsStatus);
-        doNothing().when(orderService).updateOrderStatus(this.order, orderStatus);
+        doNothing().when(orderService).updateOrderStatusPaid(this.order);
 
         ticketsService.updateOrderStatus(this.order, reference);
 
-        verify(orderService, times(1)).updateOrderStatus(this.order, orderStatus);
+        verify(orderService, times(1)).updateOrderStatusPaid(this.order);
     }
 
     @Test

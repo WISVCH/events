@@ -88,9 +88,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="soldProduct : ${soldProducts}">
-                            <td th:text="${soldProduct.getProduct().getTitle()}"></td>
-                            <td th:text="${soldProduct.getStatus()}"></td>
+                        <tr th:each="ticket : ${tickets}">
+                            <td th:text="${ticket.getProduct().getTitle()}"></td>
+                            <td th:text="${ticket.getStatus().toString()}"></td>
                         </tr>
                         </tbody>
                     </table>

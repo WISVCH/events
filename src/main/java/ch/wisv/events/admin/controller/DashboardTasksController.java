@@ -50,7 +50,7 @@ public class DashboardTasksController {
      * @param model String model
      * @return path to Thymeleaf template location
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("tasks", webhookTaskService.getAll());
 

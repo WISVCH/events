@@ -38,30 +38,24 @@
                 <table id="soldProductTable" class="table table-hover">
                     <thead class="thead-inverse bg-primary">
                     <tr>
-                        <th>Order</th>
-                        <th>Product</th>
                         <th>Customer</th>
                         <th>Email</th>
+                        <th>Product</th>
                         <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="soldProduct" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
-                    <tr th:each="soldProduct : ${soldProducts}">
+                    <tr th:each="ticket : ${tickets}">
                         <td>
-                            <a th:href="@{'/administrator/orders/view/' + ${soldProduct.getOrder().getPublicReference()} + '/'}"
-                               th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
+                            <a th:href="@{'/administrator/customers/view/' + ${ticket.getOwner().getKey()} + '/'}"
+                               th:text="${ticket.getOwner().getName()}"></a>
                         </td>
+                        <td th:text="${ticket.getOwner().getEmail()}"></td>
                         <td>
-                            <a th:href="@{'/administrator/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'}"
-                               th:text="${soldProduct.getProduct().getTitle()}"></a>
+                            <a th:href="@{'/administrator/products/overview/' + ${ticket.getProduct().getKey()} + '/'}"
+                               th:text="${ticket.getProduct().getTitle()}"></a>
                         </td>
-                        <td>
-                            <a th:href="@{'/administrator/customers/view/' + ${soldProduct.getCustomer().getKey()} + '/'}"
-                               th:text="${soldProduct.getCustomer().getName()}"></a>
-                        </td>
-                        <td th:text="${soldProduct.getCustomer().getEmail()}"></td>
-                        <td th:text="${soldProduct.getStatus().toString()}"></td>
+                        <td th:text="${ticket.getStatus().toString()}"></td>
                     </tr>
                     </tbody>
                 </table>

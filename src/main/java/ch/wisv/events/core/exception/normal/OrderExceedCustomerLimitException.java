@@ -1,4 +1,6 @@
-package ch.wisv.events.core.model.order;
+package ch.wisv.events.core.exception.normal;
+
+import ch.wisv.events.core.exception.LogLevelEnum;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -16,14 +18,9 @@ package ch.wisv.events.core.model.order;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public enum OrderStatus {
+public class OrderExceedCustomerLimitException extends EventsException {
 
-    ANONYMOUS,  // Initial creating status
-    ASSIGNED,   // Has a Customer assigned
-    PENDING,    // Sent to the payment provider
-    PAID,       // Confirmed paid by payment provider
-    EXPIRED,    // Payment attempted, but expired
-    CANCELLED,  // Order has been cancelled by the Customer
-    REJECTED    // Order has been rejected by an Admin
-
+    public OrderExceedCustomerLimitException(Integer leftOver) {
+        super(LogLevelEnum.WARN, "Limit reached after " + leftOver.toString() + " tickets.");
+    }
 }

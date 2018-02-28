@@ -140,8 +140,8 @@ public class PaymentsServiceImpl implements PaymentsService {
         HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
 
         JSONObject object = new JSONObject();
-        object.put("name", order.getCustomer().getName());
-        object.put("email", order.getCustomer().getEmail());
+        object.put("name", order.getOwner().getName());
+        object.put("email", order.getOwner().getEmail());
         object.put("returnUrl", clientUri + "/status/" + order.getPublicReference() + "/");
         object.put("mailConfirmation", false);
 
@@ -156,6 +156,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         httpPost.setHeader("Content-type", "application/json");
         httpPost.setHeader("Accept", "application/json");
         httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+
         return httpPost;
     }
 }

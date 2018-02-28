@@ -5,7 +5,7 @@ import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.product.ProductService;
-import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +30,7 @@ public class DashboardProductController {
     /**
      * Field orderService
      */
-    private final SoldProductService soldProductService;
+    private final TicketService ticketService;
 
     /**
      * Field webhookPublisher
@@ -41,16 +41,16 @@ public class DashboardProductController {
      * Default constructor
      *
      * @param productService     of type ProductService.
-     * @param soldProductService of type SoldProductService.
+     * @param ticketService of type TicketService.
      * @param webhookPublisher   of type WebhookPublisher.
      */
     @Autowired
     public DashboardProductController(ProductService productService,
-            SoldProductService soldProductService,
+            TicketService ticketService,
             WebhookPublisher webhookPublisher
     ) {
         this.productService = productService;
-        this.soldProductService = soldProductService;
+        this.ticketService = ticketService;
         this.webhookPublisher = webhookPublisher;
     }
 
@@ -60,7 +60,7 @@ public class DashboardProductController {
      * @param model SpringUI model
      * @return thymeleaf template path
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("products", this.productService.getAllProducts());
 
@@ -75,7 +75,7 @@ public class DashboardProductController {
      * @param key      of type String
      * @return String
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             model.addAttribute("product", productService.getByKey(key));
@@ -94,7 +94,7 @@ public class DashboardProductController {
      * @param model SpringUI model
      * @return thymeleaf template path
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String create(Model model) {
         if (!model.containsAttribute("product")) {
             model.addAttribute("product", new Product());
@@ -110,7 +110,7 @@ public class DashboardProductController {
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             productService.create(product);
@@ -133,7 +133,7 @@ public class DashboardProductController {
      * @param model SpringUI model
      * @return thymeleaf template path
      */
-    @GetMapping("/edit/{key}/")
+    @GetMapping("/edit/{key}")
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("product")) {
@@ -153,7 +153,7 @@ public class DashboardProductController {
      * @param product  of type Product
      * @return String
      */
-    @PostMapping("/edit/{key}/")
+    @PostMapping("/edit/{key}")
     public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             productService.update(product);
@@ -176,12 +176,12 @@ public class DashboardProductController {
      * @param key   of type String
      * @return String
      */
-    @GetMapping("/overview/{key}/")
+    @GetMapping("/overview/{key}")
     public String overview(Model model, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);
 
-            model.addAttribute("soldProducts", soldProductService.getByProduct(product));
+            model.addAttribute("tickets", ticketService.getAllByProduct(product));
             model.addAttribute("product", product);
 
             return "admin/products/overview";
@@ -197,7 +197,7 @@ public class DashboardProductController {
      * @param key                key of a Product
      * @return redirect
      */
-    @GetMapping("/delete/{key}/")
+    @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);

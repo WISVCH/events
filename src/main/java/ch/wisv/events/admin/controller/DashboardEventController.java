@@ -4,11 +4,10 @@ import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
-import ch.wisv.events.core.model.order.SoldProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,8 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DashboardEventController.
@@ -35,7 +34,7 @@ public class DashboardEventController {
     /**
      * Field productService
      */
-    private final SoldProductService soldProductService;
+    private final TicketService ticketService;
 
     /**
      * Field webhookPublisher
@@ -45,13 +44,13 @@ public class DashboardEventController {
     /**
      * Default constructor
      *
-     * @param eventService       EventService
-     * @param soldProductService SoldProductService
-     * @param webhookPublisher   WebhookPublisher
+     * @param eventService     EventService
+     * @param ticketService    TicketService
+     * @param webhookPublisher WebhookPublisher
      */
-    public DashboardEventController(EventService eventService, SoldProductService soldProductService, WebhookPublisher webhookPublisher) {
+    public DashboardEventController(EventService eventService, TicketService ticketService, WebhookPublisher webhookPublisher) {
         this.eventService = eventService;
-        this.soldProductService = soldProductService;
+        this.ticketService = ticketService;
         this.webhookPublisher = webhookPublisher;
     }
 
@@ -61,11 +60,11 @@ public class DashboardEventController {
      * @param model SpringUI model
      * @return path to Thymeleaf template
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
-        List<Event> allEvent = this.eventService.getAllEvents();
+        List<Event> allEvent = eventService.getAll();
         allEvent.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
-        model.addAttribute("events", this.eventService.getAllEvents());
+        model.addAttribute("events", eventService.getAll());
 
         return "admin/events/index";
     }
@@ -78,7 +77,7 @@ public class DashboardEventController {
      * @param key      of type String
      * @return String
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             model.addAttribute("event", eventService.getByKey(key));
@@ -97,7 +96,7 @@ public class DashboardEventController {
      * @param model SpringUI model
      * @return path to Thymeleaf template
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String create(Model model) {
         if (!model.containsAttribute("event")) {
             model.addAttribute("event", new Event());
@@ -113,7 +112,7 @@ public class DashboardEventController {
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
             eventService.create(event);
@@ -138,7 +137,7 @@ public class DashboardEventController {
      * @param model SpringUI model
      * @return path to Thymeleaf template
      */
-    @GetMapping("/edit/{key}/")
+    @GetMapping("/edit/{key}")
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("event")) {
@@ -158,7 +157,7 @@ public class DashboardEventController {
      * @param redirect Spring RedirectAttributes
      * @return redirect
      */
-    @PostMapping("/edit/{key}/")
+    @PostMapping("/edit/{key}")
     public String update(RedirectAttributes redirect, @ModelAttribute Event event) {
         try {
             eventService.update(event);
@@ -186,16 +185,15 @@ public class DashboardEventController {
      * @param key   of type String
      * @return String
      */
-    @GetMapping("/overview/{key}/")
+    @GetMapping("/overview/{key}")
     public String overview(Model model, @PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);
 
-            List<SoldProduct> soldProduct = new ArrayList<>();
-            event.getProducts().forEach(x -> soldProduct.addAll(this.soldProductService.getByProduct(x)));
-
             model.addAttribute("event", event);
-            model.addAttribute("soldProducts", soldProduct);
+            model.addAttribute("tickets", event.getProducts().stream()
+                    .flatMap(product -> ticketService.getAllByProduct(product).stream())
+                    .collect(Collectors.toList()));
 
             return "admin/events/overview";
         } catch (EventNotFoundException e) {
@@ -210,7 +208,7 @@ public class DashboardEventController {
      * @param key      PathVariable key of the Event
      * @return redirect
      */
-    @GetMapping("/delete/{key}/")
+    @GetMapping("/delete/{key}")
     public String deleteEvent(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);

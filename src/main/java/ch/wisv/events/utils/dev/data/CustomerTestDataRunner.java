@@ -65,7 +65,7 @@ public class CustomerTestDataRunner extends TestDataRunner {
      */
     private Customer createCustomer(JSONObject jsonObject) {
         return new Customer(
-                "",
+                (String) jsonObject.get("sub"),
                 (String) jsonObject.get("name"),
                 (String) jsonObject.get("email"),
                 (String) jsonObject.get("chUsername"),

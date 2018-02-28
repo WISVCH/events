@@ -172,7 +172,6 @@ public class TicketsServiceImpl implements TicketsService {
      *
      * @param order             of type Order
      * @param paymentsReference of type String
-     * @return Order
      */
     @Override
     public void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
@@ -180,10 +179,10 @@ public class TicketsServiceImpl implements TicketsService {
 
         switch (status) {
             case "WAITING":
-                orderService.updateOrderStatus(order, OrderStatus.WAITING);
+                orderService.updateOrderStatus(order, OrderStatus.PENDING);
                 break;
             case "PAID":
-                orderService.updateOrderStatus(order, OrderStatus.PAID_IDEAL);
+                orderService.updateOrderStatus(order, OrderStatus.PAID);
                 break;
             case "CANCELLED":
                 orderService.updateOrderStatus(order, OrderStatus.CANCELLED);

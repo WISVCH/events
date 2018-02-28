@@ -1,6 +1,6 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -55,7 +55,7 @@ public class DashboardOrderController {
      * @param model of type Model
      * @return String
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("orders", this.orderService.getAllOrders());
 
@@ -69,7 +69,7 @@ public class DashboardOrderController {
      * @param key   of type String
      * @return String
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String edit(Model model, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -95,7 +95,7 @@ public class DashboardOrderController {
             orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
             redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
 

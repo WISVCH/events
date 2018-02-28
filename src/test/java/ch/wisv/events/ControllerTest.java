@@ -2,6 +2,7 @@ package ch.wisv.events;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.tickets.service.TicketsService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -43,6 +44,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected OrderService orderService;
+
+    @MockBean
+    protected OrderValidationService orderValidationService;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

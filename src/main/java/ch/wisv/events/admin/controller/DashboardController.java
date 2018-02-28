@@ -1,12 +1,12 @@
 package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.order.SoldProduct;
-import ch.wisv.events.core.model.order.SoldProductStatus;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.ticket.Ticket;
+import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,25 +38,26 @@ public class DashboardController {
     private final CustomerService customerService;
 
     /**
-     * Field soldProductService
+     * Field ticketService
      */
-    private final SoldProductService soldProductService;
+    private final TicketService ticketService;
 
     /**
      * DashboardController
      *
-     * @param eventService       of type EventService
-     * @param customerService    of type CustomerService
-     * @param soldProductService of type SoldProductService
+     * @param eventService    of type EventService
+     * @param customerService of type CustomerService
+     * @param ticketService   of type TicketService
      */
     @Autowired
-    public DashboardController(EventService eventService,
+    public DashboardController(
+            EventService eventService,
             CustomerService customerService,
-            SoldProductService soldProductService
+            TicketService ticketService
     ) {
         this.eventService = eventService;
         this.customerService = customerService;
-        this.soldProductService = soldProductService;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -65,12 +66,12 @@ public class DashboardController {
      * @param model SpringUI Model
      * @return path to Thymeleaf template
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         List<Event> upcomingEvents = this.determineUpcomingEvents();
         upcomingEvents.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
 
-        int totalEvents = this.eventService.getAllEvents().size();
+        int totalEvents = this.eventService.getAll().size();
         model.addAttribute("totalEvents", totalEvents);
         model.addAttribute("increaseEvents", this.calculateChangePercentage(
                 this.determineTotalEventsLastMonth(),
@@ -120,7 +121,7 @@ public class DashboardController {
      * @return double
      */
     private double determineTotalEventsLastMonth() {
-        return this.eventService.getAllEventsBetween(LocalDateTime.of(2016, 9, 1, 0, 0), LocalDateTime.now().minusMonths(1)).size();
+        return this.eventService.getAllBetween(LocalDateTime.of(2016, 9, 1, 0, 0), LocalDateTime.now().minusMonths(1)).size();
     }
 
     /**
@@ -158,7 +159,7 @@ public class DashboardController {
             lowerbound = lowerbound.minusYears(1);
         }
 
-        return this.eventService.getAllEventsBetween(lowerbound, lowerbound.plusYears(1));
+        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
     }
 
     /**
@@ -173,7 +174,7 @@ public class DashboardController {
             lowerbound = lowerbound.minusYears(1);
         }
 
-        return this.eventService.getAllEventsBetween(lowerbound, lowerbound.plusYears(1));
+        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
     }
 
     /**
@@ -222,14 +223,16 @@ public class DashboardController {
      * @return double
      */
     private double determineAttendanceRateEvent(Event event) {
-        List<SoldProduct> soldProducts = this.soldProductService.getAllByEvent(event);
-        Long countScanned = soldProducts.stream().filter(soldProduct -> soldProduct.getStatus() == SoldProductStatus.SCANNED).count();
+        List<Ticket> eventTickets = event.getProducts().stream()
+                .flatMap(product -> ticketService.getAllByProduct(product).stream())
+                .collect(Collectors.toList());
+        long numberTicketsScanned = eventTickets.stream().filter(ticket -> ticket.getStatus() == TicketStatus.SCANNED).count();
 
-        if (soldProducts.size() == 0) {
+        if (eventTickets.size() == 0) {
             return 0.d;
         }
 
-        return Math.round(countScanned.doubleValue() / soldProducts.size() * 10000.d) / 100.d;
+        return Math.round(numberTicketsScanned / eventTickets.size() * 10000.d) / 100.d;
     }
 
     /**
@@ -251,7 +254,7 @@ public class DashboardController {
      * @return List<Event>
      */
     private List<Event> determineUpcomingEvents() {
-        return this.eventService.getUpcomingEvents().stream().filter(event ->
+        return this.eventService.getUpcoming().stream().filter(event ->
                 event.getStart().isBefore(LocalDateTime.now().plusWeeks(2))
         ).collect(Collectors.toList());
     }

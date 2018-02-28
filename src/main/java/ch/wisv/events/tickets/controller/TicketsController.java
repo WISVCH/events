@@ -5,6 +5,7 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.tickets.service.TicketsService;
@@ -77,9 +78,13 @@ public class TicketsController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("events", eventService.getUpcomingEvents());
-        model.addAttribute("customer", ticketsService.getCurrentCustomer());
+        model.addAttribute("events", eventService.getUpcoming());
         model.addAttribute("orderProduct", new OrderProductDTO());
+
+        if (ticketsService.getCurrentCustomer().getRfidToken().equals("")) {
+            model.addAttribute("message", "No card coupled to your account. For faster check-in at the event couple a card to your account at the " +
+                    "board.");
+        }
 
         return "tickets/index";
     }
@@ -97,7 +102,7 @@ public class TicketsController {
         try {
             Order order = orderService.getByReference(key);
 
-            if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
+            if (ticketsService.getCurrentCustomer().equals(order.getOwner())) {
                 model.addAttribute("order", order);
 
                 return "tickets/checkout";
@@ -122,7 +127,6 @@ public class TicketsController {
     public String cancel(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.getOrderByKeyAndAuthCustomer(key);
-
             orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -143,19 +147,19 @@ public class TicketsController {
         try {
             Order order = this.getOrderByKeyAndAuthCustomer(key);
 
-            if (order.getAmount() == 0.d && order.getOrderProducts().size() > 0) {
-                orderService.updateOrderStatus(order, OrderStatus.PAID_IDEAL);
+            if (order.getPaymentMethod() == PaymentMethod.FREE) {
+                orderService.updateOrderStatusPaid(order);
 
                 return "redirect:/complete/" + order.getPublicReference() + "/";
             }
 
             return "redirect:" + ticketsService.getPaymentsMollieUrl(order);
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (OrderNotFoundException | UnassignedOrderException | UndefinedPaymentMethodOrderException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return REDIRECT_HOME;
         } catch (PaymentsConnectionException e) {
-            redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
+            redirect.addFlashAttribute("error", "CH Payments is not responding!");
 
             return "redirect:/checkout/" + key + "/";
         }
@@ -175,7 +179,7 @@ public class TicketsController {
             Order order = this.getOrderByKeyAndAuthCustomer(key);
             ticketsService.updateOrderStatus(order, paymentsReference);
 
-            if (order.getStatus() == OrderStatus.WAITING) {
+            if (order.getStatus() == OrderStatus.PENDING) {
                 this.retryFetchOrderStatus(order, paymentsReference);
             }
 
@@ -202,7 +206,7 @@ public class TicketsController {
     private void retryFetchOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
         int count = 0;
         int maxCount = 5;
-        while (order.getStatus() == OrderStatus.WAITING && count < maxCount) {
+        while (order.getStatus() == OrderStatus.PENDING && count < maxCount) {
             try {
                 sleep(500);
                 ticketsService.updateOrderStatus(order, paymentsReference);
@@ -213,7 +217,7 @@ public class TicketsController {
 
         // Close Order when the OrderStatus has not been changes
         if (count == maxCount) {
-            orderService.updateOrderStatus(order, OrderStatus.CLOSED);
+            orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
         }
     }
 
@@ -248,7 +252,7 @@ public class TicketsController {
     private Order getOrderByKeyAndAuthCustomer(String key) throws OrderNotFoundException {
         Order order = orderService.getByReference(key);
 
-        if (ticketsService.getCurrentCustomer().equals(order.getCustomer())) {
+        if (ticketsService.getCurrentCustomer().equals(order.getOwner())) {
             return order;
         } else {
             throw new AccessDeniedException("Access denied!");
@@ -272,17 +276,23 @@ public class TicketsController {
             }
 
             Order order = orderService.createOrderByOrderProductDTO(orderProductDTO);
-            order.setCustomer(ticketsService.getCurrentCustomer());
+            order.setOwner(ticketsService.getCurrentCustomer());
             order.setCreatedBy("events-online");
+            if (order.getAmount() == 0.d && order.getOrderProducts().size() > 0) {
+                order.setPaymentMethod(PaymentMethod.FREE);
+            } else {
+                order.setPaymentMethod(PaymentMethod.MOLLIE);
+            }
 
-            orderService.assertIsValidForCustomer(order);
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/";
-        } catch (OrderInvalidException | ProductNotFoundException | EventNotFoundException e) {
+        } catch (ProductNotFoundException | EventNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-
-            return REDIRECT_HOME;
+        } catch (EventsException e) {
+            redirect.addFlashAttribute("error", "Limit exceeded: " + e.getMessage());
         }
+
+        return REDIRECT_HOME;
     }
 }

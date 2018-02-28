@@ -91,7 +91,7 @@ public class PaymentsServiceTest extends ServiceTest {
     @Test
     public void testGetPaymentsMollieUrl() throws Exception {
         Order order = new Order();
-        order.setCustomer(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
+        order.setOwner(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
 
         HttpResponse httpResponse = this.createHttpResponse("{\"url\": \"https://payments.local\"}");
         when(httpClient.execute(any(HttpPost.class))).thenReturn(httpResponse);
@@ -105,7 +105,7 @@ public class PaymentsServiceTest extends ServiceTest {
     public void testGetPaymentsMollieUrlNoUrl() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         Order order = new Order();
-        order.setCustomer(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
+        order.setOwner(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
 
         HttpResponse httpResponse = this.createHttpResponse("{\"message\": \"https://payments.local\"}");
         when(httpClient.execute(any(HttpPost.class))).thenReturn(httpResponse);
@@ -117,7 +117,7 @@ public class PaymentsServiceTest extends ServiceTest {
     public void testGetPaymentsMollieUrlIoException() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
         Order order = new Order();
-        order.setCustomer(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
+        order.setOwner(new Customer("", "San Tanino", "sant@ch.tudelft.nl", "sant", ""));
 
         when(httpClient.execute(any(HttpPost.class))).thenThrow(new IOException());
 
@@ -133,7 +133,7 @@ public class PaymentsServiceTest extends ServiceTest {
         String key = "994153c6-9cca-48c8-9693-0b07dd19d141";
         String productKey = "ef4153c6-9693-48c8-48c8-0b07dd19d141";
 
-        when(order.getCustomer()).thenReturn(customer);
+        when(order.getOwner()).thenReturn(customer);
         when(order.getPublicReference()).thenReturn(key);
         when(order.getOrderProducts()).thenReturn(ImmutableList.of(orderProduct));
         when(product.getKey()).thenReturn(productKey);

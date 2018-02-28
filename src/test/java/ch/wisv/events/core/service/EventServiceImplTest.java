@@ -78,14 +78,14 @@ public class EventServiceImplTest extends ServiceTest {
     public void testGetAllEvents() throws Exception {
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
-        assertEquals(ImmutableList.of(this.event), service.getAllEvents());
+        assertEquals(ImmutableList.of(this.event), service.getAll());
     }
 
     @Test
     public void testGetAllEventsEmpty() throws Exception {
         when(repository.findAll()).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), service.getAllEvents());
+        assertEquals(ImmutableList.of(), service.getAll());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
-        assertEquals(ImmutableList.of(this.event), service.getUpcomingEvents());
+        assertEquals(ImmutableList.of(this.event), service.getUpcoming());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), service.getUpcomingEvents());
+        assertEquals(ImmutableList.of(), service.getUpcoming());
     }
 
     @Test
@@ -109,29 +109,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.NOT_PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
-        assertEquals(ImmutableList.of(), service.getUpcomingEvents());
-    }
-
-    @Test
-    public void testGetAvailableEvents() throws Exception {
-        this.event.setPublished(EventStatus.PUBLISHED);
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
-
-        assertEquals(ImmutableList.of(this.event), service.getAvailableEvents());
-    }
-
-    @Test
-    public void testGetAvailableEventsEmpty() throws Exception {
-        when(repository.findAll()).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.getAvailableEvents());
-    }
-
-    @Test
-    public void testGetAvailableEventsNotPublished() throws Exception {
-        when(repository.findAll()).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.getAvailableEvents());
+        assertEquals(ImmutableList.of(), service.getUpcoming());
     }
 
     @Test
@@ -180,6 +158,6 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByProductsContaining(any(Product.class))).thenReturn(Optional.of(this.event));
 
-        assertEquals(this.event, service.getEventByProduct(product));
+        assertEquals(this.event, service.getByProduct(product));
     }
 }

@@ -90,6 +90,7 @@ public class Ticket {
         this.product = product;
         this.uniqueCode = uniqueCode;
         this.valid = true;
+        this.status = TicketStatus.OPEN;
     }
 
 }
