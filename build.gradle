@@ -80,7 +80,7 @@ dependencies {
     compile 'org.webjars.bower:momentjs:2.10.6'
     compile 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
     compile 'org.webjars:sprintf.js:1.0.0'
-    compile 'org.webjars:font-awesome:4.7.0'
+    compile 'org.webjars:font-awesome:5.0.6'
     compile 'org.webjars.npm:flatpickr:3.0.6'
 
     compile 'org.flywaydb:flyway-core:4.2.0'

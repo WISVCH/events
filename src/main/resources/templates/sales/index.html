@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/css/font-awesome.min.css}">
 </head>
 
 <body>
@@ -29,49 +29,23 @@
         <main class="col-12 ml-auto p-5" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
-            <!--/*@thymesVar id="products" type="List<ch.wisv.events.core.model.product.Product>"*/-->
-            <div class="row">
-
-                <!--/*@thymesVar id="orderProductDTO" type="ch.wisv.events.core.model.order.OrderProductDTO"*/-->
-                <form id="orderForm" class="w-100" th:if="${products.size() > 0}" th:action="@{./}"
-                      th:object="${orderProductDTO}" method="POST">
-
-                    <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-                    <div class="col" th:each="product : ${products}">
-                        <div class="card mb-4">
-                            <h6 class="card-header" th:text="${product.getTitle()}"></h6>
-                            <div class="card-body">
-                                <div class="input-group">
-                                    <div class="input-group-addon decrease">
-                                        <i class="fa fa-minus fa-fw"></i>
-                                    </div>
-                                    <input type="number" class="form-control" step="1"
-                                           style="text-align: center"
-                                           min="0" th:max="${product.getMaxSoldPerCustomer()}"
-                                           th:attr="data-product-key=${product.getKey()}">
-                                    <div class="input-group-addon increase">
-                                        <i class="fa fa-plus fa-fw"></i>
-                                    </div>
-                                </div>
-                                <span class="text-muted">Maximum of [[${product.getMaxSoldPerCustomer()}]] per
-                                    customer.</span>
-                            </div>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="row justify-content-between">
+                        <div class="col-6 text-center">
+                            <a th:href="@{/sales/scan}">
+                                <i class="fa fa-ticket-alt fa-fw fa-4x"></i>
+                                <p>Sell tickets</p>
+                            </a>
+                        </div>
+                        <div class="col-6 text-center">
+                            <a th:href="@{/sales/scan}">
+                                <i class="fa fa-barcode fa-fw fa-4x"></i>
+                                <p>Scan tickets</p>
+                            </a>
                         </div>
                     </div>
-                    <div id="products"></div>
-
-                    <div class="fixed-bottom m-3">
-                        <button type="submit" class="btn btn-lg btn-danger btn-block">
-                            Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="col" th:if="${products.size() == 0}">
-                <h3 class="text-center mt-5 border-bottom-0">No tickets found</h3>
-                <p class="text-muted text-center">No tickets found that your are allowed to sell. If you have been
-                    scheduled to sell tickets, please ask te board for permission.</p>
+                </div>
             </div>
         </main>
     </div>
