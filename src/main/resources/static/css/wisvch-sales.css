@@ -1,0 +1,13 @@
+.navbar-brand {
+    text-transform: uppercase;
+    font-weight: 500;
+    vertical-align: baseline
+}
+
+.container-fluid {
+    padding-top: calc(60px + 1.5rem);
+}
+
+a, a:hover {
+    transition: color .25s;
+}

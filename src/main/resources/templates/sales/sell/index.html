@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="sales/fragments/header :: header"></nav>
+
+<!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+<div class="container-fluid">
+
+    <div class="row">
+        <main class="col-12" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <form class="form w-100" id="orderForm" th:action="@{/sales/sell/}" method="POST">
+                <div class="row justify-content-center">
+                    <div class="col-12" th:each="product : ${products}">
+                        <div class="card mb-4">
+                            <h6 class="card-header" th:text="${product.getTitle()}"></h6>
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <div class="input-group-addon decrease">
+                                        <i class="fa fa-minus fa-fw"></i>
+                                    </div>
+                                    <input type="number" class="form-control" step="1"
+                                           style="text-align: center"
+                                           min="0" th:max="${product.getMaxSoldPerCustomer()}"
+                                           th:attr="data-product-key=${product.getKey()}">
+                                    <div class="input-group-addon increase">
+                                        <i class="fa fa-plus fa-fw"></i>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Maximum of [[${product.getMaxSoldPerCustomer()}]]
+                                    per customer.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="products"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-danger btn-block">
+                            Next <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
+<script th:src="@{/js/sales/script.min.js}"></script>
+</body>
