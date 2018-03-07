@@ -13,27 +13,27 @@
 
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
-<nav th:replace="fragments/header :: header"></nav>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
 
     <div class="row">
-        <main class="col-12 ml-auto p-5" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
-
+        <main class="col-12" role="main">
             <div class="row justify-content-center">
+
+                <div class="col-12 text-center">
+                    <h4 class="">Menu</h4>
+                </div>
                 <div class="col-12">
                     <div class="row justify-content-between">
                         <div class="col-6 text-center">
-                            <a th:href="@{/sales/scan}">
+                            <a th:href="@{/sales/sell}">
                                 <i class="fa fa-ticket-alt fa-fw fa-4x"></i>
                                 <p>Sell tickets</p>
                             </a>
@@ -45,6 +45,12 @@
                             </a>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-12 text-center fixed-bottom py-2">
+                    <span class="form-text text-muted">
+                        <i class="fa fa-coffee"></i> Created with caffeine
+                    </span>
                 </div>
             </div>
         </main>

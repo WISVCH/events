@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div class="row" th:fragment="messages">
+    <div class="col">
+        <div th:if="${error}" class="alert alert-dismissible fade show alert-danger w-100" role="alert">
+            <span class="fa fa-exclamation" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <strong>ERROR:</strong> <span th:text="${error}"></span>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div th:if="${warning}" class="alert alert-dismissible fade show alert-warning w-100" role="alert">
+            <span class="fa fa-exclamation" aria-hidden="true"></span>
+            <span class="sr-only">Warning:</span>
+            <strong>WARNING:</strong> <span th:text="${warning}"></span>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div th:if="${message}" class="alert alert-dismissible fade show alert-info w-100" role="alert">
+            <span class="fa fa-info" aria-hidden="true"></span>
+            <span class="sr-only">Message:</span>
+            <strong>INFO:</strong> <span th:text="${message}"></span>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div th:if="${success}" class="alert alert-dismissible fade show alert-success w-100" role="alert">
+            <span class="fa fa-check" aria-hidden="true"></span>
+            <span class="sr-only">Success:</span>
+            <strong>SUCCESS:</strong> <span th:text="${success}"></span>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
