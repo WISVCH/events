@@ -186,6 +186,7 @@ public class CustomerServiceImpl implements CustomerService {
         model.setName(customer.getName());
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
+        model.setLdapGroups(customer.getLdapGroups());
 
         this.assertIsValidCustomer(model);
 

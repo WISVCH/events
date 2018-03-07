@@ -6,6 +6,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.tickets.service.TicketsService;
@@ -44,6 +45,11 @@ public class TicketsController {
     private final EventService eventService;
 
     /**
+     * Field authenticationService.
+     */
+    private final AuthenticationService authenticationService;
+
+    /**
      * Field ticketsService
      */
     private final TicketsService ticketsService;
@@ -60,13 +66,18 @@ public class TicketsController {
 
     /**
      * Constructor TicketsController.
-     *
-     * @param eventService  of type EventService
+     *  @param eventService  of type EventService
+     * @param authenticationService
      * @param ticketService of type TicketsService
      * @param orderService  of type OrderService
      */
-    public TicketsController(EventService eventService, TicketsService ticketService, OrderService orderService) {
+    public TicketsController(EventService eventService,
+            AuthenticationService authenticationService,
+            TicketsService ticketService,
+            OrderService orderService
+    ) {
         this.eventService = eventService;
+        this.authenticationService = authenticationService;
         this.ticketsService = ticketService;
         this.orderService = orderService;
     }
@@ -81,7 +92,7 @@ public class TicketsController {
         model.addAttribute("events", eventService.getUpcoming());
         model.addAttribute("orderProduct", new OrderProductDTO());
 
-        if (ticketsService.getCurrentCustomer().getRfidToken().equals("")) {
+        if (authenticationService.getCurrentCustomer().getRfidToken().equals("")) {
             model.addAttribute("message", "No card coupled to your account. For faster check-in at the event couple a card to your account at the " +
                     "board.");
         }
@@ -102,7 +113,7 @@ public class TicketsController {
         try {
             Order order = orderService.getByReference(key);
 
-            if (ticketsService.getCurrentCustomer().equals(order.getOwner())) {
+            if (authenticationService.getCurrentCustomer().equals(order.getOwner())) {
                 model.addAttribute("order", order);
 
                 return "tickets/checkout";
@@ -252,7 +263,7 @@ public class TicketsController {
     private Order getOrderByKeyAndAuthCustomer(String key) throws OrderNotFoundException {
         Order order = orderService.getByReference(key);
 
-        if (ticketsService.getCurrentCustomer().equals(order.getOwner())) {
+        if (authenticationService.getCurrentCustomer().equals(order.getOwner())) {
             return order;
         } else {
             throw new AccessDeniedException("Access denied!");
@@ -276,7 +287,7 @@ public class TicketsController {
             }
 
             Order order = orderService.createOrderByOrderProductDTO(orderProductDTO);
-            order.setOwner(ticketsService.getCurrentCustomer());
+            order.setOwner(authenticationService.getCurrentCustomer());
             order.setCreatedBy("events-online");
             if (order.getAmount() == 0.d && order.getOrderProducts().size() > 0) {
                 order.setPaymentMethod(PaymentMethod.FREE);

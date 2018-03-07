@@ -180,6 +180,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Temporary save an Order.
+     *
+     * @param order of type Order.
+     */
+    @Override
+    public void tempSaveOrder(Order order) {
+        if (order.getStatus().equals(OrderStatus.TEMP)) {
+            order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
+            orderRepository.saveAndFlush(order);
+        }
+    }
+
+    /**
+     * Delete a temporary Order.
+     *
+     * @param order of type Order.
+     */
+    @Override
+    public void deleteTempOrder(Order order) {
+        if (order.getStatus().equals(OrderStatus.TEMP)) {
+            orderRepository.delete(order);
+        }
+    }
+
+    /**
      * Update product sold count.
      *
      * @param order of type Order

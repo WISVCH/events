@@ -70,4 +70,17 @@ public interface OrderService {
      */
     void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException;
 
+    /**
+     * Temporary save an Order.
+     *
+     * @param order of type Order.
+     */
+    void tempSaveOrder(Order order);
+
+    /**
+     * Delete a temporary Order.
+     *
+     * @param order of type Order.
+     */
+    void deleteTempOrder(Order order);
 }

@@ -2,7 +2,6 @@ package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 
 /**
@@ -22,13 +21,6 @@ import ch.wisv.events.core.model.order.Order;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public interface TicketsService {
-
-    /**
-     * Get the Customer that is currently logged in.
-     *
-     * @return Customer
-     */
-    Customer getCurrentCustomer();
 
     /**
      * Get a Mollie Url via the Payments API.

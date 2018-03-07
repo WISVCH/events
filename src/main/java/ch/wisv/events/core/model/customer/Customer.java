@@ -1,14 +1,13 @@
 package ch.wisv.events.core.model.customer;
 
+import ch.wisv.events.utils.LDAPGroup;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -72,6 +71,12 @@ public class Customer {
      * Field rfidToken of the customers pass.
      */
     private String rfidToken;
+
+    /**
+     * Field ldapGroups.
+     */
+    @ElementCollection(targetClass = LDAPGroup.class)
+    private List<LDAPGroup> ldapGroups;
 
     /**
      * Field createdAt when th

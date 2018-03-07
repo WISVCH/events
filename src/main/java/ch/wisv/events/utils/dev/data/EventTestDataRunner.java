@@ -96,7 +96,7 @@ public class EventTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("shortDescription")
         );
         event.setPublished(EventStatus.PUBLISHED);
-        event.setOrganizedBy(LDAPGroup.AKCIE);
+        event.setOrganizedBy(LDAPGroup.W3CIE);
         event.setCategories(ImmutableList.of(EventCategory.CAREER));
 
         return event;
