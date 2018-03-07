@@ -1,26 +1,18 @@
 package ch.wisv.events.tickets.service;
 
-import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.ServiceTest;
-import ch.wisv.events.core.exception.normal.CustomerInvalidException;
-import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
-import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -64,74 +56,6 @@ public class TicketsServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testGetCustomerAuthFailure() throws Exception {
-        thrown.expect(AccessDeniedException.class);
-        SecurityContextHolder.getContext().setAuthentication(null);
-
-        ticketsService.getCurrentCustomer();
-    }
-
-    @Test
-    public void testGetCurrentCustomerCreateExistingUser() throws Exception {
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setName("San Taious");
-        userInfo.setEmail("sant@ch.tudelft.nl");
-        userInfo.setLdapUsername("sant");
-        SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
-
-        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByEmail(userInfo.getEmail())).thenReturn(new Customer("", userInfo.getName(),
-                userInfo.getEmail(), userInfo.getLdapUsername(), ""));
-
-        Customer customer = ticketsService.getCurrentCustomer();
-
-        assertEquals(userInfo.getName(), customer.getName());
-        assertEquals(userInfo.getEmail(), customer.getEmail());
-        assertEquals(userInfo.getLdapUsername(), customer.getChUsername());
-    }
-
-    @Test
-    public void testGetCurrentCustomerCreateNewUser() throws Exception {
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setName("San Taious");
-        userInfo.setEmail("sant@ch.tudelft.nl");
-        userInfo.setLdapUsername("sant");
-        SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
-
-        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByEmail(userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.createByChUserInfo(userInfo)).thenReturn(new Customer(null, userInfo.getName(), userInfo.getEmail(), userInfo
-                .getLdapUsername(), ""));
-
-        Customer customer = ticketsService.getCurrentCustomer();
-
-        assertEquals(userInfo.getSub(), customer.getSub());
-        assertEquals(userInfo.getName(), customer.getName());
-        assertEquals(userInfo.getEmail(), customer.getEmail());
-        assertEquals(userInfo.getLdapUsername(), customer.getChUsername());
-    }
-
-    @Test
-    public void testGetCurrentCustomerCreateNewInvalidUser() throws Exception {
-        thrown.expect(AccessDeniedException.class);
-
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setName("San Taious");
-        userInfo.setEmail("sant@ch.tudelft.nl");
-        userInfo.setLdapUsername("sant");
-        SecurityContextHolder.getContext().setAuthentication(new OIDCAuthenticationToken("", "", userInfo, new ArrayList<>(), null, "", ""));
-
-        when(customerService.getBySub(userInfo.getSub())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByUsername(userInfo.getLdapUsername())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.getByEmail(userInfo.getEmail())).thenThrow(new CustomerNotFoundException(""));
-        when(customerService.createByChUserInfo(userInfo)).thenThrow(new CustomerInvalidException(""));
-
-        ticketsService.getCurrentCustomer();
-    }
-
-    @Test
     public void testGetPaymentsMollieUrl() throws Exception {
         String molliePaymentsUrl = "https://mollie.com/payment/2804/supermooi/";
         when(paymentsService.getPaymentsMollieUrl(this.order)).thenReturn(molliePaymentsUrl);
@@ -169,7 +93,7 @@ public class TicketsServiceTest extends ServiceTest {
 
         ticketsService.updateOrderStatus(this.order, reference);
 
-        verify(orderService, times(1)).updateOrderStatusPaid(this.order);
+        verify(orderService, times(1)).updateOrderStatus(this.order, orderStatus);
     }
 
     @Test

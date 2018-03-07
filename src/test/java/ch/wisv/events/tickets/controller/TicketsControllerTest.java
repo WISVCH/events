@@ -75,23 +75,21 @@ public class TicketsControllerTest extends ControllerTest {
 
     @Test
     public void testGetIndex() throws Exception {
-        when(ticketsService.getCurrentCustomer()).thenReturn(customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(customer);
         when(eventService.getUpcoming()).thenReturn(ImmutableList.of(event));
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/index"))
                 .andExpect(model().attribute("orderProduct", hasProperty("products", is(new HashMap<String, Long>()))))
-                .andExpect(model().attribute("customer", is(customer)))
                 .andExpect(model().attribute("events", is(ImmutableList.of(event))));
     }
 
     @Test
     public void testPostCheckout() throws Exception {
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.createOrderByOrderProductDTO(any(OrderProductDTO.class))).thenReturn(this.order);
-        doNothing().when(orderValidationService).assertOrderIsValidForCustomer(any(Order.class), any(Customer.class));
         doNothing().when(orderService).create(this.order);
 
         // Perform call
@@ -105,15 +103,14 @@ public class TicketsControllerTest extends ControllerTest {
 
         // Verify service calls
         verify(orderService, times(1)).createOrderByOrderProductDTO(orderProductDTO);
-        verify(orderValidationService, times(1)).assertOrderIsValidForCustomer(order, order.getOwner());
         verify(orderService, times(1)).create(order);
-        verify(ticketsService, times(1)).getCurrentCustomer();
+        verify(authenticationService, times(1)).getCurrentCustomer();
     }
 
     @Test
     public void testPostCheckoutProductNotFound() throws Exception {
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.createOrderByOrderProductDTO(any(OrderProductDTO.class))).thenThrow(new ProductNotFoundException("key key"));
 
         // Perform call
@@ -130,9 +127,9 @@ public class TicketsControllerTest extends ControllerTest {
     @Test
     public void testPostCheckoutInvalid() throws Exception {
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
-        when(orderService.createOrderByOrderProductDTO(any(OrderProductDTO.class))).thenReturn(this.order);
-        doThrow(new OrderInvalidException("Invalid order")).when(orderValidationService).assertOrderIsValidForCustomer(this.order, this.order.getOwner());
+        when(authenticationService.getCurrentCustomer()).thenReturn(customer);
+        when(orderService.createOrderByOrderProductDTO(any(OrderProductDTO.class))).thenReturn(order);
+        doThrow(new OrderInvalidException("Invalid order")).when(orderService).create(order);
 
         // Perform call
         mockMvc.perform(post("/checkout/")
@@ -146,7 +143,7 @@ public class TicketsControllerTest extends ControllerTest {
 
 
         // Verify Service calls
-        verify(orderService, times(0)).create(order);
+        verify(orderService, times(1)).create(order);
     }
 
     @Test
@@ -167,7 +164,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -183,7 +180,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
@@ -198,7 +195,7 @@ public class TicketsControllerTest extends ControllerTest {
         thrown.expect(NestedServletException.class);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -212,7 +209,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         doNothing().when(orderService).updateOrderStatusPaid(this.order);
 
@@ -230,7 +227,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
@@ -245,7 +242,7 @@ public class TicketsControllerTest extends ControllerTest {
         thrown.expect(NestedServletException.class);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -262,7 +259,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setAmount(1.0d);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         when(ticketsService.getPaymentsMollieUrl(this.order)).thenReturn("url.to.payments");
 
@@ -281,7 +278,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setPaymentMethod(PaymentMethod.FREE);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         when(ticketsService.getPaymentsMollieUrl(this.order)).thenReturn("url.to.payments");
         doNothing().when(orderService).updateOrderStatusPaid(this.order);
@@ -300,7 +297,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
@@ -315,7 +312,7 @@ public class TicketsControllerTest extends ControllerTest {
         thrown.expect(NestedServletException.class);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -332,7 +329,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setAmount(1.0d);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         when(ticketsService.getPaymentsMollieUrl(this.order)).thenThrow(new PaymentsConnectionException());
 
@@ -353,7 +350,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         doNothing().when(ticketsService).updateOrderStatus(this.order, key);
 
@@ -373,7 +370,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         doNothing().when(ticketsService).updateOrderStatus(this.order, key);
 
@@ -392,7 +389,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
@@ -409,7 +406,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
         doThrow(new PaymentsConnectionException()).when(ticketsService).updateOrderStatus(this.order, key);
 
@@ -417,7 +414,7 @@ public class TicketsControllerTest extends ControllerTest {
         mockMvc.perform(get("/status/" + this.order.getPublicReference() + "/").param("reference", key))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/checkout/" + this.order.getPublicReference() + "/"))
-                .andExpect(flash().attribute("error", is("CH Payments is not responding!")));
+                .andExpect(flash().attribute("error", is("Something went wrong trying to fetch the payment status.")));
     }
 
     @Test
@@ -426,7 +423,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -442,7 +439,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call
@@ -457,7 +454,7 @@ public class TicketsControllerTest extends ControllerTest {
         this.order.setOwner(this.customer);
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenThrow(new OrderNotFoundException("key " + this.order.getPublicReference()));
 
         // Perform call
@@ -473,7 +470,7 @@ public class TicketsControllerTest extends ControllerTest {
         String key = UUID.randomUUID().toString();
 
         // Set up mock calls
-        when(ticketsService.getCurrentCustomer()).thenReturn(this.customer);
+        when(authenticationService.getCurrentCustomer()).thenReturn(this.customer);
         when(orderService.getByReference(this.order.getPublicReference())).thenReturn(this.order);
 
         // Perform call

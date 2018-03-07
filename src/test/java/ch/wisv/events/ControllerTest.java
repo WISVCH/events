@@ -1,5 +1,6 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
@@ -41,6 +42,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TicketsService ticketsService;
+
+    @MockBean
+    protected AuthenticationService authenticationService;
 
     @MockBean
     protected OrderService orderService;
