@@ -14,30 +14,29 @@
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body id="scanPage">
-<nav th:replace="fragments/header :: header"></nav>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
     <div class="row">
-        <main class="col-12 ml-auto p-5" role="main">
+        <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
             <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
-            <form th:action="@{./}" th:object="${customer}" method="POST" id="formScan">
+            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+            <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}"
+                  th:object="${customer}" method="POST" id="formScan">
+                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+
                 <div class="row">
-                    <div class="col-12 text-center mt-5">
-                        <h3 class="border-bottom-0">Scan RFID- or NFC card</h3>
-
-                        <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
-                        <input type="submit" style="display: none;">
-
-
+                    <div class="col-12 text-center">
+                        <h3 class="border-bottom-0">Scan a card</h3>
                         <h1 class="border-bottom-0" style="font-weight: 100;">or</h1>
                         <h3 class="border-bottom-0">Fill in an email address</h3>
                     </div>
@@ -48,17 +47,10 @@
                                    placeholder="Email address">
                         </div>
 
-                        <button type="submit" class="btn btn-lg btn-block btn-danger">Submit</button>
+                        <button type="submit" class="btn btn-block btn-danger">Submit</button>
                     </div>
                 </div>
             </form>
-
-            <!--<div class="fixed-bottom m-3">-->
-            <!--<a th:href="@{'/sales/order/' + ${order.getPublicReference()} + '/customer/create/'}"-->
-            <!--class="btn btn-lg btn-link btn-block">-->
-            <!--Create new user (without rfid!)-->
-            <!--</a>-->
-            <!--</div>-->
         </main>
     </div>
 </div>
@@ -69,6 +61,8 @@
 <script>
     $("#scanPage").on('keypress', function (e) {
         var token = $("#rfidToken");
+
+        console.log(e);
 
         if (e.which === 13) {
             $("#formScan").submit();

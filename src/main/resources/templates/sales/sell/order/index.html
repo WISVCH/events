@@ -14,33 +14,33 @@
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body id="scanPage">
-<nav th:replace="fragments/header :: header"></nav>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
 
     <div class="row">
-        <main class="col-12 ml-auto p-5" role="main">
+        <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
             <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
                             <th>Name</th>
-                            <td th:text="${order.getCustomer().getName()}"></td>
+                            <td th:text="${order.getOwner().getName()}"></td>
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td th:text="${order.getCustomer().getEmail()}"></td>
+                            <td th:text="${order.getOwner().getEmail()}"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -68,16 +68,19 @@
                         </tr>
                         </tfoot>
                     </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form th:action="@{'/sales/sell/payment/' + ${order.getPublicReference()}}" method="POST">
+                        <input type="hidden" name="method" value="CARD">
 
-                    <form th:action="@{'/sales/payment/order/' + ${order.getPublicReference()} + '/'}" method="POST"
-                          class="fixed-bottom m-3">
-                        <!--/*@thymesVar id="payment" type="ch.wisv.events.core.model.order.PaymentMethod"*/-->
-                        <button th:class="'btn btn-lg btn-block btn-' + ${payment.getDisplayClass()}"
-                                name="payment"
-                                th:each="payment : ${T(ch.wisv.events.core.model.sales.PaymentOption).values()}"
-                                th:value="${payment.getValue()}"
-                                th:text="${payment.getDisplayName()}">
-                        </button>
+                        <button class="btn btn-block btn-success mb-2">Card</button>
+                    </form>
+                    <form th:action="@{'/sales/sell/payment/' + ${order.getPublicReference()}}" method="POST">
+                        <input type="hidden" name="method" value="CASH">
+
+                        <button class="btn btn-block btn-success mb-2">Cash</button>
                     </form>
                 </div>
             </div>

@@ -11,3 +11,7 @@
 a, a:hover {
     transition: color .25s;
 }
+
+.table-bordered tr td, .table-bordered tr th {
+    border: 2px solid #e7ebf1;
+}

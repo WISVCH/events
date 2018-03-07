@@ -14,14 +14,13 @@
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
-<body id="scanPage">
-<nav th:replace="fragments/header :: header"></nav>
+<body>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
     <div class="row">
@@ -33,21 +32,15 @@
                     <p class="text-success">
                         <i class="fa fa-check-circle fa-5x"></i>
                     </p>
-                    <h2 class="border-bottom-0">Order successful!</h2>
+                    <h2 class="text-success border-bottom-0">Order successful!</h2>
                 </div>
             </div>
 
             <div class="fixed-bottom m-3">
-                <a th:href="@{/sales/}" class="btn btn-lg btn-danger btn-block">
-                    Close
-                </a>
+                <a th:href="@{/sales/sell}" class="btn btn-danger btn-block">Close</a>
             </div>
         </main>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
 </body>
 </html>

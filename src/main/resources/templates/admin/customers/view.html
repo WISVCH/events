@@ -38,44 +38,60 @@
             <div th:replace="fragments/messages :: messages"></div>
 
 
-            <div class="card mb-5">
-                <h6 class="card-header">Details</h6>
-                <div class="card-body">
-                    <div class="row form">
-                        <div class="form-group col-sm-12">
-                            <label>Email
-                                <input type="text" class="form-control" th:value="${customer.getEmail()}"
-                                       readonly>
-                            </label>
+            <div class="row mb-5">
+                <div class="col-6">
+                    <div class="card">
+                        <h6 class="card-header">Details</h6>
+                        <div class="card-body">
+                            <div class="row form">
+                                <div class="form-group col-sm-12">
+                                    <label>Email
+                                        <input type="text" class="form-control" th:value="${customer.getEmail()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>LDAP username
+                                        <input type="text" class="form-control" th:value="${customer.getChUsername()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>WISVCH Sub
+                                        <input type="text" class="form-control" th:value="${customer.getSub()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>RFID token
+                                        <input type="text" class="form-control" th:value="${customer.getRfidToken()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>Created at
+                                        <input type="text" class="form-control"
+                                               th:value="${customer.getCreatedAt().toString()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-sm-12">
-                            <label>LDAP username
-                                <input type="text" class="form-control" th:value="${customer.getChUsername()}"
-                                       readonly>
-                            </label>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label>WISVCH Sub
-                                <input type="text" class="form-control" th:value="${customer.getSub()}"
-                                       readonly>
-                            </label>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label>RFID token
-                                <input type="text" class="form-control" th:value="${customer.getRfidToken()}"
-                                       readonly>
-                            </label>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label>Created at
-                                <input type="text" class="form-control"
-                                       th:value="${customer.getCreatedAt().toString()}"
-                                       readonly>
-                            </label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <h6 class="card-header">LDAP groups</h6>
+                        <div class="card-body">
+                            <ul>
+                                <li th:each="ldapGroup : ${customer.getLdapGroups()}"
+                                    th:text="${ldapGroup.getName()}"></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="card">
                 <h6 class="card-header">Ticket(s) bought</h6>

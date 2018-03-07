@@ -14,47 +14,49 @@
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
 </head>
 
 <body id="scanPage">
-<nav th:replace="fragments/header :: header"></nav>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
     <div class="row">
-        <main class="col-12 ml-auto p-5" role="main">
+        <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
             <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
-            <div class="row">
-                <form th:action="@{./}" th:object="${customer}" method="POST" class="w-100">
-                    <input type="hidden" th:value="*{getRfidToken()}" th:field="*{rfidToken}" required>
-                    <h3>Create a new user</h3>
+            <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}" th:object="${customer}"
+                  method="POST" class="w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="hidden" th:value="*{getRfidToken()}" th:field="*{rfidToken}" required>
+                        <h3 class="border-bottom-0">Create a new user</h3>
 
-                    <div class="form-group">
-                        <label>Full name*</label>
-                        <input type="text" class="form-control" placeholder="Full name"
-                               th:value="*{getName()}" th:field="*{name}" required>
+                        <div class="form-group">
+                            <label>Full name*</label>
+                            <input type="text" class="form-control" placeholder="Full name"
+                                   th:value="*{getName()}" th:field="*{name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address*</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email"
+                                   th:value="*{getEmail()}" th:field="*{email}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ch-username">CH Username</label>
+                            <input type="text" class="form-control" id="ch-username" placeholder="CH username"
+                                   th:value="*{getChUsername()}" th:field="*{chUsername}">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email address*</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email"
-                               th:value="*{getEmail()}" th:field="*{email}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="ch-username">CH Username</label>
-                        <input type="text" class="form-control" id="ch-username" placeholder="CH username"
-                               th:value="*{getChUsername()}" th:field="*{chUsername}">
-                    </div>
+                </div>
 
-                    <div class="fixed-bottom m-3">
-                        <button type="submit" class="btn btn-lg btn-block btn-secondary">Create user</button>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-block btn-secondary">Create user</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </main>
     </div>
 </div>
