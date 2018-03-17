@@ -16,7 +16,7 @@ after_success:
     docker push wisvch/events:$TRAVIS_BUILD_NUMBER;
     fi
 after_script:
-  - ./cc-test-reporter format-coverage -d -t jacoco /build/report/jacoco/test/
+  - ./cc-test-reporter format-coverage -d -t jacoco /build/reports/jacoco/test/
   - ./cc-test-reporter upload-coverage -d
 notifications:
   slack:
