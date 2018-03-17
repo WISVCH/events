@@ -88,7 +88,7 @@ public class Event {
     private LocalDateTime ending;
 
     /**
-     * Field target target of the amount of tickets sold by this Event.
+     * Field target target of the amount of webshop sold by this Event.
      */
     @NotNull
     private Integer target;

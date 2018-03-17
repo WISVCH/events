@@ -1,11 +1,7 @@
-package ch.wisv.events.tickets.service;
+package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
-
-import java.util.List;
+import org.apache.http.client.methods.HttpPost;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -23,22 +19,32 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface WebshopService {
+public interface PaymentsService {
 
     /**
-     * Filter the products by events if they can be sold or not.
+     * Get the Order status of Payments.
      *
-     * @param events of type List<Event>
-     *
-     * @return List<Event>
-     */
-    List<Event> filterNotSalableProducts(List<Event> events);
-
-    /**
-     * Update the status of the Order via the Payments API.
-     *
-     * @param order             of type Order
      * @param paymentsReference of type String
+     *
+     * @return String
      */
-    void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException;
+    String getPaymentsOrderStatus(String paymentsReference);
+
+    /**
+     * Get a Mollie Url via Payments.
+     *
+     * @param order of type Order
+     *
+     * @return String
+     */
+    String getPaymentsMollieUrl(Order order);
+
+    /**
+     * Create a HttpPost to create a Payments Order request
+     *
+     * @param order of type Order
+     *
+     * @return HttpPost
+     */
+    HttpPost createPaymentsOrderHttpPost(Order order);
 }

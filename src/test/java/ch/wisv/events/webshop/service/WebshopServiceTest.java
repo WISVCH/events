@@ -1,9 +1,8 @@
-package ch.wisv.events.tickets.service;
+package ch.wisv.events.webshop.service;
 
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;

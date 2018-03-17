@@ -1,4 +1,4 @@
-package ch.wisv.events.tickets.service;
+package ch.wisv.events.webshop.service;
 
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;

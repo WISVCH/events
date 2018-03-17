@@ -1,4 +1,4 @@
-package ch.wisv.events.tickets.controller;
+package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;

@@ -1,9 +1,9 @@
-package ch.wisv.events.tickets.controller;
+package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.tickets.service.WebshopService;
+import ch.wisv.events.webshop.service.WebshopService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

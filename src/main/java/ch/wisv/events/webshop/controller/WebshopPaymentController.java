@@ -1,4 +1,4 @@
-package ch.wisv.events.tickets.controller;
+package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
@@ -11,8 +11,8 @@ import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
-import ch.wisv.events.tickets.service.PaymentsService;
-import ch.wisv.events.tickets.service.WebshopService;
+import ch.wisv.events.webshop.service.PaymentsService;
+import ch.wisv.events.webshop.service.WebshopService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
