@@ -4,44 +4,17 @@
 <body>
 <header class="page-header" th:fragment="header (title, image)">
 
-    <!-- Title Bar -->
-    <div class="title-bar hide-for-large" data-responsive-toggle="nav-menu" data-hide-for="large"
-         style="display: none;">
-        <div class="row collapse">
-            <div class="small-6 medium-5 bg-left column">
-                <a class="logo-small hide-for-large" href="https://ch.tudelft.nl/">
-                    <img src="https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/ch-logo.png"
-                         alt="W.I.S.V. 'Christiaan Huygens'" class="logo-small">
-                </a>
-            </div>
-            <div class="small-6 medium-7 bg-right column">
-                <div class="float-right">
-                    <a class="login-button button alert" href="https://ch.tudelft.nl/portal" data-open="login-form"
-                       aria-controls="login-form" aria-haspopup="true" tabindex="0">Login</a>
-                    <button class="wisv-menu-icon hamburger hamburger--collapse" type="button" data-toggle="">
-                        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
     <!-- Top Bar -->
-    <div class="wisv-header left">
-
-        <div class="wisv-header right">
-            <div class="center row">
-
-                <nav class="top-bar" id="nav-menu">
+    <div class="wisv-header header-left">
+        <div class="container">
+            <div class="row">
+                <nav class="top-bar w-100" id="nav-menu">
                     <div class="top-bar-left show-for-large">
                         <div class="logo-wrapper">
-                            <div class="logo">
-                                <a href="https://ch.tudelft.nl/">
-                                    <img src="https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/ch-logo.png"
-                                         width="300" height="110" alt="W.I.S.V. 'Christiaan Huygens'">
-                                </a>
-                            </div>
+                            <a class="logo" href="https://ch.tudelft.nl/">
+                                <img src="https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/ch-logo.png"
+                                     width="300" height="110" alt="W.I.S.V. 'Christiaan Huygens'">
+                            </a>
                         </div>
                     </div>
                 </nav>
