@@ -17,23 +17,19 @@
     <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
-<nav th:replace="tickets/fragments/header :: header ('Tickets', 'events_header.jpg')"></nav>
+<nav th:replace="webshop/fragments/header :: header ('Webshop', 'events_header.jpg')"></nav>
 
 <div class="container-fluid">
     <div class="row">
-        <main class="col p-5" role="main">
-            <div class="row mb-5">
-                <div class="col">
-                    <h1>Tickets</h1>
-                </div>
-                <div class="col text-right">
-                    <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#shoppingBasket"
+        <main class="col py-3" role="main">
+            <div class="row">
+                <div class="ml-auto col-lg-4 col-md-5 col-12 mb-4">
+                    <a href="#" class="btn btn-block btn-secondary" data-toggle="modal" data-target="#shoppingBasket"
                        id="shoppingBasketButton">
                         <i class="fa fa-fw fa-shopping-basket"></i> Shopping basket (<span
                             id="shoppingBasketCount"></span>)
@@ -45,46 +41,39 @@
 
             <div class="row justify-content-left">
                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-                <div class="mb-3" th:each="event: ${events}" th:if="${event.getProducts().size() > 0}"
-                     th:classappend="'col-lg-' + (${event.getProducts().size()} * 3) + ' col-md-' + (${event.getProducts().size()} * 6)">
-                    <div class="card">
-                        <div class="card-body bt-3">
-                            <div class="row">
-                                <h5 class="col card-title mb-1" th:text="${event.getTitle()}"></h5>
-                            </div>
+                <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12" th:each="event: ${events}"
+                     th:if="${event.getProducts().size() > 0}">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-12 align-self-start mb-3">
+                                    <div class="row">
+                                        <h5 class="col-12 card-title mb-1" th:text="${event.getTitle()}"></h5>
 
-                            <div class="row mb-4">
-                                <div class="col">
-                                    <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
-                                    <div class="badge badge-secondary" th:each="cat : ${event.getCategories()}"
-                                         th:text="${cat.getDisplayName()}"></div>
+                                        <div class="col-12 mb-4">
+                                            <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
+                                            <div class="badge badge-secondary" th:each="cat : ${event.getCategories()}"
+                                                 th:text="${cat.getDisplayName()}"></div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <i class="far fa-fw fa-calendar-alt"></i>
+                                            <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
+                                        </div>
+                                        <div class="col-12" th:if="${event.getLocation() != ''}">
+                                            <i class="fas fa-map-marker fa-fw"></i>
+                                            <span th:text="${event.getLocation()}"></span>
+                                        </div>
+                                        <div class="col-12">
+                                            <i class="fas fa-info fa-fw"></i>
+                                            <span th:text="${event.getShortDescription()}"></span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <i class="fa fa-clock-o fa-fw"></i>
-                                    <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
-                                </div>
-                            </div>
-
-                            <div class="row" th:if="${event.getLocation() != ''}">
-                                <div class="col">
-                                    <i class="fa fa-map-marker fa-fw"></i>
-                                    <span th:text="${event.getLocation()}"></span>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col">
-                                    <i class="fa fa-info fa-fw"></i>
-                                    <span th:text="${event.getShortDescription()}"></span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div th:classappend="'col-md-' + ${(12 / event.getProducts().size())} + ' col-12'"
-                                     th:each="product : ${event.getProducts()}" class="mb-2">
+                                <div class="align-self-end"
+                                     th:classappend="'col-md-' + ${(12 / event.getProducts().size())} + ' col-12'"
+                                     th:each="product : ${event.getProducts()}">
                                     <div class="card">
                                         <div class="card-body bt-3">
                                             <h5 class="card-title" th:text="${product.getTitle()}"></h5>
@@ -94,7 +83,7 @@
                                             <small>Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
                                             </small>
                                         </div>
-                                        <a class="btn btn-primary btn-shopping-basket"
+                                        <a href="#" class="btn btn-primary btn-shopping-basket"
                                            th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
                                             Add to basket
                                         </a>
@@ -140,16 +129,14 @@
                     </tr>
                     </tfoot>
                 </table>
-                <button type="button" class="btn btn-secondary" id="emptyShoppingBasket">
-                    <i class="fa fa-fw fa-trash-o"></i>
-                    Empty shopping basket
+                <button type="button" class="btn btn-block btn-info" id="emptyShoppingBasket">
+                    <i class="far fa-fw fa-trash-alt"></i>
+                    Empty
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                <form method="POST" id="orderForm" th:action="@{/checkout/}" th:object="${orderProduct}">
+                <form id="orderForm" method="POST" th:action="@{'/checkout'}" th:object="${orderProduct}">
                     <div id="products"></div>
-
                     <button type="submit" class="btn btn-secondary" id="checkoutShoppingBasket">
                         Checkout <i class="fa fa-fw fa-arrow-right"></i>
                     </button>
@@ -164,7 +151,7 @@
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/sprintf.js/1.0.0/sprintf.min.js}"></script>
 <script th:src="@{/js/js.storage.min.js}"></script>
-<script th:src="@{/js/tickets/tickets.min.js}"></script>
+<script th:src="@{/js/webshop/webshop.min.js}"></script>
 <script>
     jQuery(document).ready(function ($) {
         ShoppingBasket.init();

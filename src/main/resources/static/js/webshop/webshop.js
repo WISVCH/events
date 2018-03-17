@@ -75,9 +75,13 @@ var ShoppingBasket;
                 var countItems = 0;
 
                 $.each(ShoppingBasket.shoppingBasket, function (index, product) {
-                    shoppingBasketTable += vsprintf("<tr><td>%s</td><td>%s</td><td>&euro; %s</td></tr>", [
+                    var rowBlueprint = "<tr><td>%s</td><td><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span class='px-4'>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></td><td>&euro; %s</td></tr>";
+
+                    shoppingBasketTable += vsprintf(rowBlueprint, [
                         product.title,
+                        product.key,
                         product.amount,
+                        product.key,
                         parseFloat(Math.round(product.amount * product.cost * 100) / 100).toFixed(2).replace(".", ",")
                     ]);
 
@@ -87,14 +91,46 @@ var ShoppingBasket;
                 });
 
                 if (shoppingBasketTotal > 0) {
-                    shoppingBasketTable += "<tr><td>Transaction fee</td><td>1</td><td>&euro; 0,35</td></tr>";
+                    shoppingBasketTable += "<tr><td>Transaction fee</td><td></td><td>&euro; 0,35</td></tr>";
                     shoppingBasketTotal += 0.35;
                 }
 
                 $("#shoppingBasketTable").html(shoppingBasketTable);
                 $("#shoppingBasketCount").html(countItems);
                 $("#shoppingBasketTotal").html("&euro; " + parseFloat(Math.round(shoppingBasketTotal * 100) / 100).toFixed(2).replace(".", ","));
+
+                $('.increaseBasketAmount').on('click', ShoppingBasket.__increaseProductAmount);
+                $('.decreaseBasketAmount').on('click', ShoppingBasket.__decreaseProductAmount);
             }
+        },
+
+        __increaseProductAmount: function (e) {
+            e.preventDefault();
+            var indexProduct = ShoppingBasket.__indexProductContains(
+                $(e.currentTarget).data('productKey'), ShoppingBasket.shoppingBasket);
+
+            ShoppingBasket.shoppingBasket[indexProduct].amount++;
+
+            // Update ShoppingBasket
+            Storages.localStorage.set(ShoppingBasket.LOCAL_STORAGE_SHOPPING_BASKET, ShoppingBasket.shoppingBasket);
+            ShoppingBasket.__createShoppingBasketTable();
+        },
+
+        __decreaseProductAmount: function (e) {
+            e.preventDefault();
+            var indexProduct = ShoppingBasket.__indexProductContains(
+                $(e.currentTarget).data('productKey'), ShoppingBasket.shoppingBasket);
+
+
+            if (ShoppingBasket.shoppingBasket[indexProduct].amount > 1) {
+                ShoppingBasket.shoppingBasket[indexProduct].amount--;
+            } else {
+                ShoppingBasket.shoppingBasket.splice(indexProduct, 1);
+            }
+
+            // Update ShoppingBasket
+            Storages.localStorage.set(ShoppingBasket.LOCAL_STORAGE_SHOPPING_BASKET, ShoppingBasket.shoppingBasket);
+            ShoppingBasket.__createShoppingBasketTable();
         },
 
         __createEmptyShoppingBasketTable: function () {

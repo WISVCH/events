@@ -227,15 +227,11 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerInvalidException("Email is empty, but a required field, so please fill in this field!");
         }
 
-        if (customer.getRfidToken() == null) {
-            throw new CustomerInvalidException("RFID token can not be null.");
-        }
-
         if (customer.getCreatedAt() == null) {
             throw new CustomerInvalidException("Customer should contain a created at timestamp.");
         }
 
-        if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
+        if (customer.getRfidToken() != null && !customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
             throw new CustomerInvalidException("RFID token is already used!");
         }
 

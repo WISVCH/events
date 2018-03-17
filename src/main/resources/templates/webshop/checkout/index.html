@@ -22,18 +22,18 @@
 </head>
 
 <body>
-<nav th:replace="tickets/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
+<nav th:replace="webshop/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <main class="col p-5" role="main">
-            <div class="row mb-5">
-                <div class="col-9">
-                    <h1>Checkout</h1>
+        <main class="col py-3" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col my-4">
+                    <h4 class="display-4">Order overview</h4>
                 </div>
             </div>
-
-            <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row">
                 <div class="col mb-5">
@@ -51,14 +51,14 @@
                             <td th:text="${orderProduct.getAmount()}"></td>
                             <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice() * orderProduct.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
                         </tr>
-                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}">
-                            <td>Transaction fee</td>
-                            <td>1</td>
-                            <td>&euro; 0,35</td>
-                        </tr>
                         </tbody>
                         <tfoot>
                         <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}">
+                            <td colspan="2">Transaction fee</td>
+                            <td>&euro; 0,35</td>
+                        </tr>
+                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}"
+                            style="border-top: 4px double #e7ebf1 !important;">
                             <th colspan="2">Total</th>
                             <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount() + 0.35, 1, 'POINT', 2, 'COMMA')}"></th>
                         </tr>
@@ -74,14 +74,21 @@
             <div class="row">
                 <div class="col">
                     <div class="button-group float-right">
-                        <a th:href="@{'/cancel/' + ${order.getPublicReference()} + '/'}" class="btn btn-light">
+                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/cancel'}" class="btn btn-light">
                             Cancel
                         </a>
-                        <a th:href="@{'/payment/' + ${order.getPublicReference()} + '/'}" class="btn btn-secondary">
-                            Payment
+                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer'}"
+                           class="btn btn-secondary">
+                            Next
                             <i class="fa fa-fw fa-arrow-right"></i>
                         </a>
                     </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <p class="text-center form-text text-muted">
+                        By clicking on the 'Next' button you accept and agree with the <a href="#" target="_blank">Terms
+                        and Conditions</a>.
+                    </p>
                 </div>
             </div>
         </main>

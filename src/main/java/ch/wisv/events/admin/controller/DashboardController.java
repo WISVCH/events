@@ -1,7 +1,6 @@
 package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
@@ -69,7 +68,6 @@ public class DashboardController {
     @GetMapping()
     public String index(Model model) {
         List<Event> upcomingEvents = this.determineUpcomingEvents();
-        upcomingEvents.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
 
         int totalEvents = this.eventService.getAll().size();
         model.addAttribute("totalEvents", totalEvents);
@@ -185,11 +183,7 @@ public class DashboardController {
      */
     private double determineAverageTargetRate(List<Event> events) {
         return events.stream()
-                .mapToDouble(x -> {
-                    x.setSold(x.getProducts().stream().mapToInt(Product::getSold).sum());
-
-                    return x.calcProgress();
-                }).average().orElse(0);
+                .mapToDouble(Event::calcSoldProgress).average().orElse(0);
     }
 
     /**

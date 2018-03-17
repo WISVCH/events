@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="webshop/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
+
+<div class="container">
+    <div class="row">
+        <main class="col py-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4 class="display-4">Select payment method</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-3 px-3">
+                                    <img class="img-thumbnail"
+                                         src="https://www.ideal.nl/img/statisch/mobiel/iDEAL_144x144.png" alt="">
+                                </div>
+                                <div class="col-9 h-100">
+                                    <div class="row h-100">
+                                        <div class="col-12 align-self-start mb-4">
+                                            <h5 class="d-inline mt-0">IDEAL</h5> - Online payment using your
+                                            Dutch bank. Easy, fast and secure!
+                                        </div>
+
+                                        <div class="col-12 align-self-end">
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/ideal'}"
+                                               class="btn btn-block btn-primary">
+                                                Pay with iDeal
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-3 px-3">
+                                    <img class="img-thumbnail" src="http://via.placeholder.com/150x150" alt="">
+                                </div>
+                                <div class="col-9 h-100">
+                                    <div class="row">
+                                        <div class="col-12 align-self-start mb-4">
+                                            <h5 class="d-inline mt-0">RESERVATION</h5> - Reserve your tickets now and
+                                            pay it later at the board of W.I.S.V. 'Christiaan Huygens'.<br/>
+
+                                            <span class="text-info"><strong>Note:</strong> Your order will expire is you do not pay within 3 days.</span>
+                                        </div>
+                                        <div class="col-12 align-self-end">
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/reservation'}"
+                                               class="btn btn-block btn-primary">
+                                                Reserve tickets
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>

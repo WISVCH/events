@@ -54,6 +54,7 @@
                         <td th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
                         <td>
                             <span class="badge badge-success" th:text="'Sold: ' + ${product.getSold()}"></span>
+                            <span class="badge badge-warning" th:text="'Reserved: ' + ${product.getReserved()}"></span>
                             <span class="badge badge-info" th:text="'Available: ' + ${product.getMaxSold()}"></span>
                         </td>
                         <td>
@@ -104,7 +105,8 @@
             ],
             columnDefs: [
                 {width: "60px", targets: 1},
-                {width: "180px", targets: [2, 3]},
+                {width: "240px", targets: 2},
+                {width: "180px", targets: 3},
                 {width: "120px", targets: 4}
             ]
         });

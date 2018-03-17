@@ -2,7 +2,10 @@ package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -20,19 +23,20 @@ import ch.wisv.events.core.model.order.Order;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public interface TicketsService {
+public interface WebshopService {
 
     /**
-     * Get a Mollie Url via the Payments API.
+     * Filter the products by events if they can be sold or not.
      *
-     * @param order of type Order
-     * @return String
+     * @param events of type List<Event>
+     * @return List<Event>
      */
-    String getPaymentsMollieUrl(Order order);
+    List<Event> filterNotSalableProducts(List<Event> events);
 
     /**
      * Update the status of the Order via the Payments API.
-     *  @param order             of type Order
+     *
+     * @param order             of type Order
      * @param paymentsReference of type String
      */
     void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException;

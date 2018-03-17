@@ -62,8 +62,6 @@ public class DashboardEventController {
      */
     @GetMapping()
     public String index(Model model) {
-        List<Event> allEvent = eventService.getAll();
-        allEvent.forEach(event -> event.setSold(event.getProducts().stream().mapToInt(Product::getSold).sum()));
         model.addAttribute("events", eventService.getAll());
 
         return "admin/events/index";

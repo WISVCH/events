@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class OrderProductDTO {
 
     /**
-     * Field product should contain Product keys and number of tickets of that product.
+     * Field product should contain Product keys and number of webshop of that product.
      */
     HashMap<String, Long> products;
 

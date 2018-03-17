@@ -46,7 +46,7 @@ public class TicketsServiceTest extends ServiceTest {
     public OrderService orderService;
 
     @Autowired
-    public TicketsService ticketsService;
+    public WebshopService webhookService;
 
     private Order order;
 
@@ -60,7 +60,7 @@ public class TicketsServiceTest extends ServiceTest {
         String molliePaymentsUrl = "https://mollie.com/payment/2804/supermooi/";
         when(paymentsService.getPaymentsMollieUrl(this.order)).thenReturn(molliePaymentsUrl);
 
-        assertEquals(molliePaymentsUrl, ticketsService.getPaymentsMollieUrl(this.order));
+        assertEquals(molliePaymentsUrl, webhookService.getPaymentsMollieUrl(this.order));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TicketsServiceTest extends ServiceTest {
         thrown.expect(PaymentsConnectionException.class);
         when(paymentsService.getPaymentsMollieUrl(this.order)).thenThrow(new PaymentsConnectionException());
 
-        ticketsService.getPaymentsMollieUrl(this.order);
+        webhookService.getPaymentsMollieUrl(this.order);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class TicketsServiceTest extends ServiceTest {
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn(paymentsStatus);
         doNothing().when(orderService).updateOrderStatusPaid(this.order);
 
-        ticketsService.updateOrderStatus(this.order, reference);
+        webhookService.updateOrderStatus(this.order, reference);
 
         verify(orderService, times(1)).updateOrderStatus(this.order, orderStatus);
     }
@@ -102,6 +102,6 @@ public class TicketsServiceTest extends ServiceTest {
         String reference = UUID.randomUUID().toString();
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn("STATUS_EXCEPTION");
 
-        ticketsService.updateOrderStatus(this.order, reference);
+        webhookService.updateOrderStatus(this.order, reference);
     }
 }

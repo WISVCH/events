@@ -30,4 +30,8 @@ public interface MailService {
      * @param tickets of type List<Ticket>
      */
     void sendOrderConfirmation(Order order, List<Ticket> tickets);
+
+    void sendErrorPaymentOrder(Order order);
+
+    void sendOrderReservation(Order order);
 }

@@ -88,11 +88,6 @@ public class Event {
     private LocalDateTime ending;
 
     /**
-     * Field sold amount of tickets sold by this Event.
-     */
-    private int sold;
-
-    /**
      * Field target target of the amount of tickets sold by this Event.
      */
     @NotNull
@@ -173,7 +168,23 @@ public class Event {
      *
      * @return progress of event
      */
-    public double calcProgress() {
-        return Math.min(Math.round((((double) this.sold / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
+    public double calcSoldProgress() {
+        return this.calcProgress(this.getSold());
+    }
+
+    public double calcReservedProcess() {
+        return this.calcProgress(this.getReserved());
+    }
+
+    private double calcProgress(double reserved) {
+        return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
+    }
+
+    public int getSold() {
+        return products.stream().mapToInt(Product::getSold).sum();
+    }
+
+    public int getReserved() {
+        return products.stream().mapToInt(Product::getReserved).sum();
     }
 }

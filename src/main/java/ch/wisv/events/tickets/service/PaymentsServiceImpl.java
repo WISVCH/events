@@ -1,7 +1,9 @@
 package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
+import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -118,16 +120,36 @@ public class PaymentsServiceImpl implements PaymentsService {
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                JSONObject responseObject = (JSONObject) JSONValue.parse(EntityUtils.toString(response.getEntity()));
+                int statusCode = response.getStatusLine().getStatusCode();
 
-                if (responseObject.containsKey("url")) {
-                    return (String) responseObject.get("url");
-                }
+                String responseString = EntityUtils.toString(entity);
+                JSONObject responseObject = (JSONObject) JSONValue.parse(responseString);
+
+                return this.getRedirectUrl(statusCode, responseObject);
             }
         } catch (IOException ignored) {
         }
 
         throw new PaymentsConnectionException();
+    }
+
+    /**
+     * Get redirect url
+     *
+     * @param statusCode     of type int
+     * @param responseObject of type JSONObject
+     * @return String
+     */
+    private String getRedirectUrl(int statusCode, JSONObject responseObject) {
+        if (statusCode == 201) {
+            if (responseObject.containsKey("url")) {
+                return (String) responseObject.get("url");
+            } else {
+                throw new PaymentsInvalidException("Redirect url is missing");
+            }
+        } else {
+            throw new PaymentsInvalidException((String) responseObject.get("message"));
+        }
     }
 
     /**
@@ -139,10 +161,26 @@ public class PaymentsServiceImpl implements PaymentsService {
     public HttpPost createPaymentsOrderHttpPost(Order order) {
         HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
 
+        JSONObject object = this.createPaymentsHttpPostBody(order);
+
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+
+        return httpPost;
+    }
+
+    /**
+     * Create payments HTTP Post Body.
+     *
+     * @param order of type Order
+     * @return
+     */
+    private JSONObject createPaymentsHttpPostBody(Order order) {
         JSONObject object = new JSONObject();
         object.put("name", order.getOwner().getName());
         object.put("email", order.getOwner().getEmail());
-        object.put("returnUrl", clientUri + "/status/" + order.getPublicReference() + "/");
+        object.put("returnUrl", clientUri + "/checkout/" + order.getPublicReference() + "/payment/return");
         object.put("mailConfirmation", false);
 
         JSONArray jsonArray = new JSONArray();
@@ -153,10 +191,6 @@ public class PaymentsServiceImpl implements PaymentsService {
         });
         object.put("productKeys", jsonArray);
 
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        return httpPost;
+        return object;
     }
 }

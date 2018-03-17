@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="webshop/fragments/header :: header ('Something went wrong', 'event_order-error.jpg')"></nav>
+
+<div class="container">
+    <div class="row">
+        <main class="col-8 mx-auto py-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col my-4">
+                    <h4 class="display-4">Owl no!</h4>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-5">
+                <div class="col-12">
+                    <p class="text-justify">
+                        An unexpected error occurred during the processing of your order, therefor your order has been
+                        closed. If any money has been withdrawn from your account please contact the board by emailing to
+                        <a href="mailto:board@ch.tudelft.nl">board@ch.tudelft.nl</a>
+                        or swing by at the association area.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-auto mr-auto">
+                    <a th:href="@{/}" class="btn btn-secondary">
+                        <i class="fa fa-fw fa-arrow-left"></i>
+                        Back to the homepage
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        Storages.localStorage.set('shoppingBasket', []);
+    });
+</script>
+</body>

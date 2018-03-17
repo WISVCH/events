@@ -8,7 +8,7 @@
         <li class="nav-item">
             <a th:href="@{/administrator/}" class="nav-link"
                th:classappend="${#httpServletRequest.getRequestURI() == '/events/administrator/' ? 'active':''}">
-                <i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Overview
+                <i class="fas fa-tachometer-alt fa-fw" aria-hidden="true"></i> Overview
             </a>
         </li>
     </ul>
@@ -22,7 +22,7 @@
         <li class="nav-item">
             <a th:href="@{/administrator/products/}" class="nav-link"
                th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/products/') ? 'active':''}">
-                <i class="fa fa-ticket fa-fw" aria-hidden="true"></i> Products
+                <i class="fas fa-ticket-alt fa-fw" aria-hidden="true"></i> Products
             </a>
         </li>
     </ul>

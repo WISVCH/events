@@ -60,7 +60,7 @@ public class SalesSellPaymentController {
     ) {
         try {
             Order order = orderService.getByReference(publicReference);
-            order.setPaymentMethod((order.getAmount()) == 0.d ? PaymentMethod.FREE : method);
+            order.setPaymentMethod((order.getAmount()) == 0.d ? PaymentMethod.OTHER : method);
 
             orderService.create(order);
             orderService.updateOrderStatusPaid(order);

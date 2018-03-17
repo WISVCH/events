@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.exception.normal.*;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -48,6 +49,13 @@ public interface OrderService {
     void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException, OrderExceedCustomerLimitException;
 
     /**
+     * Update an existing order.
+     *
+     * @param order of type Order
+     */
+    void update(Order order) throws OrderNotFoundException, OrderInvalidException;
+
+    /**
      * Create an Order form a OrderProductDTO.
      *
      * @param orderProductDTO of type OrderProductDTO
@@ -83,4 +91,8 @@ public interface OrderService {
      * @param order of type Order.
      */
     void deleteTempOrder(Order order);
+
+    List<Order> getAllReservationOrderByCustomer(Customer customer);
+
+    List<Order> getAllPaidOrderByCustomer(Customer customer);
 }

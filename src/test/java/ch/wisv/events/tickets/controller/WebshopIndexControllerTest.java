@@ -43,8 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@WebMvcTest(TicketsController.class)
-public class TicketsControllerTest extends ControllerTest {
+@WebMvcTest(WebshopIndexController.class)
+public class WebshopIndexControllerTest extends ControllerTest {
 
     private Customer customer;
 
@@ -80,7 +80,7 @@ public class TicketsControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("tickets/index"))
+                .andExpect(view().name("webshop/index"))
                 .andExpect(model().attribute("orderProduct", hasProperty("products", is(new HashMap<String, Long>()))))
                 .andExpect(model().attribute("events", is(ImmutableList.of(event))));
     }
@@ -170,7 +170,7 @@ public class TicketsControllerTest extends ControllerTest {
         // Perform call
         mockMvc.perform(get("/checkout/" + this.order.getPublicReference() + "/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("tickets/checkout"))
+                .andExpect(view().name("webshop/checkout"))
                 .andExpect(model().attribute("order", is(this.order)));
     }
 
@@ -445,7 +445,7 @@ public class TicketsControllerTest extends ControllerTest {
         // Perform call
         mockMvc.perform(get("/complete/" + this.order.getPublicReference() + "/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("tickets/complete"));
+                .andExpect(view().name("webshop/complete"));
     }
 
     @Test

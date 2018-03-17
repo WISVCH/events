@@ -55,7 +55,12 @@ public class Product {
     /**
      * Products sold.
      */
-    public Integer sold;
+    public int sold;
+
+    /**
+     * Products sold.
+     */
+    public int reserved;
 
     /**
      * Maximum number of sold for the product. It is an Integer so it can be NULL.
@@ -99,6 +104,7 @@ public class Product {
 
         // Set default sold to zero.
         this.sold = 0;
+        this.reserved = 0;
     }
 
     /**
@@ -132,7 +138,7 @@ public class Product {
     public double calcProgress() {
         if (this.maxSold == null) {
             return 100.d;
-        } else if (this.sold == null) {
+        } else if (this.sold == 0) {
             return 0.d;
         }
 
@@ -144,7 +150,16 @@ public class Product {
      *
      * @param amount of type Integer
      */
-    public void increaseSold(Integer amount) {
+    public void increaseSold(int amount) {
         this.sold += amount;
+    }
+
+    /**
+     * Increase sold count by amount.
+     *
+     * @param amount of type Integer
+     */
+    public void increaseReserved(int amount) {
+        this.reserved += amount;
     }
 }

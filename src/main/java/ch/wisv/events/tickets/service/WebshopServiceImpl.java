@@ -2,10 +2,17 @@ package ch.wisv.events.tickets.service;
 
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -24,7 +31,7 @@ import org.springframework.stereotype.Service;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
-public class TicketsServiceImpl implements TicketsService {
+public class WebshopServiceImpl implements WebshopService {
 
     /**
      * PaymentsService paymentsService.
@@ -42,20 +49,27 @@ public class TicketsServiceImpl implements TicketsService {
      * @param paymentsService of type PaymentsService
      * @param orderService    of type OrderService
      */
-    public TicketsServiceImpl(PaymentsService paymentsService, OrderService orderService) {
+    public WebshopServiceImpl(PaymentsService paymentsService, OrderService orderService) {
         this.paymentsService = paymentsService;
         this.orderService = orderService;
     }
 
-    /**
-     * Get a Mollie Url via the Payments API.
-     *
-     * @param order of type Order
-     * @return String
-     */
     @Override
-    public String getPaymentsMollieUrl(Order order) {
-        return paymentsService.getPaymentsMollieUrl(order);
+    public List<Event> filterNotSalableProducts(List<Event> events) {
+        events.forEach(event -> {
+            List<Product> filterSalableProducts = event.getProducts().stream()
+                    .filter(this.filterProductBySellInterval())
+                    .collect(Collectors.toList());
+
+            event.setProducts(filterSalableProducts);
+        });
+
+        return events;
+    }
+
+    private Predicate<Product> filterProductBySellInterval() {
+        return product ->
+                LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
     }
 
     /**

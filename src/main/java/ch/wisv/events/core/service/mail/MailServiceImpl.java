@@ -101,4 +101,28 @@ public class MailServiceImpl implements MailService {
                 this.templateEngine.process("mail/order", ctx)
         );
     }
+
+    @Override
+    public void sendErrorPaymentOrder(Order order) {
+        final Context ctx = new Context(new Locale("en"));
+        ctx.setVariable("order", order);
+
+        this.sendMailWithContent(
+                "w3cie@ch.tudelft.nl",
+                "Order payment failed",
+                this.templateEngine.process("mail/order-error", ctx)
+        );
+    }
+
+    @Override
+    public void sendOrderReservation(Order order) {
+        final Context ctx = new Context(new Locale("en"));
+        ctx.setVariable("order", order);
+
+        this.sendMailWithContent(
+                order.getOwner().getEmail(),
+                "Ticket reservation",
+                this.templateEngine.process("mail/order-reservation", ctx)
+        );
+    }
 }

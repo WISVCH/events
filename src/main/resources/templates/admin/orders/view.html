@@ -47,14 +47,14 @@
                                 <div class="form-group col-sm-6">
                                     <label>Status
                                         <input type="text" class="form-control"
-                                               th:value="${order.getStatus().toString()}"
+                                               th:value="${order.getStatus()}"
                                                readonly>
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>Payment method
                                         <input type="text" class="form-control"
-                                               th:value="${order.getPaymentMethod().toString()}"
+                                               th:value="${order.getPaymentMethod()}"
                                                readonly>
                                     </label>
                                 </div>

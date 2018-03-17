@@ -17,7 +17,73 @@
 }
 
 .ticket-overview tbody td:nth-child(3),
-.ticket-overview tfoot th:nth-child(2),
+.ticket-overview tfoot *:nth-child(2),
 .ticket-overview thead th:nth-child(3) {
     text-align: right;
+}
+
+.btn-primary {
+    color: #ffffff;
+}
+
+.btn-primary:active,
+.btn-primary:hover {
+    color: #40556a;
+}
+
+/*
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+    /* Force table to not be like tables anymore */
+    thead th, tbody tr, tbody td, thead tr, tbody tr, tfoot tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .ticket-overview thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .ticket-overview tbody {
+        width: 100%;
+    }
+
+    .ticket-overview tbody tr {
+        width: 100%;
+        border: 1px solid #e7ebf1;
+    }
+
+    .ticket-overview tbody tr td {
+        /* Behave  like a "row" */
+        border: none;
+        position: relative;
+        text-align: left;
+    }
+
+    .ticket-overview tbody tr td:nth-child(1) {
+        color: #40556a;
+        font-weight: bold;
+    }
+
+    .ticket-overview tbody tr td:nth-child(2),
+    .ticket-overview tbody tr td:nth-child(3) {
+        display: inline-block;
+        width: 50%;
+    }
+}
+
+#shoppingBasketTable a {
+    color: #058cce;
+}
+
+.vertical-line {
+    border-left: 3px solid #e7ebf1;
+    width: 1px;
 }

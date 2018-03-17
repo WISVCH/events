@@ -20,6 +20,6 @@ public enum PaymentMethod {
 
     CASH,       // User paid his order with cash
     CARD,       // User paid his order by card
-    MOLLIE,     // User paid his order via mollie
-    FREE;       // User paid his order is free
+    IDEAL,      // User paid his order via mollie
+    OTHER       // User paid his order via another method
 }

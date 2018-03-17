@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.exception.normal.*;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderProductDTO;
@@ -44,8 +45,6 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderProductRepository orderProductRepository;
 
-    private final OrderValidationService orderValidationService;
-
     private final ProductService productService;
 
     private final MailService mailService;
@@ -57,22 +56,19 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderRepository        of type OrderRepository
      * @param orderProductRepository of type OrderProductRepository
-     * @param orderValidationService of type OrderValidationService
      * @param productService         of type ProductService
      * @param mailService            of type MailService
      * @param ticketService          of type TicketService
      */
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-            OrderProductRepository orderProductRepository,
-            OrderValidationService orderValidationService,
-            ProductService productService,
-            MailService mailService,
-            TicketService ticketService
+                            OrderProductRepository orderProductRepository,
+                            ProductService productService,
+                            MailService mailService,
+                            TicketService ticketService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
-        this.orderValidationService = orderValidationService;
         this.productService = productService;
         this.mailService = mailService;
         this.ticketService = ticketService;
@@ -126,14 +122,23 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException, OrderExceedCustomerLimitException {
+    public void create(Order order) {
         order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
         order.updateOrderAmount();
 
-        orderValidationService.assertOrderIsValid(order);
-        if (order.getOwner() != null) {
-            orderValidationService.assertOrderIsValidForCustomer(order, order.getOwner());
+        orderRepository.saveAndFlush(order);
+    }
+
+    @Override
+    public void update(Order order) throws OrderNotFoundException, OrderInvalidException {
+        if (order.getPublicReference() == null) {
+            throw new OrderInvalidException("Order should contain a public reference");
         }
+
+        Order old = this.getByReference(order.getPublicReference());
+        old.setOwner(order.getOwner());
+        old.setStatus(order.getStatus());
+        old.setPaymentMethod(order.getPaymentMethod());
 
         orderRepository.saveAndFlush(order);
     }
@@ -156,7 +161,34 @@ public class OrderServiceImpl implements OrderService {
                 this.updateOrderStatusPaid(order);
             } catch (UnassignedOrderException | UndefinedPaymentMethodOrderException ignored) {
             }
+        } else if (status == OrderStatus.RESERVATION) {
+            this.updateOrderStatusReservation(order);
+        } else {
+            order.setStatus(status);
+            orderRepository.saveAndFlush(order);
         }
+    }
+
+    private void updateOrderStatusReservation(Order order) {
+        OrderStatus beforeStatus = order.getStatus();
+        order.setStatus(OrderStatus.RESERVATION);
+
+        if (beforeStatus != OrderStatus.RESERVATION) {
+            mailService.sendOrderReservation(order);
+            this.updateProductReservedCount(order);
+        }
+
+        orderRepository.saveAndFlush(order);
+    }
+
+    private void updateProductReservedCount(Order order) {
+        order.getOrderProducts().forEach(orderProduct -> {
+            orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue());
+            try {
+                productService.update(orderProduct.getProduct());
+            } catch (ProductNotFoundException | ProductInvalidException ignored) {
+            }
+        });
     }
 
     /**
@@ -171,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPaidAt(LocalDateTime.now());
 
         List<Ticket> tickets = this.createTicketIfPaid(order);
-        if (beforeStatus != OrderStatus.PAID && order.getStatus() == OrderStatus.PAID) {
+        if (beforeStatus != OrderStatus.PAID) {
             mailService.sendOrderConfirmation(order, tickets);
             this.updateProductSoldCount(order);
         }
@@ -186,7 +218,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void tempSaveOrder(Order order) {
-        if (order.getStatus().equals(OrderStatus.TEMP)) {
+        if (order.getStatus().equals(OrderStatus.RESERVATION)) {
             order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
             orderRepository.saveAndFlush(order);
         }
@@ -199,9 +231,19 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteTempOrder(Order order) {
-        if (order.getStatus().equals(OrderStatus.TEMP)) {
+        if (order.getStatus().equals(OrderStatus.RESERVATION)) {
             orderRepository.delete(order);
         }
+    }
+
+    @Override
+    public List<Order> getAllReservationOrderByCustomer(Customer customer) {
+        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
+    }
+
+    @Override
+    public List<Order> getAllPaidOrderByCustomer(Customer customer) {
+        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.PAID);
     }
 
     /**
