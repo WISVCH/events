@@ -4,6 +4,8 @@ import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
+import ch.wisv.events.tickets.service.PaymentsService;
+import ch.wisv.events.tickets.service.WebshopService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -44,6 +46,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected OrderService orderService;
+
+    @MockBean
+    protected WebshopService webshopService;
+
+    @MockBean
+    protected PaymentsService paymentsService;
 
     @MockBean
     protected OrderValidationService orderValidationService;

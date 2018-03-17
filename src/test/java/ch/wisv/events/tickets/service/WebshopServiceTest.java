@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class TicketsServiceTest extends ServiceTest {
+public class WebshopServiceTest extends ServiceTest {
 
     @MockBean
     public PaymentsService paymentsService;
@@ -46,29 +46,13 @@ public class TicketsServiceTest extends ServiceTest {
     public OrderService orderService;
 
     @Autowired
-    public WebshopService webhookService;
+    public WebshopService webshopService;
 
     private Order order;
 
     @Before
     public void setUp() throws Exception {
         this.order = new Order();
-    }
-
-    @Test
-    public void testGetPaymentsMollieUrl() throws Exception {
-        String molliePaymentsUrl = "https://mollie.com/payment/2804/supermooi/";
-        when(paymentsService.getPaymentsMollieUrl(this.order)).thenReturn(molliePaymentsUrl);
-
-        assertEquals(molliePaymentsUrl, webhookService.getPaymentsMollieUrl(this.order));
-    }
-
-    @Test
-    public void testGetPaymentsMollieUrlPaymentsConnectionException() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        when(paymentsService.getPaymentsMollieUrl(this.order)).thenThrow(new PaymentsConnectionException());
-
-        webhookService.getPaymentsMollieUrl(this.order);
     }
 
     @Test
@@ -91,7 +75,7 @@ public class TicketsServiceTest extends ServiceTest {
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn(paymentsStatus);
         doNothing().when(orderService).updateOrderStatusPaid(this.order);
 
-        webhookService.updateOrderStatus(this.order, reference);
+        webshopService.updateOrderStatus(this.order, reference);
 
         verify(orderService, times(1)).updateOrderStatus(this.order, orderStatus);
     }
@@ -102,6 +86,6 @@ public class TicketsServiceTest extends ServiceTest {
         String reference = UUID.randomUUID().toString();
         when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn("STATUS_EXCEPTION");
 
-        webhookService.updateOrderStatus(this.order, reference);
+        webshopService.updateOrderStatus(this.order, reference);
     }
 }

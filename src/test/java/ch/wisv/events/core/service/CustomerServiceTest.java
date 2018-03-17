@@ -220,18 +220,6 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when email is null
      */
     @Test
-    public void testCreateMissingRfidToken() throws Exception {
-        thrown.expect(CustomerInvalidException.class);
-        thrown.expectMessage("RFID token can not be null.");
-        this.customer.setRfidToken(null);
-
-        customerService.create(this.customer);
-    }
-
-    /**
-     * Test create method when email is null
-     */
-    @Test
     public void testCreateMissingCreatedAt() throws Exception {
         thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Customer should contain a created at timestamp.");
