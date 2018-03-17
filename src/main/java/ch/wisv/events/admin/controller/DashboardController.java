@@ -50,9 +50,7 @@ public class DashboardController {
      */
     @Autowired
     public DashboardController(
-            EventService eventService,
-            CustomerService customerService,
-            TicketService ticketService
+            EventService eventService, CustomerService customerService, TicketService ticketService
     ) {
         this.eventService = eventService;
         this.customerService = customerService;
@@ -63,6 +61,7 @@ public class DashboardController {
      * Get request on "/" will show index.
      *
      * @param model SpringUI Model
+     *
      * @return path to Thymeleaf template
      */
     @GetMapping()
@@ -71,32 +70,25 @@ public class DashboardController {
 
         int totalEvents = this.eventService.getAll().size();
         model.addAttribute("totalEvents", totalEvents);
-        model.addAttribute("increaseEvents", this.calculateChangePercentage(
-                this.determineTotalEventsLastMonth(),
-                totalEvents
-        ));
+        model.addAttribute("increaseEvents", this.calculateChangePercentage(this.determineTotalEventsLastMonth(), totalEvents));
 
         int totalCustomers = this.customerService.getAllCustomers().size();
         model.addAttribute("totalCustomers", totalCustomers);
-        model.addAttribute("increaseCustomers", this.calculateChangePercentage(
-                this.determineTotalCustomersLastMonth(),
-                totalCustomers
-        ));
+        model.addAttribute("increaseCustomers", this.calculateChangePercentage(this.determineTotalCustomersLastMonth(), totalCustomers));
 
         double targetRateCurrentBoard = this.determineAverageTargetRateCurrentBoard();
         model.addAttribute("averageTargetRate", targetRateCurrentBoard);
-        model.addAttribute("changeTargetRate", this.calculateChangePercentage(
-                this.determineAverageTargetRatePreviousBoard(),
-                targetRateCurrentBoard
-        ));
+        model.addAttribute(
+                "changeTargetRate",
+                this.calculateChangePercentage(this.determineAverageTargetRatePreviousBoard(), targetRateCurrentBoard)
+        );
 
         double attendanceRateCurrentBoard = this.determineAverageAttendanceRateEventCurrentBoard();
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
-        model.addAttribute("changeAttendanceRate", this.calculateChangePercentage(
-                this.determineAverageAttendanceRateEventPreviousBoard(),
-                attendanceRateCurrentBoard
-        ));
-
+        model.addAttribute(
+                "changeAttendanceRate",
+                this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
+        );
 
         model.addAttribute("upcoming", upcomingEvents);
         model.addAttribute("previous", this.determinePreviousEventAttendance());
@@ -128,8 +120,8 @@ public class DashboardController {
      * @return double
      */
     private double determineAverageTargetRateCurrentBoard() {
-        List<Event> eventsCurrentBoard = this.getEventsCurrentBoard().stream().filter(x -> x.getEnding().isBefore(LocalDateTime.now()))
-                .collect(Collectors.toList());
+        List<Event> eventsCurrentBoard = this.getEventsCurrentBoard().stream().filter(x -> x.getEnding().isBefore(LocalDateTime.now())).collect(
+                Collectors.toList());
 
         return this.determineAverageTargetRate(eventsCurrentBoard);
     }
@@ -179,11 +171,11 @@ public class DashboardController {
      * Method determineAverageTargetRate ...
      *
      * @param events of type List<Event>
+     *
      * @return double
      */
     private double determineAverageTargetRate(List<Event> events) {
-        return events.stream()
-                .mapToDouble(Event::calcSoldProgress).average().orElse(0);
+        return events.stream().mapToDouble(Event::calcSoldProgress).average().orElse(0);
     }
 
     /**
@@ -192,8 +184,12 @@ public class DashboardController {
      * @return double
      */
     private double determineAverageAttendanceRateEventCurrentBoard() {
-        double average = this.getEventsCurrentBoard().stream().filter(x -> x.getStart().isBefore(LocalDateTime.now()))
-                .mapToDouble(this::determineAttendanceRateEvent).average().orElse(0);
+        double average = this.getEventsCurrentBoard()
+                .stream()
+                .filter(x -> x.getStart().isBefore(LocalDateTime.now()))
+                .mapToDouble(this::determineAttendanceRateEvent)
+                .average()
+                .orElse(0);
 
         return Math.round(average * 100.d) / 100.d;
     }
@@ -204,8 +200,7 @@ public class DashboardController {
      * @return double
      */
     private double determineAverageAttendanceRateEventPreviousBoard() {
-        double average = this.getEventsPreviousBoard().stream()
-                .mapToDouble(this::determineAttendanceRateEvent).average().orElse(0);
+        double average = this.getEventsPreviousBoard().stream().mapToDouble(this::determineAttendanceRateEvent).average().orElse(0);
 
         return Math.round(average * 100.d) / 100.d;
     }
@@ -214,12 +209,12 @@ public class DashboardController {
      * Method determineAttendanceRateEvent ...
      *
      * @param event of type Event
+     *
      * @return double
      */
     private double determineAttendanceRateEvent(Event event) {
-        List<Ticket> eventTickets = event.getProducts().stream()
-                .flatMap(product -> ticketService.getAllByProduct(product).stream())
-                .collect(Collectors.toList());
+        List<Ticket> eventTickets = event.getProducts().stream().flatMap(product -> ticketService.getAllByProduct(product).stream()).collect(
+                Collectors.toList());
         long numberTicketsScanned = eventTickets.stream().filter(ticket -> ticket.getStatus() == TicketStatus.SCANNED).count();
 
         if (eventTickets.size() == 0) {
@@ -248,9 +243,8 @@ public class DashboardController {
      * @return List<Event>
      */
     private List<Event> determineUpcomingEvents() {
-        return this.eventService.getUpcoming().stream().filter(event ->
-                event.getStart().isBefore(LocalDateTime.now().plusWeeks(2))
-        ).collect(Collectors.toList());
+        return this.eventService.getUpcoming().stream().filter(event -> event.getStart().isBefore(LocalDateTime.now().plusWeeks(2))).collect(
+                Collectors.toList());
     }
 
     /**
@@ -258,6 +252,7 @@ public class DashboardController {
      *
      * @param previous of type double
      * @param current  of type double
+     *
      * @return double
      */
     private double calculateChangePercentage(double previous, double current) {

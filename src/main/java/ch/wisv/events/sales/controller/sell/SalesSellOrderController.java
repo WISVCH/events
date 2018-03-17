@@ -51,6 +51,7 @@ public class SalesSellOrderController {
      * Method overview ...
      *
      * @param redirect of type RedirectAttributes
+     *
      * @return String
      */
     @GetMapping
@@ -71,6 +72,7 @@ public class SalesSellOrderController {
      *
      * @param redirect        of type RedirectAttributes
      * @param publicReference of type String
+     *
      * @return String
      */
     @GetMapping("/{ending}")

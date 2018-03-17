@@ -21,11 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public enum LogLevelEnum {
 
-    ERROR,
-    WARN,
-    INFO,
-    DEBUG,
-    TRACE;
+    ERROR, WARN, INFO, DEBUG, TRACE;
 
     public void logMessage(String message) {
         switch (this) {

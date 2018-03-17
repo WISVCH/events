@@ -48,6 +48,7 @@ public class DashboardTasksController {
      * Index of vendor [GET "/"].
      *
      * @param model String model
+     *
      * @return path to Thymeleaf template location
      */
     @GetMapping()

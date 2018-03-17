@@ -36,6 +36,7 @@ public interface WebhookService {
      * Method getByKey get Webhook by Key.
      *
      * @param key of type String
+     *
      * @return Webhook
      */
     Webhook getByKey(String key) throws WebhookNotFoundException;
@@ -44,6 +45,7 @@ public interface WebhookService {
      * Method getByTriggerAndLdapGroup ...
      *
      * @param webhookTrigger of type WebhookTrigger
+     *
      * @return List<Webhook>
      */
     List<Webhook> getByTrigger(WebhookTrigger webhookTrigger);
@@ -61,7 +63,6 @@ public interface WebhookService {
      * @param model of type Webhook
      */
     void update(Webhook model) throws WebhookNotFoundException, WebhookInvalidException;
-
 
     /**
      * Method delete an existing Webhook.

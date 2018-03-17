@@ -51,6 +51,7 @@ public class DashboardWebhookController {
      * Index of vendor [GET "/"].
      *
      * @param model String model
+     *
      * @return path to Thymeleaf template location
      */
     @GetMapping()
@@ -65,6 +66,7 @@ public class DashboardWebhookController {
      *
      * @param model Spring model
      * @param key   key of the vendor
+     *
      * @return path to Thymeleaf template location
      */
     @GetMapping("/view/{key}")
@@ -85,6 +87,7 @@ public class DashboardWebhookController {
      * Create a new vendor [GET "/create/"].
      *
      * @param model Spring model
+     *
      * @return path to Thymeleaf template location
      */
     @GetMapping("/create")
@@ -101,6 +104,7 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param webhook  Webhook with the needed information
+     *
      * @return redirect to other page
      */
     @PostMapping("/create")
@@ -123,6 +127,7 @@ public class DashboardWebhookController {
      *
      * @param model Spring model
      * @param key   key of the vendor
+     *
      * @return path to Thymeleaf template location
      */
     @GetMapping("/edit/{key}")
@@ -144,6 +149,7 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param webhook  Webhook webhook with the needed information
+     *
      * @return redirect to edit page
      */
     @PostMapping("/edit/{key}")
@@ -166,6 +172,7 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param key      Vendor model with the needed information
+     *
      * @return redirect to edit page
      */
     @GetMapping("/delete/{key}")

@@ -95,11 +95,7 @@ public class MailServiceImpl implements MailService {
         ctx.setVariable("order", order);
         ctx.setVariable("tickets", tickets);
 
-        this.sendMailWithContent(
-                order.getOwner().getEmail(),
-                "Order overview",
-                this.templateEngine.process("mail/order", ctx)
-        );
+        this.sendMailWithContent(order.getOwner().getEmail(), "Order overview", this.templateEngine.process("mail/order", ctx));
     }
 
     @Override
@@ -107,11 +103,7 @@ public class MailServiceImpl implements MailService {
         final Context ctx = new Context(new Locale("en"));
         ctx.setVariable("order", order);
 
-        this.sendMailWithContent(
-                "w3cie@ch.tudelft.nl",
-                "Order payment failed",
-                this.templateEngine.process("mail/order-error", ctx)
-        );
+        this.sendMailWithContent("w3cie@ch.tudelft.nl", "Order payment failed", this.templateEngine.process("mail/order-error", ctx));
     }
 
     @Override
@@ -119,10 +111,6 @@ public class MailServiceImpl implements MailService {
         final Context ctx = new Context(new Locale("en"));
         ctx.setVariable("order", order);
 
-        this.sendMailWithContent(
-                order.getOwner().getEmail(),
-                "Ticket reservation",
-                this.templateEngine.process("mail/order-reservation", ctx)
-        );
+        this.sendMailWithContent(order.getOwner().getEmail(), "Ticket reservation", this.templateEngine.process("mail/order-reservation", ctx));
     }
 }

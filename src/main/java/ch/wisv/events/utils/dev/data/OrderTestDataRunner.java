@@ -5,7 +5,6 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.repository.TicketRepository;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -51,27 +50,18 @@ public class OrderTestDataRunner extends TestDataRunner {
     private final ProductRepository productRepository;
 
     /**
-     * Field ticketRepository
-     */
-    private final TicketRepository ticketRepository;
-
-    /**
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
      *
-     * @param orderRepository       of type OrderRepository
-     * @param customerRepository    of type CustomerRepository
-     * @param productRepository     of type ProductRepository
-     * @param ticketRepository of type TicketRepository
+     * @param orderRepository    of type OrderRepository
+     * @param customerRepository of type CustomerRepository
+     * @param productRepository  of type ProductRepository
      */
-    public OrderTestDataRunner(OrderRepository orderRepository,
-            CustomerRepository customerRepository,
-            ProductRepository productRepository,
-            TicketRepository ticketRepository
+    public OrderTestDataRunner(
+            OrderRepository orderRepository, CustomerRepository customerRepository, ProductRepository productRepository
     ) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
-        this.ticketRepository = ticketRepository;
 
         this.setJsonFileName("orders.json");
     }
@@ -87,23 +77,24 @@ public class OrderTestDataRunner extends TestDataRunner {
 
         this.orderRepository.save(order);
 
-//        order.getProducts().forEach(product -> {
-//            SoldProduct soldProduct = new SoldProduct(
-//                    product,
-//                    order,
-//                    order.getCustomer()
-//            );
-//            soldProduct.setUniqueCode(RandomStringUtils.randomNumeric(6));
-//            soldProduct.setStatus((RandomUtils.nextFloat(0, 1) > 0.4) ? SoldProductStatus.SCANNED : SoldProductStatus.OPEN);
-//
-//            this.ticketReposiotorysaveAndFlush(soldProduct);
-//        });
+        //        order.getProducts().forEach(product -> {
+        //            SoldProduct soldProduct = new SoldProduct(
+        //                    product,
+        //                    order,
+        //                    order.getCustomer()
+        //            );
+        //            soldProduct.setUniqueCode(RandomStringUtils.randomNumeric(6));
+        //            soldProduct.setStatus((RandomUtils.nextFloat(0, 1) > 0.4) ? SoldProductStatus.SCANNED : SoldProductStatus.OPEN);
+        //
+        //            this.ticketReposiotorysaveAndFlush(soldProduct);
+        //        });
     }
 
     /**
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Product
      */
     private ch.wisv.events.core.model.order.Order createOrder(JSONObject jsonObject) {
@@ -115,13 +106,13 @@ public class OrderTestDataRunner extends TestDataRunner {
             order.setOwner(customer.get());
 
             List<Product> allProduct = this.productRepository.findAll();
-//            order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));
-//            order.getProducts().forEach(x -> {
-//                x.setSold(x.getSold() + 1);
-//                this.productRepository.saveAndFlush(x);
-//            });
-//            order.setStatus(OrderStatus.valueOf((String) jsonObject.get("orderStatus")));
-//            order.setAmount(order.getProducts().stream().mapToDouble(Product::getCost).sum());
+            //            order.addProduct(allProduct.get(df.getNumberBetween(0, allProduct.size())));
+            //            order.getProducts().forEach(x -> {
+            //                x.setSold(x.getSold() + 1);
+            //                this.productRepository.saveAndFlush(x);
+            //            });
+            //            order.setStatus(OrderStatus.valueOf((String) jsonObject.get("orderStatus")));
+            //            order.setAmount(order.getProducts().stream().mapToDouble(Product::getCost).sum());
 
             return order;
         }

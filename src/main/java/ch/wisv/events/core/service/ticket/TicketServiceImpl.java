@@ -48,11 +48,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public Ticket createByOrderProduct(Order order, OrderProduct orderProduct) {
-        Ticket ticket = new Ticket(
-                order.getOwner(),
-                orderProduct.getProduct(),
-                this.generateUniqueString()
-        );
+        Ticket ticket = new Ticket(order.getOwner(), orderProduct.getProduct(), this.generateUniqueString());
 
         ticketRepository.saveAndFlush(ticket);
 
@@ -74,6 +70,7 @@ public class TicketServiceImpl implements TicketService {
      *
      * @param product  of type Product
      * @param customer of type Customer
+     *
      * @return List<Ticket>
      */
     @Override
@@ -85,6 +82,7 @@ public class TicketServiceImpl implements TicketService {
      * Get all Ticket by a Product
      *
      * @param product of type Product
+     *
      * @return List<Ticket>
      */
     @Override
@@ -96,6 +94,7 @@ public class TicketServiceImpl implements TicketService {
      * Get all Ticket by a Customer
      *
      * @param customer of type Customer
+     *
      * @return List<Ticket>
      */
     @Override
@@ -107,6 +106,7 @@ public class TicketServiceImpl implements TicketService {
      * Get all Ticket by Product
      *
      * @param product of type Product
+     *
      * @return int
      */
     @Override

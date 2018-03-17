@@ -1,6 +1,5 @@
 package ch.wisv.events.core.model.product;
 
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -117,8 +116,8 @@ public class Product {
      * @param sellStart   Start selling date
      * @param sellEnd     End selling date
      */
-    public Product(String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart,
-            LocalDateTime sellEnd
+    public Product(
+            String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart, LocalDateTime sellEnd
     ) {
         this();
         this.title = title;

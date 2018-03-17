@@ -66,21 +66,20 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getAvailableProducts() {
-        return productRepository.findAllBySellStartBefore(LocalDateTime.now())
-                .stream().filter(product -> {
-                    if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
-                        return false;
-                    }
+        return productRepository.findAllBySellStartBefore(LocalDateTime.now()).stream().filter(product -> {
+            if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
+                return false;
+            }
 
-                    return product.getMaxSold() == null || product.getSold() < product.getMaxSold();
-                })
-                .collect(Collectors.toCollection(ArrayList::new));
+            return product.getMaxSold() == null || product.getSold() < product.getMaxSold();
+        }).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
      * Get Product by Key
      *
      * @param key key of a Product
+     *
      * @return Product
      */
     @Override
@@ -203,8 +202,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInvalidException("It is not possible to add the same product twice or more!");
         }
 
-        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 ||
-                product.getMaxSoldPerCustomer() > 25) {
+        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25) {
             throw new ProductInvalidException("Max sold per customer should be between 1 and 25!");
         }
     }

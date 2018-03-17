@@ -3,7 +3,6 @@ package ch.wisv.events.tickets.service;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -81,6 +80,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * Get the Order status of Payments.
      *
      * @param paymentsReference of type String
+     *
      * @return String
      */
     @Override
@@ -109,6 +109,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * Get a Mollie Url via Payments.
      *
      * @param order of type Order
+     *
      * @return String
      */
     @Override
@@ -138,6 +139,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      *
      * @param statusCode     of type int
      * @param responseObject of type JSONObject
+     *
      * @return String
      */
     private String getRedirectUrl(int statusCode, JSONObject responseObject) {
@@ -156,6 +158,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * Create a HttpPost to create a Payments Order request
      *
      * @param order of type Order
+     *
      * @return HttpPost
      */
     public HttpPost createPaymentsOrderHttpPost(Order order) {
@@ -174,6 +177,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * Create payments HTTP Post Body.
      *
      * @param order of type Order
+     *
      * @return
      */
     private JSONObject createPaymentsHttpPostBody(Order order) {

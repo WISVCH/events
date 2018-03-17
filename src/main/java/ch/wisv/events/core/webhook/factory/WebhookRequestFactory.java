@@ -44,9 +44,11 @@ public abstract class WebhookRequestFactory {
      *
      * @param trigger of type WebhookTrigger
      * @param object  of type Object
+     *
      * @return JSONObject
      */
-    public static JSONObject generateRequest(WebhookTrigger trigger, Object object) throws WebhookRequestFactoryNotFoundException, WebhookRequestObjectIncorrect {
+    public static JSONObject generateRequest(WebhookTrigger trigger, Object object)
+            throws WebhookRequestFactoryNotFoundException, WebhookRequestObjectIncorrect {
         WebhookRequestFactory factory = determineFactory(trigger);
         JSONObject request = factory.getRequestData(object);
         request.put("trigger", trigger.getTag());
@@ -58,7 +60,9 @@ public abstract class WebhookRequestFactory {
      * Method determineFactory ...
      *
      * @param trigger of type WebhookTrigger
+     *
      * @return WebhookRequestFactory
+     *
      * @throws WebhookRequestFactoryNotFoundException when
      */
     private static WebhookRequestFactory determineFactory(WebhookTrigger trigger) throws WebhookRequestFactoryNotFoundException {

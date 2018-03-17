@@ -37,6 +37,7 @@ public interface CustomerService {
      * Method getAllCustomerCreatedAfter ...
      *
      * @param after of type LocalDateTime
+     *
      * @return List<Customer>
      */
     List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
@@ -45,6 +46,7 @@ public interface CustomerService {
      * Get a customer by key.
      *
      * @param key key
+     *
      * @return Customer
      */
     Customer getByKey(String key) throws CustomerNotFoundException;
@@ -53,6 +55,7 @@ public interface CustomerService {
      * Get a Customer by its sub.
      *
      * @param sub of type String
+     *
      * @return Customer
      */
     Customer getBySub(String sub) throws CustomerNotFoundException;
@@ -61,6 +64,7 @@ public interface CustomerService {
      * Get a customer by CH username or Email.
      *
      * @param username of type String
+     *
      * @return Customer
      */
     Customer getByUsername(String username) throws CustomerNotFoundException;
@@ -68,7 +72,8 @@ public interface CustomerService {
     /**
      * Get a customer by Email.
      *
-     * @param email    of type String
+     * @param email of type String
+     *
      * @return Customer
      */
     Customer getByEmail(String email) throws CustomerNotFoundException;
@@ -77,6 +82,7 @@ public interface CustomerService {
      * Get a customer by rfidToken.
      *
      * @param query of type String
+     *
      * @return Customer
      */
     Customer getByRfidToken(String query) throws CustomerNotFoundException;

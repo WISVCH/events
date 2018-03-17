@@ -57,7 +57,8 @@ public class WebshopServiceImpl implements WebshopService {
     @Override
     public List<Event> filterNotSalableProducts(List<Event> events) {
         events.forEach(event -> {
-            List<Product> filterSalableProducts = event.getProducts().stream()
+            List<Product> filterSalableProducts = event.getProducts()
+                    .stream()
                     .filter(this.filterProductBySellInterval())
                     .collect(Collectors.toList());
 
@@ -68,8 +69,7 @@ public class WebshopServiceImpl implements WebshopService {
     }
 
     private Predicate<Product> filterProductBySellInterval() {
-        return product ->
-                LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
+        return product -> LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
     }
 
     /**

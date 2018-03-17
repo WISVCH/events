@@ -19,6 +19,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Find Events that ending after a certain dateTime, so all upcoming events.
      *
      * @param dateTime DateTime an event should ending after
+     *
      * @return list of Events
      */
     List<Event> findByEndingAfter(LocalDateTime dateTime);
@@ -28,6 +29,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param published   of type EventStatus
      * @param organizedBy of type LDAPGroup
+     *
      * @return List<Event>
      */
     List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus published, LDAPGroup organizedBy, LocalDateTime ending);
@@ -36,6 +38,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Method findAllByPublished ...
      *
      * @param published of type EventStatus
+     *
      * @return List<Event>
      */
     List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
@@ -44,6 +47,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Find an Event by key.
      *
      * @param key key of an Event
+     *
      * @return list of Events
      */
     Optional<Event> findByKey(String key);
@@ -53,6 +57,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param start  of type LocalDateTime
      * @param ending of type LocalDateTime
+     *
      * @return List<Event>
      */
     List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
@@ -62,6 +67,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param after  of type LocalDateTime
      * @param before of type LocalDateTime
+     *
      * @return List<Event>
      */
     List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
@@ -70,6 +76,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Method findByProductsContaining ...
      *
      * @param product of type Product
+     *
      * @return Optional<Event>
      */
     Optional<Event> findByProductsContaining(Product product);

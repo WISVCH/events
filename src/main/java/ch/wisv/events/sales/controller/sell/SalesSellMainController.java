@@ -47,9 +47,7 @@ public class SalesSellMainController {
 
     @Autowired
     public SalesSellMainController(
-            AuthenticationService authenticationService,
-            SalesService salesService,
-            OrderService orderService
+            AuthenticationService authenticationService, SalesService salesService, OrderService orderService
     ) {
         this.authenticationService = authenticationService;
         this.salesService = salesService;

@@ -19,6 +19,7 @@ import ch.wisv.events.core.exception.LogLevelEnum;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class UnassignedOrderException extends EventsException {
+
     public UnassignedOrderException() {
         super(LogLevelEnum.ERROR, "Order is not assigned to a Customer");
     }

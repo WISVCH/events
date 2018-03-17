@@ -80,10 +80,6 @@ public class WebhookTask {
      */
     @Override
     public String toString() {
-        return "WebhookTask{" +
-                "trigger=" + trigger +
-                ", webhook=" + webhook.getPayloadUrl() +
-                ", object=" + object.toString() +
-                '}';
+        return "WebhookTask{" + "trigger=" + trigger + ", webhook=" + webhook.getPayloadUrl() + ", object=" + object.toString() + '}';
     }
 }

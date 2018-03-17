@@ -36,18 +36,28 @@ import java.util.Collections;
 import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
 
 /**
- * CH Connect Security Configuration
+ * CH Connect Security Configuration.
  */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Profile("!test")
-public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    /** CHConnectConfiguration. */
     private final CHConnectConfiguration properties;
+
+    /** ClientConfigurationService. */
     private final ClientConfigurationService clientConfigurationService;
 
-    public CHConnectSecurityConfiguration(CHConnectConfiguration properties, ClientConfigurationService clientConfigurationService) {
+    /**
+     * Constructor of ChConnectSecurityConfiguration.
+     *
+     * @param properties                 of type CHConnectConfiguration
+     * @param clientConfigurationService of type ClientConfigurationService
+     */
+    public ChConnectSecurityConfiguration(CHConnectConfiguration properties, ClientConfigurationService clientConfigurationService) {
         this.properties = properties;
         this.clientConfigurationService = clientConfigurationService;
     }
@@ -57,18 +67,17 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                .logout()
-                .logoutSuccessUrl("/");
+        http.addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class).exceptionHandling().authenticationEntryPoint(
+                authenticationEntryPoint()).and().logout().logoutSuccessUrl("/");
     }
 
     /**
      * Configure OIDC authentication provider in manager.
+     *
+     * @param auth of type AuthenticationManagerBuilder
      */
     @Autowired
-    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(oidcAuthenticationProvider());
     }
 
@@ -135,6 +144,8 @@ public class CHConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      * {@link StaticSingleIssuerService}.
      *
      * @return OIDCAuthenticationFilter
+     *
+     * @throws Exception when the authentication manager throws an Exception.
      */
     @Bean
     public OIDCAuthenticationFilter oidcAuthenticationFilter() throws Exception {

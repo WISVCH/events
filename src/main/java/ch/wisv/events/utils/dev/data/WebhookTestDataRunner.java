@@ -66,6 +66,7 @@ public class WebhookTestDataRunner extends TestDataRunner {
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Product
      */
     private Webhook createWebhook(JSONObject jsonObject) {
@@ -83,6 +84,7 @@ public class WebhookTestDataRunner extends TestDataRunner {
      *
      * @param webhook   of type Webhook
      * @param jsonArray of type JSONArray
+     *
      * @return Webhook
      */
     private Webhook addTriggers(Webhook webhook, JSONArray jsonArray) {

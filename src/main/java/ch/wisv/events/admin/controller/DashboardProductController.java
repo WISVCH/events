@@ -40,14 +40,13 @@ public class DashboardProductController {
     /**
      * Default constructor
      *
-     * @param productService     of type ProductService.
-     * @param ticketService of type TicketService.
-     * @param webhookPublisher   of type WebhookPublisher.
+     * @param productService   of type ProductService.
+     * @param ticketService    of type TicketService.
+     * @param webhookPublisher of type WebhookPublisher.
      */
     @Autowired
-    public DashboardProductController(ProductService productService,
-            TicketService ticketService,
-            WebhookPublisher webhookPublisher
+    public DashboardProductController(
+            ProductService productService, TicketService ticketService, WebhookPublisher webhookPublisher
     ) {
         this.productService = productService;
         this.ticketService = ticketService;
@@ -58,6 +57,7 @@ public class DashboardProductController {
      * Get request for ProductOverview
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
     @GetMapping()
@@ -73,6 +73,7 @@ public class DashboardProductController {
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     *
      * @return String
      */
     @GetMapping("/view/{key}")
@@ -92,6 +93,7 @@ public class DashboardProductController {
      * Get request to create a Product
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
     @GetMapping("/create")
@@ -108,6 +110,7 @@ public class DashboardProductController {
      *
      * @param product  Product product attr.
      * @param redirect Spring RedirectAttributes
+     *
      * @return redirect
      */
     @PostMapping("/create")
@@ -131,6 +134,7 @@ public class DashboardProductController {
      * Product Overview page
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
     @GetMapping("/edit/{key}")
@@ -151,6 +155,7 @@ public class DashboardProductController {
      *
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
+     *
      * @return String
      */
     @PostMapping("/edit/{key}")
@@ -174,6 +179,7 @@ public class DashboardProductController {
      *
      * @param model of type Model
      * @param key   of type String
+     *
      * @return String
      */
     @GetMapping("/overview/{key}")
@@ -195,6 +201,7 @@ public class DashboardProductController {
      *
      * @param redirectAttributes Spring RedirectAttributes
      * @param key                key of a Product
+     *
      * @return redirect
      */
     @GetMapping("/delete/{key}")

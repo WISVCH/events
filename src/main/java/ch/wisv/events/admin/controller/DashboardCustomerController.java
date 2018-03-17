@@ -45,8 +45,8 @@ public class DashboardCustomerController {
     /**
      * Autowired constructor.
      *
-     * @param customerService    CustomerService
-     * @param ticketService TicketService
+     * @param customerService CustomerService
+     * @param ticketService   TicketService
      */
     @Autowired
     public DashboardCustomerController(CustomerService customerService, TicketService ticketService) {
@@ -58,6 +58,7 @@ public class DashboardCustomerController {
      * Index of customers pages.
      *
      * @param model String model
+     *
      * @return path to customers index template
      */
     @GetMapping()
@@ -73,6 +74,7 @@ public class DashboardCustomerController {
      *
      * @param model String model
      * @param key   key of the customer some want to edit
+     *
      * @return path to the customer edit template
      */
     @GetMapping("/view/{key}")
@@ -92,6 +94,7 @@ public class DashboardCustomerController {
      * Create a new customer page.
      *
      * @param model String model
+     *
      * @return path to customer create template
      */
     @GetMapping("/create")
@@ -109,6 +112,7 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param model    Customer model
+     *
      * @return redirect
      */
     @PostMapping("/create")
@@ -133,6 +137,7 @@ public class DashboardCustomerController {
      *
      * @param model String model
      * @param key   key of the customer some want to edit
+     *
      * @return path to the customer edit template
      */
     @GetMapping("/edit/{key}")
@@ -156,6 +161,7 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param customer Customer customer
+     *
      * @return redirect
      */
     @PostMapping("/edit/{key}")
@@ -180,6 +186,7 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param key      Vendor model
+     *
      * @return redirect
      */
     @GetMapping("/delete/{key}")

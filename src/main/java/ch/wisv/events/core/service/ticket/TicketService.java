@@ -31,6 +31,7 @@ public interface TicketService {
      *
      * @param order        of type Order
      * @param orderProduct of type OrderProduct
+     *
      * @return Ticket
      */
     Ticket createByOrderProduct(Order order, OrderProduct orderProduct);
@@ -40,6 +41,7 @@ public interface TicketService {
      *
      * @param product  of type Product
      * @param customer of type Customer
+     *
      * @return List<Ticket>
      */
     List<Ticket> getAllByProductAndCustomer(Product product, Customer customer);
@@ -48,6 +50,7 @@ public interface TicketService {
      * Get all Ticket by a Product
      *
      * @param product of type Product
+     *
      * @return List<Ticket>
      */
     List<Ticket> getAllByProduct(Product product);
@@ -56,6 +59,7 @@ public interface TicketService {
      * Get all Ticket by a Customer
      *
      * @param customer of type Customer
+     *
      * @return List<Ticket>
      */
     List<Ticket> getAllByCustomer(Customer customer);
@@ -64,6 +68,7 @@ public interface TicketService {
      * Get all Ticket by Product
      *
      * @param product of type Product
+     *
      * @return int
      */
     int countByProduct(Product product);

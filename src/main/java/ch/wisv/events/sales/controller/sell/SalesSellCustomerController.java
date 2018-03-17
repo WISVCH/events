@@ -46,11 +46,9 @@ public class SalesSellCustomerController {
      */
     private final OrderValidationService orderValidationService;
 
-
     @Autowired
-    public SalesSellCustomerController(OrderService orderService,
-            CustomerService customerService,
-            OrderValidationService orderValidationService
+    public SalesSellCustomerController(
+            OrderService orderService, CustomerService customerService, OrderValidationService orderValidationService
     ) {
         this.orderService = orderService;
         this.customerService = customerService;
@@ -108,7 +106,6 @@ public class SalesSellCustomerController {
         }
     }
 
-
     @GetMapping("/create")
     public String createCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
@@ -130,6 +127,7 @@ public class SalesSellCustomerController {
      *
      * @param customer        of type Customer
      * @param publicReference of type String
+     *
      * @return String
      */
     @PostMapping("/create")

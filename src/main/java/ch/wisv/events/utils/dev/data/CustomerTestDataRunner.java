@@ -33,7 +33,6 @@ public class CustomerTestDataRunner extends TestDataRunner {
      */
     private final CustomerRepository customerRepository;
 
-
     /**
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
      *
@@ -61,6 +60,7 @@ public class CustomerTestDataRunner extends TestDataRunner {
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Product
      */
     private Customer createCustomer(JSONObject jsonObject) {

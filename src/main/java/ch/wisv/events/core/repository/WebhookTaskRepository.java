@@ -35,6 +35,7 @@ public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Intege
      * Method findAllByWebhookTaskStatus().
      *
      * @param webhookTaskStatus of type WebhookTaskStatus
+     *
      * @return List<WebhookTask>
      */
     List<WebhookTask> findAllByWebhookTaskStatus(WebhookTaskStatus webhookTaskStatus);

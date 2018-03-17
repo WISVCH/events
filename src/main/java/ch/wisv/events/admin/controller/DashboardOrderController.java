@@ -38,6 +38,7 @@ public class DashboardOrderController {
      * OrderService.
      */
     private final OrderService orderService;
+
     private final String REDIRECT_ORDERS_OVERVIEW = "redirect:/administrator/orders/";
 
     /**
@@ -53,6 +54,7 @@ public class DashboardOrderController {
      * Show list of all orders.
      *
      * @param model of type Model
+     *
      * @return String
      */
     @GetMapping()
@@ -67,6 +69,7 @@ public class DashboardOrderController {
      *
      * @param model of type Model
      * @param key   of type String
+     *
      * @return String
      */
     @GetMapping("/view/{key}")
@@ -86,6 +89,7 @@ public class DashboardOrderController {
      *
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     *
      * @return String
      */
     @GetMapping("/delete/{key}")

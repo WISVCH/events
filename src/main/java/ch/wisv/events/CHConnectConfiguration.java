@@ -2,6 +2,8 @@ package ch.wisv.events;
 
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jose.JWSAlgorithm;
+import lombok.Getter;
+import lombok.Setter;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
@@ -21,6 +23,9 @@ import java.util.List;
 
 import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
 
+/**
+ * CHConnectConfiguration class.
+ */
 @Component
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
@@ -28,31 +33,46 @@ import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PR
 public class CHConnectConfiguration {
 
     /**
-     * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration
+     * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration.
      */
     @NotNull
+    @Getter
+    @Setter
     private String issuerUri;
 
     /**
-     * URI of this application, without trailing slash
+     * URI of this application, without trailing slash.
      */
     @NotNull
+    @Getter
+    @Setter
     private String clientUri;
 
     /**
-     * Groups that are admin in the system
+     * Groups that are admin in the system.
      */
     @NotNull
+    @Getter
+    @Setter
     private List<String> adminGroups;
 
     /**
-     * List of all the users that are allowed in the beta
+     * List of all the users that are allowed in the beta.
      */
     @NotNull
+    @Getter
+    @Setter
     private List<String> betaUsers;
 
+    /**
+     * Registered oauth2 client.
+     */
+    @Setter
     private RegisteredClient registeredClient;
 
+    /**
+     * CHConnectConfiguration constructor.
+     */
     public CHConnectConfiguration() {
         registeredClient = new RegisteredClient();
         registeredClient.setScope(ImmutableSet.of("openid", "email", "profile", "ldap"));
@@ -62,38 +82,11 @@ public class CHConnectConfiguration {
         registeredClient.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
     }
 
-    public String getIssuerUri() {
-        return issuerUri;
-    }
-
-    public void setIssuerUri(String issuerUri) {
-        this.issuerUri = issuerUri;
-    }
-
-    public String getClientUri() {
-        return clientUri;
-    }
-
-    public void setClientUri(String clientUri) {
-        this.clientUri = clientUri;
-    }
-
-    public List<String> getAdminGroups() {
-        return adminGroups;
-    }
-
-    public void setAdminGroups(List<String> adminGroups) {
-        this.adminGroups = adminGroups;
-    }
-
-    public List<String> getBetaUsers() {
-        return betaUsers;
-    }
-
-    public void setBetaUsers(List<String> betaUsers) {
-        this.betaUsers = betaUsers;
-    }
-
+    /**
+     * Get the Registerd Client.
+     *
+     * @return RegisteredClient
+     */
     @Bean
     public RegisteredClient getRegisteredClient() {
         if (clientUri != null && registeredClient.getRedirectUris().isEmpty()) {
@@ -103,10 +96,6 @@ public class CHConnectConfiguration {
             registeredClient.setJwksUri(issuerUri + "/jwk");
         }
         return registeredClient;
-    }
-
-    public void setRegisteredClient(RegisteredClient registeredClient) {
-        this.registeredClient = registeredClient;
     }
 
     /**
@@ -121,13 +110,11 @@ public class CHConnectConfiguration {
     public ClientConfigurationService clientConfigurationService() {
         RegisteredClientService registeredClientService = new JsonFileRegisteredClientService("config/oidc-client-registration.json");
 
-        DynamicRegistrationClientConfigurationService clientConfigurationService = new
-                DynamicRegistrationClientConfigurationService();
+        DynamicRegistrationClientConfigurationService clientConfigurationService = new DynamicRegistrationClientConfigurationService();
         clientConfigurationService.setRegisteredClientService(registeredClientService);
         clientConfigurationService.setTemplate(getRegisteredClient());
         return clientConfigurationService;
     }
-
 
     /**
      * Static client configuration: in production, we use a client configured from Spring properties.

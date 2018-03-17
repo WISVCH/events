@@ -29,6 +29,7 @@ public interface WebshopService {
      * Filter the products by events if they can be sold or not.
      *
      * @param events of type List<Event>
+     *
      * @return List<Event>
      */
     List<Event> filterNotSalableProducts(List<Event> events);

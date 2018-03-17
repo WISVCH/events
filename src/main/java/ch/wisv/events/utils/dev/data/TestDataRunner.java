@@ -51,6 +51,7 @@ abstract class TestDataRunner implements CommandLineRunner {
      * Callback used to run the bean.
      *
      * @param args incoming main method arguments
+     *
      * @throws Exception on error
      */
     @Override

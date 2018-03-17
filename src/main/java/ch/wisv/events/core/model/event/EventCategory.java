@@ -7,10 +7,7 @@ import lombok.Getter;
  */
 public enum EventCategory {
 
-    CAREER("Career"),
-    SOCIAL("Social"),
-    EDUCATIONAL("Educational"),
-    ASSOCIATION("Association");
+    CAREER("Career"), SOCIAL("Social"), EDUCATIONAL("Educational"), ASSOCIATION("Association");
 
     /**
      * Display name of the status (for view purpose)

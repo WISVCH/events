@@ -15,12 +15,7 @@ abstract public class WebshopController {
     }
 
     protected void assertShouldContinue(Order order) throws OrderInvalidException {
-        OrderStatus[] stopOrderStatus = new OrderStatus[]{
-                OrderStatus.EXPIRED,
-                OrderStatus.PAID,
-                OrderStatus.RESERVATION,
-                OrderStatus.REJECTED,
-        };
+        OrderStatus[] stopOrderStatus = new OrderStatus[]{OrderStatus.EXPIRED, OrderStatus.PAID, OrderStatus.RESERVATION, OrderStatus.REJECTED,};
 
         if (ArrayUtils.contains(stopOrderStatus, order.getStatus())) {
             throw new OrderInvalidException("Order is in a invalid state");

@@ -29,6 +29,7 @@ public interface WebhookRepository extends JpaRepository<Webhook, Integer> {
      * Method findByKey find Vendor by Key.
      *
      * @param key of type String
+     *
      * @return Optional<Vendor>
      */
     Optional<Webhook> findByKey(String key);
@@ -37,6 +38,7 @@ public interface WebhookRepository extends JpaRepository<Webhook, Integer> {
      * Method findAllByWebhookTriggersContainsAndLdapGroup ...
      *
      * @param webhookTrigger of type WebhookTrigger
+     *
      * @return List<Webhook>
      */
     List<Webhook> findAllByWebhookTriggersIsContaining(WebhookTrigger webhookTrigger);

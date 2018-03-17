@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('USER')")
 public class SalesScanMainController {
 
-
     @GetMapping
     public String index(Model model) {
         return "sales/scan/index";

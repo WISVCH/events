@@ -78,6 +78,7 @@ public class EventTestDataRunner extends TestDataRunner {
      * Method createEvent.
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Event
      */
     private Event createEvent(JSONObject jsonObject) {
@@ -107,6 +108,7 @@ public class EventTestDataRunner extends TestDataRunner {
      *
      * @param event      of type Event
      * @param jsonObject of type JSONObject
+     *
      * @return Event
      */
     private Event addProduct(Event event, JSONObject jsonObject) {
@@ -114,14 +116,12 @@ public class EventTestDataRunner extends TestDataRunner {
             int productNumber = ((Long) jsonObject.get("productNumber")).intValue();
             Optional<Product> optional = this.productRepository.findById(productNumber);
 
-            if (optional.isPresent()) {
-                Product product = optional.get();
+            optional.ifPresent(product -> {
                 product.setLinked(true);
-
                 this.productRepository.saveAndFlush(product);
 
                 event.addProduct(product);
-            }
+            });
         }
 
         return event;

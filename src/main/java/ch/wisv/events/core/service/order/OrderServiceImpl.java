@@ -61,11 +61,12 @@ public class OrderServiceImpl implements OrderService {
      * @param ticketService          of type TicketService
      */
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository,
-                            OrderProductRepository orderProductRepository,
-                            ProductService productService,
-                            MailService mailService,
-                            TicketService ticketService
+    public OrderServiceImpl(
+            OrderRepository orderRepository,
+            OrderProductRepository orderProductRepository,
+            ProductService productService,
+            MailService mailService,
+            TicketService ticketService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -88,18 +89,19 @@ public class OrderServiceImpl implements OrderService {
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
+     *
      * @return Order
      */
     @Override
     public Order getByReference(String reference) throws OrderNotFoundException {
-        return orderRepository.findOneByPublicReference(reference).orElseThrow(() ->
-                new OrderNotFoundException("reference " + reference));
+        return orderRepository.findOneByPublicReference(reference).orElseThrow(() -> new OrderNotFoundException("reference " + reference));
     }
 
     /**
      * Create an Order form a OrderProductDTO.
      *
      * @param orderProductDTO of type OrderProductDTO
+     *
      * @return Order
      */
     @Override
@@ -142,7 +144,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.saveAndFlush(order);
     }
-
 
     /**
      * Update OrderStatus of an Order.
@@ -265,6 +266,7 @@ public class OrderServiceImpl implements OrderService {
      * Create the ticket if an order has the status paid.
      *
      * @param order of type Order.
+     *
      * @throws UnassignedOrderException when order is not assigned to a Customer.
      */
     private List<Ticket> createTicketIfPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException {
@@ -277,7 +279,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (order.getStatus() == OrderStatus.PAID) {
-            return order.getOrderProducts().stream()
+            return order.getOrderProducts()
+                    .stream()
                     .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
                     .collect(Collectors.toList());
         }

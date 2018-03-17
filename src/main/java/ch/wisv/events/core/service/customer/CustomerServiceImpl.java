@@ -70,6 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Method getAllCustomerCreatedAfter ...
      *
      * @param after of type LocalDateTime
+     *
      * @return List<Customer>
      */
     @Override
@@ -81,6 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by key.
      *
      * @param key key
+     *
      * @return Customer
      */
     @Override
@@ -94,6 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a Customer by its sub.
      *
      * @param sub of type String
+     *
      * @return Customer
      */
     @Override
@@ -107,6 +110,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by CH username or Email.
      *
      * @param username of type String
+     *
      * @return Customer
      */
     @Override
@@ -120,6 +124,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by CH username.
      *
      * @param email
+     *
      * @return Customer
      */
     @Override
@@ -133,6 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by rfidToken.
      *
      * @param token of type String
+     *
      * @return Customer
      */
     @Override
@@ -161,13 +167,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
-        Customer customer = new Customer(
-                userInfo.getSub(),
-                userInfo.getName(),
-                userInfo.getEmail(),
-                userInfo.getLdapUsername(),
-                ""
-        );
+        Customer customer = new Customer(userInfo.getSub(), userInfo.getName(), userInfo.getEmail(), userInfo.getLdapUsername(), "");
         this.create(customer);
 
         return customer;
@@ -212,6 +212,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Will check all the required fields if they are valid.
      *
      * @param customer of type Customer
+     *
      * @throws CustomerInvalidException when one of the required fields is not valid
      */
     private void assertIsValidCustomer(Customer customer) throws CustomerInvalidException {
@@ -244,6 +245,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Method check if given email is not used by another Customer.
      *
      * @param customer of type Customer
+     *
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
@@ -262,6 +264,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Method check if given rfidToken is not used by another Customer.
      *
      * @param customer of type Customer
+     *
      * @return boolean
      */
     private boolean isNotUniqueRfidToken(Customer customer) {

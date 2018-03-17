@@ -24,29 +24,29 @@ import javax.validation.constraints.NotNull;
 public class ProductDTO {
 
     /**
-     * Field title
+     * Title of a Product.
      */
     @NotNull
     private String title;
 
     /**
-     * Field description
+     * (Optional) Description of a Product.
      */
     private String description;
 
     /**
-     * Field cost
+     * Cost of a Product.
      */
     @NotNull
     private Double cost;
 
     /**
-     * Field maxSold
+     * (Optional) Max sold of a Product.
      */
     private Integer maxSold;
 
     /**
-     * Field maxSoldPerCustomer
+     * (Optional) Max sold per Customer of a Product.
      */
     private Integer maxSoldPerCustomer;
 }

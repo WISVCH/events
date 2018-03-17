@@ -25,6 +25,7 @@ public interface EventService {
      *
      * @param lowerbound of type LocalDateTime
      * @param upperbound of type LocalDateTime
+     *
      * @return List<Event>
      */
     List<Event> getAllBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
@@ -40,6 +41,7 @@ public interface EventService {
      * Get Event by key
      *
      * @param key key of an Event
+     *
      * @return Event
      */
     Event getByKey(String key) throws EventNotFoundException;
@@ -48,6 +50,7 @@ public interface EventService {
      * Get all Events that are connected to the same Product
      *
      * @param product of type Product
+     *
      * @return List of Events
      */
     Event getByProduct(Product product) throws EventNotFoundException;

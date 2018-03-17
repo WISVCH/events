@@ -31,8 +31,7 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @Service
-public class
-OrderValidationServiceImpl implements OrderValidationService {
+public class OrderValidationServiceImpl implements OrderValidationService {
 
     private final OrderService orderService;
 
@@ -54,7 +53,6 @@ OrderValidationServiceImpl implements OrderValidationService {
         this.eventService = eventService;
     }
 
-
     /**
      * Assert if an Order is valid.
      *
@@ -71,6 +69,7 @@ OrderValidationServiceImpl implements OrderValidationService {
      * Assert the default Order checks
      *
      * @param order of type Order
+     *
      * @throws OrderInvalidException when Order is invalid.
      */
     private void assertDefaultOrderChecks(Order order) throws OrderInvalidException {
@@ -78,8 +77,10 @@ OrderValidationServiceImpl implements OrderValidationService {
             throw new OrderInvalidException("Order amount can not be null");
         }
 
-        Double amountShouldBe = order.getOrderProducts().stream()
-                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount()).sum();
+        Double amountShouldBe = order.getOrderProducts()
+                .stream()
+                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
+                .sum();
 
         if (!order.getAmount().equals(amountShouldBe)) {
             throw new OrderInvalidException("Order amount does not match");
@@ -98,6 +99,7 @@ OrderValidationServiceImpl implements OrderValidationService {
      * Assert if the Product in the Order does not exceed the Product limit.
      *
      * @param order of type Order
+     *
      * @throws OrderExceedProductLimitException when Product limit will be exceed.
      */
     private void assertOrderNotExceedProductLimit(Order order) throws OrderExceedProductLimitException {
@@ -119,6 +121,7 @@ OrderValidationServiceImpl implements OrderValidationService {
      * Assert if the Product in the Order do not exceed the Event limit.
      *
      * @param order of type Order
+     *
      * @throws OrderExceedEventLimitException when Event limit will be exceeded.
      */
     private void assertOrderNotExceedEventLimit(Order order) throws OrderExceedEventLimitException {
@@ -144,6 +147,7 @@ OrderValidationServiceImpl implements OrderValidationService {
      *
      * @param order    of type Order
      * @param customer of type Customer
+     *
      * @throws OrderExceedCustomerLimitException when the customer limit is exceeded
      */
     @Override
@@ -159,13 +163,11 @@ OrderValidationServiceImpl implements OrderValidationService {
 
             int ticketSold = ticketService.getAllByProductAndCustomer(orderProduct.getProduct(), customer).size();
 
-            ticketSold += reservationOrders.stream()
-                    .mapToInt(reservationOrder -> reservationOrder.getOrderProducts().stream()
-                            .filter(product -> orderProduct.getProduct().equals(product.getProduct()))
-                            .mapToInt(product -> product.getAmount().intValue())
-                            .sum()
-                    )
-                    .sum();
+            ticketSold += reservationOrders.stream().mapToInt(reservationOrder -> reservationOrder.getOrderProducts()
+                    .stream()
+                    .filter(product -> orderProduct.getProduct().equals(product.getProduct()))
+                    .mapToInt(product -> product.getAmount().intValue())
+                    .sum()).sum();
 
             if (ticketSold + orderProduct.getAmount() > maxSoldPerCustomer) {
                 throw new OrderExceedCustomerLimitException(maxSoldPerCustomer - ticketSold);

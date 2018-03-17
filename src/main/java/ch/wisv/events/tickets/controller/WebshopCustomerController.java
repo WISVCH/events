@@ -48,7 +48,12 @@ public class WebshopCustomerController extends WebshopController {
      * @param authenticationService  of type AuthenticationService
      * @param orderValidationService of type OrderValidationService
      */
-    public WebshopCustomerController(OrderService orderService, CustomerService customerService, AuthenticationService authenticationService, OrderValidationService orderValidationService) {
+    public WebshopCustomerController(
+            OrderService orderService,
+            CustomerService customerService,
+            AuthenticationService authenticationService,
+            OrderValidationService orderValidationService
+    ) {
         super(orderService);
         this.customerService = customerService;
         this.authenticationService = authenticationService;
@@ -70,7 +75,6 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
-
     @GetMapping("/chconnect")
     @PreAuthorize("hasRole('USER')")
     public String customerChConnect(RedirectAttributes redirect, @PathVariable String key) {
@@ -89,7 +93,8 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
-    private void addCustomerToOrder(Order order, Customer customer) throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
+    private void addCustomerToOrder(Order order, Customer customer)
+            throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
         orderValidationService.assertOrderIsValidForCustomer(order, customer);
 
         order.setOwner(customer);

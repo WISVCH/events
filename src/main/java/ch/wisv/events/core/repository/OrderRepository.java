@@ -30,6 +30,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * Method findOneByPublicReference find Order by public reference.
      *
      * @param publicReference of type String
+     *
      * @return Optional<Order>
      */
     Optional<Order> findOneByPublicReference(String publicReference);
@@ -38,6 +39,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * Method findAllByOwner find Order by Customer.
      *
      * @param owner of type Customer
+     *
      * @return List<Order>
      */
     List<Order> findAllByOwner(Customer owner);
@@ -47,6 +49,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      *
      * @param owner  of type Customer
      * @param status of type OrderStatus
+     *
      * @return List<Order>
      */
     List<Order> findAllByOwnerAndStatus(Customer owner, OrderStatus status);

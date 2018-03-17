@@ -58,9 +58,8 @@ public class WebhookPublisher {
      * @param eventService       of type EventService.
      */
     @Autowired
-    private WebhookPublisher(WebhookService webhookService,
-            WebhookTaskService webhookTaskService,
-            EventService eventService
+    private WebhookPublisher(
+            WebhookService webhookService, WebhookTaskService webhookTaskService, EventService eventService
     ) {
         this.webhookService = webhookService;
         this.webhookTaskService = webhookTaskService;
@@ -91,6 +90,7 @@ public class WebhookPublisher {
      *
      * @param webhook of type Webhook.
      * @param content of type Object.
+     *
      * @return boolean
      */
     private boolean isWebhookAuthenticated(Webhook webhook, Object content) {
@@ -100,13 +100,13 @@ public class WebhookPublisher {
             if (content instanceof Event) {
                 Event event = (Event) content;
 
-                if (webhook.getLdapGroup() == event.getOrganizedBy()) {
-                    return true;
-                }
+                return webhook.getLdapGroup() == event.getOrganizedBy();
             } else if (content instanceof Product) {
                 Product product = (Product) content;
+
                 try {
                     Event event = eventService.getByProduct(product);
+
                     if (event.getOrganizedBy() == webhook.getLdapGroup()) {
                         return true;
                     }

@@ -15,7 +15,10 @@ import ch.wisv.events.tickets.service.PaymentsService;
 import ch.wisv.events.tickets.service.WebshopService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static java.lang.Thread.sleep;
@@ -59,14 +62,19 @@ public class WebshopPaymentController {
      * @param webshopService         of type WebshopService
      * @param mailService
      */
-    public WebshopPaymentController(OrderService orderService, OrderValidationService orderValidationService, PaymentsService paymentsService, WebshopService webshopService, MailService mailService) {
+    public WebshopPaymentController(
+            OrderService orderService,
+            OrderValidationService orderValidationService,
+            PaymentsService paymentsService,
+            WebshopService webshopService,
+            MailService mailService
+    ) {
         this.orderService = orderService;
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
         this.webshopService = webshopService;
         this.mailService = mailService;
     }
-
 
     @GetMapping("")
     public String checkout(Model model, RedirectAttributes redirect, @PathVariable String key) {
@@ -107,7 +115,6 @@ public class WebshopPaymentController {
             return "redirect:/checkout/" + key + "/payment";
         }
     }
-
 
     @GetMapping("/ideal")
     public String checkoutIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {

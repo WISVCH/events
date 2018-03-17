@@ -34,7 +34,6 @@ public class WebshopIndexController {
      */
     private final EventService eventService;
 
-
     /**
      *
      */

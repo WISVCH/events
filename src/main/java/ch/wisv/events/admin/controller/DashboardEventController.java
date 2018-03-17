@@ -4,7 +4,6 @@ import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +56,7 @@ public class DashboardEventController {
      * Get request on "/admin/events/" will show overview of all Events
      *
      * @param model SpringUI model
+     *
      * @return path to Thymeleaf template
      */
     @GetMapping()
@@ -73,6 +72,7 @@ public class DashboardEventController {
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     *
      * @return String
      */
     @GetMapping("/view/{key}")
@@ -92,6 +92,7 @@ public class DashboardEventController {
      * Get request on "/admin/events/create/" will show page to create Event
      *
      * @param model SpringUI model
+     *
      * @return path to Thymeleaf template
      */
     @GetMapping("/create")
@@ -108,6 +109,7 @@ public class DashboardEventController {
      *
      * @param event    EventRequest model attr.
      * @param redirect Spring RedirectAttributes
+     *
      * @return redirect
      */
     @PostMapping("/create")
@@ -133,6 +135,7 @@ public class DashboardEventController {
      * Get request on "/admin/events/edit/{key}" will show the edit page to edit Event with requested key
      *
      * @param model SpringUI model
+     *
      * @return path to Thymeleaf template
      */
     @GetMapping("/edit/{key}")
@@ -153,6 +156,7 @@ public class DashboardEventController {
      *
      * @param event    EventRequest model attr.
      * @param redirect Spring RedirectAttributes
+     *
      * @return redirect
      */
     @PostMapping("/edit/{key}")
@@ -181,6 +185,7 @@ public class DashboardEventController {
      *
      * @param model of type Model
      * @param key   of type String
+     *
      * @return String
      */
     @GetMapping("/overview/{key}")
@@ -189,9 +194,12 @@ public class DashboardEventController {
             Event event = eventService.getByKey(key);
 
             model.addAttribute("event", event);
-            model.addAttribute("tickets", event.getProducts().stream()
-                    .flatMap(product -> ticketService.getAllByProduct(product).stream())
-                    .collect(Collectors.toList()));
+            model.addAttribute("tickets",
+                               event.getProducts()
+                                       .stream()
+                                       .flatMap(product -> ticketService.getAllByProduct(product).stream())
+                                       .collect(Collectors.toList())
+            );
 
             return "admin/events/overview";
         } catch (EventNotFoundException e) {
@@ -204,6 +212,7 @@ public class DashboardEventController {
      *
      * @param redirect Spring RedirectAttributes
      * @param key      PathVariable key of the Event
+     *
      * @return redirect
      */
     @GetMapping("/delete/{key}")

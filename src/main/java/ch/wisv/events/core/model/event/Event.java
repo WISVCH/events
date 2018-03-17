@@ -44,7 +44,7 @@ public class Event {
     private String title;
 
     /**
-     * Field shortDescription
+     * Short description of the Event.
      */
     @NotEmpty
     private String shortDescription;
@@ -138,8 +138,16 @@ public class Event {
      * @param start       Starting DateTime of the Event
      * @param ending      Ending DateTime of the Event
      */
-    public Event(String title, String description, String location, int target, Integer maxSold, String imageURL,
-            LocalDateTime start, LocalDateTime ending, String shortDescription
+    public Event(
+            String title,
+            String description,
+            String location,
+            int target,
+            Integer maxSold,
+            String imageURL,
+            LocalDateTime start,
+            LocalDateTime ending,
+            String shortDescription
     ) {
         this();
         this.title = title;

@@ -20,9 +20,7 @@ import lombok.Getter;
  */
 public enum WebhookTaskStatus {
 
-    PENDING("badge-warning"),
-    SUCCESS("badge-success"),
-    ERROR("badge-danger");
+    PENDING("badge-warning"), SUCCESS("badge-success"), ERROR("badge-danger");
 
     /**
      * Badge class;

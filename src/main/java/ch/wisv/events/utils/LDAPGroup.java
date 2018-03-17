@@ -18,41 +18,13 @@ package ch.wisv.events.utils;
  */
 public enum LDAPGroup {
 
-    AKCIE("AkCie"),
-    ANNUCIE("AnnuCie"),
-    BT("Business Tour"),
-    BEHEER("CH Beheer"),
-    CHIPCIE("CHipCie"),
-    CHOCO("CHoCo"),
-    COMMA("ComMA"),
-    DIES("Dies"),
-    DIENST2("Dienst2"),
-    FACIE("FaCie"),
-    FILMCREW("Filmcrew"),
-    FLITCIE("FlitCie"),
-    GALACIE("GalaCie"),
-    ICOM("iCom"),
-    LANCIE("LANcie"),
-    LUCIE("LuCie"),
-    MACHAZINE("MaCHazine"),
-    MAPHYA("MaPhyA"),
-    MATCH("MatCH"),
-    MEISCIE("MeisCie"),
-    REISCOMMISSIE("Reiscommissie"),
-    SJAARCIE("SjaarCie"),
-    SYMPOSIUM("Symposiumcommissie"),
-    VERDIEPCIE("VerdiepCie"),
-    W3CIE("W3Cie"),
-    WHISCO("WhisCo"),
-    WIFI("WiFi"),
-    BESTUUR("Bestuur"),
-    VOORZITTER("Voorzitter"),
-    SECRETARIS("Secretaris"),
-    PENNINGMEESTER("Penningmeester"),
-    COW("COW"),
-    COI("COI"),
-    CPR("CPR"),
-    CC("CC");
+    AKCIE("AkCie"), ANNUCIE("AnnuCie"), BT("Business Tour"), BEHEER("CH Beheer"), CHIPCIE("CHipCie"), CHOCO("CHoCo"), COMMA("ComMA"), DIES("Dies"),
+    DIENST2(
+            "Dienst2"), FACIE("FaCie"), FILMCREW("Filmcrew"), FLITCIE("FlitCie"), GALACIE("GalaCie"), ICOM("iCom"), LANCIE("LANcie"), LUCIE
+            ("LuCie"), MACHAZINE(
+            "MaCHazine"), MAPHYA("MaPhyA"), MATCH("MatCH"), MEISCIE("MeisCie"), REISCOMMISSIE("Reiscommissie"), SJAARCIE("SjaarCie"), SYMPOSIUM(
+            "Symposiumcommissie"), VERDIEPCIE("VerdiepCie"), W3CIE("W3Cie"), WHISCO("WhisCo"), WIFI("WiFi"), BESTUUR("Bestuur"), VOORZITTER(
+            "Voorzitter"), SECRETARIS("Secretaris"), PENNINGMEESTER("Penningmeester"), COW("COW"), COI("COI"), CPR("CPR"), CC("CC");
 
     /**
      * Field name

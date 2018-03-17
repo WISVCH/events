@@ -20,11 +20,11 @@ public class ResponseEntityBuilder {
      * @param httpHeaders Optional Http Headers for the response.
      * @param message     The message in human readable String format
      * @param object      Optional object related to the request (like a created Customer)
+     *
      * @return The ResponseEntity in standard CH Events format.
      */
-    private static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
-            String message,
-            Object object
+    private static ResponseEntity<?> createResponseEntity(
+            HttpStatus httpStatus, HttpHeaders httpHeaders, String message, Object object
     ) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status", httpStatus.toString());
@@ -44,6 +44,7 @@ public class ResponseEntityBuilder {
      * @param httpStatus The HTTP Status of the message
      * @param message    The message in human readable String format
      * @param object     Object related to the request
+     *
      * @return The ResponseEntity in standard CH Events format.
      */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, String message, Object object) {
@@ -55,6 +56,7 @@ public class ResponseEntityBuilder {
      *
      * @param httpStatus The HTTP Status of the message
      * @param message    The message in human readable String format
+     *
      * @return The ResponseEntity in standard CH Events format.
      */
     public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, String message) {
@@ -67,10 +69,11 @@ public class ResponseEntityBuilder {
      * @param httpStatus  The HTTP Status of the message
      * @param httpHeaders Http Headers for the response.
      * @param message     The message in human readable String format
+     *
      * @return The ResponseEntity in standard CH Events format.
      */
-    public static ResponseEntity<?> createResponseEntity(HttpStatus httpStatus, HttpHeaders httpHeaders,
-            String message
+    public static ResponseEntity<?> createResponseEntity(
+            HttpStatus httpStatus, HttpHeaders httpHeaders, String message
     ) {
         return createResponseEntity(httpStatus, httpHeaders, message, null);
     }

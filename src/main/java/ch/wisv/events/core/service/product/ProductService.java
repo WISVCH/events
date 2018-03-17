@@ -30,6 +30,7 @@ public interface ProductService {
      * Get Product by Key
      *
      * @param key key of a Product
+     *
      * @return Product
      */
     Product getByKey(String key) throws ProductNotFoundException;

@@ -55,8 +55,7 @@ public class SalesSellPaymentController {
      */
     @PostMapping
     public String payment(
-            @PathVariable String publicReference,
-            @RequestParam(value = "method") PaymentMethod method
+            @PathVariable String publicReference, @RequestParam(value = "method") PaymentMethod method
     ) {
         try {
             Order order = orderService.getByReference(publicReference);

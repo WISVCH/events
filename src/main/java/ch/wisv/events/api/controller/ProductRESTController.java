@@ -3,8 +3,8 @@ package ch.wisv.events.api.controller;
 import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.util.Search;
 import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.util.Search;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,14 @@ public class ProductRESTController {
         this.productService = productService;
     }
 
-    @PostMapping("")
+    /**
+     * Create a Product based on a ProductDTO and return the id, key and title of this Product.
+     *
+     * @param product of type ProductDTO
+     *
+     * @return ResponseEntity
+     */
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity createProduct(@Validated @RequestBody ProductDTO product) {
         try {
@@ -58,6 +65,7 @@ public class ProductRESTController {
      * Get all unused products into search format.
      *
      * @param query query
+     *
      * @return Search Object
      */
     @GetMapping(value = "/search/unused")

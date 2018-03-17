@@ -60,10 +60,7 @@
     $(document).ready(function () {
         setTimeout(
             function () {
-                window.location.href = [[@{
-                    '/scan/product/' + ${product.getKey()} +'/'
-                }
-            ]]
+                window.location.href = [[@{'/scan/product/' + ${product.getKey()} +'/'}]]
             }, 1500);
     });
     /*]]>*/

@@ -7,9 +7,7 @@ import static java.util.Arrays.stream;
  */
 public enum EventStatus {
 
-    PUBLISHED(1, "Published"),
-    CONCEPT(2, "Concept"),
-    NOT_PUBLISHED(3, "Not published");
+    PUBLISHED(1, "Published"), CONCEPT(2, "Concept"), NOT_PUBLISHED(3, "Not published");
 
     /**
      * ID of the status
@@ -36,6 +34,7 @@ public enum EventStatus {
      * Get status by status ID
      *
      * @param index Status ID
+     *
      * @return EventStatus corresponding to the ID
      */
     public static EventStatus getStatus(int index) {

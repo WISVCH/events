@@ -24,7 +24,6 @@ import java.util.List;
  */
 public interface SalesService {
 
-
     /**
      * Get all Event which can be sold by the current user.
      *

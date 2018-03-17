@@ -1,6 +1,5 @@
 package ch.wisv.events.core.webhook.factory.event;
 
-
 import ch.wisv.events.core.exception.runtime.WebhookRequestObjectIncorrect;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventCategory;
@@ -61,6 +60,7 @@ public class EventCreateUpdateRequestFactory extends WebhookRequestFactory {
      * Method generateProductRequestData ...
      *
      * @param productList of type List<Product>
+     *
      * @return JSONArray
      */
     private JSONArray generateProductRequestData(List<Product> productList) {

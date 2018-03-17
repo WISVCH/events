@@ -47,7 +47,6 @@ public class WebshopCheckoutController extends WebshopController {
         this.orderValidationService = orderValidationService;
     }
 
-
     @PostMapping("")
     public String checkout(RedirectAttributes redirect, @ModelAttribute OrderProductDTO orderProductDTO) {
         try {
@@ -78,6 +77,7 @@ public class WebshopCheckoutController extends WebshopController {
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     *
      * @return String
      */
     @GetMapping("/{key}")

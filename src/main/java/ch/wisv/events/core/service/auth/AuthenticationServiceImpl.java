@@ -71,6 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Get CHUserInfo from a Authentication object.
      *
      * @param auth of type Authentication.
+     *
      * @return CHUserInfo
      */
     private CHUserInfo getChUserInfo(Authentication auth) {
@@ -91,7 +92,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Get a Customer by CHUserInfo.
      *
      * @param userInfo of type CHUserInfo.
+     *
      * @return Customer
+     *
      * @throws CustomerInvalidException when the CHUserInfo will result in an invalid
      */
     private Customer getCustomerByCHUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
@@ -118,6 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      *
      * @param customer of type Customer.
      * @param userInfo of type CHUserInfo.
+     *
      * @throws CustomerInvalidException  when the Customer is invalid.
      * @throws CustomerNotFoundException when the Customer does not exists.
      */
@@ -134,16 +138,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             customer.setEmail(userInfo.getEmail());
         }
 
-        customer.setLdapGroups(userInfo.getLdapGroups().stream()
-                .map(ldapString -> {
-                    try {
-                        return LDAPGroup.valueOf(ldapString.toUpperCase());
-                    } catch (IllegalArgumentException ignored) {
-                        return null;
-                    }
-                })
-                .collect(Collectors.toList())
-        );
+        customer.setLdapGroups(userInfo.getLdapGroups().stream().map(ldapString -> {
+            try {
+                return LDAPGroup.valueOf(ldapString.toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                return null;
+            }
+        }).collect(Collectors.toList()));
 
         customerService.update(customer);
     }

@@ -37,6 +37,7 @@ public interface OrderService {
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
+     *
      * @return Order
      */
     Order getByReference(String reference) throws OrderNotFoundException;
@@ -46,7 +47,8 @@ public interface OrderService {
      *
      * @param order of type Order
      */
-    void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException, OrderExceedCustomerLimitException;
+    void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException,
+                                    OrderExceedCustomerLimitException;
 
     /**
      * Update an existing order.
@@ -59,6 +61,7 @@ public interface OrderService {
      * Create an Order form a OrderProductDTO.
      *
      * @param orderProductDTO of type OrderProductDTO
+     *
      * @return Order
      */
     Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException;

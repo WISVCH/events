@@ -73,6 +73,7 @@ public class EventServiceImpl implements EventService {
      *
      * @param lowerbound of type LocalDateTime
      * @param upperbound of type LocalDateTime
+     *
      * @return List<Event>
      */
     @Override
@@ -87,15 +88,15 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcoming() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
-                .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
-                .collect(Collectors.toList());
+        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream().filter(x -> x.getPublished() == EventStatus.PUBLISHED).collect(
+                Collectors.toList());
     }
 
     /**
      * Get Event by key
      *
      * @param key key of an Event
+     *
      * @return Event
      */
     @Override
@@ -109,6 +110,7 @@ public class EventServiceImpl implements EventService {
      * Get all Events that are connected to the same Product
      *
      * @param product of type Product
+     *
      * @return List of Events
      */
     @Override
@@ -140,7 +142,6 @@ public class EventServiceImpl implements EventService {
 
         eventRepository.saveAndFlush(event);
     }
-
 
     /**
      * Update event by Event

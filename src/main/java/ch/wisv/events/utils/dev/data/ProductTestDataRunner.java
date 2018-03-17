@@ -63,6 +63,7 @@ public class ProductTestDataRunner extends TestDataRunner {
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Product
      */
     private Product createProduct(JSONObject jsonObject) {

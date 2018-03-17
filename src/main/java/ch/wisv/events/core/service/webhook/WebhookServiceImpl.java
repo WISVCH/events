@@ -59,6 +59,7 @@ public class WebhookServiceImpl implements WebhookService {
      * Method getByKey get Webhook by Key.
      *
      * @param key of type String
+     *
      * @return Webhook
      */
     @Override
@@ -72,6 +73,7 @@ public class WebhookServiceImpl implements WebhookService {
      * Method getByTriggerAndLdapGroup ...
      *
      * @param webhookTrigger of type WebhookTrigger
+     *
      * @return List<Webhook>
      */
     @Override
@@ -90,7 +92,6 @@ public class WebhookServiceImpl implements WebhookService {
 
         this.repository.saveAndFlush(model);
     }
-
 
     /**
      * Method update an existing Webhook.
@@ -124,6 +125,7 @@ public class WebhookServiceImpl implements WebhookService {
      * Method assertIsValidWebhook ...
      *
      * @param model of type Webhook
+     *
      * @throws WebhookInvalidException when
      */
     private void assertIsValidWebhook(Webhook model) throws WebhookInvalidException {

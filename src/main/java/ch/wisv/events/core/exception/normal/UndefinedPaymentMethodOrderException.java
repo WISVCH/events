@@ -19,6 +19,7 @@ import ch.wisv.events.core.exception.LogLevelEnum;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class UndefinedPaymentMethodOrderException extends EventsException {
+
     public UndefinedPaymentMethodOrderException() {
         super(LogLevelEnum.ERROR, "Undefined payment method in Order");
     }

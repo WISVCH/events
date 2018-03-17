@@ -29,6 +29,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Method findById ...
      *
      * @param customerId of type Integer
+     *
      * @return Optional<Customer>
      */
     Optional<Customer> findById(Integer customerId);
@@ -37,6 +38,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a customer by its rfidToken.
      *
      * @param token of type String
+     *
      * @return optional
      */
     Optional<Customer> findByRfidToken(String token);
@@ -45,6 +47,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a customer by its key.
      *
      * @param key key
+     *
      * @return optional
      */
     Optional<Customer> findByKey(String key);
@@ -53,6 +56,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its email.
      *
      * @param email of type String
+     *
      * @return Optional<Customer>
      */
     Optional<Customer> findByEmail(String email);
@@ -61,6 +65,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Method findAllByCreatedAtAfter ...
      *
      * @param after of type LocalDateTime
+     *
      * @return List<Customer>
      */
     List<Customer> findAllByCreatedAtAfter(LocalDateTime after);
@@ -69,6 +74,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its sub.
      *
      * @param sub of type String
+     *
      * @return Optional<Customer>
      */
     Optional<Customer> findBySub(String sub);
@@ -77,6 +83,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its username.
      *
      * @param username of type username.
+     *
      * @return Optional<Customer>
      */
     Optional<Customer> findByChUsername(String username);

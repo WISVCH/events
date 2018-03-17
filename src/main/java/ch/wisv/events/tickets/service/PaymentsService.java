@@ -25,6 +25,7 @@ public interface PaymentsService {
      * Get the Order status of Payments.
      *
      * @param paymentsReference of type String
+     *
      * @return String
      */
     String getPaymentsOrderStatus(String paymentsReference);
@@ -33,6 +34,7 @@ public interface PaymentsService {
      * Get a Mollie Url via Payments.
      *
      * @param order of type Order
+     *
      * @return String
      */
     String getPaymentsMollieUrl(Order order);
@@ -41,6 +43,7 @@ public interface PaymentsService {
      * Create a HttpPost to create a Payments Order request
      *
      * @param order of type Order
+     *
      * @return HttpPost
      */
     HttpPost createPaymentsOrderHttpPost(Order order);
