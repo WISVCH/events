@@ -1,5 +1,4 @@
-plugins:
+engines:
   checkstyle:
     enabled: true
-    config:
-      file: "checkstyle.xml"
+    config: 'checkstyle.xml'
