@@ -1,4 +1,3 @@
-engines:
+plugins:
   checkstyle:
     enabled: true
-    config: 'checkstyle.xml'
