@@ -9,6 +9,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - "./gradlew clean build -PbuildNumber=$TRAVIS_BUILD_NUMBER --scan"
+  - ./cc-test-reporter format-coverage -t cobertura $TRAVIS_BUILD_DIR/coverage/.resultset.json
   - docker build --no-cache --pull -t wisvch/events:$TRAVIS_BUILD_NUMBER .
 after_success:
   - if [ "${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}" == "master" ]; then
