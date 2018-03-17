@@ -41,23 +41,20 @@ import java.io.IOException;
 @Service
 public class PaymentsServiceImpl implements PaymentsService {
 
-    /**
-     * Field issuerUri
-     */
+    /** HTTP success status code of CH Payments. */
+    private static final int SUCCESS_PAYMENT_STATUS_CODE = 201;
+
+    /** Payments issuer url. */
     @Value("${wisvch.payments.issuerUri}")
     @NotNull
     private String issuerUri;
 
-    /**
-     * Field clientUri
-     */
+    /** Payments client url. */
     @Value("${wisvch.payments.clientUri}")
     @NotNull
     private String clientUri;
 
-    /**
-     * Field httpClient
-     */
+    /** HTTP client. */
     private HttpClient httpClient;
 
     /**
@@ -135,7 +132,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
-     * Get redirect url
+     * Get redirect url.
      *
      * @param statusCode     of type int
      * @param responseObject of type JSONObject
@@ -143,7 +140,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * @return String
      */
     private String getRedirectUrl(int statusCode, JSONObject responseObject) {
-        if (statusCode == 201) {
+        if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
             if (responseObject.containsKey("url")) {
                 return (String) responseObject.get("url");
             } else {
@@ -155,7 +152,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
-     * Create a HttpPost to create a Payments Order request
+     * Create a HttpPost to create a Payments Order request.
      *
      * @param order of type Order
      *
@@ -178,7 +175,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      *
      * @param order of type Order
      *
-     * @return
+     * @return JSONObject
      */
     private JSONObject createPaymentsHttpPostBody(Order order) {
         JSONObject object = new JSONObject();

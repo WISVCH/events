@@ -31,8 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout")
 public class WebshopCheckoutController extends WebshopController {
 
-    private final OrderService orderService;
-
+    /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
     /**
@@ -43,12 +42,19 @@ public class WebshopCheckoutController extends WebshopController {
      */
     public WebshopCheckoutController(OrderService orderService, OrderValidationService orderValidationService) {
         super(orderService);
-        this.orderService = orderService;
         this.orderValidationService = orderValidationService;
     }
 
-    @PostMapping("")
-    public String checkout(RedirectAttributes redirect, @ModelAttribute OrderProductDTO orderProductDTO) {
+    /**
+     * Post mapping for the checkout of a shopping basket.
+     *
+     * @param redirect        of type RedirectAttributes
+     * @param orderProductDTO of type OrderProductDTO
+     *
+     * @return String
+     */
+    @PostMapping
+    public String checkoutShoppingBasket(RedirectAttributes redirect, @ModelAttribute OrderProductDTO orderProductDTO) {
         try {
             if (orderProductDTO.getProducts().isEmpty()) {
                 redirect.addFlashAttribute("error", "Shopping basket can not be empty!");
@@ -81,10 +87,10 @@ public class WebshopCheckoutController extends WebshopController {
      * @return String
      */
     @GetMapping("/{key}")
-    public String checkout(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    public String checkoutOverview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertShouldContinue(order);
+            this.assertOrderIsSuitableForCheckout(order);
 
             model.addAttribute("order", order);
 
@@ -96,11 +102,19 @@ public class WebshopCheckoutController extends WebshopController {
         }
     }
 
+    /**
+     * Cancel a checkout.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping("/{key}/cancel")
-    public String cancelOrder(RedirectAttributes redirect, @PathVariable String key) {
+    public String checkoutCancel(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertShouldContinue(order);
+            this.assertOrderIsSuitableForCheckout(order);
             orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
 
             redirect.addFlashAttribute("success", "Order has successfully been cancelled.");

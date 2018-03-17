@@ -51,11 +51,13 @@ public class WebshopIndexController {
     }
 
     /**
-     * GetMapping for "/".
+     * Front page of the webshop.
+     *
+     * @param model of type Model
      *
      * @return String
      */
-    @GetMapping("/")
+    @GetMapping
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute("events", webshopService.filterNotSalableProducts(upcoming));

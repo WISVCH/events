@@ -40,7 +40,7 @@ public interface PaymentsService {
     String getPaymentsMollieUrl(Order order);
 
     /**
-     * Create a HttpPost to create a Payments Order request
+     * Create a HttpPost to create a Payments Order request.
      *
      * @param order of type Order
      *

@@ -39,6 +39,9 @@ public interface WebshopService {
      *
      * @param order             of type Order
      * @param paymentsReference of type String
+     *
+     * @throws PaymentsStatusUnknown when CH Payment status is unknown
+     * @throws OrderInvalidException when an Order is invalid
      */
     void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException;
 }

@@ -54,6 +54,13 @@ public class WebshopServiceImpl implements WebshopService {
         this.orderService = orderService;
     }
 
+    /**
+     * Remove Event Products when there are not salable.
+     *
+     * @param events of type List<Event>
+     *
+     * @return List<Event>
+     */
     @Override
     public List<Event> filterNotSalableProducts(List<Event> events) {
         events.forEach(event -> {
@@ -68,6 +75,11 @@ public class WebshopServiceImpl implements WebshopService {
         return events;
     }
 
+    /**
+     * Check if Product is in sell interval.
+     *
+     * @return Predicate<Product>
+     */
     private Predicate<Product> filterProductBySellInterval() {
         return product -> LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
     }

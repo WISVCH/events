@@ -34,10 +34,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout/{key}/customer")
 public class WebshopCustomerController extends WebshopController {
 
+    /** CustomerService. */
     private final CustomerService customerService;
 
+    /** AuthenticationService. */
     private final AuthenticationService authenticationService;
 
+    /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
     /**
@@ -60,11 +63,20 @@ public class WebshopCustomerController extends WebshopController {
         this.orderValidationService = orderValidationService;
     }
 
+    /**
+     * Show the possible options to checkout as a Customer.
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping
     public String customerOptions(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertShouldContinue(order);
+            this.assertOrderIsSuitableForCheckout(order);
             model.addAttribute("order", order);
 
             return "webshop/checkout/customer";
@@ -75,12 +87,20 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
+    /**
+     * Checkout using CHConnect.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping("/chconnect")
     @PreAuthorize("hasRole('USER')")
     public String customerChConnect(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertShouldContinue(order);
+            this.assertOrderIsSuitableForCheckout(order);
             Customer customer = authenticationService.getCurrentCustomer();
 
             this.addCustomerToOrder(order, customer);
@@ -93,20 +113,20 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
-    private void addCustomerToOrder(Order order, Customer customer)
-            throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
-        orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-        order.setOwner(customer);
-        orderService.update(order);
-        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
-    }
-
+    /**
+     * Checkout as a guest.
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping("/guest")
     public String customerGuest(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertShouldContinue(order);
+            this.assertOrderIsSuitableForCheckout(order);
 
             if (!model.containsAttribute("customer")) {
                 model.addAttribute("customer", new Customer());
@@ -121,8 +141,17 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
+    /**
+     * Checkout as a guest by getting or creating an Customer.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     * @param customer of type Customer
+     *
+     * @return String
+     */
     @PostMapping("/guest")
-    public String addNewCustomer(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
+    public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);
 
@@ -148,6 +177,13 @@ public class WebshopCustomerController extends WebshopController {
         }
     }
 
+    /**
+     * Get an existing Customer based on email or username.
+     *
+     * @param customer of type Customer
+     *
+     * @return Customer
+     */
     private Customer getExistingCustomer(Customer customer) {
         try {
             return customerService.getByEmail(customer.getEmail());
@@ -158,5 +194,24 @@ public class WebshopCustomerController extends WebshopController {
             }
         }
         return null;
+    }
+
+    /**
+     * Add a Customer to an Order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     *
+     * @throws OrderInvalidException             when Order is invalid
+     * @throws OrderExceedCustomerLimitException when the Order exceed the Customer limit
+     * @throws OrderNotFoundException            when the Order does not exists
+     */
+    private void addCustomerToOrder(Order order, Customer customer)
+            throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
+        orderValidationService.assertOrderIsValidForCustomer(order, customer);
+
+        order.setOwner(customer);
+        orderService.update(order);
+        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }
 }

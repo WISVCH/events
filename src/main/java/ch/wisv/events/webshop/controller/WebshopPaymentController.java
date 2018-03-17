@@ -41,16 +41,24 @@ import static java.lang.Thread.sleep;
  */
 @Controller
 @RequestMapping("/checkout/{key}/payment")
-public class WebshopPaymentController {
+public class WebshopPaymentController extends WebshopController {
 
-    private final OrderService orderService;
+    /** Max retry attempt to fetch payment status. */
+    private static final int MAX_PAYMENT_FETCH_ATTEMPT = 5;
 
+    /** Amount of milli secs between status fetch attempt. */
+    private static final int WAIT_BETWEEN_STATUS_FETCH_ATTEMPT = 500;
+
+    /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
+    /** PaymentsService. */
     private final PaymentsService paymentsService;
 
+    /** WebshopService. */
     private final WebshopService webshopService;
 
+    /** MailService. */
     private final MailService mailService;
 
     /**
@@ -60,7 +68,7 @@ public class WebshopPaymentController {
      * @param orderValidationService of type OrderValidationService
      * @param paymentsService        of type PaymentsService
      * @param webshopService         of type WebshopService
-     * @param mailService
+     * @param mailService            of type MailService
      */
     public WebshopPaymentController(
             OrderService orderService,
@@ -69,35 +77,48 @@ public class WebshopPaymentController {
             WebshopService webshopService,
             MailService mailService
     ) {
-        this.orderService = orderService;
+        super(orderService);
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
         this.webshopService = webshopService;
         this.mailService = mailService;
     }
 
-    @GetMapping("")
-    public String checkout(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    /**
+     * Show different types of Payment options.
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
+    @GetMapping
+    public String paymentOverview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
             model.addAttribute("order", order);
-
-            if (order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.REJECTED) {
-                redirect.addFlashAttribute("error", "Order has already been paid or has been rejected.");
-
-                return "redirect:/";
-            }
+            this.assertOrderIsSuitableForCheckout(order);
 
             return "webshop/payment/index";
-        } catch (OrderNotFoundException e) {
+        } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
         }
     }
 
+    /**
+     * Payment method using a Reservation.
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping("/reservation")
-    public String checkoutReservation(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    public String paymentReservation(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
             model.addAttribute("model", order);
@@ -116,6 +137,15 @@ public class WebshopPaymentController {
         }
     }
 
+    /**
+     * Payment method using iDeal.
+     *
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
     @GetMapping("/ideal")
     public String checkoutIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
@@ -139,6 +169,15 @@ public class WebshopPaymentController {
         }
     }
 
+    /**
+     * Return url after iDeal payment.
+     *
+     * @param redirect          of type RedirectAttributes
+     * @param key               of type String
+     * @param paymentsReference of type String
+     *
+     * @return String
+     */
     @GetMapping("/return")
     public String returnMolliePayment(RedirectAttributes redirect, @PathVariable String key, @RequestParam("reference") String paymentsReference) {
         try {
@@ -163,14 +202,23 @@ public class WebshopPaymentController {
         }
     }
 
+    /**
+     * Fetch OrderStatus from CH Payments and retry if it fails the first time.
+     *
+     * @param order             of type Order
+     * @param paymentsReference of type String
+     *
+     * @throws OrderInvalidException when Order is invalid
+     * @throws PaymentsStatusUnknown when Payments Status is unknown
+     */
     private void fetchOrderStatus(Order order, String paymentsReference) throws OrderInvalidException, PaymentsStatusUnknown {
         int count = 0;
-        int maxCount = 5;
+        int maxCount = MAX_PAYMENT_FETCH_ATTEMPT;
 
         while (order.getStatus() == OrderStatus.PENDING && count < maxCount) {
             try {
                 webshopService.updateOrderStatus(order, paymentsReference);
-                sleep(500);
+                sleep(WAIT_BETWEEN_STATUS_FETCH_ATTEMPT);
             } catch (InterruptedException ignored) {
             }
 
