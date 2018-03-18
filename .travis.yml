@@ -17,7 +17,7 @@ after_success:
     fi
 after_script:
   - cd src/main/java/
-  - ../../../cc-test-reporter format-coverage -d -t jacoco --exit-code $TRAVIS_TEST_RESULT
+  - ../../../cc-test-reporter format-coverage -d -t jacoco
   - ../../../cc-test-reporter upload-coverage -d
 notifications:
   slack:
