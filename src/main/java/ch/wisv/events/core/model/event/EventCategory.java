@@ -3,20 +3,20 @@ package ch.wisv.events.core.model.event;
 import lombok.Getter;
 
 /**
- * Enum EventStatus
+ * Enum EventStatus.
  */
 public enum EventCategory {
 
     CAREER("Career"), SOCIAL("Social"), EDUCATIONAL("Educational"), ASSOCIATION("Association");
 
     /**
-     * Display name of the status (for view purpose)
+     * Display name of the status (for view purpose).
      */
     @Getter
     private final String displayName;
 
     /**
-     * Default constructor
+     * EventCategory constructor.
      *
      * @param displayName Display name of the status
      */

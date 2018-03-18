@@ -1,27 +1,30 @@
 package ch.wisv.events.api.controller;
 
-import ch.wisv.events.api.request.ProductDTO;
+import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.util.Search;
+import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
+import java.util.List;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ProductRESTController.
  */
 @RestController
 @RequestMapping("/api/v1/products")
-public class ProductRESTController {
+public class ProductRestController {
 
     /**
      * ProductService.
@@ -33,20 +36,20 @@ public class ProductRESTController {
      *
      * @param productService ProductService
      */
-    public ProductRESTController(ProductService productService) {
+    public ProductRestController(ProductService productService) {
         this.productService = productService;
     }
 
     /**
-     * Create a Product based on a ProductDTO and return the id, key and title of this Product.
+     * Create a Product based on a ProductDto and return the id, key and title of this Product.
      *
-     * @param product of type ProductDTO
+     * @param product of type ProductDto
      *
      * @return ResponseEntity
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity createProduct(@Validated @RequestBody ProductDTO product) {
+    public ResponseEntity createProduct(@Validated @RequestBody ProductDto product) {
         try {
             Product created = productService.create(product);
 
@@ -55,7 +58,7 @@ public class ProductRESTController {
             json.put("product_key", created.getKey());
             json.put("product_title", created.getTitle());
 
-            return createResponseEntity(HttpStatus.CREATED, "Product successfullly created", json);
+            return createResponseEntity(HttpStatus.CREATED, "Product successfully created", json);
         } catch (ProductInvalidException e) {
             return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
         }

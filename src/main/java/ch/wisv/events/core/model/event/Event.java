@@ -1,20 +1,25 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.utils.LDAPGroup;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Event entity.
@@ -64,7 +69,7 @@ public class Event {
     /**
      * Field imageURL imageUrl to an image of the Event.
      */
-    private String imageURL;
+    private String imageUrl;
 
     /**
      * Product that are related to this event and can be sold. OneToMany so one Product can be used by one Event, but
@@ -106,7 +111,7 @@ public class Event {
     /**
      * Commission/board which organizes the Event.
      */
-    private LDAPGroup organizedBy;
+    private ch.wisv.events.utils.LdapGroup organizedBy;
 
     /**
      * List of all the possible catergories.
@@ -122,7 +127,7 @@ public class Event {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
         this.published = EventStatus.NOT_PUBLISHED;
-        this.organizedBy = LDAPGroup.BESTUUR;
+        this.organizedBy = ch.wisv.events.utils.LdapGroup.BESTUUR;
         this.categories = new ArrayList<>();
     }
 
@@ -134,7 +139,7 @@ public class Event {
      * @param location    Location of the Event
      * @param target      Target of the Event
      * @param maxSold     Limit of the Event
-     * @param imageURL    Path to the Image of the Event
+     * @param imageUrl    Path to the Image of the Event
      * @param start       Starting DateTime of the Event
      * @param ending      Ending DateTime of the Event
      */
@@ -144,7 +149,7 @@ public class Event {
             String location,
             int target,
             Integer maxSold,
-            String imageURL,
+            String imageUrl,
             LocalDateTime start,
             LocalDateTime ending,
             String shortDescription
@@ -157,7 +162,7 @@ public class Event {
         this.maxSold = maxSold;
         this.start = start;
         this.ending = ending;
-        this.imageURL = imageURL;
+        this.imageUrl = imageUrl;
         this.shortDescription = shortDescription;
     }
 

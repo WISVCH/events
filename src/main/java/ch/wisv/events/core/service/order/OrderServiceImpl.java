@@ -1,10 +1,14 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.core.exception.normal.*;
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.ProductInvalidException;
+import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.normal.UnassignedOrderException;
+import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
-import ch.wisv.events.core.model.order.OrderProductDTO;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
@@ -13,31 +17,14 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -98,17 +85,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Create an Order form a OrderProductDTO.
+     * Create an Order form a OrderProductDto.
      *
-     * @param orderProductDTO of type OrderProductDTO
+     * @param orderProductDto of type OrderProductDto
      *
      * @return Order
      */
     @Override
-    public Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException {
+    public Order createOrderByOrderProductDTO(ch.wisv.events.core.model.order.OrderProductDto orderProductDto) throws ProductNotFoundException {
         Order order = new Order();
 
-        for (Map.Entry<String, Long> values : orderProductDTO.getProducts().entrySet()) {
+        for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
             if (values.getValue() > 0) {
                 Product product = productService.getByKey(values.getKey());
                 order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));

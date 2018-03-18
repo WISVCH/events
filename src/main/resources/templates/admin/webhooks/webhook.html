@@ -53,7 +53,7 @@
                                     <div class="form-group col-sm-12">
                                         <label>LDAP group*
                                             <select class="mb-0 form-control" th:field="*{ldapGroup}" required>
-                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LdapGroup).values()}"
                                                         th:value="${group}"
                                                         th:text="${group.getName()}">
                                                 </option>

@@ -2,10 +2,14 @@ package ch.wisv.events;
 
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jose.JWSAlgorithm;
+import java.util.Collections;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.RegisteredClient;
+import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
 import org.mitre.openid.connect.client.service.RegisteredClientService;
 import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
@@ -17,12 +21,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
-
 /**
  * CHConnectConfiguration class.
  */
@@ -30,7 +28,7 @@ import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PR
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public class CHConnectConfiguration {
+public class ChConnectConfiguration {
 
     /**
      * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration.
@@ -73,7 +71,7 @@ public class CHConnectConfiguration {
     /**
      * CHConnectConfiguration constructor.
      */
-    public CHConnectConfiguration() {
+    public ChConnectConfiguration() {
         registeredClient = new RegisteredClient();
         registeredClient.setScope(ImmutableSet.of("openid", "email", "profile", "ldap"));
         registeredClient.setTokenEndpointAuthMethod(ClientDetailsEntity.AuthMethod.SECRET_BASIC);

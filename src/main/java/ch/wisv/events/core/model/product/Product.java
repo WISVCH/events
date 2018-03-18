@@ -1,17 +1,22 @@
 package ch.wisv.events.core.model.product;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Product Entity.
@@ -67,7 +72,7 @@ public class Product {
     public Integer maxSold;
 
     /**
-     * Field maxSoldPerCustomer
+     * Field maxSoldPerCustomer.
      */
     public Integer maxSoldPerCustomer;
 
@@ -84,18 +89,18 @@ public class Product {
     public LocalDateTime sellEnd;
 
     /**
-     * Field productList
+     * Field productList.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     public List<Product> products;
 
     /**
-     * Flag if product is linked
+     * Flag if product is linked.
      */
     public boolean linked;
 
     /**
-     * Default constructor.
+     * Product constructor.
      */
     public Product() {
         this.key = UUID.randomUUID().toString();

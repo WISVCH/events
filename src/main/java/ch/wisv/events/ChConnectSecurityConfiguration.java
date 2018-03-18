@@ -3,7 +3,9 @@ package ch.wisv.events;
 import ch.wisv.connect.client.CHUserInfoFetcher;
 import ch.wisv.connect.common.model.CHUserInfo;
 import com.google.common.collect.ImmutableSet;
+import java.util.Collections;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
+import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
 import org.mitre.openid.connect.client.OIDCAuthenticationProvider;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
 import org.mitre.openid.connect.client.service.ServerConfigurationService;
@@ -31,10 +33,6 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.Collections;
-
-import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
-
 /**
  * CH Connect Security Configuration.
  */
@@ -46,7 +44,7 @@ import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PR
 public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     /** CHConnectConfiguration. */
-    private final CHConnectConfiguration properties;
+    private final ChConnectConfiguration properties;
 
     /** ClientConfigurationService. */
     private final ClientConfigurationService clientConfigurationService;
@@ -57,7 +55,7 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      * @param properties                 of type CHConnectConfiguration
      * @param clientConfigurationService of type ClientConfigurationService
      */
-    public ChConnectSecurityConfiguration(CHConnectConfiguration properties, ClientConfigurationService clientConfigurationService) {
+    public ChConnectSecurityConfiguration(ChConnectConfiguration properties, ClientConfigurationService clientConfigurationService) {
         this.properties = properties;
         this.clientConfigurationService = clientConfigurationService;
     }

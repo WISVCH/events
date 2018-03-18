@@ -6,17 +6,16 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * DashboardController.
@@ -26,23 +25,17 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardController {
 
-    /**
-     * Field eventService
-     */
+    /** EventService. */
     private final EventService eventService;
 
-    /**
-     * Field customerService
-     */
+    /** CustomerService. */
     private final CustomerService customerService;
 
-    /**
-     * Field ticketService
-     */
+    /** TicketService. */
     private final TicketService ticketService;
 
     /**
-     * DashboardController
+     * DashboardController constructor.
      *
      * @param eventService    of type EventService
      * @param customerService of type CustomerService
@@ -78,16 +71,14 @@ public class DashboardController {
 
         double targetRateCurrentBoard = this.determineAverageTargetRateCurrentBoard();
         model.addAttribute("averageTargetRate", targetRateCurrentBoard);
-        model.addAttribute(
-                "changeTargetRate",
-                this.calculateChangePercentage(this.determineAverageTargetRatePreviousBoard(), targetRateCurrentBoard)
+        model.addAttribute("changeTargetRate",
+                           this.calculateChangePercentage(this.determineAverageTargetRatePreviousBoard(), targetRateCurrentBoard)
         );
 
         double attendanceRateCurrentBoard = this.determineAverageAttendanceRateEventCurrentBoard();
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
-        model.addAttribute(
-                "changeAttendanceRate",
-                this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
+        model.addAttribute("changeAttendanceRate",
+                           this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
         );
 
         model.addAttribute("upcoming", upcomingEvents);
@@ -140,7 +131,7 @@ public class DashboardController {
     /**
      * Method getEventsCurrentBoard returns the eventsCurrentBoard of this DashboardController object.
      *
-     * @return the eventsCurrentBoard (type List<Event>) of this DashboardController object.
+     * @return the eventsCurrentBoard (type List) of this DashboardController object.
      */
     private List<Event> getEventsCurrentBoard() {
         LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear(), 9, 1, 0, 0);
@@ -155,7 +146,7 @@ public class DashboardController {
     /**
      * Method getEventsPreviousBoard returns the eventsPreviousBoard of this DashboardController object.
      *
-     * @return the eventsPreviousBoard (type List<Event>) of this DashboardController object.
+     * @return the eventsPreviousBoard (type List) of this DashboardController object.
      */
     private List<Event> getEventsPreviousBoard() {
         LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear() - 1, 9, 1, 0, 0);
@@ -170,7 +161,7 @@ public class DashboardController {
     /**
      * Method determineAverageTargetRate ...
      *
-     * @param events of type List<Event>
+     * @param events of type List
      *
      * @return double
      */
@@ -240,7 +231,7 @@ public class DashboardController {
     /**
      * Method determineUpcomingEvents ...
      *
-     * @return List<Event>
+     * @return List
      */
     private List<Event> determineUpcomingEvents() {
         return this.eventService.getUpcoming().stream().filter(event -> event.getStart().isBefore(LocalDateTime.now().plusWeeks(2))).collect(

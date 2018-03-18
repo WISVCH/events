@@ -3,6 +3,9 @@ package ch.wisv.events.core.webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
 import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
 import ch.wisv.events.core.repository.WebhookTaskRepository;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,26 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Component
 @Slf4j
 public class WebhookTaskScheduler {
@@ -83,9 +66,8 @@ public class WebhookTaskScheduler {
 
         httpPost.setHeader("Content-type", "application/json");
         httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader(
-                "Authorization",
-                "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
+        httpPost.setHeader("Authorization",
+                           "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
         );
         httpPost.setEntity(new StringEntity(webhookTask.getObject().toJSONString(), "UTF8"));
 

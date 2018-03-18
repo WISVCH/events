@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -22,23 +26,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardProductController {
 
-    /**
-     * ProductService
-     */
+    /** ProductService. */
     private final ProductService productService;
 
-    /**
-     * Field orderService
-     */
+    /** TicketService. */
     private final TicketService ticketService;
 
-    /**
-     * Field webhookPublisher
-     */
+    /** WebhookPublisher. */
     private final WebhookPublisher webhookPublisher;
 
     /**
-     * Default constructor
+     * DashboardProductController constructor.
      *
      * @param productService   of type ProductService.
      * @param ticketService    of type TicketService.
@@ -54,7 +52,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Get request for ProductOverview
+     * Get request for ProductOverview.
      *
      * @param model SpringUI model
      *
@@ -68,7 +66,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Method view ...
+     * Get request for showing Product overview.
      *
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
@@ -90,7 +88,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Get request to create a Product
+     * Get request to create a Product.
      *
      * @param model SpringUI model
      *
@@ -106,7 +104,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Post request to create a Product
+     * Post request to create a Product.
      *
      * @param product  Product product attr.
      * @param redirect Spring RedirectAttributes
@@ -131,7 +129,7 @@ public class DashboardProductController {
 
     /**
      * Get request to edit a Product or if the key does not exists it will redirect to the
-     * Product Overview page
+     * Product Overview page.
      *
      * @param model SpringUI model
      *
@@ -151,7 +149,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Method edit post request to update an existing Product
+     * Method edit post request to update an existing Product.
      *
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
@@ -159,8 +157,9 @@ public class DashboardProductController {
      * @return String
      */
     @PostMapping("/edit/{key}")
-    public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
+    public String update(RedirectAttributes redirect, @ModelAttribute Product product, @PathVariable String key) {
         try {
+            product.setKey(key);
             productService.update(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("success", "Changes have been saved!");
@@ -197,7 +196,7 @@ public class DashboardProductController {
     }
 
     /**
-     * Get request to delete a Product
+     * Get request to delete a Product.
      *
      * @param redirectAttributes Spring RedirectAttributes
      * @param key                key of a Product

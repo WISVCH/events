@@ -1,10 +1,8 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.product.Product;
-
 import java.util.List;
 
 /**
@@ -45,9 +43,9 @@ public interface ProductService {
     /**
      * Method create ...
      *
-     * @param productDTO of type ProductDTO
+     * @param productDto of type ProductDto
      */
-    Product create(ProductDTO productDTO) throws ProductInvalidException;
+    Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException;
 
     /**
      * Update Product using a Product

@@ -348,7 +348,7 @@
 //
 //        HashMap<String, Long> products = new HashMap<>();
 //        products.put("key", 1L);
-//        OrderProductDTO orderProductDTO = new OrderProductDTO();
+//        OrderProductDto orderProductDTO = new OrderProductDto();
 //        orderProductDTO.setProducts(products);
 //
 //        Order order = service.createOrderByOrderProductDTO(orderProductDTO);

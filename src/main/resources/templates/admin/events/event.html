@@ -150,7 +150,7 @@
                                         <label>Organized by
                                             <select name="" id="organizedBy" class="form-control"
                                                     th:field="*{organizedBy}" required>
-                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LdapGroup).values()}"
                                                         th:value="${group}"
                                                         th:text="${group.getName()}">
                                                 </option>

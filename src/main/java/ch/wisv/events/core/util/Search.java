@@ -1,10 +1,9 @@
 package ch.wisv.events.core.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.Data;
 
 /**
  * Search Object.

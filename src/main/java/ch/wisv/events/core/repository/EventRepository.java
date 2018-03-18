@@ -3,12 +3,10 @@ package ch.wisv.events.core.repository;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.utils.LDAPGroup;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Event repository.
@@ -25,14 +23,18 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByEndingAfter(LocalDateTime dateTime);
 
     /**
-     * Find all Events that are organized by a certain LDAPGroup.
+     * Find all Events that are organized by a certain LdapGroup.
      *
      * @param published   of type EventStatus
-     * @param organizedBy of type LDAPGroup
+     * @param organizedBy of type LdapGroup
      *
      * @return List<Event>
      */
-    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus published, LDAPGroup organizedBy, LocalDateTime ending);
+    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(
+            EventStatus published,
+            ch.wisv.events.utils.LdapGroup organizedBy,
+            LocalDateTime ending
+    );
 
     /**
      * Method findAllByPublished ...

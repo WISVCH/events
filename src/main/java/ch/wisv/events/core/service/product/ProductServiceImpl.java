@@ -1,36 +1,18 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -108,17 +90,17 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Method create ...
      *
-     * @param productDTO of type ProductDTO
+     * @param productDto of type ProductDto
      */
     @Override
-    public Product create(ProductDTO productDTO) throws ProductInvalidException {
+    public Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException {
         Product product = new Product();
 
-        product.setTitle(productDTO.getTitle());
-        product.setDescription(productDTO.getDescription());
-        product.setCost(productDTO.getCost());
-        product.setMaxSold(productDTO.getMaxSold());
-        product.setMaxSoldPerCustomer(productDTO.getMaxSoldPerCustomer());
+        product.setTitle(productDto.getTitle());
+        product.setDescription(productDto.getDescription());
+        product.setCost(productDto.getCost());
+        product.setMaxSold(productDto.getMaxSold());
+        product.setMaxSoldPerCustomer(productDto.getMaxSoldPerCustomer());
 
         return this.create(product);
     }
