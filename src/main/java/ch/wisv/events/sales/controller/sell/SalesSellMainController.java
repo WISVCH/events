@@ -3,6 +3,7 @@ package ch.wisv.events.sales.controller.sell;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
@@ -17,26 +18,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * SalesSellMainController class.
+ */
 @Controller
 @RequestMapping(value = "/sales/sell")
 @PreAuthorize("hasRole('USER')")
 public class SalesSellMainController {
 
+    /** AuthenticationService. */
     private final AuthenticationService authenticationService;
 
+    /** SalesService. */
     private final SalesService salesService;
 
+    /** OrderService. */
     private final OrderService orderService;
 
+    /**
+     * SalesSellMainController constructor.
+     *
+     * @param authenticationService of type AuthenticationService
+     * @param salesService          of type SalesService
+     * @param orderService          of type OrderService
+     */
     @Autowired
-    public SalesSellMainController(
-            AuthenticationService authenticationService, SalesService salesService, OrderService orderService
-    ) {
+    public SalesSellMainController(AuthenticationService authenticationService, SalesService salesService, OrderService orderService) {
         this.authenticationService = authenticationService;
         this.salesService = salesService;
         this.orderService = orderService;
     }
 
+    /**
+     * Sales sell index page.
+     *
+     * @param model of type Model
+     *
+     * @return String
+     */
     @GetMapping
     public String index(Model model) {
         Customer currentUser = authenticationService.getCurrentCustomer();
@@ -45,8 +64,16 @@ public class SalesSellMainController {
         return "sales/sell/index";
     }
 
+    /**
+     * Create an Order based on a OrderProductDto.
+     *
+     * @param redirect        of type RedirectAttributes
+     * @param orderProductDto of type OrderProductDto
+     *
+     * @return String
+     */
     @PostMapping
-    public String createOrder(RedirectAttributes redirect, @ModelAttribute ch.wisv.events.core.model.order.OrderProductDto orderProductDto) {
+    public String createOrder(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         if (orderProductDto.getProducts().isEmpty()) {
             redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
 
