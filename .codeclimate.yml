@@ -1,8 +1,12 @@
 engines:
   checkstyle:
     enabled: true
-    config:
-      file: "checkstyle.xml"
     checks:
       com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck:
         enabled: false
+
+plugins:
+  checkstyle:
+      enabled: true
+      config:
+        file: ".codeclimate/checkstyle.xml"
