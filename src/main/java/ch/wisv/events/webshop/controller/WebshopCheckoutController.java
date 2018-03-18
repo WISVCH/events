@@ -54,7 +54,7 @@ public class WebshopCheckoutController extends WebshopController {
                 return "redirect:/";
             }
 
-            Order order = orderService.createOrderByOrderProductDTO(orderProductDto);
+            Order order = orderService.createOrderByOrderProductDto(orderProductDto);
             order.setCreatedBy("events-webshop");
             orderValidationService.assertOrderIsValid(order);
             orderService.create(order);

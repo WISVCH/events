@@ -13,31 +13,31 @@ import java.util.List;
 public interface EventService {
 
     /**
-     * Get all Events
+     * Get all Events.
      *
      * @return Collection of Events
      */
     List<Event> getAll();
 
     /**
-     * Get all Events between a lowerbound and upperbound
+     * Get all Events between a lowerBound and upperBound.
      *
-     * @param lowerbound of type LocalDateTime
-     * @param upperbound of type LocalDateTime
+     * @param lowerBound of type LocalDateTime
+     * @param upperBound of type LocalDateTime
      *
-     * @return List<Event>
+     * @return List of Events
      */
-    List<Event> getAllBetween(LocalDateTime lowerbound, LocalDateTime upperbound);
+    List<Event> getAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound);
 
     /**
-     * Get all upcoming Events
+     * Get all upcoming Events.
      *
-     * @return Collection of Events
+     * @return List of Events
      */
     List<Event> getUpcoming();
 
     /**
-     * Get Event by key
+     * Get Event by key.
      *
      * @param key key of an Event
      *
@@ -46,7 +46,7 @@ public interface EventService {
     Event getByKey(String key) throws EventNotFoundException;
 
     /**
-     * Get all Events that are connected to the same Product
+     * Get all Events that are connected to the same Product.
      *
      * @param product of type Product
      *
@@ -55,21 +55,21 @@ public interface EventService {
     Event getByProduct(Product product) throws EventNotFoundException;
 
     /**
-     * Add a new Event by a EventRequest
+     * Add a new Event by a EventRequest.
      *
      * @param event Event
      */
     void create(Event event) throws EventInvalidException;
 
     /**
-     * Update event by Event
+     * Update event by Event.
      *
      * @param event Event
      */
     void update(Event event) throws EventNotFoundException, EventInvalidException;
 
     /**
-     * Delete an Event
+     * Delete an Event.
      *
      * @param event Event
      */
@@ -78,7 +78,7 @@ public interface EventService {
     /**
      * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
      *
-     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     * @return List of Events
      */
     List<Event> getPreviousEventsLastTwoWeeks();
 }

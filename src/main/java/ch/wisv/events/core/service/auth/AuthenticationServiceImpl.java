@@ -40,7 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         CHUserInfo userInfo = this.getChUserInfo(auth);
 
         try {
-            Customer customer = this.getCustomerByCHUserInfo(userInfo);
+            Customer customer = this.getCustomerByChUserInfo(userInfo);
             this.updateCustomerInfo(customer, userInfo);
 
             return customer;
@@ -79,7 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      *
      * @throws CustomerInvalidException when the CHUserInfo will result in an invalid
      */
-    private Customer getCustomerByCHUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
+    private Customer getCustomerByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
         try {
             return customerService.getBySub(userInfo.getSub());
         } catch (CustomerNotFoundException ignored) {

@@ -6,38 +6,41 @@ import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * TicketRepository interface.
+ */
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     /**
-     * Find all Ticket by Product and Customer
+     * Find all Ticket by Product and Customer.
      *
      * @param product of type Product
      * @param owner   of type Customer
      *
-     * @return List<Ticket>
+     * @return List
      */
     List<Ticket> findAllByProductAndOwner(Product product, Customer owner);
 
     /**
-     * Find all Ticket by Product
+     * Find all Ticket by Product.
      *
      * @param product of type Product
      *
-     * @return List<Ticket>
+     * @return List
      */
     List<Ticket> findAllByProduct(Product product);
 
     /**
-     * Find all Ticket by Customer
+     * Find all Ticket by Customer.
      *
      * @param owner of type Customer
      *
-     * @return List<Ticket>
-     */
+     * @return List<
+          */
     List<Ticket> findAllByOwner(Customer owner);
 
     /**
-     * Count all Ticket by Product
+     * Count all Ticket by Product.
      *
      * @param product of type Product
      *

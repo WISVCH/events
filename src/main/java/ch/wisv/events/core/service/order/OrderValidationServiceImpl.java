@@ -17,20 +17,26 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * OrderValidationServiceImpl class.
+ */
 @Service
 public class OrderValidationServiceImpl implements OrderValidationService {
 
+    /** OrderService. */
     private final OrderService orderService;
 
+    /** TicketService. */
     private final TicketService ticketService;
 
+    /** EventService. */
     private final EventService eventService;
 
     /**
-     * Default constructor
+     * OrderValidationServiceImpl constructor.
      *
      * @param orderService  of type Order Service
-     * @param ticketService of type TicketSerivce
+     * @param ticketService of type TicketService
      * @param eventService  of type EventService
      */
     @Autowired
@@ -53,7 +59,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     }
 
     /**
-     * Assert the default Order checks
+     * Assert the default Order checks.
      *
      * @param order of type Order
      *

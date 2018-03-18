@@ -19,18 +19,14 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 @Service
 public class MailServiceImpl implements MailService {
 
-    /**
-     * Field mailSender
-     */
+    /** JavaMailSender. */
     private final JavaMailSender mailSender;
 
-    /**
-     * Field templateEngine
-     */
+    /** SpringTemplateEngine. */
     private final SpringTemplateEngine templateEngine;
 
     /**
-     * Constructor MailServiceImpl creates a new MailServiceImpl instance.
+     * MailServiceImpl constructor.
      *
      * @param mailSender     of type JavaMailSender
      * @param templateEngine of type templateEngine

@@ -10,14 +10,14 @@ public interface SalesService {
     /**
      * Get all Event which can be sold by the current user.
      *
-     * @return List<Event>
+     * @return List of Events
      */
     List<Event> getAllGrantedEventByCustomer(Customer customer);
 
     /**
      * Get all Product which can be sold by the current user.
      *
-     * @return List<Product>
+     * @return List of Products
      */
     List<Product> getAllGrantedProductByCustomer(Customer customer);
 }

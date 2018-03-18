@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
      *
      * @param after of type LocalDateTime
      *
-     * @return List<Customer>
+     * @return List
      */
     @Override
     public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
@@ -106,7 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Get a customer by CH username.
      *
-     * @param email
+     * @param email of type String
      *
      * @return Customer
      */

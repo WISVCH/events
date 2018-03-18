@@ -11,21 +11,22 @@ public interface WebhookTaskService {
     /**
      * Method getAll returns the all of this WebhookTaskService object.
      *
-     * @return the all (type List<WebhookTask>) of this WebhookTaskService object.
+     * @return List of WebhookTasks
      */
     List<WebhookTask> getAll();
 
     /**
-     * Method create WebhookTask
+     * Method create WebhookTask.
      *
      * @param webhookTask of type WebhookTask
      */
     void create(WebhookTask webhookTask);
 
     /**
-     * Method create ...
+     * Create webhook task by trigger, webhook and jsonObject.
      *
      * @param webhookTrigger of type WebhookTrigger
+     * @param webhook        of type Webhook
      * @param jsonObject     of type Object
      */
     void create(WebhookTrigger webhookTrigger, Webhook webhook, JSONObject jsonObject);

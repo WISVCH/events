@@ -9,13 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+/**
+ * WebhookTaskServiceImpl class.
+ */
 @Service
 @Slf4j
 public class WebhookTaskServiceImpl implements WebhookTaskService {
 
-    /**
-     * Field webhookTaskRepository
-     */
+    /** WebhookTaskRepository. */
     private final WebhookTaskRepository webhookTaskRepository;
 
     /**
@@ -30,7 +31,7 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
     /**
      * Method getAll returns the all of this WebhookTaskService object.
      *
-     * @return the all (type List<WebhookTask>) of this WebhookTaskService object.
+     * @return List of WebhookTask.
      */
     @Override
     public List<WebhookTask> getAll() {
@@ -38,7 +39,7 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
     }
 
     /**
-     * Method create WebhookTask
+     * Method create WebhookTask.
      *
      * @param webhookTask of type WebhookTask
      */

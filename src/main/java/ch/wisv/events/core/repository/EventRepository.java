@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Event repository.
+ * EventRepository interface.
  */
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
@@ -23,25 +23,11 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByEndingAfter(LocalDateTime dateTime);
 
     /**
-     * Find all Events that are organized by a certain LdapGroup.
-     *
-     * @param published   of type EventStatus
-     * @param organizedBy of type LdapGroup
-     *
-     * @return List<Event>
-     */
-    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(
-            EventStatus published,
-            ch.wisv.events.utils.LdapGroup organizedBy,
-            LocalDateTime ending
-    );
-
-    /**
      * Method findAllByPublished ...
      *
      * @param published of type EventStatus
      *
-     * @return List<Event>
+     * @return List
      */
     List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
 
@@ -60,7 +46,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @param start  of type LocalDateTime
      * @param ending of type LocalDateTime
      *
-     * @return List<Event>
+     * @return List
      */
     List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
 
@@ -70,7 +56,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @param after  of type LocalDateTime
      * @param before of type LocalDateTime
      *
-     * @return List<Event>
+     * @return List
      */
     List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
 
@@ -79,7 +65,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param product of type Product
      *
-     * @return Optional<Event>
+     * @return Optional
      */
     Optional<Event> findByProductsContaining(Product product);
 }

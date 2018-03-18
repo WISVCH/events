@@ -71,14 +71,16 @@ public class DashboardController {
 
         double targetRateCurrentBoard = this.determineAverageTargetRateCurrentBoard();
         model.addAttribute("averageTargetRate", targetRateCurrentBoard);
-        model.addAttribute("changeTargetRate",
-                           this.calculateChangePercentage(this.determineAverageTargetRatePreviousBoard(), targetRateCurrentBoard)
+        model.addAttribute(
+                "changeTargetRate",
+                this.calculateChangePercentage(this.determineAverageTargetRatePreviousBoard(), targetRateCurrentBoard)
         );
 
         double attendanceRateCurrentBoard = this.determineAverageAttendanceRateEventCurrentBoard();
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
-        model.addAttribute("changeAttendanceRate",
-                           this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
+        model.addAttribute(
+                "changeAttendanceRate",
+                this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
         );
 
         model.addAttribute("upcoming", upcomingEvents);

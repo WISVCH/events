@@ -11,6 +11,7 @@ import ch.wisv.events.core.exception.normal.UnassignedOrderException;
 import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface OrderService {
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
-     * @return the allOrders (type List<Order>) of this OrderService object.
+     * @return List of Orders
      */
     List<Order> getAllOrders();
 
@@ -54,7 +55,7 @@ public interface OrderService {
      *
      * @return Order
      */
-    Order createOrderByOrderProductDTO(ch.wisv.events.core.model.order.OrderProductDto orderProductDto) throws ProductNotFoundException;
+    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
 
     /**
      * Update the Order status.
@@ -65,7 +66,7 @@ public interface OrderService {
     void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
 
     /**
-     * Method updateOrderStatusPaid
+     * Update and the order status to paid.
      *
      * @param order of type Order
      */
@@ -85,7 +86,12 @@ public interface OrderService {
      */
     void deleteTempOrder(Order order);
 
+    /**
+     * Get all reservation orders by a Customer.
+     *
+     * @param customer of type Customer.
+     *
+     * @return List of Orders
+     */
     List<Order> getAllReservationOrderByCustomer(Customer customer);
-
-    List<Order> getAllPaidOrderByCustomer(Customer customer);
 }

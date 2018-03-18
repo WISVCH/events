@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
-     * @return the allOrders (type List<Order>) of this OrderService object.
+     * @return List of Orders.
      */
     @Override
     public List<Order> getAllOrders() {
@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
      * @return Order
      */
     @Override
-    public Order createOrderByOrderProductDTO(ch.wisv.events.core.model.order.OrderProductDto orderProductDto) throws ProductNotFoundException {
+    public Order createOrderByOrderProductDto(ch.wisv.events.core.model.order.OrderProductDto orderProductDto) throws ProductNotFoundException {
         Order order = new Order();
 
         for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
@@ -180,7 +180,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Method updateOrderStatusPaid
+     * Update order status to PAID.
      *
      * @param order of type Order
      */
@@ -227,11 +227,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllReservationOrderByCustomer(Customer customer) {
         return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
-    }
-
-    @Override
-    public List<Order> getAllPaidOrderByCustomer(Customer customer) {
-        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.PAID);
     }
 
     /**

@@ -42,7 +42,7 @@ public class EventCreateUpdateRequestFactory extends WebhookRequestFactory {
     /**
      * Method generateProductRequestData ...
      *
-     * @param productList of type List<Product>
+     * @param productList of type List of Products
      *
      * @return JSONArray
      */

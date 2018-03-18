@@ -6,26 +6,26 @@ import ch.wisv.events.core.model.product.Product;
 import java.util.List;
 
 /**
- * ProductService.
+ * ProductService interface.
  */
 public interface ProductService {
 
     /**
-     * Get all products
+     * Get all products.
      *
      * @return List of Products
      */
     List<Product> getAllProducts();
 
     /**
-     * Get all available products
+     * Get all available products.
      *
      * @return Collection of Products
      */
     List<Product> getAvailableProducts();
 
     /**
-     * Get Product by Key
+     * Get Product by Key.
      *
      * @param key key of a Product
      *
@@ -34,7 +34,7 @@ public interface ProductService {
     Product getByKey(String key) throws ProductNotFoundException;
 
     /**
-     * Add a new Product using a Product
+     * Add a new Product using a Product.
      *
      * @param product of type Product
      */
@@ -48,14 +48,14 @@ public interface ProductService {
     Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException;
 
     /**
-     * Update Product using a Product
+     * Update Product using a Product.
      *
      * @param product Product containing the new product information
      */
     void update(Product product) throws ProductNotFoundException, ProductInvalidException;
 
     /**
-     * Remove a Product
+     * Remove a Product.
      *
      * @param product Product to be deleted.
      */

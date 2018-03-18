@@ -13,14 +13,16 @@ import org.json.simple.JSONObject;
 public abstract class WebhookRequestFactory {
 
     /**
-     * Field mapping
+     * Mapping of Triggers and Factories.
      */
-    private static HashMap<WebhookTrigger, WebhookRequestFactory> mapping = new HashMap<WebhookTrigger, WebhookRequestFactory>() {{
-        put(WebhookTrigger.EVENT_CREATE_UPDATE, new EventCreateUpdateRequestFactory());
-        put(WebhookTrigger.EVENT_DELETE, new EventDeleteRequestFactory());
-        put(WebhookTrigger.PRODUCT_CREATE_UPDATE, new ProductCreateUpdateRequestFactory());
-        put(WebhookTrigger.PRODUCT_DELETE, new ProductDeleteFactory());
-    }};
+    private static HashMap<WebhookTrigger, WebhookRequestFactory> mapping = new HashMap<WebhookTrigger, WebhookRequestFactory>() {
+        {
+            put(WebhookTrigger.EVENT_CREATE_UPDATE, new EventCreateUpdateRequestFactory());
+            put(WebhookTrigger.EVENT_DELETE, new EventDeleteRequestFactory());
+            put(WebhookTrigger.PRODUCT_CREATE_UPDATE, new ProductCreateUpdateRequestFactory());
+            put(WebhookTrigger.PRODUCT_DELETE, new ProductDeleteFactory());
+        }
+    };
 
     /**
      * Method generateRequest ...

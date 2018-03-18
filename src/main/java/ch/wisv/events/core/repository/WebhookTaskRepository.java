@@ -5,12 +5,15 @@ import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * WebhookTaskRepository interface.
+ */
 public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Integer> {
 
     /**
      * Method findAllOrderBy_CreatedAt_Asc ...
      *
-     * @return List<WebhookTask>
+     * @return List
      */
     List<WebhookTask> findAllByOrderByCreatedAtAsc();
 
@@ -19,7 +22,7 @@ public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Intege
      *
      * @param webhookTaskStatus of type WebhookTaskStatus
      *
-     * @return List<WebhookTask>
+     * @return List
      */
     List<WebhookTask> findAllByWebhookTaskStatus(WebhookTaskStatus webhookTaskStatus);
 

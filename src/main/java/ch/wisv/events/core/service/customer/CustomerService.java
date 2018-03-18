@@ -21,7 +21,7 @@ public interface CustomerService {
      *
      * @param after of type LocalDateTime
      *
-     * @return List<Customer>
+     * @return List
      */
     List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
 

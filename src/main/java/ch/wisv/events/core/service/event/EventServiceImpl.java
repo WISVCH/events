@@ -19,14 +19,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventServiceImpl implements EventService {
 
-    /**
-     * EventRepository
-     */
+    /** EventRepository. */
     private final EventRepository eventRepository;
 
-    /**
-     * ProductRepository
-     */
+    /** ProductRepository. */
     private final ProductService productService;
 
     /**
@@ -42,7 +38,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all Events
+     * Get all Events.
      *
      * @return Collection of Events
      */
@@ -52,22 +48,22 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all Events between a lowerbound and upperbound
+     * Get all event between an lower and upper bound.
      *
-     * @param lowerbound of type LocalDateTime
-     * @param upperbound of type LocalDateTime
+     * @param lowerBound of type LocalDateTime
+     * @param upperBound of type LocalDateTime
      *
-     * @return List<Event>
+     * @return List
      */
     @Override
-    public List<Event> getAllBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
-        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerbound, upperbound);
+    public List<Event> getAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound) {
+        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerBound, upperBound);
     }
 
     /**
-     * Get all upcoming Events
+     * Get all upcoming Events.
      *
-     * @return Collection of Events
+     * @return List
      */
     @Override
     public List<Event> getUpcoming() {
@@ -76,7 +72,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get Event by key
+     * Get Event by key.
      *
      * @param key key of an Event
      *
@@ -90,7 +86,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all Events that are connected to the same Product
+     * Get all Events that are connected to the same Product.
      *
      * @param product of type Product
      *
@@ -106,7 +102,7 @@ public class EventServiceImpl implements EventService {
     /**
      * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
      *
-     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     * @return List of Events
      */
     @Override
     public List<Event> getPreviousEventsLastTwoWeeks() {
@@ -114,7 +110,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Add a new Event by a EventRequest
+     * Add a new Event by a EventRequest.
      *
      * @param event Event
      */
@@ -127,7 +123,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update event by Event
+     * Update event by Event.
      *
      * @param event Event
      */
@@ -155,7 +151,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Delete an Event
+     * Delete an Event.
      *
      * @param event Event
      */
@@ -165,7 +161,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update the linked status of Products
+     * Update the linked status of Products.
      *
      * @param products List of Products
      * @param linked   linked status

@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * SalesSellOrderController class.
+ */
 @Controller
 @PreAuthorize("hasRole('USER')")
 @RequestMapping(value = "/sales/sell/order/{publicReference}")
 public class SalesSellOrderController {
 
-    /**
-     * Field orderService
-     */
+    /** OrderService. */
     private final OrderService orderService;
 
     /**

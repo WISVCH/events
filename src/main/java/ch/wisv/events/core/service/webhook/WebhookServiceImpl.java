@@ -31,7 +31,7 @@ public class WebhookServiceImpl implements WebhookService {
     /**
      * Method getAll returns the all of this WebhookService object.
      *
-     * @return the all (type List<Webhook>) of this WebhookService object.
+     * @return List of Webhook
      */
     @Override
     public List<Webhook> getAll() {
@@ -57,7 +57,7 @@ public class WebhookServiceImpl implements WebhookService {
      *
      * @param webhookTrigger of type WebhookTrigger
      *
-     * @return List<Webhook>
+     * @return List of Webhook
      */
     @Override
     public List<Webhook> getByTrigger(WebhookTrigger webhookTrigger) {

@@ -11,7 +11,7 @@ public interface WebhookService {
     /**
      * Method getAll returns the all of this WebhookService object.
      *
-     * @return the all (type List<Webhook>) of this WebhookService object.
+     * @return List of Webhook
      */
     List<Webhook> getAll();
 
@@ -29,7 +29,7 @@ public interface WebhookService {
      *
      * @param webhookTrigger of type WebhookTrigger
      *
-     * @return List<Webhook>
+     * @return List of Webhook
      */
     List<Webhook> getByTrigger(WebhookTrigger webhookTrigger);
 

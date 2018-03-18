@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 
 /**
- * SearchItem Object
+ * SearchItem class.
  */
 @Data
 @JsonAutoDetect

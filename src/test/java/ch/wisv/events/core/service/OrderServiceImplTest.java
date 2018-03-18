@@ -351,7 +351,7 @@
 //        OrderProductDto orderProductDTO = new OrderProductDto();
 //        orderProductDTO.setProducts(products);
 //
-//        Order order = service.createOrderByOrderProductDTO(orderProductDTO);
+//        Order order = service.createOrderByOrderProductDto(orderProductDTO);
 //
 //        assertEquals(1, order.getOrderProducts().size());
 //    }

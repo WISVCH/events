@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * WebhookRepository interface.
+ */
 public interface WebhookRepository extends JpaRepository<Webhook, Integer> {
 
     /**
@@ -13,7 +16,7 @@ public interface WebhookRepository extends JpaRepository<Webhook, Integer> {
      *
      * @param key of type String
      *
-     * @return Optional<Vendor>
+     * @return Optional
      */
     Optional<Webhook> findByKey(String key);
 
@@ -22,7 +25,7 @@ public interface WebhookRepository extends JpaRepository<Webhook, Integer> {
      *
      * @param webhookTrigger of type WebhookTrigger
      *
-     * @return List<Webhook>
+     * @return List
      */
     List<Webhook> findAllByWebhookTriggersIsContaining(WebhookTrigger webhookTrigger);
 }

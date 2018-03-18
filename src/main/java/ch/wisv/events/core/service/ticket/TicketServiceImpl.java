@@ -9,13 +9,16 @@ import ch.wisv.events.core.repository.TicketRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
+/**
+ * TicketServiceImpl class.
+ */
 @Service
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
 
     /**
-     * Default constructor
+     * TicketServiceImpl constructor.
      *
      * @param ticketRepository of type TicketRepository
      */
@@ -49,12 +52,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
-     * Get all Ticket by a Product and Customer
+     * Get all Ticket by a Product and Customer.
      *
      * @param product  of type Product
      * @param customer of type Customer
      *
-     * @return List<Ticket>
+     * @return List of Tickets
      */
     @Override
     public List<Ticket> getAllByProductAndCustomer(Product product, Customer customer) {
@@ -62,11 +65,11 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
-     * Get all Ticket by a Product
+     * Get all Ticket by a Product.
      *
      * @param product of type Product
      *
-     * @return List<Ticket>
+     * @return List of Tickets
      */
     @Override
     public List<Ticket> getAllByProduct(Product product) {
@@ -74,26 +77,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
-     * Get all Ticket by a Customer
+     * Get all Ticket by a Customer.
      *
      * @param customer of type Customer
      *
-     * @return List<Ticket>
+     * @return List of Tickets
      */
     @Override
     public List<Ticket> getAllByCustomer(Customer customer) {
         return ticketRepository.findAllByOwner(customer);
     }
 
-    /**
-     * Get all Ticket by Product
-     *
-     * @param product of type Product
-     *
-     * @return int
-     */
-    @Override
-    public int countByProduct(Product product) {
-        return ticketRepository.countTicketsByProduct(product);
-    }
 }

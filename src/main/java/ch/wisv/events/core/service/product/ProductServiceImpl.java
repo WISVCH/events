@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    /**
-     * ProductRepository
-     */
+    /** ProductRepository. */
     private final ProductRepository productRepository;
 
     /**
@@ -32,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all products
+     * Get all products.
      *
      * @return List of Products
      */
@@ -42,23 +40,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all available products
+     * Get all available products.
      *
      * @return Collection of Products
      */
     @Override
     public List<Product> getAvailableProducts() {
-        return productRepository.findAllBySellStartBefore(LocalDateTime.now()).stream().filter(product -> {
-            if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
-                return false;
-            }
-
-            return product.getMaxSold() == null || product.getSold() < product.getMaxSold();
-        }).collect(Collectors.toCollection(ArrayList::new));
+        return productRepository.findAllBySellStartBefore(LocalDateTime.now()).stream()
+                .filter(product -> (product.getSellEnd() == null || !product.getSellEnd()
+                        .isBefore(LocalDateTime.now())) && (product.getMaxSold() == null || product.getSold() < product.getMaxSold()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * Get Product by Key
+     * Get Product by Key.
      *
      * @param key key of a Product
      *
@@ -72,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Add a new Product using a Product
+     * Add a new Product using a Product.
      *
      * @param product of type Product
      */
@@ -106,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Update Product using a Product
+     * Update Product using a Product.
      *
      * @param product Product containing the new product information
      */
@@ -130,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Remove a Product
+     * Remove a Product.
      *
      * @param product Product to be deleted.
      */
@@ -144,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Update the linked status of Products
+     * Update the linked status of Products.
      *
      * @param products List of Products
      * @param linked   linked status

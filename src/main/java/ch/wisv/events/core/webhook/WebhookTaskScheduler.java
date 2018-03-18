@@ -22,14 +22,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WebhookTaskScheduler {
 
-    /**
-     * Field WEBHOOK_TASK_INTERVAL_SECONDS
-     */
-    private final int WEBHOOK_TASK_INTERVAL_SECONDS = 60;
+    /** Task interval in seconds. */
+    private static final int WEBHOOK_TASK_INTERVAL_SECONDS = 60;
 
-    /**
-     * Field webhookTaskRepository
-     */
+    /** WebhookTaskRepository. */
     private final WebhookTaskRepository webhookTaskRepository;
 
     /**
@@ -66,8 +62,9 @@ public class WebhookTaskScheduler {
 
         httpPost.setHeader("Content-type", "application/json");
         httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Authorization",
-                           "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
+        httpPost.setHeader(
+                "Authorization",
+                "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
         );
         httpPost.setEntity(new StringEntity(webhookTask.getObject().toJSONString(), "UTF8"));
 

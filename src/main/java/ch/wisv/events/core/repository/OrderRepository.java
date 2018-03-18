@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * OrderRepository interface.
+ */
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     /**
@@ -14,7 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      *
      * @param publicReference of type String
      *
-     * @return Optional<Order>
+     * @return Optional
      */
     Optional<Order> findOneByPublicReference(String publicReference);
 
@@ -23,17 +26,17 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      *
      * @param owner of type Customer
      *
-     * @return List<Order>
+     * @return List
      */
     List<Order> findAllByOwner(Customer owner);
 
     /**
-     * Find all Order by a Customer that have a given status
+     * Find all Order by a Customer that have a given status.
      *
      * @param owner  of type Customer
      * @param status of type OrderStatus
      *
-     * @return List<Order>
+     * @return List
      */
     List<Order> findAllByOwnerAndStatus(Customer owner, OrderStatus status);
 

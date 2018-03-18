@@ -31,7 +31,7 @@ public class SalesServiceImpl implements SalesService {
     /**
      * Get all Event which can be sold by the current user.
      *
-     * @return List<Event>
+     * @return List of Events
      */
     @Override
     public List<Event> getAllGrantedEventByCustomer(Customer customer) {
@@ -46,7 +46,7 @@ public class SalesServiceImpl implements SalesService {
     /**
      * Get all Product which can be sold by the current user.
      *
-     * @return List<Product>
+     * @return List of Products
      */
     @Override
     public List<Product> getAllGrantedProductByCustomer(Customer customer) {

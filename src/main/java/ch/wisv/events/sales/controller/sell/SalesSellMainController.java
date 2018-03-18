@@ -54,7 +54,7 @@ public class SalesSellMainController {
         }
 
         try {
-            Order order = orderService.createOrderByOrderProductDTO(orderProductDto);
+            Order order = orderService.createOrderByOrderProductDto(orderProductDto);
             order.setCreatedBy(authenticationService.getCurrentCustomer().getName());
             order.setStatus(OrderStatus.RESERVATION);
             orderService.tempSaveOrder(order);

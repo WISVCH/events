@@ -15,22 +15,19 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * WebhookPublisher class.
+ */
 @Component
 public class WebhookPublisher {
 
-    /**
-     * Field webhookService
-     */
+    /** WebhookService. */
     private final WebhookService webhookService;
 
-    /**
-     * Field webhookTaskService
-     */
+    /** WebhookTaskService. */
     private final WebhookTaskService webhookTaskService;
 
-    /**
-     * Field eventService
-     */
+    /** EventService. */
     private final EventService eventService;
 
     /**
