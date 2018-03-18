@@ -1,9 +1,4 @@
-engines:
-  checkstyle:
-    enabled: true
-    checks:
-      com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck:
-        enabled: false
+version: "2"
 
 plugins:
   checkstyle:
