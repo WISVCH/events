@@ -5,7 +5,7 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
@@ -22,22 +22,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 public class CustomerServiceTest extends ServiceTest {
 
     /**
@@ -220,18 +205,6 @@ public class CustomerServiceTest extends ServiceTest {
      * Test create method when email is null
      */
     @Test
-    public void testCreateMissingRfidToken() throws Exception {
-        thrown.expect(CustomerInvalidException.class);
-        thrown.expectMessage("RFID token can not be null.");
-        this.customer.setRfidToken(null);
-
-        customerService.create(this.customer);
-    }
-
-    /**
-     * Test create method when email is null
-     */
-    @Test
     public void testCreateMissingCreatedAt() throws Exception {
         thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("Customer should contain a created at timestamp.");
@@ -335,7 +308,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testDelete() throws Exception {
-        when(orderRepository.findByCustomer(this.customer)).thenReturn(Collections.emptyList());
+        when(orderRepository.findAllByOwner(this.customer)).thenReturn(Collections.emptyList());
 
         customerService.delete(this.customer);
         verify(repository, times(1)).delete(this.customer);
@@ -346,7 +319,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testDeleteCustomerPlacedOrders() throws Exception {
-        when(orderRepository.findByCustomer(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
+        when(orderRepository.findAllByOwner(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
 
         thrown.expect(CustomerAlreadyPlacedOrdersException.class);
         thrown.expectMessage("Customer has already placed orders, so it can not be deleted!");

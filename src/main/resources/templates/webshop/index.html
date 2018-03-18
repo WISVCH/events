@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="webshop/fragments/header :: header ('Webshop', 'events_header.jpg')"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col py-3" role="main">
+            <div class="row">
+                <div class="ml-auto col-lg-4 col-md-5 col-12 mb-4">
+                    <a href="#" class="btn btn-block btn-secondary" data-toggle="modal" data-target="#shoppingBasket"
+                       id="shoppingBasketButton">
+                        <i class="fa fa-fw fa-shopping-basket"></i> Shopping basket (<span
+                            id="shoppingBasketCount"></span>)
+                    </a>
+                </div>
+            </div>
+
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row justify-content-left">
+                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12" th:each="event: ${events}"
+                     th:if="${event.getProducts().size() > 0}">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-12 align-self-start mb-3">
+                                    <div class="row">
+                                        <h5 class="col-12 card-title mb-1" th:text="${event.getTitle()}"></h5>
+
+                                        <div class="col-12 mb-4">
+                                            <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
+                                            <div class="badge badge-secondary" th:each="cat : ${event.getCategories()}"
+                                                 th:text="${cat.getDisplayName()}"></div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <i class="far fa-fw fa-calendar-alt"></i>
+                                            <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
+                                        </div>
+                                        <div class="col-12" th:if="${event.getLocation() != ''}">
+                                            <i class="fas fa-map-marker fa-fw"></i>
+                                            <span th:text="${event.getLocation()}"></span>
+                                        </div>
+                                        <div class="col-12">
+                                            <i class="fas fa-info fa-fw"></i>
+                                            <span th:text="${event.getShortDescription()}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="align-self-end"
+                                     th:classappend="'col-md-' + ${(12 / event.getProducts().size())} + ' col-12'"
+                                     th:each="product : ${event.getProducts()}">
+                                    <div class="card">
+                                        <div class="card-body bt-3">
+                                            <h5 class="card-title" th:text="${product.getTitle()}"></h5>
+                                            <p class="card-text" th:text="${product.getDescription()}"></p>
+                                            <h6 th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></h6>
+
+                                            <small>Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
+                                            </small>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-shopping-basket"
+                                           th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
+                                            Add to basket
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div class="modal fade" id="shoppingBasket" tabindex="-1" role="dialog" aria-labelledby="shoppingBasketTitle"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: calc(100vw - 20px); max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shoppingBasketTitle">
+                    <i class="fa fa-fw fa-shopping-basket"></i>
+                    Shopping basket
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table ticket-overview">
+                    <thead class="thead-inverse bg-primary">
+                    <tr>
+                        <th>Article</th>
+                        <th style="width: 15%;">Amount</th>
+                        <th style="width: 20%;">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody id="shoppingBasketTable">
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="2">Total</th>
+                        <th id="shoppingBasketTotal"></th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <button type="button" class="btn btn-block btn-info" id="emptyShoppingBasket">
+                    <i class="far fa-fw fa-trash-alt"></i>
+                    Empty
+                </button>
+            </div>
+            <div class="modal-footer">
+                <form id="orderForm" method="POST" th:action="@{'/checkout'}" th:object="${orderProduct}">
+                    <div id="products"></div>
+                    <button type="submit" class="btn btn-secondary" id="checkoutShoppingBasket">
+                        Checkout <i class="fa fa-fw fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/sprintf.js/1.0.0/sprintf.min.js}"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
+<script th:src="@{/js/webshop/webshop.min.js}"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        ShoppingBasket.init();
+    });
+</script>
+</body>
+

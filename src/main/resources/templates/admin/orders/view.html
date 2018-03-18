@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -44,22 +44,29 @@
                                                readonly>
                                     </label>
                                 </div>
-                                <div class="form-group col-sm-12">
+                                <div class="form-group col-sm-6">
                                     <label>Status
                                         <input type="text" class="form-control"
-                                               th:value="${order.getStatus().toString()}"
+                                               th:value="${order.getStatus()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>Payment method
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getPaymentMethod()}"
                                                readonly>
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label>Created at
-                                        <input type="text" class="form-control" th:value="${order.getCreationDate()}"
+                                        <input type="text" class="form-control" th:value="${order.getCreatedAt()}"
                                                readonly>
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label>Paid at
-                                        <input type="text" class="form-control" th:value="${order.getPaidDate()}"
+                                        <input type="text" class="form-control" th:value="${order.getPaidAt()}"
                                                readonly>
                                     </label>
                                 </div>
@@ -81,21 +88,21 @@
                                 <div class="form-group col-sm-12">
                                     <label>Name
                                         <input type="text" class="form-control"
-                                               th:value="${order.getCustomer().getName()}"
+                                               th:value="${order.getOwner().getName()}"
                                                readonly>
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label>Email
                                         <input type="text" class="form-control"
-                                               th:value="${order.getCustomer().getEmail()}"
+                                               th:value="${order.getOwner().getEmail()}"
                                                readonly>
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label>CH username
                                         <input type="text" class="form-control"
-                                               th:value="${order.getCustomer().getChUsername()}"
+                                               th:value="${order.getOwner().getChUsername()}"
                                                readonly>
                                     </label>
                                 </div>

@@ -1,43 +1,19 @@
 package ch.wisv.events.core.repository;
 
-import ch.wisv.events.core.model.order.Customer;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import ch.wisv.events.core.model.customer.Customer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
-
-    /**
-     * Method findById ...
-     *
-     * @param customerId of type Integer
-     * @return Optional<Customer>
-     */
-    Optional<Customer> findById(Integer customerId);
 
     /**
      * Find a customer by its rfidToken.
      *
      * @param token of type String
-     * @return optional
+     *
+     * @return Optional
      */
     Optional<Customer> findByRfidToken(String token);
 
@@ -45,6 +21,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a customer by its key.
      *
      * @param key key
+     *
      * @return optional
      */
     Optional<Customer> findByKey(String key);
@@ -53,7 +30,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its email.
      *
      * @param email of type String
-     * @return Optional<Customer>
+     *
+     * @return Optional
      */
     Optional<Customer> findByEmail(String email);
 
@@ -61,7 +39,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Method findAllByCreatedAtAfter ...
      *
      * @param after of type LocalDateTime
-     * @return List<Customer>
+     *
+     * @return List
      */
     List<Customer> findAllByCreatedAtAfter(LocalDateTime after);
 
@@ -69,7 +48,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its sub.
      *
      * @param sub of type String
-     * @return Optional<Customer>
+     *
+     * @return Optional
      */
     Optional<Customer> findBySub(String sub);
 
@@ -77,7 +57,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      * Find a Customer by its username.
      *
      * @param username of type username.
-     * @return Optional<Customer>
+     *
+     * @return Optional
      */
     Optional<Customer> findByChUsername(String username);
 }

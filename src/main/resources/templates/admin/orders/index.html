@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -41,6 +41,7 @@
                         <th>Product(s)</th>
                         <th>Amount</th>
                         <th>Status</th>
+                        <th>Payment</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -49,21 +50,22 @@
                     <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
                         <td th:text="'#' + ${order.getId()}"></td>
                         <td>
-                            <a th:href="@{'/administrator/customers/view/' + ${order.getCustomer().getKey()} + '/'}"
-                               th:text="${order.getCustomer().getName()}"></a>
+                            <a th:href="@{'/administrator/customers/view/' + ${order.getOwner().getKey()} + '/'}"
+                               th:text="${order.getOwner().getName()}"></a>
                         </td>
                         <td>
                             <span th:each="orderProduct : ${order.getOrderProducts()}"
                                   th:text="${orderProduct.getProduct().getTitle()} + ' (' + ${orderProduct.getAmount()} + 'x), '"></span>
                         </td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
-                        <td th:text="${order.getStatus().toString()}"></td>
+                        <td th:text="${order.getStatus()}"></td>
+                        <td th:text="${order.getPaymentMethod()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'delete/' + ${order.getPublicReference()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
                                    class="btn btn-sm btn-danger">
-                                    <i class="fa fa-fw fa-remove"></i>
+                                    <i class="far fa-fw fa-trash-alt"></i>
                                 </a>
                             </div>
                         </td>
@@ -90,8 +92,8 @@
             columnDefs: [
                 {width: "20px", targets: 0},
                 {width: "160px", targets: 1},
-                {width: "80px", targets: [3, 4]},
-                {width: "50px", targets: 5}
+                {width: "80px", targets: [3, 4, 5]},
+                {width: "50px", targets: 6}
             ]
         });
 

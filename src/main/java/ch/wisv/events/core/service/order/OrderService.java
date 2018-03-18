@@ -1,37 +1,26 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.exception.normal.OrderExceedCustomerLimitException;
+import ch.wisv.events.core.exception.normal.OrderExceedEventLimitException;
+import ch.wisv.events.core.exception.normal.OrderExceedProductLimitException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.exception.normal.UnassignedOrderException;
+import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderProductDTO;
+import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
-
 import java.util.List;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 public interface OrderService {
 
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
-     * @return the allOrders (type List<Order>) of this OrderService object.
+     * @return List of Orders
      */
     List<Order> getAllOrders();
 
@@ -39,6 +28,7 @@ public interface OrderService {
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
+     *
      * @return Order
      */
     Order getByReference(String reference) throws OrderNotFoundException;
@@ -48,41 +38,60 @@ public interface OrderService {
      *
      * @param order of type Order
      */
-    void create(Order order) throws OrderInvalidException, EventNotFoundException;
+    void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException,
+                                    OrderExceedCustomerLimitException;
 
     /**
-     * Method update ...
+     * Update an existing order.
      *
      * @param order of type Order
      */
-    void update(Order order) throws OrderInvalidException;
+    void update(Order order) throws OrderNotFoundException, OrderInvalidException;
 
     /**
-     * Method updateOrderStatus
-     *  @param order  of type Order
+     * Create an Order form a OrderProductDto.
+     *
+     * @param orderProductDto of type OrderProductDto
+     *
+     * @return Order
+     */
+    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
+
+    /**
+     * Update the Order status.
+     *
+     * @param order  of type Order
      * @param status of type OrderStatus
      */
     void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
 
     /**
-     * Assert if the Order is valid.
+     * Update and the order status to paid.
      *
      * @param order of type Order
      */
-    void assertIsValid(Order order) throws OrderInvalidException;
+    void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException;
 
     /**
-     * Assert if the Order is valid for a Customer.
+     * Temporary save an Order.
      *
-     * @param order of type order.
+     * @param order of type Order.
      */
-    void assertIsValidForCustomer(Order order) throws OrderInvalidException;
+    void tempSaveOrder(Order order);
 
     /**
-     * Create an Order form a OrderProductDTO.
+     * Delete a temporary Order.
      *
-     * @param orderProductDTO of type OrderProductDTO
-     * @return Order
+     * @param order of type Order.
      */
-    Order createOrderByOrderProductDTO(OrderProductDTO orderProductDTO) throws ProductNotFoundException;
+    void deleteTempOrder(Order order);
+
+    /**
+     * Get all reservation orders by a Customer.
+     *
+     * @param customer of type Customer.
+     *
+     * @return List of Orders
+     */
+    List<Order> getAllReservationOrderByCustomer(Customer customer);
 }

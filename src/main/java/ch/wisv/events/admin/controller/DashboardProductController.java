@@ -5,13 +5,17 @@ import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.product.ProductService;
-import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -22,45 +26,39 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardProductController {
 
-    /**
-     * ProductService
-     */
+    /** ProductService. */
     private final ProductService productService;
 
-    /**
-     * Field orderService
-     */
-    private final SoldProductService soldProductService;
+    /** TicketService. */
+    private final TicketService ticketService;
 
-    /**
-     * Field webhookPublisher
-     */
+    /** WebhookPublisher. */
     private final WebhookPublisher webhookPublisher;
 
     /**
-     * Default constructor
+     * DashboardProductController constructor.
      *
-     * @param productService     of type ProductService.
-     * @param soldProductService of type SoldProductService.
-     * @param webhookPublisher   of type WebhookPublisher.
+     * @param productService   of type ProductService.
+     * @param ticketService    of type TicketService.
+     * @param webhookPublisher of type WebhookPublisher.
      */
     @Autowired
-    public DashboardProductController(ProductService productService,
-            SoldProductService soldProductService,
-            WebhookPublisher webhookPublisher
+    public DashboardProductController(
+            ProductService productService, TicketService ticketService, WebhookPublisher webhookPublisher
     ) {
         this.productService = productService;
-        this.soldProductService = soldProductService;
+        this.ticketService = ticketService;
         this.webhookPublisher = webhookPublisher;
     }
 
     /**
-     * Get request for ProductOverview
+     * Get request for ProductOverview.
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("products", this.productService.getAllProducts());
 
@@ -68,14 +66,15 @@ public class DashboardProductController {
     }
 
     /**
-     * Method view ...
+     * Get request for showing Product overview.
      *
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     *
      * @return String
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             model.addAttribute("product", productService.getByKey(key));
@@ -89,12 +88,13 @@ public class DashboardProductController {
     }
 
     /**
-     * Get request to create a Product
+     * Get request to create a Product.
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String create(Model model) {
         if (!model.containsAttribute("product")) {
             model.addAttribute("product", new Product());
@@ -104,13 +104,14 @@ public class DashboardProductController {
     }
 
     /**
-     * Post request to create a Product
+     * Post request to create a Product.
      *
      * @param product  Product product attr.
      * @param redirect Spring RedirectAttributes
+     *
      * @return redirect
      */
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             productService.create(product);
@@ -128,12 +129,13 @@ public class DashboardProductController {
 
     /**
      * Get request to edit a Product or if the key does not exists it will redirect to the
-     * Product Overview page
+     * Product Overview page.
      *
      * @param model SpringUI model
+     *
      * @return thymeleaf template path
      */
-    @GetMapping("/edit/{key}/")
+    @GetMapping("/edit/{key}")
     public String edit(Model model, @PathVariable String key) {
         try {
             if (!model.containsAttribute("product")) {
@@ -147,15 +149,17 @@ public class DashboardProductController {
     }
 
     /**
-     * Method edit post request to update an existing Product
+     * Method edit post request to update an existing Product.
      *
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
+     *
      * @return String
      */
-    @PostMapping("/edit/{key}/")
-    public String update(RedirectAttributes redirect, @ModelAttribute Product product) {
+    @PostMapping("/edit/{key}")
+    public String update(RedirectAttributes redirect, @ModelAttribute Product product, @PathVariable String key) {
         try {
+            product.setKey(key);
             productService.update(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("success", "Changes have been saved!");
@@ -174,14 +178,15 @@ public class DashboardProductController {
      *
      * @param model of type Model
      * @param key   of type String
+     *
      * @return String
      */
-    @GetMapping("/overview/{key}/")
+    @GetMapping("/overview/{key}")
     public String overview(Model model, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);
 
-            model.addAttribute("soldProducts", soldProductService.getByProduct(product));
+            model.addAttribute("tickets", ticketService.getAllByProduct(product));
             model.addAttribute("product", product);
 
             return "admin/products/overview";
@@ -191,13 +196,14 @@ public class DashboardProductController {
     }
 
     /**
-     * Get request to delete a Product
+     * Get request to delete a Product.
      *
      * @param redirectAttributes Spring RedirectAttributes
      * @param key                key of a Product
+     *
      * @return redirect
      */
-    @GetMapping("/delete/{key}/")
+    @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales > Scan</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-12 ml-auto p-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <h3 class="text-center">Select a product</h3>
+                </div>
+            </div>
+            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+            <div class="row mb-4" th:each=" product : ${products}">
+                <div class="col">
+                    <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}"
+                       class="btn btn-lg btn-block btn-secondary">
+                        <span th:text="${product.getTitle()}"></span>
+                        <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+</body>

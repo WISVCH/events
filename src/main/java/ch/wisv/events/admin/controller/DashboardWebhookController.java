@@ -8,37 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Controller
 @RequestMapping("/administrator/webhooks")
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardWebhookController {
 
-    /**
-     * Field webhookService
-     */
+    /** WebhookService. */
     private final WebhookService webhookService;
 
     /**
-     * Default constructor.
+     * DashboardWebhookController constructor.
      *
      * @param webhookService of type WebhookService.
      */
@@ -51,9 +37,10 @@ public class DashboardWebhookController {
      * Index of vendor [GET "/"].
      *
      * @param model String model
+     *
      * @return path to Thymeleaf template location
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("webhooks", webhookService.getAll());
 
@@ -65,9 +52,10 @@ public class DashboardWebhookController {
      *
      * @param model Spring model
      * @param key   key of the vendor
+     *
      * @return path to Thymeleaf template location
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
@@ -85,9 +73,10 @@ public class DashboardWebhookController {
      * Create a new vendor [GET "/create/"].
      *
      * @param model Spring model
+     *
      * @return path to Thymeleaf template location
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String create(Model model) {
         if (!model.containsAttribute("webhook")) {
             model.addAttribute("webhook", new Webhook());
@@ -101,9 +90,10 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param webhook  Webhook with the needed information
+     *
      * @return redirect to other page
      */
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
         try {
             webhookService.create(webhook);
@@ -123,9 +113,10 @@ public class DashboardWebhookController {
      *
      * @param model Spring model
      * @param key   key of the vendor
+     *
      * @return path to Thymeleaf template location
      */
-    @GetMapping("/edit/{key}/")
+    @GetMapping("/edit/{key}")
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
@@ -144,11 +135,13 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param webhook  Webhook webhook with the needed information
+     *
      * @return redirect to edit page
      */
-    @PostMapping("/edit/{key}/")
-    public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
+    @PostMapping("/edit/{key}")
+    public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook, @PathVariable String key) {
         try {
+            webhook.setKey(key);
             webhookService.update(webhook);
             redirect.addFlashAttribute("success", "Webhook changes saves!");
 
@@ -166,9 +159,10 @@ public class DashboardWebhookController {
      *
      * @param redirect RedirectAttributes
      * @param key      Vendor model with the needed information
+     *
      * @return redirect to edit page
      */
-    @GetMapping("/delete/{key}/")
+    @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);

@@ -4,33 +4,16 @@ import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -70,7 +53,8 @@ public class CustomerServiceImpl implements CustomerService {
      * Method getAllCustomerCreatedAfter ...
      *
      * @param after of type LocalDateTime
-     * @return List<Customer>
+     *
+     * @return List
      */
     @Override
     public List<Customer> getAllCustomerCreatedAfter(LocalDateTime after) {
@@ -81,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by key.
      *
      * @param key key
+     *
      * @return Customer
      */
     @Override
@@ -94,6 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a Customer by its sub.
      *
      * @param sub of type String
+     *
      * @return Customer
      */
     @Override
@@ -107,6 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by CH username or Email.
      *
      * @param username of type String
+     *
      * @return Customer
      */
     @Override
@@ -119,7 +106,8 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Get a customer by CH username.
      *
-     * @param email
+     * @param email of type String
+     *
      * @return Customer
      */
     @Override
@@ -133,6 +121,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Get a customer by rfidToken.
      *
      * @param token of type String
+     *
      * @return Customer
      */
     @Override
@@ -161,13 +150,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
-        Customer customer = new Customer(
-                userInfo.getSub(),
-                userInfo.getName(),
-                userInfo.getEmail(),
-                userInfo.getLdapUsername(),
-                ""
-        );
+        Customer customer = new Customer(userInfo.getSub(), userInfo.getName(), userInfo.getEmail(), userInfo.getLdapUsername(), "");
         this.create(customer);
 
         return customer;
@@ -186,6 +169,7 @@ public class CustomerServiceImpl implements CustomerService {
         model.setName(customer.getName());
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
+        model.setLdapGroups(customer.getLdapGroups());
 
         this.assertIsValidCustomer(model);
 
@@ -199,7 +183,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void delete(Customer customer) {
-        List<Order> orders = orderRepository.findByCustomer(customer);
+        List<Order> orders = orderRepository.findAllByOwner(customer);
         if (orders.size() > 0) {
             throw new CustomerAlreadyPlacedOrdersException();
         }
@@ -211,6 +195,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Will check all the required fields if they are valid.
      *
      * @param customer of type Customer
+     *
      * @throws CustomerInvalidException when one of the required fields is not valid
      */
     private void assertIsValidCustomer(Customer customer) throws CustomerInvalidException {
@@ -226,15 +211,11 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerInvalidException("Email is empty, but a required field, so please fill in this field!");
         }
 
-        if (customer.getRfidToken() == null) {
-            throw new CustomerInvalidException("RFID token can not be null.");
-        }
-
         if (customer.getCreatedAt() == null) {
             throw new CustomerInvalidException("Customer should contain a created at timestamp.");
         }
 
-        if (!customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
+        if (customer.getRfidToken() != null && !customer.getRfidToken().equals("") && this.isNotUniqueRfidToken(customer)) {
             throw new CustomerInvalidException("RFID token is already used!");
         }
 
@@ -247,6 +228,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Method check if given email is not used by another Customer.
      *
      * @param customer of type Customer
+     *
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
@@ -265,6 +247,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Method check if given rfidToken is not used by another Customer.
      *
      * @param customer of type Customer
+     *
      * @return boolean
      */
     private boolean isNotUniqueRfidToken(Customer customer) {

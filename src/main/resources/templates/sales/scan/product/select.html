@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales > Scan</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-12 ml-auto p-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row text-center">
+                <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
+                <h3 class="w-100" th:text="${product.getTitle()}"></h3>
+
+                <form class="w-100" th:action="@{./}" method="POST" th:if="${soldProducts.size() > 0}">
+                    <input type="hidden" name="rfidToken" id="rfidToken">
+                    <h5 class="col-10 mx-auto" style="font-weight: 200;">Select the tickets that you want to scan.</h5>
+
+
+                    <div class="my-4 col-10 mx-auto">
+                        <div class="d-block" th:each="soldProduct : ${soldProducts}">
+                            <label class="custom-control custom-checkbox"
+                                   style="font-size: 22px; padding-left: 2rem;">
+                                <input type="checkbox" class="custom-control-input" th:value="${soldProduct.getId()}"
+                                       name="soldProducts" id="soldProducts">
+                                <span class="custom-control-indicator"
+                                      style="height: 1.5rem; width: 1.5rem; top: 0.4rem"></span>
+                                <span class="custom-control-description text-uppercase font-weight-normal"
+                                      th:text="${soldProduct.getUniqueCode()}">
+                            </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-10 col-xs-offset-1">
+                        <button type="submit" class="btn btn-lg btn-block btn-secondary">Submit</button>
+                    </div>
+                </form>
+
+                <div class="col-10 mx-auto" th:if="${soldProducts.size() == 0}">
+                    <h5 style="font-weight: 200;">No tickets left to scan!</h5>
+                </div>
+
+                <div class="fixed-bottom m-3">
+                    <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}"
+                       class="btn btn-lg btn-block btn-light">Back</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+</body>

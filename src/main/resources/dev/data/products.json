@@ -26,10 +26,10 @@
   {
     "title": "MatCH ticket",
     "description": "Ticket for the MatCH activity.",
-    "cost": 3.00,
+    "cost": 1.00,
     "maxSold": 5,
     "maxSoldPerCustomer": 5,
-    "key": "48b068ab-f4c9-46f7-bcf0-15b2f60bd1b6"
+    "key": "8d7900db-07d6-4922-91da-55e80daec441"
   },
   {
     "title": "Annuarium",

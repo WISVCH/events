@@ -1,42 +1,22 @@
 package ch.wisv.events.core.service.product;
 
-import ch.wisv.events.api.request.ProductDTO;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    /**
-     * ProductRepository
-     */
+    /** ProductRepository. */
     private final ProductRepository productRepository;
 
     /**
@@ -50,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all products
+     * Get all products.
      *
      * @return List of Products
      */
@@ -60,27 +40,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get all available products
+     * Get all available products.
      *
      * @return Collection of Products
      */
     @Override
     public List<Product> getAvailableProducts() {
-        return productRepository.findAllBySellStartBefore(LocalDateTime.now())
-                .stream().filter(product -> {
-                    if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
-                        return false;
-                    }
-
-                    return product.getMaxSold() == null || product.getSold() < product.getMaxSold();
-                })
+        return productRepository.findAllBySellStartBefore(LocalDateTime.now()).stream()
+                .filter(product -> (product.getSellEnd() == null || !product.getSellEnd()
+                        .isBefore(LocalDateTime.now())) && (product.getMaxSold() == null || product.getSold() < product.getMaxSold()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * Get Product by Key
+     * Get Product by Key.
      *
      * @param key key of a Product
+     *
      * @return Product
      */
     @Override
@@ -91,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Add a new Product using a Product
+     * Add a new Product using a Product.
      *
      * @param product of type Product
      */
@@ -109,23 +85,23 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Method create ...
      *
-     * @param productDTO of type ProductDTO
+     * @param productDto of type ProductDto
      */
     @Override
-    public Product create(ProductDTO productDTO) throws ProductInvalidException {
+    public Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException {
         Product product = new Product();
 
-        product.setTitle(productDTO.getTitle());
-        product.setDescription(productDTO.getDescription());
-        product.setCost(productDTO.getCost());
-        product.setMaxSold(productDTO.getMaxSold());
-        product.setMaxSoldPerCustomer(productDTO.getMaxSoldPerCustomer());
+        product.setTitle(productDto.getTitle());
+        product.setDescription(productDto.getDescription());
+        product.setCost(productDto.getCost());
+        product.setMaxSold(productDto.getMaxSold());
+        product.setMaxSoldPerCustomer(productDto.getMaxSoldPerCustomer());
 
         return this.create(product);
     }
 
     /**
-     * Update Product using a Product
+     * Update Product using a Product.
      *
      * @param product Product containing the new product information
      */
@@ -149,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Remove a Product
+     * Remove a Product.
      *
      * @param product Product to be deleted.
      */
@@ -163,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Update the linked status of Products
+     * Update the linked status of Products.
      *
      * @param products List of Products
      * @param linked   linked status
@@ -203,8 +179,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInvalidException("It is not possible to add the same product twice or more!");
         }
 
-        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 ||
-                product.getMaxSoldPerCustomer() > 25) {
+        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25) {
             throw new ProductInvalidException("Max sold per customer should be between 1 and 25!");
         }
     }

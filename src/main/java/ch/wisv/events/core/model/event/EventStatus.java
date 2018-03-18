@@ -3,26 +3,24 @@ package ch.wisv.events.core.model.event;
 import static java.util.Arrays.stream;
 
 /**
- * Enum EventStatus
+ * Enum EventStatus.
  */
 public enum EventStatus {
 
-    PUBLISHED(1, "Published"),
-    CONCEPT(2, "Concept"),
-    NOT_PUBLISHED(3, "Not published");
+    PUBLISHED(1, "Published"), CONCEPT(2, "Concept"), NOT_PUBLISHED(3, "Not published");
 
     /**
-     * ID of the status
+     * ID of the status.
      */
     private final int id;
 
     /**
-     * Display name of the status (for view purpose)
+     * Display name of the status (for view purpose).
      */
     private final String displayName;
 
     /**
-     * Default constructor
+     * EventStatus constructor.
      *
      * @param id          ID of the status
      * @param displayName Display name of the status
@@ -33,9 +31,10 @@ public enum EventStatus {
     }
 
     /**
-     * Get status by status ID
+     * Get status by status ID.
      *
      * @param index Status ID
+     *
      * @return EventStatus corresponding to the ID
      */
     public static EventStatus getStatus(int index) {
@@ -43,7 +42,7 @@ public enum EventStatus {
     }
 
     /**
-     * Get display name of the EventStatus
+     * Get display name of the EventStatus.
      *
      * @return display name
      */
@@ -52,7 +51,7 @@ public enum EventStatus {
     }
 
     /**
-     * Get id of the EventStatus
+     * Get id of the EventStatus.
      *
      * @return id
      */

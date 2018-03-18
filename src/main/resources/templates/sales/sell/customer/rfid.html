@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-sales.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body id="scanPage">
+<nav th:replace="sales/fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-12" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
+            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+            <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}"
+                  th:object="${customer}" method="POST" id="formScan">
+                <input type="hidden" th:field="*{rfidToken}" id="rfidToken">
+
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="border-bottom-0">Scan a card</h3>
+                        <h1 class="border-bottom-0" style="font-weight: 100;">or</h1>
+                        <h3 class="border-bottom-0">Fill in an email address</h3>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <div class="form-group">
+                            <input type="email" class="form-control input-lg" th:field="*{email}"
+                                   placeholder="Email address">
+                        </div>
+
+                        <button type="submit" class="btn btn-block btn-danger">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+<script>
+    $("#scanPage").on('keypress', function (e) {
+        var token = $("#rfidToken");
+
+        console.log(e);
+
+        if (e.which === 13) {
+            $("#formScan").submit();
+            return false;
+        }
+        token.val(token.val() + e.key);
+    })
+</script>
+</body>
+</html>

@@ -1,66 +1,51 @@
 package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
-import ch.wisv.events.core.model.order.Customer;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
-import ch.wisv.events.core.service.product.SoldProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Controller
 @RequestMapping(value = "/administrator/customers")
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardCustomerController {
 
-    /**
-     * CustomerService.
-     */
+    /** CustomerService. */
     private final CustomerService customerService;
 
-    /**
-     * SoldProductService
-     */
-    private final SoldProductService soldProductService;
+    /** TicketService. */
+    private final TicketService ticketService;
 
     /**
      * Autowired constructor.
      *
-     * @param customerService    CustomerService
-     * @param soldProductService SoldProductService
+     * @param customerService CustomerService
+     * @param ticketService   TicketService
      */
     @Autowired
-    public DashboardCustomerController(CustomerService customerService, SoldProductService soldProductService) {
+    public DashboardCustomerController(CustomerService customerService, TicketService ticketService) {
         this.customerService = customerService;
-        this.soldProductService = soldProductService;
+        this.ticketService = ticketService;
     }
 
     /**
      * Index of customers pages.
      *
      * @param model String model
+     *
      * @return path to customers index template
      */
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("customers", customerService.getAllCustomers());
 
@@ -73,14 +58,15 @@ public class DashboardCustomerController {
      *
      * @param model String model
      * @param key   key of the customer some want to edit
+     *
      * @return path to the customer edit template
      */
-    @GetMapping("/view/{key}/")
+    @GetMapping("/view/{key}")
     public String view(Model model, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
             model.addAttribute("customer", customer);
-            model.addAttribute("soldProducts", soldProductService.getByCustomer(customer));
+            model.addAttribute("tickets", ticketService.getAllByCustomer(customer));
 
             return "admin/customers/view";
         } catch (CustomerNotFoundException e) {
@@ -92,9 +78,10 @@ public class DashboardCustomerController {
      * Create a new customer page.
      *
      * @param model String model
+     *
      * @return path to customer create template
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String create(Model model) {
         if (!model.containsAttribute("customer")) {
             model.addAttribute("customer", new Customer());
@@ -109,9 +96,10 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param model    Customer model
+     *
      * @return redirect
      */
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
             customerService.create(model);
@@ -133,16 +121,17 @@ public class DashboardCustomerController {
      *
      * @param model String model
      * @param key   key of the customer some want to edit
+     *
      * @return path to the customer edit template
      */
-    @GetMapping("/edit/{key}/")
+    @GetMapping("/edit/{key}")
     public String edit(Model model, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
             if (!model.containsAttribute("customer")) {
                 model.addAttribute("customer", customer);
             }
-            model.addAttribute("products", soldProductService.getByCustomer(customer));
+            model.addAttribute("products", ticketService.getAllByCustomer(customer));
 
             return "admin/customers/customer";
         } catch (CustomerNotFoundException e) {
@@ -156,11 +145,13 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param customer Customer customer
+     *
      * @return redirect
      */
-    @PostMapping("/edit/{key}/")
-    public String edit(RedirectAttributes redirect, @ModelAttribute Customer customer) {
+    @PostMapping("/edit/{key}")
+    public String edit(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String key) {
         try {
+            customer.setKey(key);
             customerService.update(customer);
             redirect.addFlashAttribute("success", "Customer changes have been saved!");
 
@@ -180,9 +171,10 @@ public class DashboardCustomerController {
      *
      * @param redirect RedirectAttributes for the user feedback
      * @param key      Vendor model
+     *
      * @return redirect
      */
-    @GetMapping("/delete/{key}/")
+    @GetMapping("/delete/{key}")
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
