@@ -260,6 +260,8 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order.
      *
      * @return List of Ticket
+     *
+     * @throws EventsException when Order in unassigned, the payment method is undefined or the order status is not paid
      */
     private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
         if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {
