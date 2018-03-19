@@ -30,6 +30,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -65,8 +66,20 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class).exceptionHandling().authenticationEntryPoint(
-                authenticationEntryPoint()).and().logout().logoutSuccessUrl("/");
+        http
+                .addFilterBefore(oidcAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
+            .and().authorizeRequests()
+                .antMatchers("/administrator/**").hasRole("ADMIN")
+                .antMatchers("/").permitAll()
+                .anyRequest().permitAll()
+            .and()
+                .logout()
+                .logoutSuccessUrl("/")
+            .and()
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     /**
@@ -75,7 +88,7 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      * @param auth of type AuthenticationManagerBuilder
      */
     @Autowired
-    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) {
+    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(oidcAuthenticationProvider());
     }
 
@@ -124,10 +137,8 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
 
                 if (properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains)) {
                     return ImmutableSet.of(ROLE_ADMIN, ROLE_USER);
-                } else if (properties.getBetaUsers().stream().anyMatch(info.getLdapUsername()::contains)) {
-                    return ImmutableSet.of(ROLE_USER);
                 } else {
-                    return ImmutableSet.of();
+                    return ImmutableSet.of(ROLE_USER);
                 }
             }
             throw new AccessDeniedException("Invalid user info!");

@@ -36,7 +36,7 @@ public class WebshopIndexController {
      *
      * @return String
      */
-    @GetMapping
+    @GetMapping("/")
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute("events", webshopService.filterNotSalableProducts(upcoming));

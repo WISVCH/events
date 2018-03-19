@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * WebshopPaymentController class.
+ */
 @Controller
 @RequestMapping("/checkout/{key}/payment")
 public class WebshopPaymentController extends WebshopController {
@@ -94,17 +97,16 @@ public class WebshopPaymentController extends WebshopController {
     /**
      * Payment method using a Reservation.
      *
-     * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String
      */
     @GetMapping("/reservation")
-    public String paymentReservation(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    public String paymentReservation(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            model.addAttribute("model", order);
+            this.assertOrderIsSuitableForCheckout(order);
 
             orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 

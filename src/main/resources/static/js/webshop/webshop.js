@@ -6,6 +6,8 @@ var ShoppingBasket;
 
         LOCAL_STORAGE_SHOPPING_BASKET: 'shoppingBasket',
 
+        toast_id: 0,
+
         shoppingBasket: [],
 
         init: function () {
@@ -155,6 +157,8 @@ var ShoppingBasket;
             shoppingBasketButton.addClass('animated pulse').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                 $(this).removeClass('animated pulse');
             });
+
+            ShoppingBasket.__toast("Product added to your shopping basket.")
         },
 
         __shakeShoppingBasket: function () {
@@ -163,6 +167,17 @@ var ShoppingBasket;
             shoppingBasketButton.addClass('animated shake').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                 $(this).removeClass('animated shake');
             });
+
+            ShoppingBasket.__toast("You reached the maximum sold per customer.")
+        },
+
+        __toast: function (text) {
+            var x = document.createElement('div');
+            x.className = "toast show";
+            x.innerHTML = text;
+
+            document.body.appendChild(x);
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
         }
 
     };
