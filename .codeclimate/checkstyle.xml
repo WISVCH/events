@@ -38,6 +38,11 @@
 
         <property name="basedir" value="${basedir}"/>
     -->
+        
+    <property name="severity" value="warning"/>
+    
+    <!-- The default severity is defined as ERROR.                                       -->
+    <!-- If left, Checkstyle abort the execution, which results in Code Climate erroring -->
 
     <property name="fileExtensions" value="java, properties, xml"/>
 
