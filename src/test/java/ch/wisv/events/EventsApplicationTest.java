@@ -1,6 +1,7 @@
 package ch.wisv.events;
 
 import ch.wisv.events.core.service.mail.MailService;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
-
+import org.springframework.test.context.junit4.SpringRunner;
 
 @Configuration
 @ComponentScan

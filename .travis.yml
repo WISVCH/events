@@ -1,12 +1,14 @@
 sudo: required
 services:
   - docker
+  - postgresql
 language: java
 jdk: oraclejdk8
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - psql -c 'create database events;' -U postgres
 script:
   - "./gradlew clean build jacocoTestReport jacocoFix -PbuildNumber=$TRAVIS_BUILD_NUMBER --scan"
   - docker build --no-cache --pull -t wisvch/events:$TRAVIS_BUILD_NUMBER .

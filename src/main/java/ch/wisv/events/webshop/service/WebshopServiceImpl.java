@@ -10,6 +10,7 @@ import ch.wisv.events.core.service.order.OrderService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +52,10 @@ public class WebshopServiceImpl implements WebshopService {
                     .stream()
                     .filter(this.filterProductBySellInterval())
                     .collect(Collectors.toList());
-
             event.setProducts(filterSalableProducts);
         });
 
-        return events;
+        return events.stream().filter(event -> event.getProducts().size() > 0).collect(Collectors.toList());
     }
 
     /**
