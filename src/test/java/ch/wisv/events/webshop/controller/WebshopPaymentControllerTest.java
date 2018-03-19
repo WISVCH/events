@@ -15,7 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -34,8 +36,8 @@ public class WebshopPaymentControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("webshop/payment/index"))
                 .andExpect(model().attribute("order", order))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/ideal\"")))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
+                .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/ideal\"")))
+                .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
     }
 
     @Test
@@ -43,11 +45,9 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = new Order();
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("webshop/payment/index"))
-                .andExpect(model().attribute("order", order))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/ideal\"")))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(flash().attribute("error", "Order with reference " + order.getPublicReference() + " not found!"));
     }
 
     @Test
@@ -57,11 +57,9 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         orderRepository.saveAndFlush(order);
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("webshop/payment/index"))
-                .andExpect(model().attribute("order", order))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/ideal\"")))
-                .andExpect(content().string(containsString("action=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(flash().attribute("error", "Order is in a invalid state"));
     }
 
     @Test
