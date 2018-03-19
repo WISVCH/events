@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.order;
 
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderExceedCustomerLimitException;
 import ch.wisv.events.core.exception.normal.OrderExceedEventLimitException;
 import ch.wisv.events.core.exception.normal.OrderExceedProductLimitException;
@@ -15,6 +16,9 @@ import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 
+/**
+ * OrderService interface.
+ */
 public interface OrderService {
 
     /**
@@ -70,21 +74,7 @@ public interface OrderService {
      *
      * @param order of type Order
      */
-    void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException;
-
-    /**
-     * Temporary save an Order.
-     *
-     * @param order of type Order.
-     */
-    void tempSaveOrder(Order order);
-
-    /**
-     * Delete a temporary Order.
-     *
-     * @param order of type Order.
-     */
-    void deleteTempOrder(Order order);
+    void updateOrderStatusPaid(Order order) throws EventsException;
 
     /**
      * Get all reservation orders by a Customer.

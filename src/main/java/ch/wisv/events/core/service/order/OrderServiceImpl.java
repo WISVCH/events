@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.order;
 
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
@@ -9,6 +10,7 @@ import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
+import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
@@ -18,7 +20,6 @@ import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,14 +29,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    /** OrderRepository. */
     private final OrderRepository orderRepository;
 
+    /** OrderProductRepository. */
     private final OrderProductRepository orderProductRepository;
 
+    /** ProductService. */
     private final ProductService productService;
 
+    /** MailService. */
     private final MailService mailService;
 
+    /** TicketService. */
     private final TicketService ticketService;
 
     /**
@@ -92,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
      * @return Order
      */
     @Override
-    public Order createOrderByOrderProductDto(ch.wisv.events.core.model.order.OrderProductDto orderProductDto) throws ProductNotFoundException {
+    public Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException {
         Order order = new Order();
 
         for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
@@ -111,23 +117,35 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void create(Order order) {
+    public void create(Order order) throws OrderInvalidException {
+        if (order.getOrderProducts() == null) {
+            throw new OrderInvalidException("Order should contain a list of OrderProducts");
+        }
+
         order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
         order.updateOrderAmount();
 
         orderRepository.saveAndFlush(order);
     }
 
+    /**
+     * Update an Order.
+     *
+     * @param order of type Order
+     * @throws OrderNotFoundException when Order is not found.
+     * @throws OrderInvalidException when Order is invalid to update.
+     */
     @Override
     public void update(Order order) throws OrderNotFoundException, OrderInvalidException {
         if (order.getPublicReference() == null) {
-            throw new OrderInvalidException("Order should contain a public reference");
+            throw new OrderInvalidException("Order should contain a public reference before updating.");
         }
 
         Order old = this.getByReference(order.getPublicReference());
         old.setOwner(order.getOwner());
         old.setStatus(order.getStatus());
         old.setPaymentMethod(order.getPaymentMethod());
+        old.updateOrderAmount();
 
         orderRepository.saveAndFlush(order);
     }
@@ -139,15 +157,11 @@ public class OrderServiceImpl implements OrderService {
      * @param status of type OrderStatus
      */
     @Override
-    public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
-        if (order.getId() == null) {
-            throw new OrderInvalidException("Order should contain an ID before changing its status");
-        }
-
+    public void updateOrderStatus(Order order, OrderStatus status) {
         if (status == OrderStatus.PAID) {
             try {
                 this.updateOrderStatusPaid(order);
-            } catch (UnassignedOrderException | UndefinedPaymentMethodOrderException ignored) {
+            } catch (EventsException ignored) {
             }
         } else if (status == OrderStatus.RESERVATION) {
             this.updateOrderStatusReservation(order);
@@ -157,6 +171,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * Update order status to reservation.
+     *
+     * @param order of type Order
+     */
     private void updateOrderStatusReservation(Order order) {
         OrderStatus beforeStatus = order.getStatus();
         order.setStatus(OrderStatus.RESERVATION);
@@ -169,6 +188,11 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.saveAndFlush(order);
     }
 
+    /**
+     * Update product reservation count.
+     *
+     * @param order of type Order
+     */
     private void updateProductReservedCount(Order order) {
         order.getOrderProducts().forEach(orderProduct -> {
             orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue());
@@ -185,13 +209,13 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     @Override
-    public void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException {
+    public void updateOrderStatusPaid(Order order) throws EventsException {
         OrderStatus beforeStatus = order.getStatus();
         order.setStatus(OrderStatus.PAID);
         order.setPaidAt(LocalDateTime.now());
 
-        List<Ticket> tickets = this.createTicketIfPaid(order);
         if (beforeStatus != OrderStatus.PAID) {
+            List<Ticket> tickets = this.createTicketIfPaid(order);
             mailService.sendOrderConfirmation(order, tickets);
             this.updateProductSoldCount(order);
         }
@@ -200,30 +224,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Temporary save an Order.
+     * Get all reservation Order by a Customer.
      *
-     * @param order of type Order.
-     */
-    @Override
-    public void tempSaveOrder(Order order) {
-        if (order.getStatus().equals(OrderStatus.RESERVATION)) {
-            order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
-            orderRepository.saveAndFlush(order);
-        }
-    }
-
-    /**
-     * Delete a temporary Order.
+     * @param customer of type Customer.
      *
-     * @param order of type Order.
+     * @return List of Orders
      */
-    @Override
-    public void deleteTempOrder(Order order) {
-        if (order.getStatus().equals(OrderStatus.RESERVATION)) {
-            orderRepository.delete(order);
-        }
-    }
-
     @Override
     public List<Order> getAllReservationOrderByCustomer(Customer customer) {
         return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
@@ -249,9 +255,11 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order of type Order.
      *
-     * @throws UnassignedOrderException when order is not assigned to a Customer.
+     * @return List of Ticket
+     *
+     * @throws EventsException when Order in unassigned or payment method is undefined.
      */
-    private List<Ticket> createTicketIfPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException {
+    private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
         if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {
             throw new UnassignedOrderException();
         }
@@ -260,13 +268,13 @@ public class OrderServiceImpl implements OrderService {
             throw new UndefinedPaymentMethodOrderException();
         }
 
-        if (order.getStatus() == OrderStatus.PAID) {
-            return order.getOrderProducts()
-                    .stream()
-                    .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
-                    .collect(Collectors.toList());
+        if (order.getStatus() != OrderStatus.PAID) {
+            throw new OrderInvalidException("Tickets cannot be create, because the order is not paid");
         }
 
-        return new ArrayList<>();
+        return order.getOrderProducts()
+                .stream()
+                .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
+                .collect(Collectors.toList());
     }
 }

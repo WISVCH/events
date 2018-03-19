@@ -86,13 +86,13 @@ public class SalesSellCustomerController {
 
             orderValidationService.assertOrderIsValidForCustomer(order, customer);
             order.setOwner(customer);
-            orderService.tempSaveOrder(order);
+//            orderService.tempSaveOrder(order);
 
             return "redirect:/sales/sell/order/" + order.getPublicReference();
         } catch (CustomerNotFoundException e) {
             return "redirect:/sales/sell/customer/" + order.getPublicReference() + "/create";
         } catch (OrderInvalidException | OrderExceedCustomerLimitException e) {
-            orderService.deleteTempOrder(order);
+//            orderService.deleteTempOrder(order);
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/sell";
@@ -132,7 +132,7 @@ public class SalesSellCustomerController {
             orderValidationService.assertOrderIsValidForCustomer(order, customer);
 
             order.setOwner(customer);
-            orderService.tempSaveOrder(order);
+//            orderService.tempSaveOrder(order);
 
             redirect.addFlashAttribute("success", "Customer successfully created!");
 

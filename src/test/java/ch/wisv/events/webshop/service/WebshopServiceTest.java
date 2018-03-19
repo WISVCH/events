@@ -21,16 +21,13 @@ import static org.mockito.Mockito.*;
 public class WebshopServiceTest extends ServiceTest {
 
     @MockBean
-    public PaymentsService paymentsService;
+    private PaymentsService paymentsService;
 
     @MockBean
-    public CustomerService customerService;
-
-    @MockBean
-    public OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
-    public WebshopService webshopService;
+    private WebshopService webshopService;
 
     private Order order;
 
