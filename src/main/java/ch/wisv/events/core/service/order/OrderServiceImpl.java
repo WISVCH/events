@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * OrderServiceImpl class.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -132,8 +135,9 @@ public class OrderServiceImpl implements OrderService {
      * Update an Order.
      *
      * @param order of type Order
+     *
      * @throws OrderNotFoundException when Order is not found.
-     * @throws OrderInvalidException when Order is invalid to update.
+     * @throws OrderInvalidException  when Order is invalid to update.
      */
     @Override
     public void update(Order order) throws OrderNotFoundException, OrderInvalidException {
@@ -256,8 +260,6 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order.
      *
      * @return List of Ticket
-     *
-     * @throws EventsException when Order in unassigned or payment method is undefined.
      */
     private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
         if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {

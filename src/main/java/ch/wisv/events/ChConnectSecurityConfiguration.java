@@ -88,7 +88,7 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      * @param auth of type AuthenticationManagerBuilder
      */
     @Autowired
-    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureAuthenticationProvider(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(oidcAuthenticationProvider());
     }
 
