@@ -5,6 +5,6 @@ import ch.wisv.events.core.exception.LogLevelEnum;
 public class OrderExceedEventLimitException extends EventsException {
 
     public OrderExceedEventLimitException(Integer leftOver) {
-        super(LogLevelEnum.WARN, "Limit reached after " + leftOver.toString() + " webshop.");
+        super(LogLevelEnum.WARN, "Event limit exceeded (max " + leftOver.toString() + " tickets allowed).");
     }
 }
