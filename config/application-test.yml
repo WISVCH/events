@@ -12,10 +12,10 @@ spring:
 
     # Username to log in to the database
     # It's recommended to create a dedicated Database user instead of using the default postgres user
-    username: database
+    username: postgres
 
     # Password to log in with <MyDbPassword> in database <MyDb>
-    password: LLF9?Umb2Ao%MCwZPJ@wMyE6abJXcyn
+    password: 
 
   data.jpa.repositories.enabled: true
 
