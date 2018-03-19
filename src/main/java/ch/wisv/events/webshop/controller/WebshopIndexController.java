@@ -1,6 +1,7 @@
 package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.webshop.service.WebshopService;
 import java.util.List;
@@ -39,7 +40,7 @@ public class WebshopIndexController {
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute("events", webshopService.filterNotSalableProducts(upcoming));
-        model.addAttribute("orderProduct", new ch.wisv.events.core.model.order.OrderProductDto());
+        model.addAttribute("orderProduct", new OrderProductDto());
 
         return "webshop/index";
     }
