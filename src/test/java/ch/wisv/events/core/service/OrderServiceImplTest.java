@@ -4,6 +4,7 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.UnassignedOrderException;
+import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -291,11 +292,12 @@ public class OrderServiceImplTest extends ServiceTest {
         Order mock = mock(Order.class);
         when(mock.getStatus()).thenReturn(OrderStatus.ANONYMOUS);
 
-        orderService.updateOrderStatusPaid(mock);
+        orderService.updateOrderStatus(mock, OrderStatus.PAID);
     }
 
     @Test
     public void testUpdateOrderStatusPaidMissingPaymentMethod() throws Exception {
+        thrown.expect(UndefinedPaymentMethodOrderException.class);
         Order mock = mock(Order.class);
         when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED).thenReturn(OrderStatus.PAID);
         when(mock.getOwner()).thenReturn(mock(Customer.class));

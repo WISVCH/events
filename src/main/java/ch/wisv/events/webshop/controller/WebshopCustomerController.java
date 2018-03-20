@@ -3,7 +3,6 @@ package ch.wisv.events.webshop.controller;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.normal.EventsException;
-import ch.wisv.events.core.exception.normal.OrderExceedCustomerLimitException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
@@ -171,6 +170,22 @@ public class WebshopCustomerController extends WebshopController {
     }
 
     /**
+     * Add a Customer to an Order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     *
+     * @throws EventsException when Order is invalid,,the Order exceed the Customer limit or the Order does not exists
+     */
+    private void addCustomerToOrder(Order order, Customer customer) throws EventsException {
+        orderValidationService.assertOrderIsValidForCustomer(order, customer);
+
+        order.setOwner(customer);
+        orderService.update(order);
+        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
+    }
+
+    /**
      * Get an existing Customer based on email or username.
      *
      * @param customer of type Customer
@@ -187,24 +202,5 @@ public class WebshopCustomerController extends WebshopController {
             }
         }
         return null;
-    }
-
-    /**
-     * Add a Customer to an Order.
-     *
-     * @param order    of type Order
-     * @param customer of type Customer
-     *
-     * @throws OrderInvalidException             when Order is invalid
-     * @throws OrderExceedCustomerLimitException when the Order exceed the Customer limit
-     * @throws OrderNotFoundException            when the Order does not exists
-     */
-    private void addCustomerToOrder(Order order, Customer customer)
-            throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
-        orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-        order.setOwner(customer);
-        orderService.update(order);
-        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }
 }

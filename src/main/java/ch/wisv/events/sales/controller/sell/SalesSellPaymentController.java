@@ -2,6 +2,7 @@ package ch.wisv.events.sales.controller.sell;
 
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class SalesSellPaymentController {
             order.setPaymentMethod((order.getAmount()) == 0.d ? PaymentMethod.OTHER : method);
 
             orderService.create(order);
-            orderService.updateOrderStatusPaid(order);
+            orderService.updateOrderStatus(order, OrderStatus.PAID);
 
             return "redirect:/sales/sell/order/" + order.getPublicReference() + "/complete";
         } catch (EventsException e) {

@@ -71,16 +71,7 @@ public interface OrderService {
      *
      * @throws OrderInvalidException when the status update will put the Order in an invalid state
      */
-    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
-
-    /**
-     * Update and the order status to paid.
-     *
-     * @param order of type Order
-     *
-     * @throws EventsException when updating goes wrong
-     */
-    void updateOrderStatusPaid(Order order) throws EventsException;
+    void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
     /**
      * Get all reservation orders by a Customer.

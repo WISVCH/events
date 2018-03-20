@@ -108,7 +108,7 @@ public class WebshopCheckoutController extends WebshopController {
             redirect.addFlashAttribute("success", "Order has successfully been cancelled.");
 
             return "redirect:/";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";

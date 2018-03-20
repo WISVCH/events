@@ -161,18 +161,76 @@ public class OrderServiceImpl implements OrderService {
      * @param status of type OrderStatus
      */
     @Override
-    public void updateOrderStatus(Order order, OrderStatus status) {
+    public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
         if (status == OrderStatus.PAID) {
-            try {
-                this.updateOrderStatusPaid(order);
-            } catch (EventsException ignored) {
-            }
+            this.updateOrderStatusPaid(order);
         } else if (status == OrderStatus.RESERVATION) {
             this.updateOrderStatusReservation(order);
         } else {
             order.setStatus(status);
             orderRepository.saveAndFlush(order);
         }
+    }
+
+    /**
+     * Get all reservation Order by a Customer.
+     *
+     * @param customer of type Customer.
+     *
+     * @return List of Orders
+     */
+    @Override
+    public List<Order> getAllReservationOrderByCustomer(Customer customer) {
+        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
+    }
+
+    /**
+     * Create the ticket if an order has the status paid.
+     *
+     * @param order of type Order.
+     *
+     * @return List of Ticket
+     *
+     * @throws EventsException when Order in unassigned, the payment method is undefined or the order status is not paid
+     */
+    private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
+        if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {
+            throw new UnassignedOrderException();
+        }
+
+        if (order.getPaymentMethod() == null) {
+            throw new UndefinedPaymentMethodOrderException();
+        }
+
+        if (order.getStatus() != OrderStatus.PAID) {
+            throw new OrderInvalidException("Tickets cannot be created, because the order is not paid");
+        }
+
+        return order.getOrderProducts()
+                .stream()
+                .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Update order status to PAID.
+     *
+     * @param order of type Order
+     *
+     * @throws EventsException when creating the tickets fails
+     */
+    private void updateOrderStatusPaid(Order order) throws EventsException {
+        OrderStatus beforeStatus = order.getStatus();
+        order.setStatus(OrderStatus.PAID);
+        order.setPaidAt(LocalDateTime.now());
+
+        if (beforeStatus != OrderStatus.PAID) {
+            List<Ticket> tickets = this.createTicketIfPaid(order);
+            mailService.sendOrderConfirmation(order, tickets);
+            this.updateProductSoldCount(order);
+        }
+
+        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -208,38 +266,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Update order status to PAID.
-     *
-     * @param order of type Order
-     */
-    @Override
-    public void updateOrderStatusPaid(Order order) throws EventsException {
-        OrderStatus beforeStatus = order.getStatus();
-        order.setStatus(OrderStatus.PAID);
-        order.setPaidAt(LocalDateTime.now());
-
-        if (beforeStatus != OrderStatus.PAID) {
-            List<Ticket> tickets = this.createTicketIfPaid(order);
-            mailService.sendOrderConfirmation(order, tickets);
-            this.updateProductSoldCount(order);
-        }
-
-        orderRepository.saveAndFlush(order);
-    }
-
-    /**
-     * Get all reservation Order by a Customer.
-     *
-     * @param customer of type Customer.
-     *
-     * @return List of Orders
-     */
-    @Override
-    public List<Order> getAllReservationOrderByCustomer(Customer customer) {
-        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
-    }
-
-    /**
      * Update product sold count.
      *
      * @param order of type Order
@@ -252,33 +278,5 @@ public class OrderServiceImpl implements OrderService {
             } catch (ProductNotFoundException | ProductInvalidException ignored) {
             }
         });
-    }
-
-    /**
-     * Create the ticket if an order has the status paid.
-     *
-     * @param order of type Order.
-     *
-     * @return List of Ticket
-     *
-     * @throws EventsException when Order in unassigned, the payment method is undefined or the order status is not paid
-     */
-    private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
-        if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {
-            throw new UnassignedOrderException();
-        }
-
-        if (order.getPaymentMethod() == null) {
-            throw new UndefinedPaymentMethodOrderException();
-        }
-
-        if (order.getStatus() != OrderStatus.PAID) {
-            throw new OrderInvalidException("Tickets cannot be create, because the order is not paid");
-        }
-
-        return order.getOrderProducts()
-                .stream()
-                .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
-                .collect(Collectors.toList());
     }
 }

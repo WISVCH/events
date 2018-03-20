@@ -34,7 +34,7 @@ abstract class WebshopController {
         OrderStatus[] stopOrderStatus = new OrderStatus[]{OrderStatus.EXPIRED, OrderStatus.PAID, OrderStatus.RESERVATION, OrderStatus.REJECTED};
 
         if (ArrayUtils.contains(stopOrderStatus, order.getStatus())) {
-            throw new OrderInvalidException("Order is in a invalid state");
+            throw new OrderInvalidException("Order with " + order.getStatus() + " is not suitable for payment.");
         }
     }
 }

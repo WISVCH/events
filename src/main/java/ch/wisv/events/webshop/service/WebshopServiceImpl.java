@@ -1,5 +1,6 @@
 package ch.wisv.events.webshop.service;
 
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.event.Event;
@@ -73,7 +74,7 @@ public class WebshopServiceImpl implements WebshopService {
      * @param paymentsReference of type String
      */
     @Override
-    public void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
+    public void updateOrderStatus(Order order, String paymentsReference) throws EventsException {
         String status = paymentsService.getPaymentsOrderStatus(paymentsReference);
 
         switch (status) {

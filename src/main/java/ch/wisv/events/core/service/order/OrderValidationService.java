@@ -31,5 +31,5 @@ public interface OrderValidationService {
      *
      * @param order of type Order
      */
-    void assertOrderIsValidForPayment(Order order) throws OrderInvalidException;
+    void assertOrderIsValidForIdealPayment(Order order) throws OrderInvalidException;
 }
