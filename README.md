@@ -1,5 +1,8 @@
-# Events [![Build Status](https://travis-ci.org/WISVCH/events.svg?branch=master)](https://travis-ci.org/WISVCH/events)
+# Events [![Build Status](https://travis-ci.org/WISVCH/events.svg?branch=master)](https://travis-ci.org/WISVCH/events) [![Maintainability](https://api.codeclimate.com/v1/badges/f73308e49963d9782643/maintainability)](https://codeclimate.com/github/WISVCH/events/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/f73308e49963d9782643/test_coverage)](https://codeclimate.com/github/WISVCH/events/test_coverage)
+
 Event registration for W.I.S.V. 'Christiaan Huygens'.
+
+
 
 Uses [WISVCH/bootstrap-theme](https://github.com/WISVCH/bootstrap-theme) for styling.
 
