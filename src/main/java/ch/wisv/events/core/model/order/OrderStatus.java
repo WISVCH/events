@@ -21,9 +21,15 @@ public enum OrderStatus {
     RESERVATION,
 
     /* FINAL STATUSES. */
-    /** Order has been paid */
+    /** Order has been paid. */
     PAID,
+
+    /** Order has closed due to an error. */
     ERROR,
+
+    /** Order has been rejected by an admin. */
     REJECTED,
+
+    /** Order has been expired. */
     EXPIRED,
 }
