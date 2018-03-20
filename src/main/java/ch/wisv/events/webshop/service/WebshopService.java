@@ -1,11 +1,13 @@
 package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import java.util.List;
 
+/**
+ * WebshopService class.
+ */
 public interface WebshopService {
 
     /**
@@ -23,8 +25,7 @@ public interface WebshopService {
      * @param order             of type Order
      * @param paymentsReference of type String
      *
-     * @throws PaymentsStatusUnknown when CH Payment status is unknown
-     * @throws OrderInvalidException when an Order is invalid
+     * @throws EventsException when CH Payment status is unknown or the Order is invalid
      */
-    void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException;
+    void updateOrderStatus(Order order, String paymentsReference) throws EventsException;
 }

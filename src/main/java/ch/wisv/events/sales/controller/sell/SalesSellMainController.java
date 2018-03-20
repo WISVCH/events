@@ -84,7 +84,7 @@ public class SalesSellMainController {
             Order order = orderService.createOrderByOrderProductDto(orderProductDto);
             order.setCreatedBy(authenticationService.getCurrentCustomer().getName());
             order.setStatus(OrderStatus.RESERVATION);
-            orderService.tempSaveOrder(order);
+//            orderService.tempSaveOrder(order);
 
             return "redirect:/sales/sell/customer/" + order.getPublicReference();
         } catch (EventsException e) {

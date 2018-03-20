@@ -1,20 +1,18 @@
 package ch.wisv.events.core.service.order;
 
-import ch.wisv.events.core.exception.normal.EventNotFoundException;
-import ch.wisv.events.core.exception.normal.OrderExceedCustomerLimitException;
-import ch.wisv.events.core.exception.normal.OrderExceedEventLimitException;
-import ch.wisv.events.core.exception.normal.OrderExceedProductLimitException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
-import ch.wisv.events.core.exception.normal.UnassignedOrderException;
-import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 
+/**
+ * OrderService interface.
+ */
 public interface OrderService {
 
     /**
@@ -30,6 +28,8 @@ public interface OrderService {
      * @param reference of type String
      *
      * @return Order
+     *
+     * @throws OrderNotFoundException when Order is not found
      */
     Order getByReference(String reference) throws OrderNotFoundException;
 
@@ -37,14 +37,18 @@ public interface OrderService {
      * Method create creates and order.
      *
      * @param order of type Order
+     *
+     * @throws EventsException when something is wrong with the Order
      */
-    void create(Order order) throws OrderInvalidException, EventNotFoundException, OrderExceedEventLimitException, OrderExceedProductLimitException,
-                                    OrderExceedCustomerLimitException;
+    void create(Order order) throws EventsException;
 
     /**
      * Update an existing order.
      *
      * @param order of type Order
+     *
+     * @throws OrderNotFoundException when Order is not found
+     * @throws OrderInvalidException  when the updates make the Order invalid
      */
     void update(Order order) throws OrderNotFoundException, OrderInvalidException;
 
@@ -54,6 +58,8 @@ public interface OrderService {
      * @param orderProductDto of type OrderProductDto
      *
      * @return Order
+     *
+     * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
      */
     Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
 
@@ -62,29 +68,10 @@ public interface OrderService {
      *
      * @param order  of type Order
      * @param status of type OrderStatus
-     */
-    void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException;
-
-    /**
-     * Update and the order status to paid.
      *
-     * @param order of type Order
+     * @throws EventsException when the status update will put the Order in an invalid state
      */
-    void updateOrderStatusPaid(Order order) throws UnassignedOrderException, UndefinedPaymentMethodOrderException;
-
-    /**
-     * Temporary save an Order.
-     *
-     * @param order of type Order.
-     */
-    void tempSaveOrder(Order order);
-
-    /**
-     * Delete a temporary Order.
-     *
-     * @param order of type Order.
-     */
-    void deleteTempOrder(Order order);
+    void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
     /**
      * Get all reservation orders by a Customer.

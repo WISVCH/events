@@ -3,7 +3,6 @@ package ch.wisv.events.webshop.controller;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.normal.EventsException;
-import ch.wisv.events.core.exception.normal.OrderExceedCustomerLimitException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
@@ -72,6 +71,10 @@ public class WebshopCustomerController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
             model.addAttribute("order", order);
 
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            }
+
             return "webshop/checkout/customer";
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -94,8 +97,12 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
-            Customer customer = authenticationService.getCurrentCustomer();
 
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            }
+
+            Customer customer = authenticationService.getCurrentCustomer();
             this.addCustomerToOrder(order, customer);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/payment";
@@ -121,17 +128,22 @@ public class WebshopCustomerController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
-            if (!model.containsAttribute("customer")) {
-                model.addAttribute("customer", new Customer());
-            }
-            model.addAttribute("order", order);
+            if (order.getStatus() == OrderStatus.ASSIGNED) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            } else if (order.getStatus() == OrderStatus.ANONYMOUS) {
+                if (!model.containsAttribute("customer")) {
+                    model.addAttribute("customer", new Customer());
+                }
 
-            return "webshop/checkout/create";
+                model.addAttribute("order", order);
+
+                return "webshop/checkout/create";
+            }
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-
-            return "redirect:/";
         }
+
+        return "redirect:/";
     }
 
     /**
@@ -147,6 +159,7 @@ public class WebshopCustomerController extends WebshopController {
     public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);
+            this.assertOrderIsSuitableForCheckout(order);
 
             Customer existingCustomer = this.getExistingCustomer(customer);
 
@@ -171,6 +184,22 @@ public class WebshopCustomerController extends WebshopController {
     }
 
     /**
+     * Add a Customer to an Order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     *
+     * @throws EventsException when Order is invalid,,the Order exceed the Customer limit or the Order does not exists
+     */
+    private void addCustomerToOrder(Order order, Customer customer) throws EventsException {
+        orderValidationService.assertOrderIsValidForCustomer(order, customer);
+
+        order.setOwner(customer);
+        orderService.update(order);
+        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
+    }
+
+    /**
      * Get an existing Customer based on email or username.
      *
      * @param customer of type Customer
@@ -187,24 +216,5 @@ public class WebshopCustomerController extends WebshopController {
             }
         }
         return null;
-    }
-
-    /**
-     * Add a Customer to an Order.
-     *
-     * @param order    of type Order
-     * @param customer of type Customer
-     *
-     * @throws OrderInvalidException             when Order is invalid
-     * @throws OrderExceedCustomerLimitException when the Order exceed the Customer limit
-     * @throws OrderNotFoundException            when the Order does not exists
-     */
-    private void addCustomerToOrder(Order order, Customer customer)
-            throws OrderInvalidException, OrderExceedCustomerLimitException, OrderNotFoundException {
-        orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-        order.setOwner(customer);
-        orderService.update(order);
-        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }
 }

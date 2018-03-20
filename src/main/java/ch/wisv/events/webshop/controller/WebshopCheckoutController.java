@@ -1,10 +1,8 @@
 package ch.wisv.events.webshop.controller;
 
-import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -60,13 +58,11 @@ public class WebshopCheckoutController extends WebshopController {
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference();
-        } catch (ProductNotFoundException | EventNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", "Limit exceeded: " + e.getMessage());
-        }
+            redirect.addFlashAttribute("error", e.getMessage());
 
-        return "redirect:/";
+            return "redirect:/";
+        }
     }
 
     /**
@@ -112,7 +108,7 @@ public class WebshopCheckoutController extends WebshopController {
             redirect.addFlashAttribute("success", "Order has successfully been cancelled.");
 
             return "redirect:/";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";

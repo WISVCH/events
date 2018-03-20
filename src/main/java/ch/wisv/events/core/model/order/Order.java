@@ -110,9 +110,10 @@ public class Order {
      * Calculate and set the order amount.
      */
     public void updateOrderAmount() {
-        this.setAmount(this.getOrderProducts()
-                               .stream()
-                               .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
-                               .sum());
+        this.setAmount(
+                this.getOrderProducts().stream()
+                        .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
+                        .sum()
+        );
     }
 }

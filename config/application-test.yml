@@ -1,35 +1,45 @@
-############## Test properties #############################################################
+############## Test properties ###################################################################
+# This is the default property file which can be used as a template for default configuration.   #
+# Copy this file to `/config/application.properties`, with the runnable jar in the `/` directory #
+##################################################################################################
 
 spring:
-    datasource:
-        driverClassName: org.hsqldb.jdbc.JDBCDriver
-        url: jdbc:hsqldb:mem:events
-        username: sa
-        password:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/events
+    username: postgres
+    password:
 
-    data.jpa.repositories.enabled: true
+  data.jpa.repositories.enabled: true
 
-    jpa:
-        show-sql: false
-        database-platform: org.hibernate.dialect.HSQLDialect
-        generate-ddl: true
-        hibernate.ddl-auto: create-drop
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
 
-        properties.hibernate.default_schema: public
+    properties.hibernate.default_schema: public
 
+  mail:
+    host: 127.0.0.1
+    port: 1025
+
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+
+flyway.enabled: false
 server:
+    port: 8080
     context-path: /events
 
-security.basic.enabled: false
-
 wisvch.connect:
-    issuerUri: https://connect.ch.tudelft.nl/
-    clientUri: http://localhost:8080/events
+  issuerUri: https://connect.ch.tudelft.nl
+  clientUri: http://localhost:8080/events
 
-    admin-groups: dienst2
-    beta-users: test
+  admin-groups: test
+  beta-users: test
 
-# CH Payments Configuration
 wisvch.payments:
-    issuerUri: http://localhost:9000/payments
+    issuerUri: https://ch.tudelft.nl/payments
     clientUri: http://localhost:8080/events

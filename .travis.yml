@@ -1,12 +1,14 @@
 sudo: required
 services:
   - docker
+  - postgresql
 language: java
 jdk: oraclejdk8
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - psql -c 'create database events;' -U postgres
 script:
   - "./gradlew clean build jacocoTestReport jacocoFix -PbuildNumber=$TRAVIS_BUILD_NUMBER --scan"
   - docker build --no-cache --pull -t wisvch/events:$TRAVIS_BUILD_NUMBER .
@@ -21,5 +23,8 @@ after_script:
   - ../../../cc-test-reporter upload-coverage -d
 notifications:
   slack:
-    secure: ceFDoYAYk+5QTuo+ydI8KT47ZQnrZfRMYlLHx7Wb0auwP+5G0fcoMPm+INsLW4JHrQc2C5E+Ch6tyuPxT+jCUjOtmrhA4KE2d+ZZVdR8raaqeBshvUiVuEhrRR+9wPqwE8/YP/17N5jC3xl3d4bPYcTmLtvHpr95EdVdF/+IQ4aVLq3axpBVQS2cyexMoKjB7UeFIlonRNUAycy9ccVZXwp1ShyqWrJJcOcEdtNOJHKIQohlCVmG0JDr1jDd/Yi2fGYTX/kxx5oSaFrPSLOz3Bcyxwb/B3C+5ZaGkYAiB+pcZxfRAF5cDpDrS5V0raqdfwO2+pNsam+p5V79M8hddGr6xUMM972izO9fCI3fAIhTK9FM/sDa9y+oTGu9bLBg6nrKOvZMEnKbmPMpGJ13o9c+qxhklzYfSG6X28R1hXG8Ct/WpmpZhPQbEK9+ggLZwHXDdomUeZ74USOgt5hhwOg+R+pJeWrgz3L5WX8yYyh9L40v1bo/7ioeqxhJOPKdju8Q30YEOZ6addlUyFl3F6Zisr6RsT0whGlUDoevvHvvShljJU/rcie1sUmikeI4DeBE7UnuDCEkeDCB+OgCW7IiMI0L48mryJe2T7eARGY88oZklDGIUBtREp8zKk8hcHBntKnTszMd0IioW4CkgcAuh9p8oNJ5on+dwmckr94=
+    rooms:
+      - secure: ceFDoYAYk+5QTuo+ydI8KT47ZQnrZfRMYlLHx7Wb0auwP+5G0fcoMPm+INsLW4JHrQc2C5E+Ch6tyuPxT+jCUjOtmrhA4KE2d+ZZVdR8raaqeBshvUiVuEhrRR+9wPqwE8/YP/17N5jC3xl3d4bPYcTmLtvHpr95EdVdF/+IQ4aVLq3axpBVQS2cyexMoKjB7UeFIlonRNUAycy9ccVZXwp1ShyqWrJJcOcEdtNOJHKIQohlCVmG0JDr1jDd/Yi2fGYTX/kxx5oSaFrPSLOz3Bcyxwb/B3C+5ZaGkYAiB+pcZxfRAF5cDpDrS5V0raqdfwO2+pNsam+p5V79M8hddGr6xUMM972izO9fCI3fAIhTK9FM/sDa9y+oTGu9bLBg6nrKOvZMEnKbmPMpGJ13o9c+qxhklzYfSG6X28R1hXG8Ct/WpmpZhPQbEK9+ggLZwHXDdomUeZ74USOgt5hhwOg+R+pJeWrgz3L5WX8yYyh9L40v1bo/7ioeqxhJOPKdju8Q30YEOZ6addlUyFl3F6Zisr6RsT0whGlUDoevvHvvShljJU/rcie1sUmikeI4DeBE7UnuDCEkeDCB+OgCW7IiMI0L48mryJe2T7eARGY88oZklDGIUBtREp8zKk8hcHBntKnTszMd0IioW4CkgcAuh9p8oNJ5on+dwmckr94=
+    on_success: never
+    on_failure: always
   email: false

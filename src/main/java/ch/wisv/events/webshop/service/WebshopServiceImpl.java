@@ -1,6 +1,6 @@
 package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -13,6 +13,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
+/**
+ * WebshopServiceImpl class.
+ */
 @Service
 public class WebshopServiceImpl implements WebshopService {
 
@@ -51,11 +54,10 @@ public class WebshopServiceImpl implements WebshopService {
                     .stream()
                     .filter(this.filterProductBySellInterval())
                     .collect(Collectors.toList());
-
             event.setProducts(filterSalableProducts);
         });
 
-        return events;
+        return events.stream().filter(event -> event.getProducts().size() > 0).collect(Collectors.toList());
     }
 
     /**
@@ -74,7 +76,7 @@ public class WebshopServiceImpl implements WebshopService {
      * @param paymentsReference of type String
      */
     @Override
-    public void updateOrderStatus(Order order, String paymentsReference) throws PaymentsStatusUnknown, OrderInvalidException {
+    public void updateOrderStatus(Order order, String paymentsReference) throws EventsException {
         String status = paymentsService.getPaymentsOrderStatus(paymentsReference);
 
         switch (status) {
@@ -86,6 +88,9 @@ public class WebshopServiceImpl implements WebshopService {
                 break;
             case "CANCELLED":
                 orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
+                break;
+            case "EXPIRED":
+                orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
                 break;
             default:
                 throw new PaymentsStatusUnknown(status);

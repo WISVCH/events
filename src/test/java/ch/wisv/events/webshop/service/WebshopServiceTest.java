@@ -21,16 +21,10 @@ import static org.mockito.Mockito.*;
 public class WebshopServiceTest extends ServiceTest {
 
     @MockBean
-    public PaymentsService paymentsService;
-
-    @MockBean
-    public CustomerService customerService;
-
-    @MockBean
-    public OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
-    public WebshopService webshopService;
+    private WebshopService webshopService;
 
     private Order order;
 
@@ -41,23 +35,21 @@ public class WebshopServiceTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusWaiting() throws Exception {
-        runUpdateOrderStatus("WAITING", OrderStatus.PENDING);
+        runUpdateOrderStatus("123-345-561", OrderStatus.PENDING);
     }
 
     @Test
     public void testUpdateOrderStatusPaid() throws Exception {
-        runUpdateOrderStatus("PAID", OrderStatus.PAID);
+        runUpdateOrderStatus("123-345-562", OrderStatus.PAID);
     }
 
     @Test
     public void testUpdateOrderStatusCancelled() throws Exception {
-        runUpdateOrderStatus("CANCELLED", OrderStatus.CANCELLED);
+        runUpdateOrderStatus("123-345-563", OrderStatus.CANCELLED);
     }
 
-    private void runUpdateOrderStatus(String paymentsStatus, OrderStatus orderStatus) throws EventsException {
-        String reference = UUID.randomUUID().toString();
-        when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn(paymentsStatus);
-        doNothing().when(orderService).updateOrderStatusPaid(this.order);
+    private void runUpdateOrderStatus(String reference, OrderStatus orderStatus) throws EventsException {
+        doNothing().when(orderService).updateOrderStatus(this.order, orderStatus);
 
         webshopService.updateOrderStatus(this.order, reference);
 
@@ -67,9 +59,7 @@ public class WebshopServiceTest extends ServiceTest {
     @Test
     public void testUpdateOrderStatusException() throws Exception {
         thrown.expect(PaymentsStatusUnknown.class);
-        String reference = UUID.randomUUID().toString();
-        when(paymentsService.getPaymentsOrderStatus(reference)).thenReturn("STATUS_EXCEPTION");
 
-        webshopService.updateOrderStatus(this.order, reference);
+        webshopService.updateOrderStatus(this.order, "123-345-564");
     }
 }
