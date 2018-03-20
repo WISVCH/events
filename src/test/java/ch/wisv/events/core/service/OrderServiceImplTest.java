@@ -208,13 +208,13 @@ public class OrderServiceImplTest extends ServiceTest {
 
         // Updates that should happen
         verify(mock, times(1)).setOwner(any(Customer.class));
-        verify(mock, times(1)).setStatus(any(OrderStatus.class));
         verify(mock, times(1)).setPaymentMethod(any(PaymentMethod.class));
         verify(mock, times(1)).updateOrderAmount();
 
         // Updates that should not happen
         verify(mock, times(0)).setPublicReference(any(String.class));
         verify(mock, times(0)).setOrderProducts(any(List.class));
+        verify(mock, times(0)).setStatus(any(OrderStatus.class));
         verify(mock, times(0)).setCreatedBy(any(String.class));
         verify(mock, times(0)).setCreatedAt(any(LocalDateTime.class));
         verify(mock, times(0)).setPaidAt(any(LocalDateTime.class));
@@ -242,6 +242,7 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testUpdateOrderStatus() throws Exception {
         Order mock = mock(Order.class);
+        when(mock.getStatus()).thenReturn(OrderStatus.PENDING);
         orderService.updateOrderStatus(mock, OrderStatus.EXPIRED);
 
         verify(mock, times(1)).setStatus(OrderStatus.EXPIRED);
@@ -251,9 +252,9 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testUpdateOrderStatusPaid() throws Exception {
         Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED).thenReturn(OrderStatus.PAID);
+        when(mock.getStatus()).thenReturn(OrderStatus.PENDING).thenReturn(OrderStatus.PAID);
         when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.CASH);
+        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.IDEAL);
         when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
         orderService.updateOrderStatus(mock, OrderStatus.PAID);
 
@@ -268,26 +269,19 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusPaidButWasAlreadyPaid() throws Exception {
-        Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.PAID).thenReturn(OrderStatus.PAID);
-        when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.CASH);
-        when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
-        orderService.updateOrderStatus(mock, OrderStatus.PAID);
+        thrown.expect(OrderInvalidException.class);
+        thrown.expectMessage("Not allowed to update status from PAID to PAID");
 
-        when(ticketService.createByOrderProduct(any(Order.class), any(OrderProduct.class))).thenReturn(mock(Ticket.class));
-        doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
+        Order order = new Order();
+        order.setStatus(OrderStatus.PAID);
 
-        verify(mock, times(1)).setStatus(OrderStatus.PAID);
-        verify(mock, times(1)).setPaidAt(any(LocalDateTime.class));
-        verify(ticketService, times(0)).createByOrderProduct(any(Order.class), any(OrderProduct.class));
-        verify(productService, times(0)).update(any(Product.class));
-        verify(orderRepository, times(1)).saveAndFlush(any(Order.class));
+        orderService.updateOrderStatus(order, OrderStatus.PAID);
     }
 
     @Test
     public void testUpdateOrderStatusPaidMissingOwner() throws Exception {
-        thrown.expect(UnassignedOrderException.class);
+        thrown.expect(OrderInvalidException.class);
+        thrown.expectMessage("Not allowed to update status from ANONYMOUS to PAID");
 
         Order mock = mock(Order.class);
         when(mock.getStatus()).thenReturn(OrderStatus.ANONYMOUS);
@@ -296,27 +290,12 @@ public class OrderServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void testUpdateOrderStatusPaidMissingPaymentMethod() throws Exception {
-        thrown.expect(UndefinedPaymentMethodOrderException.class);
-        Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED).thenReturn(OrderStatus.PAID);
-        when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getPaymentMethod()).thenReturn(null);
-        orderService.updateOrderStatus(mock, OrderStatus.PAID);
-
-        verify(mock, times(1)).setStatus(OrderStatus.PAID);
-        verify(mock, times(1)).setPaidAt(any(LocalDateTime.class));
-        verify(ticketService, times(0)).createByOrderProduct(any(Order.class), any(OrderProduct.class));
-        verify(orderRepository, times(0)).saveAndFlush(any(Order.class));
-    }
-
-    @Test
     public void testUpdateOrderStatusReservation() throws Exception {
         Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED).thenReturn(OrderStatus.RESERVATION);
+        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED);
         when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.CASH);
         when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
+
         orderService.updateOrderStatus(mock, OrderStatus.RESERVATION);
 
         doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());

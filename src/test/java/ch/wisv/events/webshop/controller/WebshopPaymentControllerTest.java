@@ -87,7 +87,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentOverviewNotSuitableForCheckout() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.PAID, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment", "Order with PAID is not suitable for payment.");
+        this.requestPaymentCheckoutException(order, "/payment", "Order with status PAID is not suitable for checkout");
     }
 
     /**
@@ -149,7 +149,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentReservationNotSuitableForCheckout() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.PAID, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order with PAID is not suitable for payment.");
+        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order with status PAID is not suitable for checkout");
     }
 
     /**
@@ -213,7 +213,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentIdealNotSuitableForCheckout() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.PAID, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order with PAID is not suitable for payment.");
+        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order with status PAID is not suitable for checkout");
     }
 
     /**

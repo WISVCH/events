@@ -71,6 +71,10 @@ public class WebshopCustomerController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
             model.addAttribute("order", order);
 
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            }
+
             return "webshop/checkout/customer";
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -93,8 +97,12 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
-            Customer customer = authenticationService.getCurrentCustomer();
 
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            }
+
+            Customer customer = authenticationService.getCurrentCustomer();
             this.addCustomerToOrder(order, customer);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/payment";
@@ -120,17 +128,22 @@ public class WebshopCustomerController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
-            if (!model.containsAttribute("customer")) {
-                model.addAttribute("customer", new Customer());
-            }
-            model.addAttribute("order", order);
+            if (order.getStatus() == OrderStatus.ASSIGNED) {
+                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            } else if (order.getStatus() == OrderStatus.ANONYMOUS) {
+                if (!model.containsAttribute("customer")) {
+                    model.addAttribute("customer", new Customer());
+                }
 
-            return "webshop/checkout/create";
+                model.addAttribute("order", order);
+
+                return "webshop/checkout/create";
+            }
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
-
-            return "redirect:/";
         }
+
+        return "redirect:/";
     }
 
     /**
@@ -146,6 +159,7 @@ public class WebshopCustomerController extends WebshopController {
     public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);
+            this.assertOrderIsSuitableForCheckout(order);
 
             Customer existingCustomer = this.getExistingCustomer(customer);
 

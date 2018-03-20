@@ -148,7 +148,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         mockMvc.perform(get("/checkout/" + order.getPublicReference()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
-                .andExpect(flash().attribute("error", "Order with PAID is not suitable for payment."));
+                .andExpect(flash().attribute("error", "Order with status PAID is not suitable for checkout"));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/cancel"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
-                .andExpect(flash().attribute("error", "Order with PAID is not suitable for payment."));
+                .andExpect(flash().attribute("error", "Order with status PAID is not suitable for checkout"));
     }
 
     @Test

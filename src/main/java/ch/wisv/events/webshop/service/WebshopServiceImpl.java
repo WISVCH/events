@@ -89,6 +89,9 @@ public class WebshopServiceImpl implements WebshopService {
             case "CANCELLED":
                 orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
                 break;
+            case "EXPIRED":
+                orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
+                break;
             default:
                 throw new PaymentsStatusUnknown(status);
         }

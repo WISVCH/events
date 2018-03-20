@@ -5,13 +5,20 @@ import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
-import ch.wisv.events.core.exception.normal.UnassignedOrderException;
-import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
+import static ch.wisv.events.core.model.order.OrderStatus.ANONYMOUS;
+import static ch.wisv.events.core.model.order.OrderStatus.ASSIGNED;
+import static ch.wisv.events.core.model.order.OrderStatus.CANCELLED;
+import static ch.wisv.events.core.model.order.OrderStatus.ERROR;
+import static ch.wisv.events.core.model.order.OrderStatus.EXPIRED;
+import static ch.wisv.events.core.model.order.OrderStatus.PAID;
+import static ch.wisv.events.core.model.order.OrderStatus.PENDING;
+import static ch.wisv.events.core.model.order.OrderStatus.REJECTED;
+import static ch.wisv.events.core.model.order.OrderStatus.RESERVATION;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderProductRepository;
@@ -19,7 +26,9 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -147,7 +156,6 @@ public class OrderServiceImpl implements OrderService {
 
         Order old = this.getByReference(order.getPublicReference());
         old.setOwner(order.getOwner());
-        old.setStatus(order.getStatus());
         old.setPaymentMethod(order.getPaymentMethod());
         old.updateOrderAmount();
 
@@ -162,14 +170,31 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
-        if (status == OrderStatus.PAID) {
-            this.updateOrderStatusPaid(order);
-        } else if (status == OrderStatus.RESERVATION) {
-            this.updateOrderStatusReservation(order);
-        } else {
-            order.setStatus(status);
-            orderRepository.saveAndFlush(order);
+        HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {{
+            put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
+            put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION));
+            put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
+            put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
+            put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
+
+            put(PAID, ImmutableList.of(REJECTED));
+            put(ERROR, ImmutableList.of());
+            put(REJECTED, ImmutableList.of());
+            put(EXPIRED, ImmutableList.of());
+        }};
+
+        if (!allowedChanges.get(order.getStatus()).contains(status)) {
+            throw new OrderInvalidException("Not allowed to update status from " + order.getStatus() + " to " + status);
         }
+
+        if (status == PAID) {
+            this.updateOrderStatusPaid(order);
+        } else if (status == RESERVATION) {
+            this.updateOrderStatusReservation(order);
+        }
+
+        order.setStatus(status);
+        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -181,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getAllReservationOrderByCustomer(Customer customer) {
-        return orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
+        return orderRepository.findAllByOwnerAndStatus(customer, RESERVATION);
     }
 
     /**
@@ -190,22 +215,8 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order.
      *
      * @return List of Ticket
-     *
-     * @throws EventsException when Order in unassigned, the payment method is undefined or the order status is not paid
      */
-    private List<Ticket> createTicketIfPaid(Order order) throws EventsException {
-        if (order.getStatus() == OrderStatus.ANONYMOUS || order.getOwner() == null) {
-            throw new UnassignedOrderException();
-        }
-
-        if (order.getPaymentMethod() == null) {
-            throw new UndefinedPaymentMethodOrderException();
-        }
-
-        if (order.getStatus() != OrderStatus.PAID) {
-            throw new OrderInvalidException("Tickets cannot be created, because the order is not paid");
-        }
-
+    private List<Ticket> createTicketForOrder(Order order) {
         return order.getOrderProducts()
                 .stream()
                 .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
@@ -216,21 +227,15 @@ public class OrderServiceImpl implements OrderService {
      * Update order status to PAID.
      *
      * @param order of type Order
-     *
-     * @throws EventsException when creating the tickets fails
      */
-    private void updateOrderStatusPaid(Order order) throws EventsException {
-        OrderStatus beforeStatus = order.getStatus();
-        order.setStatus(OrderStatus.PAID);
+    private void updateOrderStatusPaid(Order order) {
+        List<Ticket> tickets = this.createTicketForOrder(order);
+        mailService.sendOrderConfirmation(order, tickets);
+
         order.setPaidAt(LocalDateTime.now());
+        orderRepository.save(order);
 
-        if (beforeStatus != OrderStatus.PAID) {
-            List<Ticket> tickets = this.createTicketIfPaid(order);
-            mailService.sendOrderConfirmation(order, tickets);
-            this.updateProductSoldCount(order);
-        }
-
-        orderRepository.saveAndFlush(order);
+        this.updateProductSoldCount(order);
     }
 
     /**
@@ -239,15 +244,9 @@ public class OrderServiceImpl implements OrderService {
      * @param order of type Order
      */
     private void updateOrderStatusReservation(Order order) {
-        OrderStatus beforeStatus = order.getStatus();
-        order.setStatus(OrderStatus.RESERVATION);
+        mailService.sendOrderReservation(order);
 
-        if (beforeStatus != OrderStatus.RESERVATION) {
-            mailService.sendOrderReservation(order);
-            this.updateProductReservedCount(order);
-        }
-
-        orderRepository.saveAndFlush(order);
+        this.updateProductReservedCount(order);
     }
 
     /**
