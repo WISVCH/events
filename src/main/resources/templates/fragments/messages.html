@@ -16,17 +16,14 @@
         <div th:if="${warning}" class="alert alert-dismissible fade show alert-warning w-100" role="alert">
             <span class="fa fa-exclamation" aria-hidden="true"></span>
             <span class="sr-only">Warning:</span>
-            <strong>WARNING:</strong> <span th:text="${warning}"></span>
+            <span th:text="${warning}"></span>
 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div th:if="${message}" class="alert alert-dismissible fade show alert-info w-100" role="alert">
-            <span class="fa fa-info" aria-hidden="true"></span>
-            <span class="sr-only">Message:</span>
-            <strong>INFO:</strong> <span th:text="${message}"></span>
-
+        <div th:if="${message}" class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>INFO:</strong> [[${message}]]</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

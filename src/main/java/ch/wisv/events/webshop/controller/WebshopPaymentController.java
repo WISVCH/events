@@ -85,6 +85,13 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("order", order);
 
+            if (order.getOwner().getRfidToken() == null || order.getOwner().getRfidToken().equals("")) {
+                model.addAttribute(
+                        "message",
+                        "No card linked to your account! Link a card to your account, for an easier and faster check-in at the event(s)."
+                );
+            }
+
             return "webshop/payment/index";
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
