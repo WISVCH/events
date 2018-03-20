@@ -1,7 +1,6 @@
 package ch.wisv.events.webshop.service;
 
 import ch.wisv.events.core.exception.normal.EventsException;
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -14,6 +13,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
+/**
+ * WebshopServiceImpl class.
+ */
 @Service
 public class WebshopServiceImpl implements WebshopService {
 

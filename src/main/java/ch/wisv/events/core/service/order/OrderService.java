@@ -69,7 +69,7 @@ public interface OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      *
-     * @throws OrderInvalidException when the status update will put the Order in an invalid state
+     * @throws EventsException when the status update will put the Order in an invalid state
      */
     void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
