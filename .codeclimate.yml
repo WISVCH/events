@@ -5,3 +5,7 @@ plugins:
       enabled: true
       config:
         file: ".codeclimate/checkstyle.xml"
+  sonar-java:
+      enabled: true
+      config:
+        minimum_severity: critical
