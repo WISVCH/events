@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -19,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import static org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
+@Table(name = "orders")
 @Data
 public class Order {
 
