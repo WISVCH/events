@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.event;
 
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,12 @@ public class Event {
     /**
      * Commission/board which organizes the Event.
      */
-    private ch.wisv.events.utils.LdapGroup organizedBy;
+    private LdapGroup organizedBy;
+
+    /**
+     * Events is for CH members only.
+     */
+    private boolean chOnly;
 
     /**
      * List of all the possible catergories.
@@ -127,7 +133,7 @@ public class Event {
         this.key = UUID.randomUUID().toString();
         this.products = new ArrayList<>();
         this.published = EventStatus.NOT_PUBLISHED;
-        this.organizedBy = ch.wisv.events.utils.LdapGroup.BESTUUR;
+        this.organizedBy = LdapGroup.BESTUUR;
         this.categories = new ArrayList<>();
     }
 

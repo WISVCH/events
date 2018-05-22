@@ -87,6 +87,11 @@ public class Order {
     private PaymentMethod paymentMethod;
 
     /**
+     * Event is for CH member only.
+     */
+    private boolean isChOnly;
+
+    /**
      * Constructor Order creates a new Order instance.
      */
     public Order() {

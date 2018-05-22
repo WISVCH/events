@@ -145,6 +145,7 @@ public class EventServiceImpl implements EventService {
         update.setOrganizedBy(event.getOrganizedBy());
         update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
+        update.setChOnly(event.isChOnly());
 
         this.assertIsValidEvent(event);
         this.updateLinkedProducts(update.getProducts(), true);

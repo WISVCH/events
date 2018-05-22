@@ -80,7 +80,11 @@
                                             <p class="card-text" th:text="${product.getDescription()}"></p>
                                             <h6 th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></h6>
 
-                                            <small>Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
+                                            <small th:if="${event.isChOnly()}" class="text-danger">
+                                                This product is only for CH members.
+                                            </small>
+                                            <small>
+                                                Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
                                             </small>
                                         </div>
                                         <a href="#" class="btn btn-primary btn-shopping-basket"
