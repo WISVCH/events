@@ -128,7 +128,7 @@ public class WebshopCustomerControllerTest extends ControllerTest {
                                 .param("email", "email@ch.tudelft.nl")
                                 .sessionAttr("customer", new Customer()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/customer"));
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/customer/guest"));
     }
 
     @Test

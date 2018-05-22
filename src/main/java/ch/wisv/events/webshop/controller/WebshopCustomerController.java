@@ -156,15 +156,20 @@ public class WebshopCustomerController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
-            Customer existingCustomer = this.getExistingCustomer(customer);
-            orderService.addCustomerToOrder(order, existingCustomer);
+            Customer orderCustomer = this.getExistingCustomer(customer);
+            if (orderCustomer == null) {
+                customerService.create(customer);
+                orderCustomer = customer;
+            }
+
+            orderService.addCustomerToOrder(order, orderCustomer);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/payment";
         } catch (CustomerInvalidException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("customer", customer);
 
-            return "redirect:/checkout/" + key + "/customer";
-
+            return "redirect:/checkout/" + key + "/customer/guest";
         } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
@@ -189,6 +194,6 @@ public class WebshopCustomerController extends WebshopController {
             }
         }
 
-        return customer;
+        return null;
     }
 }
