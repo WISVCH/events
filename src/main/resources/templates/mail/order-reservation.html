@@ -296,6 +296,10 @@
                                                             </td>
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: right;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Amount
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: right;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 Cost
                                                             </td>
                                                         </tr>
@@ -304,6 +308,11 @@
                                                                 th:text="${orderProduct.getProduct().getTitle()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 T.U.E.S.DAY
+                                                            </td>
+                                                            <td class="white-header"
+                                                                th:text="${orderProduct.getAmount()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: right;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                € 2,00
                                                             </td>
                                                             <td class="white-header"
                                                                 th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"
@@ -315,6 +324,9 @@
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 Total
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                             </td>
                                                             <td class="grey-header"
                                                                 th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"

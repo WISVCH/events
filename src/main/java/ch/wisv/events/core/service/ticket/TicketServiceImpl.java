@@ -7,6 +7,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.TicketRepository;
 import java.util.List;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
 
+    /** TicketRepository. */
     private final TicketRepository ticketRepository;
 
     /**
@@ -34,21 +36,15 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public Ticket createByOrderProduct(Order order, OrderProduct orderProduct) {
-        Ticket ticket = new Ticket(order.getOwner(), orderProduct.getProduct(), this.generateUniqueString());
+        Ticket ticket = new Ticket(
+                order.getOwner(),
+                orderProduct.getProduct(),
+                this.generateUniqueString(orderProduct.getProduct())
+        );
 
         ticketRepository.saveAndFlush(ticket);
 
         return ticket;
-    }
-
-    /**
-     * Generate a Ticket unique String.
-     *
-     * @return String
-     */
-    private String generateUniqueString() {
-        // TODO: generate unique string
-        return "123456";
     }
 
     /**
@@ -86,6 +82,23 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> getAllByCustomer(Customer customer) {
         return ticketRepository.findAllByOwner(customer);
+    }
+
+    /**
+     * Generate a Ticket unique String.
+     *
+     * @param product of type Product
+     *
+     * @return String
+     */
+    private String generateUniqueString(Product product) {
+        String ticketUnique = RandomStringUtils.random(6, "0123456789");
+
+        while (ticketRepository.existsByProductAndUniqueCode(product, ticketUnique)) {
+            ticketUnique = RandomStringUtils.random(6, "0123456789");
+        }
+
+        return ticketUnique;
     }
 
 }

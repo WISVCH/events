@@ -11,6 +11,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import java.util.List;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class OrderValidationServiceImpl implements OrderValidationService {
 
     /** OrderService. */
-    private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     /** TicketService. */
     private final TicketService ticketService;
@@ -35,13 +36,13 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     /**
      * OrderValidationServiceImpl constructor.
      *
-     * @param orderService  of type Order Service
+     * @param orderRepository  of type OrderRepository
      * @param ticketService of type TicketService
      * @param eventService  of type EventService
      */
     @Autowired
-    public OrderValidationServiceImpl(OrderService orderService, TicketService ticketService, EventService eventService) {
-        this.orderService = orderService;
+    public OrderValidationServiceImpl(OrderRepository orderRepository, TicketService ticketService, EventService eventService) {
+        this.orderRepository = orderRepository;
         this.ticketService = ticketService;
         this.eventService = eventService;
     }
@@ -145,7 +146,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
      */
     @Override
     public void assertOrderIsValidForCustomer(Order order, Customer customer) throws OrderExceedCustomerLimitException {
-        List<Order> reservationOrders = orderService.getAllReservationOrderByCustomer(customer);
+        List<Order> reservationOrders = orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION);
 
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             Integer maxSoldPerCustomer = orderProduct.getProduct().getMaxSoldPerCustomer();

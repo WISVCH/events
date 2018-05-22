@@ -35,16 +35,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
      *
      * @param owner of type Customer
      *
-     * @return List<
-          */
+     * @return List
+     */
     List<Ticket> findAllByOwner(Customer owner);
 
     /**
-     * Count all Ticket by Product.
+     * Check if there exists a Ticket with a Product and a Unique code.
      *
-     * @param product of type Product
+     * @param product    of type Product
+     * @param uniqueCode of type String
      *
-     * @return int
+     * @return boolean
      */
-    int countTicketsByProduct(Product product);
+    boolean existsByProductAndUniqueCode(Product product, String uniqueCode);
 }

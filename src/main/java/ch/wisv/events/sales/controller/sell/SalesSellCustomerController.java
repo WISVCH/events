@@ -8,6 +8,7 @@ import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
@@ -22,23 +23,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * SalesSellCustomerController class.
+ */
 @Controller
 @PreAuthorize("hasRole('USER')")
 @RequestMapping("/sales/sell/customer/{publicReference}")
 public class SalesSellCustomerController {
 
+    /** CustomerService. */
     private final CustomerService customerService;
 
-    /**
-     * Field orderService
-     */
+    /** OrderService. */
     private final OrderService orderService;
 
-    /**
-     * Field orderValidationService
-     */
+    /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
+    /**
+     * SalesSellCustomerController constructor.
+     *
+     * @param orderService           of type OrderService
+     * @param customerService        of type CustomerService
+     * @param orderValidationService of type OrderValidationService
+     */
     @Autowired
     public SalesSellCustomerController(
             OrderService orderService, CustomerService customerService, OrderValidationService orderValidationService
@@ -48,13 +56,22 @@ public class SalesSellCustomerController {
         this.orderValidationService = orderValidationService;
     }
 
-    @GetMapping
+    /**
+     * @param model           of type Model
+     * @param redirect        of type RedirectAttributes
+     * @param publicReference of type String
+     *
+     * @return String
+     */
+    @GetMapping("")
     public String identifyCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
+
             if (order.getOwner() != null) {
                 return "redirect:/sales/sell/payment/" + order.getPublicReference();
             }
+
             model.addAttribute("customer", new Customer());
             model.addAttribute("order", order);
 
@@ -66,7 +83,7 @@ public class SalesSellCustomerController {
         }
     }
 
-    @PostMapping
+    @PostMapping("")
     public String determineCustomer(RedirectAttributes redirect, @PathVariable String publicReference, @ModelAttribute Customer customer) {
         Order order;
         try {
@@ -84,15 +101,12 @@ public class SalesSellCustomerController {
                 customer = customerService.getByEmail(customer.getEmail());
             }
 
-            orderValidationService.assertOrderIsValidForCustomer(order, customer);
-            order.setOwner(customer);
-//            orderService.tempSaveOrder(order);
+            orderService.addCustomerToOrder(order, customer);
 
             return "redirect:/sales/sell/order/" + order.getPublicReference();
         } catch (CustomerNotFoundException e) {
             return "redirect:/sales/sell/customer/" + order.getPublicReference() + "/create";
-        } catch (OrderInvalidException | OrderExceedCustomerLimitException e) {
-//            orderService.deleteTempOrder(order);
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/sales/sell";
@@ -118,6 +132,7 @@ public class SalesSellCustomerController {
     /**
      * PostMapping "/sales/order/{publicReference}/customer/create/" creates a new customer.
      *
+     * @param redirect        of type RedirectAttributes
      * @param customer        of type Customer
      * @param publicReference of type String
      *
@@ -127,12 +142,8 @@ public class SalesSellCustomerController {
     public String create(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
-
             customerService.create(customer);
-            orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-            order.setOwner(customer);
-//            orderService.tempSaveOrder(order);
+            orderService.addCustomerToOrder(order, customer);
 
             redirect.addFlashAttribute("success", "Customer successfully created!");
 

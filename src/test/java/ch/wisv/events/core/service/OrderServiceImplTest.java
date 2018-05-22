@@ -157,16 +157,6 @@ public class OrderServiceImplTest extends ServiceTest {
         orderService.getByReference(this.order.getPublicReference());
     }
 
-    /**
-     * Test get all product method
-     */
-    @Test
-    public void testGetAllReservationOrderByCustomer() {
-        when(orderRepository.findAllByOwnerAndStatus(any(Customer.class), eq(OrderStatus.RESERVATION))).thenReturn(Collections.emptyList());
-
-        assertEquals(Collections.emptyList(), orderService.getAllReservationOrderByCustomer(mock(Customer.class)));
-    }
-
     @Test
     public void testCreate() throws Exception {
         orderService.create(this.order);

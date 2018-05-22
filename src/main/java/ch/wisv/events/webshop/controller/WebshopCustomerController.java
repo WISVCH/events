@@ -11,7 +11,7 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.core.service.order.OrderValidationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,27 +32,22 @@ public class WebshopCustomerController extends WebshopController {
     /** AuthenticationService. */
     private final AuthenticationService authenticationService;
 
-    /** OrderValidationService. */
-    private final OrderValidationService orderValidationService;
-
     /**
      * Constructor WebshopController.
      *
      * @param orderService           of type OrderService
      * @param customerService        of type CustomerService
      * @param authenticationService  of type AuthenticationService
-     * @param orderValidationService of type OrderValidationService
      */
+    @Autowired
     public WebshopCustomerController(
             OrderService orderService,
             CustomerService customerService,
-            AuthenticationService authenticationService,
-            OrderValidationService orderValidationService
+            AuthenticationService authenticationService
     ) {
         super(orderService);
         this.customerService = customerService;
         this.authenticationService = authenticationService;
-        this.orderValidationService = orderValidationService;
     }
 
     /**
@@ -103,7 +98,7 @@ public class WebshopCustomerController extends WebshopController {
             }
 
             Customer customer = authenticationService.getCurrentCustomer();
-            this.addCustomerToOrder(order, customer);
+            orderService.addCustomerToOrder(order, customer);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/payment";
         } catch (EventsException e) {
@@ -162,13 +157,7 @@ public class WebshopCustomerController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
 
             Customer existingCustomer = this.getExistingCustomer(customer);
-
-            if (existingCustomer == null) {
-                customerService.create(customer);
-                this.addCustomerToOrder(order, customer);
-            } else {
-                this.addCustomerToOrder(order, existingCustomer);
-            }
+            orderService.addCustomerToOrder(order, existingCustomer);
 
             return "redirect:/checkout/" + order.getPublicReference() + "/payment";
         } catch (CustomerInvalidException e) {
@@ -181,22 +170,6 @@ public class WebshopCustomerController extends WebshopController {
 
             return "redirect:/";
         }
-    }
-
-    /**
-     * Add a Customer to an Order.
-     *
-     * @param order    of type Order
-     * @param customer of type Customer
-     *
-     * @throws EventsException when Order is invalid,,the Order exceed the Customer limit or the Order does not exists
-     */
-    private void addCustomerToOrder(Order order, Customer customer) throws EventsException {
-        orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-        order.setOwner(customer);
-        orderService.update(order);
-        orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }
 
     /**
@@ -215,6 +188,7 @@ public class WebshopCustomerController extends WebshopController {
             } catch (CustomerNotFoundException ignored) {
             }
         }
-        return null;
+
+        return customer;
     }
 }

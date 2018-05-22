@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/sales/sell/payment/{publicReference}")
 public class SalesSellPaymentController {
 
-    /**
-     * Field orderService
-     */
+    /** OrderService. */
     private final OrderService orderService;
 
     /**
@@ -34,7 +32,10 @@ public class SalesSellPaymentController {
     }
 
     /**
-     * /sales/payment/order/{publicReference}
+     * /sales/payment/order/{publicReference}.
+     *
+     * @param publicReference of type String
+     * @param method          of type PaymentMethod
      *
      * @return String
      */

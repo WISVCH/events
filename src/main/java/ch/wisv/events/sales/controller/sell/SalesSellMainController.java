@@ -4,9 +4,9 @@ import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDto;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.sales.service.SalesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,18 +35,28 @@ public class SalesSellMainController {
     /** OrderService. */
     private final OrderService orderService;
 
+    /** OrderValidationService. */
+    private final OrderValidationService orderValidationService;
+
     /**
      * SalesSellMainController constructor.
      *
-     * @param authenticationService of type AuthenticationService
-     * @param salesService          of type SalesService
-     * @param orderService          of type OrderService
+     * @param authenticationService  of type AuthenticationService
+     * @param salesService           of type SalesService
+     * @param orderService           of type OrderService
+     * @param orderValidationService of type OrderValidationService
      */
     @Autowired
-    public SalesSellMainController(AuthenticationService authenticationService, SalesService salesService, OrderService orderService) {
+    public SalesSellMainController(
+            AuthenticationService authenticationService,
+            SalesService salesService,
+            OrderService orderService,
+            OrderValidationService orderValidationService
+    ) {
         this.authenticationService = authenticationService;
         this.salesService = salesService;
         this.orderService = orderService;
+        this.orderValidationService = orderValidationService;
     }
 
     /**
@@ -56,7 +66,7 @@ public class SalesSellMainController {
      *
      * @return String
      */
-    @GetMapping
+    @GetMapping("")
     public String index(Model model) {
         Customer currentUser = authenticationService.getCurrentCustomer();
         model.addAttribute("products", salesService.getAllGrantedProductByCustomer(currentUser));
@@ -72,7 +82,7 @@ public class SalesSellMainController {
      *
      * @return String
      */
-    @PostMapping
+    @PostMapping("")
     public String createOrder(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         if (orderProductDto.getProducts().isEmpty()) {
             redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
@@ -83,8 +93,8 @@ public class SalesSellMainController {
         try {
             Order order = orderService.createOrderByOrderProductDto(orderProductDto);
             order.setCreatedBy(authenticationService.getCurrentCustomer().getName());
-            order.setStatus(OrderStatus.RESERVATION);
-//            orderService.tempSaveOrder(order);
+            orderValidationService.assertOrderIsValid(order);
+            orderService.create(order);
 
             return "redirect:/sales/sell/customer/" + order.getPublicReference();
         } catch (EventsException e) {

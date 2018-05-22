@@ -74,11 +74,10 @@ public interface OrderService {
     void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
     /**
-     * Get all reservation orders by a Customer.
+     * Add a Customer to an Order.
      *
-     * @param customer of type Customer.
-     *
-     * @return List of Orders
+     * @param order    of type Order
+     * @param customer of type Customer
      */
-    List<Order> getAllReservationOrderByCustomer(Customer customer);
+    void addCustomerToOrder(Order order, Customer customer) throws EventsException;
 }

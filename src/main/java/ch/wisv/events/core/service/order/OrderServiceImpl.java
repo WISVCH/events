@@ -28,6 +28,7 @@ import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,9 @@ public class OrderServiceImpl implements OrderService {
     /** OrderProductRepository. */
     private final OrderProductRepository orderProductRepository;
 
+    /** OrderValidationService. */
+    private final OrderValidationService orderValidationService;
+
     /** ProductService. */
     private final ProductService productService;
 
@@ -61,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderRepository        of type OrderRepository
      * @param orderProductRepository of type OrderProductRepository
+     * @param orderValidationService of type OrderValidationService
      * @param productService         of type ProductService
      * @param mailService            of type MailService
      * @param ticketService          of type TicketService
@@ -69,12 +74,14 @@ public class OrderServiceImpl implements OrderService {
     public OrderServiceImpl(
             OrderRepository orderRepository,
             OrderProductRepository orderProductRepository,
+            OrderValidationService orderValidationService,
             ProductService productService,
             MailService mailService,
             TicketService ticketService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
+        this.orderValidationService = orderValidationService;
         this.productService = productService;
         this.mailService = mailService;
         this.ticketService = ticketService;
@@ -172,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
         HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {{
             put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
-            put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION));
+            put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION, PAID));
             put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
             put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
             put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
@@ -198,15 +205,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Get all reservation Order by a Customer.
+     * Add Customer to an Order
      *
-     * @param customer of type Customer.
-     *
-     * @return List of Orders
+     * @param order    of type Order
+     * @param customer of type Customer
      */
     @Override
-    public List<Order> getAllReservationOrderByCustomer(Customer customer) {
-        return orderRepository.findAllByOwnerAndStatus(customer, RESERVATION);
+    public void addCustomerToOrder(Order order, Customer customer) throws EventsException {
+        orderValidationService.assertOrderIsValidForCustomer(order, customer);
+
+        order.setOwner(customer);
+        this.update(order);
+        this.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }
 
     /**
@@ -217,10 +227,15 @@ public class OrderServiceImpl implements OrderService {
      * @return List of Ticket
      */
     private List<Ticket> createTicketForOrder(Order order) {
-        return order.getOrderProducts()
-                .stream()
-                .map(orderProduct -> ticketService.createByOrderProduct(order, orderProduct))
-                .collect(Collectors.toList());
+        List<Ticket> tickets = new ArrayList<>();
+
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            for (int i = 0; i < orderProduct.getAmount(); i++) {
+                tickets.add(ticketService.createByOrderProduct(order, orderProduct));
+            }
+        }
+
+        return tickets;
     }
 
     /**
