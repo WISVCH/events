@@ -17,27 +17,19 @@
     <link th:href="@{/css/error.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
 <nav th:replace="fragments/header :: header"></nav>
 
-<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
 <div class="container-fluid">
     <div class="row">
         <main class="col-12 p-5" role="main">
             <div class="row">
                 <div class="col-12 text-center">
-                    <div class="speech p-5" th:if="${status == 403}">
-                        <h1 class="display-4 border-bottom-0 mb-0 pb-0">Owl no, you are not authorized!</h1>
-                    </div>
-                    <div class="speech p-5" th:if="${status == 404}">
-                        <h1 class="display-4 border-bottom-0 mb-0 pb-0">Owl no, page not found!</h1>
-                    </div>
-                    <div class="speech p-5" th:if="${status == 500}">
-                        <h1 class="display-4 border-bottom-0 mb-0 pb-0">Owl no, something unexpected happened!</h1>
+                    <div class="speech p-5">
+                        <h1 class="display-4 border-bottom-0 mb-0 pb-0">Owl no, [[${message}]]</h1>
                     </div>
                 </div>
             </div>
@@ -46,11 +38,11 @@
                 <img th:src="@{/images/error-owl.svg}" class="error-owl" alt="">
             </div>
 
-            <div class="row" th:if="${status == 500}">
+            <div class="row">
                 <div class="d-block mx-auto mt-4">
                     <a href="https://github.com/WISVCH/events/issues/new" class="btn btn-danger p-4">
                         <span style="font-size: 24px;">
-                            <i class="fa fa-github fa-fw"></i> Bug? Create an issue!
+                            <i class="fab fa-github fa-fw"></i> Bug? Create an issue!
                         </span>
                     </a>
                 </div>

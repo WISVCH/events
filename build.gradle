@@ -18,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
 
 jar {
     baseName = 'events'
@@ -80,7 +81,7 @@ dependencies {
     compile 'org.webjars.bower:momentjs:2.10.6'
     compile 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
     compile 'org.webjars:sprintf.js:1.0.0'
-    compile 'org.webjars:font-awesome:4.7.0'
+    compile 'org.webjars:font-awesome:5.0.6'
     compile 'org.webjars.npm:flatpickr:3.0.6'
 
     compile 'org.flywaydb:flyway-core:4.2.0'
@@ -101,3 +102,20 @@ buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
     licenseAgree = 'yes'
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+task jacocoFix(type: Copy) {
+    from 'build/reports/jacoco/test/jacocoTestReport.xml'
+    into './src/main/java/'
+    rename { String fileName ->
+        fileName.replace("jacocoTestReport.xml", "jacoco.xml")
+    }
+}
+
+check.dependsOn jacocoTestReport

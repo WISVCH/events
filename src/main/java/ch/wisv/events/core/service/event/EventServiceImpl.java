@@ -9,41 +9,20 @@ import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.service.product.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Service
 public class EventServiceImpl implements EventService {
 
-    /**
-     * EventRepository
-     */
+    /** EventRepository. */
     private final EventRepository eventRepository;
 
-    /**
-     * ProductRepository
-     */
+    /** ProductRepository. */
     private final ProductService productService;
 
     /**
@@ -59,55 +38,45 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all Events
+     * Get all Events.
      *
      * @return Collection of Events
      */
     @Override
-    public List<Event> getAllEvents() {
+    public List<Event> getAll() {
         return eventRepository.findAll();
     }
 
     /**
-     * Get all Events between a lowerbound and upperbound
+     * Get all event between an lower and upper bound.
      *
-     * @param lowerbound of type LocalDateTime
-     * @param upperbound of type LocalDateTime
-     * @return List<Event>
+     * @param lowerBound of type LocalDateTime
+     * @param upperBound of type LocalDateTime
+     *
+     * @return List
      */
     @Override
-    public List<Event> getAllEventsBetween(LocalDateTime lowerbound, LocalDateTime upperbound) {
-        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerbound, upperbound);
+    public List<Event> getAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound) {
+        return this.eventRepository.findAllByStartIsAfterAndStartIsBefore(lowerBound, upperBound);
     }
 
     /**
-     * Get all upcoming Events
+     * Get all upcoming Events.
      *
-     * @return Collection of Events
+     * @return List
      */
     @Override
-    public List<Event> getUpcomingEvents() {
+    public List<Event> getUpcoming() {
         return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
                 .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toList());
     }
 
     /**
-     * Get all available events
-     *
-     * @return Collection of Events
-     */
-    @Override
-    public List<Event> getAvailableEvents() {
-        return eventRepository.findAll().stream()
-                .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Get Event by key
+     * Get Event by key.
      *
      * @param key key of an Event
+     *
      * @return Event
      */
     @Override
@@ -118,13 +87,14 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Get all Events that are connected to the same Product
+     * Get all Events that are connected to the same Product.
      *
      * @param product of type Product
+     *
      * @return List of Events
      */
     @Override
-    public Event getEventByProduct(Product product) throws EventNotFoundException {
+    public Event getByProduct(Product product) throws EventNotFoundException {
         Optional<Event> event = eventRepository.findByProductsContaining(product);
 
         return event.orElseThrow(() -> new EventNotFoundException("containing product #" + product.getId()));
@@ -133,7 +103,7 @@ public class EventServiceImpl implements EventService {
     /**
      * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
      *
-     * @return the previousEventsLastTwoWeeks (type List<Event>) of this EventService object.
+     * @return List of Events
      */
     @Override
     public List<Event> getPreviousEventsLastTwoWeeks() {
@@ -141,7 +111,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Add a new Event by a EventRequest
+     * Add a new Event by a EventRequest.
      *
      * @param event Event
      */
@@ -153,9 +123,8 @@ public class EventServiceImpl implements EventService {
         eventRepository.saveAndFlush(event);
     }
 
-
     /**
-     * Update event by Event
+     * Update event by Event.
      *
      * @param event Event
      */
@@ -166,17 +135,17 @@ public class EventServiceImpl implements EventService {
 
         update.setTitle(event.getTitle());
         update.setDescription(event.getDescription());
-        update.setImageURL(event.getImageURL());
+        update.setImageUrl(event.getImageUrl());
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
         update.setEnding(event.getEnding());
         update.setMaxSold(event.getMaxSold());
-        update.setSold(event.getSold());
         update.setProducts(event.getProducts());
         update.setPublished(event.getPublished());
         update.setOrganizedBy(event.getOrganizedBy());
         update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
+        update.setChOnly(event.isChOnly());
 
         this.assertIsValidEvent(event);
         this.updateLinkedProducts(update.getProducts(), true);
@@ -184,7 +153,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Delete an Event
+     * Delete an Event.
      *
      * @param event Event
      */
@@ -194,7 +163,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * Update the linked status of Products
+     * Update the linked status of Products.
      *
      * @param products List of Products
      * @param linked   linked status

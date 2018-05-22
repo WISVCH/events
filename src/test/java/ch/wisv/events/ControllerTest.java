@@ -1,49 +1,139 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
+import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.repository.CustomerRepository;
+import ch.wisv.events.core.repository.EventRepository;
+import ch.wisv.events.core.repository.OrderProductRepository;
+import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.tickets.service.TicketsService;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
+@Transactional
 public abstract class ControllerTest {
 
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @MockBean
-    protected EventService eventService;
-
-    @MockBean
-    protected TicketsService ticketsService;
-
-    @MockBean
-    protected OrderService orderService;
-
+    /**
+     * Testing utils.
+     */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    /**
+     * Services.
+     */
+    @Autowired
+    protected EventService eventService;
+
+    @Autowired
+    protected OrderService orderService;
+
+    /**
+     * Repositories.
+     */
+    @Autowired
+    protected EventRepository eventRepository;
+
+    @Autowired
+    protected ProductRepository productRepository;
+
+    @Autowired
+    protected OrderRepository orderRepository;
+
+    @Autowired
+    protected CustomerRepository customerRepository;
+
+    @Autowired
+    protected OrderProductRepository orderProductRepository;
+
+    @Autowired
+    protected WebApplicationContext wac;
+
+    protected MockMvc mockMvc;
+
+    /**
+     * Setup and tear down.
+     */
+    @Before
+    public void setup() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
+
+    @After
+    public void tearDown() {
+        this.mockMvc = null;
+
+        // Clear repository
+        orderRepository.deleteAll();
+        eventRepository.deleteAll();
+        productRepository.deleteAll();
+        customerRepository.deleteAll();
+        orderProductRepository.deleteAll();
+    }
+
+    protected Customer createCustomer() {
+        Customer customer = new Customer();
+        customer.setSub("WISVCH.1234");
+        customer.setName("test");
+        customer.setEmail("test");
+        customer.setEmail("test");
+        customer.setLdapGroups(null);
+        customer.setRfidToken("");
+
+        customerRepository.saveAndFlush(customer);
+
+        return customer;
+    }
+
+    protected Product createProduct() {
+        Product product = new Product();
+        product.setCost(1.d);
+        productRepository.saveAndFlush(product);
+
+        return product;
+    }
+
+    protected Order createNewOrder() {
+        return this.createOrder(null, new ArrayList<>(), OrderStatus.ANONYMOUS, null);
+    }
+
+    protected Order createPaymentOrder(OrderStatus orderStatus, String createdBy) {
+        List<Product> products = new ArrayList<>();
+        products.add(createProduct());
+
+        return this.createOrder(createCustomer(), products, orderStatus, createdBy);
+    }
+
+    protected Order createOrder(Customer customer, List<Product> products, OrderStatus status, String createdBy) {
+        Order order = new Order();
+        order.setOwner(customer);
+        order.setStatus(status);
+        order.setCreatedBy(createdBy);
+
+        List<OrderProduct> orderProducts = new ArrayList<>();
+        products.forEach(product -> {
+            OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
+            orderProducts.add(orderProduct);
+            orderProductRepository.saveAndFlush(orderProduct);
+        });
+        order.setOrderProducts(orderProducts);
+
+        orderRepository.saveAndFlush(order);
+
+        return order;
+    }
 }

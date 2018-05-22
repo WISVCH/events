@@ -11,43 +11,23 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.webhook.WebhookService;
 import ch.wisv.events.core.service.webhook.WebhookTaskService;
 import ch.wisv.events.core.webhook.factory.WebhookRequestFactory;
-import ch.wisv.events.utils.LDAPGroup;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * WebhookPublisher class.
  */
 @Component
 public class WebhookPublisher {
 
-    /**
-     * Field webhookService
-     */
+    /** WebhookService. */
     private final WebhookService webhookService;
 
-    /**
-     * Field webhookTaskService
-     */
+    /** WebhookTaskService. */
     private final WebhookTaskService webhookTaskService;
 
-    /**
-     * Field eventService
-     */
+    /** EventService. */
     private final EventService eventService;
 
     /**
@@ -58,9 +38,8 @@ public class WebhookPublisher {
      * @param eventService       of type EventService.
      */
     @Autowired
-    private WebhookPublisher(WebhookService webhookService,
-            WebhookTaskService webhookTaskService,
-            EventService eventService
+    private WebhookPublisher(
+            WebhookService webhookService, WebhookTaskService webhookTaskService, EventService eventService
     ) {
         this.webhookService = webhookService;
         this.webhookTaskService = webhookTaskService;
@@ -91,22 +70,23 @@ public class WebhookPublisher {
      *
      * @param webhook of type Webhook.
      * @param content of type Object.
+     *
      * @return boolean
      */
     private boolean isWebhookAuthenticated(Webhook webhook, Object content) {
-        if (webhook.getLdapGroup() == LDAPGroup.BEHEER) {
+        if (webhook.getLdapGroup() == ch.wisv.events.utils.LdapGroup.BEHEER) {
             return true;
         } else {
             if (content instanceof Event) {
                 Event event = (Event) content;
 
-                if (webhook.getLdapGroup() == event.getOrganizedBy()) {
-                    return true;
-                }
+                return webhook.getLdapGroup() == event.getOrganizedBy();
             } else if (content instanceof Product) {
                 Product product = (Product) content;
+
                 try {
-                    Event event = eventService.getEventByProduct(product);
+                    Event event = eventService.getByProduct(product);
+
                     if (event.getOrganizedBy() == webhook.getLdapGroup()) {
                         return true;
                     }

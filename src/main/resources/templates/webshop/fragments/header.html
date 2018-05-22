@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<header class="page-header" th:fragment="header (title, image)">
+
+    <!-- Top Bar -->
+    <div class="wisv-header header-left">
+        <div class="container">
+            <div class="row">
+                <nav class="top-bar w-100" id="nav-menu">
+                    <div class="top-bar-left show-for-large">
+                        <div class="logo-wrapper">
+                            <a class="logo" href="https://ch.tudelft.nl/">
+                                <img src="https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/ch-logo.png"
+                                     width="300" height="110" alt="W.I.S.V. 'Christiaan Huygens'">
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Page title -->
+    <div class="page-title" th:style="'background-image:url(' + @{'/images/' + ${image}} + ')'">
+        <div class="row">
+            <div class="col">
+                <h1 th:text="${title}"></h1>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

@@ -3,30 +3,41 @@ package ch.wisv.events.core.service;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.runtime.OrderCannotUpdateException;
-import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.order.*;
+import ch.wisv.events.core.exception.normal.UnassignedOrderException;
+import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
+import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
+import ch.wisv.events.core.model.order.OrderProductDto;
+import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
-import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.mail.MailService;
+import ch.wisv.events.core.service.mail.MailServiceImpl;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.core.service.order.OrderServiceImpl;
 import ch.wisv.events.core.service.product.ProductService;
-import ch.wisv.events.core.service.product.SoldProductService;
-import com.google.common.collect.ImmutableList;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
+import ch.wisv.events.core.service.ticket.TicketService;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
-
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -46,72 +57,45 @@ import static org.mockito.Mockito.*;
  */
 public class OrderServiceImplTest extends ServiceTest {
 
-    /**
-     * Mock OrderRepository
-     */
-    @Mock
-    private OrderRepository repository;
+    @MockBean
+    private OrderRepository orderRepository;
 
-    /**
-     * Mock OrderProductRepository
-     */
-    @Mock
+    @MockBean
     private OrderProductRepository orderProductRepository;
 
-    /**
-     * Mock SoldProductService
-     */
-    @Mock
-    private SoldProductService soldProductService;
-
-    /**
-     * Field mailService
-     */
-    @Mock
-    private MailService mailService;
-
-    /**
-     * Field mailService
-     */
-    @Mock
+    @MockBean
     private ProductService productService;
 
-    /**
-     * Field eventService
-     */
-    @Mock
-    private EventService eventService;
+    @MockBean
+    private TicketService ticketService;
 
-    /**
-     * Field service
-     */
-    private OrderService service;
+    @MockBean
+    private MailServiceImpl mailService;
 
-    /**
-     * Default Order
-     */
+    /** OrderService. */
+    @Autowired
+    private OrderService orderService;
+
+    /** Order. */
     private Order order;
 
-    /**
-     * Field product.
-     */
+    /** Product. */
     private Product product;
 
     /**
-     * Method setUp ...
-     *
-     * @throws Exception when
+     * Test set up method.
      */
     @Before
-    public void setUp() throws Exception {
-        this.service = new OrderServiceImpl(repository, orderProductRepository, mailService, soldProductService, productService, eventService);
-
+    public void setUp() {
         this.product = mock(Product.class);
 
         this.order = new Order();
-        this.order.setCustomer(mock(Customer.class));
+        this.order.setOwner(mock(Customer.class));
         this.order.setCreatedBy("events-online");
         this.order.setAmount(1.d);
+        this.order.setPaymentMethod(PaymentMethod.CASH);
+        this.order.setStatus(OrderStatus.PAID);
+        this.order.updateOrderAmount();
 
         OrderProduct orderProduct = new OrderProduct(this.product, 1.d, 1L);
         this.order.setOrderProducts(
@@ -120,38 +104,32 @@ public class OrderServiceImplTest extends ServiceTest {
     }
 
     /**
-     * Method tearDown ...
-     *
-     * @throws Exception when
+     * Test tear down method.
      */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.order = null;
-    }
-
-
-    /**
-     * Test get all product method
-     *
-     * @throws Exception when
-     */
-    @Test
-    public void testGetAllProducts() throws Exception {
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.order));
-
-        assertEquals(Collections.singletonList(this.order), service.getAllOrders());
+        this.product = null;
     }
 
     /**
      * Test get all product method
-     *
-     * @throws Exception when
      */
     @Test
-    public void testGetAllProductsEmpty() throws Exception {
-        when(repository.findAll()).thenReturn(Collections.emptyList());
+    public void testGetAllProducts() {
+        when(orderRepository.findAll()).thenReturn(Collections.singletonList(this.order));
 
-        assertEquals(Collections.emptyList(), service.getAllOrders());
+        assertEquals(Collections.singletonList(this.order), orderService.getAllOrders());
+    }
+
+    /**
+     * Test get all product method
+     */
+    @Test
+    public void testGetAllProductsEmpty() {
+        when(orderRepository.findAll()).thenReturn(Collections.emptyList());
+
+        assertEquals(Collections.emptyList(), orderService.getAllOrders());
     }
 
     /**
@@ -161,9 +139,9 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByReference() throws Exception {
-        when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
+        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
 
-        assertEquals(this.order, service.getByReference(this.order.getPublicReference()));
+        assertEquals(this.order, orderService.getByReference(this.order.getPublicReference()));
     }
 
     /**
@@ -174,183 +152,146 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testGetByReferenceEmpty() throws Exception {
         thrown.expect(OrderNotFoundException.class);
-        when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
+        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
 
-        service.getByReference(this.order.getPublicReference());
+        orderService.getByReference(this.order.getPublicReference());
     }
 
     @Test
     public void testCreate() throws Exception {
-        Event event = mock(Event.class);
-        when(event.getMaxSold()).thenReturn(25);
-        when(this.product.getMaxSold()).thenReturn(25);
-        when(eventService.getEventByProduct(this.product)).thenReturn(event);
-
-        service.create(this.order);
+        orderService.create(this.order);
 
         verify(orderProductRepository, times(1)).saveAndFlush(this.order.getOrderProducts().get(0));
-        verify(repository, times(1)).saveAndFlush(this.order);
+        verify(orderRepository, times(1)).saveAndFlush(this.order);
     }
 
     @Test
-    public void testCreateNotEnoughTickets() throws Exception {
+    public void testCreateNoProducts() throws Exception {
         thrown.expect(OrderInvalidException.class);
+        this.order.setOrderProducts(null);
 
-        Event event = mock(Event.class);
-        when(event.getMaxSold()).thenReturn(25);
-        when(soldProductService.getByProduct(this.product)).thenReturn(ImmutableList.of(new SoldProduct(), new SoldProduct()));
-        when(eventService.getEventByProduct(this.product)).thenReturn(event);
-        when(this.product.getMaxSold()).thenReturn(2);
-        when(this.product.getTitle()).thenReturn("Title");
-
-        service.create(this.order);
+        orderService.create(this.order);
     }
 
     @Test
-    public void testCreateNotEnoughEventTickets() throws Exception {
-        thrown.expect(OrderInvalidException.class);
+    public void testCreateByOrderProductDto() throws Exception {
+        HashMap<String, Long> products = new HashMap<>();
+        products.put("123-345-456", 1L);
+        OrderProductDto orderProductDto = new OrderProductDto();
+        orderProductDto.setProducts(products);
 
-        Event event = mock(Event.class);
-        when(event.getMaxSold()).thenReturn(2);
-        when(soldProductService.getByProduct(this.product)).thenReturn(ImmutableList.of(new SoldProduct(), new SoldProduct()));
-        when(eventService.getEventByProduct(this.product)).thenReturn(event);
-        when(this.product.getMaxSold()).thenReturn(25);
-        when(this.product.getTitle()).thenReturn("Title");
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getCost()).thenReturn(1.d);
+        when(productService.getByKey("123-345-456")).thenReturn(mockProduct);
 
-        service.create(this.order);
+        Order order = orderService.createOrderByOrderProductDto(orderProductDto);
+
+        assertEquals(order.getOrderProducts(), Collections.singletonList(new OrderProduct(mockProduct, 1.d, 1L)));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Order order = new Order(
-                1,
-                OrderStatus.OPEN,
-                1.d,
-                this.order.getOrderProducts(),
-                this.order.getPublicReference(),
-                this.order.getCreatedBy(),
-                this.order.getCreationDate(),
-                this.order.getPaidDate(),
-                this.order.getCustomer()
-        );
-        when(repository.findByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
-        service.update(order);
-        verify(repository, times(1)).saveAndFlush(order);
+        Order mock = mock(Order.class);
+
+        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(mock));
+        orderService.update(order);
+
+        // Updates that should happen
+        verify(mock, times(1)).setOwner(any(Customer.class));
+        verify(mock, times(1)).setPaymentMethod(any(PaymentMethod.class));
+        verify(mock, times(1)).updateOrderAmount();
+
+        // Updates that should not happen
+        verify(mock, times(0)).setPublicReference(any(String.class));
+        verify(mock, times(0)).setOrderProducts(any(List.class));
+        verify(mock, times(0)).setStatus(any(OrderStatus.class));
+        verify(mock, times(0)).setCreatedBy(any(String.class));
+        verify(mock, times(0)).setCreatedAt(any(LocalDateTime.class));
+        verify(mock, times(0)).setPaidAt(any(LocalDateTime.class));
+
+        verify(orderRepository, times(1)).saveAndFlush(this.order);
     }
 
     @Test
     public void testUpdateNewOrder() throws Exception {
-        thrown.expect(OrderCannotUpdateException.class);
-        thrown.expectMessage("This object is new so can not be updated");
-        when(repository.findByPublicReference(any(String.class))).thenReturn(Optional.empty());
+        thrown.expect(OrderNotFoundException.class);
+        when(orderRepository.findOneByPublicReference(any(String.class))).thenReturn(Optional.empty());
 
-        service.update(new Order());
+        orderService.update(new Order());
     }
 
     @Test
-    public void testAssertIsValid() throws Exception {
-        this.order.setAmount(1.d);
-        service.assertIsValid(this.order);
-    }
-
-    @Test
-    public void testAssertIsValidAmountNull() throws Exception {
+    public void testUpdateMissingPublicReference() throws Exception {
+        this.order.setPublicReference(null);
         thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Order amount can not be null");
+        when(orderRepository.findOneByPublicReference(any(String.class))).thenReturn(Optional.empty());
 
-        this.order.setAmount(null);
-        service.assertIsValid(this.order);
+        orderService.update(this.order);
     }
 
     @Test
-    public void testAssertIsValidAmountNegative() throws Exception {
+    public void testUpdateOrderStatus() throws Exception {
+        Order mock = mock(Order.class);
+        when(mock.getStatus()).thenReturn(OrderStatus.PENDING);
+        orderService.updateOrderStatus(mock, OrderStatus.EXPIRED);
+
+        verify(mock, times(1)).setStatus(OrderStatus.EXPIRED);
+        verify(orderRepository, times(1)).saveAndFlush(mock);
+    }
+
+    @Test
+    public void testUpdateOrderStatusPaid() throws Exception {
+        Order mock = mock(Order.class);
+        when(mock.getStatus()).thenReturn(OrderStatus.PENDING).thenReturn(OrderStatus.PAID);
+        when(mock.getOwner()).thenReturn(mock(Customer.class));
+        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.IDEAL);
+        when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
+        orderService.updateOrderStatus(mock, OrderStatus.PAID);
+
+        when(ticketService.createByOrderProduct(any(Order.class), any(OrderProduct.class))).thenReturn(mock(Ticket.class));
+        doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
+
+        verify(mock, times(1)).setStatus(OrderStatus.PAID);
+        verify(mock, times(1)).setPaidAt(any(LocalDateTime.class));
+        verify(ticketService, atLeastOnce()).createByOrderProduct(any(Order.class), any(OrderProduct.class));
+        verify(productService, atLeastOnce()).update(any(Product.class));
+    }
+
+    @Test
+    public void testUpdateOrderStatusPaidButWasAlreadyPaid() throws Exception {
         thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Order amount can not be negative");
+        thrown.expectMessage("Not allowed to update status from PAID to PAID");
 
-        this.order.setAmount(-1.d);
-        service.assertIsValid(this.order);
+        Order order = new Order();
+        order.setStatus(OrderStatus.PAID);
+
+        orderService.updateOrderStatus(order, OrderStatus.PAID);
     }
 
     @Test
-    public void testAssertIsValidNoProducts() throws Exception {
+    public void testUpdateOrderStatusPaidMissingOwner() throws Exception {
         thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("OrderProducts list can not be null");
+        thrown.expectMessage("Not allowed to update status from ANONYMOUS to PAID");
 
-        this.order.setOrderProducts(Collections.emptyList());
-        service.assertIsValid(this.order);
+        Order mock = mock(Order.class);
+        when(mock.getStatus()).thenReturn(OrderStatus.ANONYMOUS);
+
+        orderService.updateOrderStatus(mock, OrderStatus.PAID);
     }
 
     @Test
-    public void testAssertIsValidProductsNull() throws Exception {
-        thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("OrderProducts list can not be null");
+    public void testUpdateOrderStatusReservation() throws Exception {
+        Order mock = mock(Order.class);
+        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED);
+        when(mock.getOwner()).thenReturn(mock(Customer.class));
+        when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
 
-        this.order.setOrderProducts(null);
-        service.assertIsValid(this.order);
-    }
+        orderService.updateOrderStatus(mock, OrderStatus.RESERVATION);
 
-    @Test
-    public void testAssertIsValidCreationDateNull() throws Exception {
-        thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Order creation date can not be null");
+        doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
 
-        this.order.setCreationDate(null);
-        service.assertIsValid(this.order);
-    }
-
-    @Test
-    public void testAssertIsValidCreatedByNull() throws Exception {
-        thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Order created by can not be null");
-
-        this.order.setCreatedBy(null);
-        service.assertIsValid(this.order);
-    }
-
-    @Test
-    public void testAssertIsValidCreatedByEmpty() throws Exception {
-        thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Order created by can not be null");
-
-        this.order.setCreatedBy("");
-        service.assertIsValid(this.order);
-    }
-
-    @Test
-    public void testAssertIsValidForCustomer() throws Exception {
-        Customer customer = mock(Customer.class);
-        this.order.setCustomer(customer);
-        when(this.product.getMaxSoldPerCustomer()).thenReturn(1);
-        when(soldProductService.getAllByCustomerAndProduct(customer, this.product, null)).thenReturn(Collections.emptyList());
-
-        service.assertIsValidForCustomer(this.order);
-    }
-
-    @Test
-    public void testAssertIsNotValidForCustomer() throws Exception {
-        thrown.expect(OrderInvalidException.class);
-
-        Customer customer = mock(Customer.class);
-        this.order.setCustomer(customer);
-
-        when(this.product.getMaxSoldPerCustomer()).thenReturn(1);
-        when(soldProductService.getAllByCustomerAndProduct(customer, this.product, null)).thenReturn(Collections.singletonList(new SoldProduct()));
-
-        service.assertIsValidForCustomer(this.order);
-    }
-
-    @Test
-    public void testCreateOrderByOrderProductDTO() throws Exception {
-        when(productService.getByKey("key")).thenReturn(this.product);
-        when(this.product.getCost()).thenReturn(1.d);
-
-        HashMap<String, Long> products = new HashMap<>();
-        products.put("key", 1L);
-        OrderProductDTO orderProductDTO = new OrderProductDTO();
-        orderProductDTO.setProducts(products);
-
-        Order order = service.createOrderByOrderProductDTO(orderProductDTO);
-
-        assertEquals(1, order.getOrderProducts().size());
+        verify(mock, times(1)).setStatus(OrderStatus.RESERVATION);
+        verify(productService, atLeastOnce()).update(any(Product.class));
+        verify(orderRepository, times(1)).saveAndFlush(any(Order.class));
     }
 }

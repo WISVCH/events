@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -47,7 +47,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.order.Customer"*/-->
+                    <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
                     <tr th:each="customer : ${customers}" th:attr="data-key=${customer.getKey()}">
                         <td th:text="${customer.getName()}"></td>
                         <td th:text="${customer.getEmail()}"></td>

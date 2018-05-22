@@ -1,6 +1,11 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailService;
+import ch.wisv.events.webshop.service.PaymentsService;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,23 +17,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration(exclude = {FlywayAutoConfiguration.class})
@@ -54,6 +44,21 @@ public class EventsApplicationTest {
     @Primary
     public MailService mailService() {
         return Mockito.mock(MailService.class);
+    }
+
+    @Bean
+    @Primary
+    public PaymentsService paymentService() {
+        PaymentsService paymentsService = Mockito.mock(PaymentsService.class);
+
+        Mockito.when(paymentsService.getPaymentsMollieUrl(Mockito.any(Order.class))).then(invocation -> "https://paymentURL.com");
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-561")).thenReturn("WAITING");
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-562")).thenReturn("PAID");
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-563")).thenReturn("CANCELLED");
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-564")).thenReturn("STATUS_EXCEPTION");
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-565")).thenThrow(new PaymentsConnectionException());
+
+        return paymentsService;
     }
 
     @Component

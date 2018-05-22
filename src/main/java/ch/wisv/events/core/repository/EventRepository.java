@@ -3,15 +3,13 @@ package ch.wisv.events.core.repository;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.utils.LDAPGroup;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Event repository.
+ * EventRepository interface.
  */
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
@@ -19,24 +17,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Find Events that ending after a certain dateTime, so all upcoming events.
      *
      * @param dateTime DateTime an event should ending after
+     *
      * @return list of Events
      */
     List<Event> findByEndingAfter(LocalDateTime dateTime);
 
     /**
-     * Find all Events that are organized by a certain LDAPGroup.
-     *
-     * @param published   of type EventStatus
-     * @param organizedBy of type LDAPGroup
-     * @return List<Event>
-     */
-    List<Event> findAllByPublishedAndOrganizedByAndEndingIsAfter(EventStatus published, LDAPGroup organizedBy, LocalDateTime ending);
-
-    /**
      * Method findAllByPublished ...
      *
      * @param published of type EventStatus
-     * @return List<Event>
+     *
+     * @return List
      */
     List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
 
@@ -44,6 +35,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Find an Event by key.
      *
      * @param key key of an Event
+     *
      * @return list of Events
      */
     Optional<Event> findByKey(String key);
@@ -53,7 +45,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param start  of type LocalDateTime
      * @param ending of type LocalDateTime
-     * @return List<Event>
+     *
+     * @return List
      */
     List<Event> findAllByEndingBetween(LocalDateTime start, LocalDateTime ending);
 
@@ -62,7 +55,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @param after  of type LocalDateTime
      * @param before of type LocalDateTime
-     * @return List<Event>
+     *
+     * @return List
      */
     List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
 
@@ -70,7 +64,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * Method findByProductsContaining ...
      *
      * @param product of type Product
-     * @return Optional<Event>
+     *
+     * @return Optional
      */
     Optional<Event> findByProductsContaining(Product product);
 }

@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -150,7 +150,7 @@
                                         <label>Organized by
                                             <select name="" id="organizedBy" class="form-control"
                                                     th:field="*{organizedBy}" required>
-                                                <option th:each="group : ${T(ch.wisv.events.utils.LDAPGroup).values()}"
+                                                <option th:each="group : ${T(ch.wisv.events.utils.LdapGroup).values()}"
                                                         th:value="${group}"
                                                         th:text="${group.getName()}">
                                                 </option>
@@ -170,6 +170,17 @@
                                                 <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
                                             </label>
                                         </div>
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label class="mb-2">Other</label>
+                                        <label class="form-check-label custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                                   th:field="*{chOnly}"
+                                                   value="ch event only"
+                                                   th:checked="${event.isChOnly()}">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description text-dark font-weight-normal">CH members only</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>

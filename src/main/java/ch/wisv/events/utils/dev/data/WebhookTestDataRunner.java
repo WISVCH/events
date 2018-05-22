@@ -3,40 +3,20 @@ package ch.wisv.events.utils.dev.data;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookRepository;
-import ch.wisv.events.utils.LDAPGroup;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 @Component
 @Profile("dev")
 @Order(value = 5)
 public class WebhookTestDataRunner extends TestDataRunner {
 
-    /**
-     * Field eventRepository
-     */
+    /** WebhookRepository. */
     private final WebhookRepository webhookRepository;
 
     /**
@@ -51,7 +31,7 @@ public class WebhookTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method loop
+     * Method loop.
      *
      * @param jsonObject of type JSONObject
      */
@@ -66,11 +46,12 @@ public class WebhookTestDataRunner extends TestDataRunner {
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
+     *
      * @return Product
      */
     private Webhook createWebhook(JSONObject jsonObject) {
         Webhook webhook = new Webhook();
-        webhook.setLdapGroup(LDAPGroup.valueOf((String) jsonObject.get("ldapGroup")));
+        webhook.setLdapGroup(ch.wisv.events.utils.LdapGroup.valueOf((String) jsonObject.get("ldapGroup")));
         webhook.setPayloadUrl((String) jsonObject.get("payloadUrl"));
         webhook.setActive(true);
         webhook.setSecret("secret");
@@ -83,6 +64,7 @@ public class WebhookTestDataRunner extends TestDataRunner {
      *
      * @param webhook   of type Webhook
      * @param jsonArray of type JSONArray
+     *
      * @return Webhook
      */
     private Webhook addTriggers(Webhook webhook, JSONArray jsonArray) {

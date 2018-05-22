@@ -24,22 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 public class EventServiceImplTest extends ServiceTest {
 
     @Mock
@@ -78,14 +63,14 @@ public class EventServiceImplTest extends ServiceTest {
     public void testGetAllEvents() throws Exception {
         when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
 
-        assertEquals(ImmutableList.of(this.event), service.getAllEvents());
+        assertEquals(ImmutableList.of(this.event), service.getAll());
     }
 
     @Test
     public void testGetAllEventsEmpty() throws Exception {
         when(repository.findAll()).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), service.getAllEvents());
+        assertEquals(ImmutableList.of(), service.getAll());
     }
 
     @Test
@@ -93,7 +78,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
-        assertEquals(ImmutableList.of(this.event), service.getUpcomingEvents());
+        assertEquals(ImmutableList.of(this.event), service.getUpcoming());
     }
 
     @Test
@@ -101,7 +86,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), service.getUpcomingEvents());
+        assertEquals(ImmutableList.of(), service.getUpcoming());
     }
 
     @Test
@@ -109,29 +94,7 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.NOT_PUBLISHED);
         when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
-        assertEquals(ImmutableList.of(), service.getUpcomingEvents());
-    }
-
-    @Test
-    public void testGetAvailableEvents() throws Exception {
-        this.event.setPublished(EventStatus.PUBLISHED);
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.event));
-
-        assertEquals(ImmutableList.of(this.event), service.getAvailableEvents());
-    }
-
-    @Test
-    public void testGetAvailableEventsEmpty() throws Exception {
-        when(repository.findAll()).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.getAvailableEvents());
-    }
-
-    @Test
-    public void testGetAvailableEventsNotPublished() throws Exception {
-        when(repository.findAll()).thenReturn(ImmutableList.of());
-
-        assertEquals(ImmutableList.of(), service.getAvailableEvents());
+        assertEquals(ImmutableList.of(), service.getUpcoming());
     }
 
     @Test
@@ -180,6 +143,6 @@ public class EventServiceImplTest extends ServiceTest {
         this.event.setPublished(EventStatus.PUBLISHED);
         when(repository.findByProductsContaining(any(Product.class))).thenReturn(Optional.of(this.event));
 
-        assertEquals(this.event, service.getEventByProduct(product));
+        assertEquals(this.event, service.getByProduct(product));
     }
 }

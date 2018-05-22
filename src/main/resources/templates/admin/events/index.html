@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -60,9 +60,11 @@
                                 <div class="progress-bar" role="progressbar" th:aria-valuenow="${event.getSold()}"
                                      aria-valuemin="0"
                                      th:aria-valuemax="${event.getTarget()}"
-                                     th:style="'width: ' + ${event.calcProgress()} + '%;'"
-                                     th:text="${event.calcProgress()} + '%'">
-                                    59%
+                                     th:style="'width: ' + ${event.calcSoldProgress()} + '%;'">
+                                </div>
+                                <div class="progress-bar bg-warning" role="progressbar"
+                                     th:style="'width: ' + ${event.calcReservedProcess()} + '%;'"
+                                     aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
                         </td>

@@ -1,18 +1,22 @@
 package ch.wisv.events.core.model.product;
 
-
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Product Entity.
@@ -55,7 +59,12 @@ public class Product {
     /**
      * Products sold.
      */
-    public Integer sold;
+    public int sold;
+
+    /**
+     * Products sold.
+     */
+    public int reserved;
 
     /**
      * Maximum number of sold for the product. It is an Integer so it can be NULL.
@@ -63,7 +72,7 @@ public class Product {
     public Integer maxSold;
 
     /**
-     * Field maxSoldPerCustomer
+     * Field maxSoldPerCustomer.
      */
     public Integer maxSoldPerCustomer;
 
@@ -80,18 +89,18 @@ public class Product {
     public LocalDateTime sellEnd;
 
     /**
-     * Field productList
+     * Field productList.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     public List<Product> products;
 
     /**
-     * Flag if product is linked
+     * Flag if product is linked.
      */
     public boolean linked;
 
     /**
-     * Default constructor.
+     * Product constructor.
      */
     public Product() {
         this.key = UUID.randomUUID().toString();
@@ -99,6 +108,7 @@ public class Product {
 
         // Set default sold to zero.
         this.sold = 0;
+        this.reserved = 0;
     }
 
     /**
@@ -111,8 +121,8 @@ public class Product {
      * @param sellStart   Start selling date
      * @param sellEnd     End selling date
      */
-    public Product(String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart,
-            LocalDateTime sellEnd
+    public Product(
+            String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart, LocalDateTime sellEnd
     ) {
         this();
         this.title = title;
@@ -132,11 +142,28 @@ public class Product {
     public double calcProgress() {
         if (this.maxSold == null) {
             return 100.d;
-        } else if (this.sold == null) {
+        } else if (this.sold == 0) {
             return 0.d;
         }
 
         return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
     }
 
+    /**
+     * Increase sold count by amount.
+     *
+     * @param amount of type Integer
+     */
+    public void increaseSold(int amount) {
+        this.sold += amount;
+    }
+
+    /**
+     * Increase sold count by amount.
+     *
+     * @param amount of type Integer
+     */
+    public void increaseReserved(int amount) {
+        this.reserved += amount;
+    }
 }

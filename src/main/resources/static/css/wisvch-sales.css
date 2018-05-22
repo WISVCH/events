@@ -1,0 +1,17 @@
+.navbar-brand {
+    text-transform: uppercase;
+    font-weight: 500;
+    vertical-align: baseline
+}
+
+.container-fluid {
+    padding-top: calc(60px + 1.5rem);
+}
+
+a, a:hover {
+    transition: color .25s;
+}
+
+.table-bordered tr td, .table-bordered tr th {
+    border: 2px solid #e7ebf1;
+}

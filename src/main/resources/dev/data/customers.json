@@ -1,11 +1,13 @@
 [
   {
+    "sub": "WISVCH.1234",
     "name": "Sven Popping",
     "email": "svenp@ch.tudelft.nl",
     "chUserman": "svenp",
     "rfidToken": "3061a041"
   },
   {
+    "sub": "WISVCH.0001",
     "name": "Test",
     "email": "test@ch.tudelft.nl",
     "chUserman": "test",

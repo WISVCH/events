@@ -255,7 +255,7 @@
                                                                 Name
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="${order.getCustomer().getName()}"
+                                                                th:text="${order.getOwner().getName()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 Name Surname
                                                             </td>
@@ -266,7 +266,7 @@
                                                                 Email
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="${order.getCustomer().getEmail()}"
+                                                                th:text="${order.getOwner().getEmail()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 email@email.com
                                                             </td>
@@ -302,24 +302,24 @@
                                                                 Cost
                                                             </td>
                                                         </tr>
-                                                        <tr th:each="soldProduct : ${soldProducts}">
+                                                        <tr th:each="ticket : ${tickets}">
                                                             <td class="white-header"
-                                                                th:text="${soldProduct.getProduct().getTitle()}"
+                                                                th:text="${ticket.getProduct().getTitle()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="${soldProduct.getUniqueCode()}"
+                                                                th:text="${ticket.getUniqueCode()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 236429
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="'€ ' + ${#numbers.formatDecimal(soldProduct.getProduct().getCost(), 1, 'POINT', 2, 'COMMA')}"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(ticket.getProduct().getCost(), 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 € 2,00
                                                             </td>
                                                         </tr>
-                                                        <tr th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}">
+                                                        <tr th:if="${order.getPaymentMethod() == T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}">
                                                             <td class="white-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                                 Transaction fee
@@ -338,13 +338,13 @@
                                                                 Total
                                                             </td>
                                                             <td class="grey-header"
-                                                                th:if="${order.getStatus() != T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}"
+                                                                th:if="${order.getPaymentMethod() != T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}"
                                                                 th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 € 2,00
                                                             </td>
                                                             <td class="grey-header"
-                                                                th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID_IDEAL}"
+                                                                th:if="${order.getPaymentMethod() == T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}"
                                                                 th:text="'€ ' + ${#numbers.formatDecimal((order.getAmount() + 0.35), 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 € 2,00

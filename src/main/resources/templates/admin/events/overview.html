@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -30,7 +30,7 @@
         <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Sold ticket [[${event.getTitle()}]]</h1>
+            <h1>Ticket [[${event.getTitle()}]]</h1>
 
             <div th:replace="fragments/messages :: messages"></div>
 
@@ -38,30 +38,25 @@
                 <table id="soldProductTable" class="table table-hover">
                     <thead class="thead-inverse bg-primary">
                     <tr>
-                        <th>Order</th>
-                        <th>Product</th>
                         <th>Customer</th>
                         <th>Email</th>
+                        <th>Product</th>
                         <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
                     <!--/*@thymesVar id="soldProduct" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
-                    <tr th:each="soldProduct : ${soldProducts}">
+                    <tr th:each="ticket : ${tickets}">
                         <td>
-                            <a th:href="@{'/administrator/orders/view/' + ${soldProduct.getOrder().getPublicReference()} + '/'}"
-                               th:text="'Order #' + ${soldProduct.getOrder().getId()}"></a>
+                            <a th:href="@{'/administrator/customers/view/' + ${ticket.getOwner().getKey()} + '/'}"
+                               th:text="${ticket.getOwner().getName()}"></a>
                         </td>
+                        <td th:text="${ticket.getOwner().getEmail()}"></td>
                         <td>
-                            <a th:href="@{'/administrator/products/overview/' + ${soldProduct.getProduct().getKey()} + '/'}"
-                               th:text="${soldProduct.getProduct().getTitle()}"></a>
+                            <a th:href="@{'/administrator/products/overview/' + ${ticket.getProduct().getKey()} + '/'}"
+                               th:text="${ticket.getProduct().getTitle()}"></a>
                         </td>
-                        <td>
-                            <a th:href="@{'/administrator/customers/view/' + ${soldProduct.getCustomer().getKey()} + '/'}"
-                               th:text="${soldProduct.getCustomer().getName()}"></a>
-                        </td>
-                        <td th:text="${soldProduct.getCustomer().getEmail()}"></td>
-                        <td th:text="${soldProduct.getStatus().toString()}"></td>
+                        <td th:text="${ticket.getStatus().toString()}"></td>
                     </tr>
                     </tbody>
                 </table>
