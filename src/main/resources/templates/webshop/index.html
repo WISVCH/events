@@ -97,6 +97,10 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mb-3 col-12 text-center" th:if="${events.size() == 0}">
+                    <h3 class="display-4">No tickets available.</h3>
+                </div>
             </div>
         </main>
     </div>
