@@ -7,6 +7,9 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
 
+/**
+ * TicketService.
+ */
 public interface TicketService {
 
     /**
@@ -47,4 +50,10 @@ public interface TicketService {
      */
     List<Ticket> getAllByCustomer(Customer customer);
 
+    /**
+     * Delete tickets by an Order.
+     *
+     * @param order of type Order
+     */
+    void deleteByOrder(Order order);
 }

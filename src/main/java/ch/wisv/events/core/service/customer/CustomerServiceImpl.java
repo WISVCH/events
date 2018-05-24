@@ -183,7 +183,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void delete(Customer customer) {
-        List<Order> orders = orderRepository.findAllByOwner(customer);
+        List<Order> orders = orderRepository.findAllByOwnerOrderByCreatedAt(customer);
         if (orders.size() > 0) {
             throw new CustomerAlreadyPlacedOrdersException();
         }

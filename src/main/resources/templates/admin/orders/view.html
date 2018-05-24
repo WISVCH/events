@@ -32,6 +32,29 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
+            <div class="row" th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).RESERVATION}">
+                <div class="col">
+                    <div class="card mb-5">
+                        <h6 class="card-header">Reservation approval</h6>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-4">
+                                    <a th:href="@{'/administrator/orders/approve/' + ${order.getPublicReference()} + '/CARD'}"
+                                       class="btn btn-block btn-success">Card</a>
+                                </div>
+                                <div class="col-4">
+                                    <a th:href="@{'/administrator/orders/approve/' + ${order.getPublicReference()} + '/CASH'}"
+                                       class="btn btn-block btn-success">Cash</a>
+                                </div>
+                                <div class="col-4">
+                                    <a th:href="@{'/administrator/orders/delete/' + ${order.getPublicReference()} }"
+                                       class="btn btn-block btn-danger">Reject</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <div class="card mb-5">
@@ -40,7 +63,8 @@
                             <div class="row form">
                                 <div class="form-group col-sm-12">
                                     <label>Public reference
-                                        <input type="text" class="form-control" th:value="${order.getPublicReference()}"
+                                        <input type="text" class="form-control"
+                                               th:value="${order.getPublicReference()}"
                                                readonly>
                                     </label>
                                 </div>

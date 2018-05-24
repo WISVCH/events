@@ -16,6 +16,63 @@ import java.util.List;
 public interface OrderService {
 
     /**
+     * Add a Customer to an Order.
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     */
+    void addCustomerToOrder(Order order, Customer customer) throws EventsException;
+
+    /**
+     * Method create creates and order.
+     *
+     * @param order of type Order
+     *
+     * @throws EventsException when something is wrong with the Order
+     */
+    void create(Order order) throws EventsException;
+
+    /**
+     * Create an Order form a OrderProductDto.
+     *
+     * @param orderProductDto of type OrderProductDto
+     *
+     * @return Order
+     *
+     * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
+     */
+    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
+
+    /**
+     * Update an existing order.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderNotFoundException when Order is not found
+     * @throws OrderInvalidException  when the updates make the Order invalid
+     */
+    void update(Order order) throws OrderNotFoundException, OrderInvalidException;
+
+    /**
+     * Update the Order status.
+     *
+     * @param order  of type Order
+     * @param status of type OrderStatus
+     *
+     * @throws EventsException when the status update will put the Order in an invalid state
+     */
+    void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
+
+    /**
+     * Get all order by a Customer
+     *
+     * @param customer of type Customer
+     *
+     * @return List of Order
+     */
+    List<Order> getReservationByCustomer(Customer customer);
+
+    /**
      * Method getAllOrders returns the allOrders of this OrderService object.
      *
      * @return List of Orders
@@ -32,52 +89,4 @@ public interface OrderService {
      * @throws OrderNotFoundException when Order is not found
      */
     Order getByReference(String reference) throws OrderNotFoundException;
-
-    /**
-     * Method create creates and order.
-     *
-     * @param order of type Order
-     *
-     * @throws EventsException when something is wrong with the Order
-     */
-    void create(Order order) throws EventsException;
-
-    /**
-     * Update an existing order.
-     *
-     * @param order of type Order
-     *
-     * @throws OrderNotFoundException when Order is not found
-     * @throws OrderInvalidException  when the updates make the Order invalid
-     */
-    void update(Order order) throws OrderNotFoundException, OrderInvalidException;
-
-    /**
-     * Create an Order form a OrderProductDto.
-     *
-     * @param orderProductDto of type OrderProductDto
-     *
-     * @return Order
-     *
-     * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
-     */
-    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
-
-    /**
-     * Update the Order status.
-     *
-     * @param order  of type Order
-     * @param status of type OrderStatus
-     *
-     * @throws EventsException when the status update will put the Order in an invalid state
-     */
-    void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
-
-    /**
-     * Add a Customer to an Order.
-     *
-     * @param order    of type Order
-     * @param customer of type Customer
-     */
-    void addCustomerToOrder(Order order, Customer customer) throws EventsException;
 }

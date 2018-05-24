@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,12 +71,9 @@ public class OrderServiceImpl implements OrderService {
      */
     @Autowired
     public OrderServiceImpl(
-            OrderRepository orderRepository,
-            OrderProductRepository orderProductRepository,
-            OrderValidationService orderValidationService,
-            ProductService productService,
-            MailService mailService,
-            TicketService ticketService
+            OrderRepository orderRepository, OrderProductRepository orderProductRepository,
+            OrderValidationService orderValidationService, ProductService productService,
+            MailService mailService, TicketService ticketService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -85,6 +81,128 @@ public class OrderServiceImpl implements OrderService {
         this.productService = productService;
         this.mailService = mailService;
         this.ticketService = ticketService;
+    }
+
+    /**
+     * Add Customer to an Order
+     *
+     * @param order    of type Order
+     * @param customer of type Customer
+     */
+    @Override
+    public void addCustomerToOrder(Order order, Customer customer) throws EventsException {
+        orderValidationService.assertOrderIsValidForCustomer(order, customer);
+        order.setOwner(customer);
+        this.update(order);
+        this.updateOrderStatus(order, OrderStatus.ASSIGNED);
+    }
+
+    /**
+     * Create and save and Order.
+     *
+     * @param order of type Order
+     */
+    @Override
+    public void create(Order order) throws OrderInvalidException {
+        if (order.getOrderProducts() == null) {
+            throw new OrderInvalidException("Order should contain a list of OrderProducts");
+        }
+
+        order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
+        order.updateOrderAmount();
+        orderRepository.saveAndFlush(order);
+    }
+
+    /**
+     * Create an Order form a OrderProductDto.
+     *
+     * @param orderProductDto of type OrderProductDto
+     *
+     * @return Order
+     */
+    @Override
+    public Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException {
+        Order order = new Order();
+
+        for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
+            if (values.getValue() > 0) {
+                Product product = productService.getByKey(values.getKey());
+
+                order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));
+            }
+        }
+
+        return order;
+    }
+
+    /**
+     * Update an Order.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderNotFoundException when Order is not found.
+     * @throws OrderInvalidException  when Order is invalid to update.
+     */
+    @Override
+    public void update(Order order) throws OrderNotFoundException, OrderInvalidException {
+        if (order.getPublicReference() == null) {
+            throw new OrderInvalidException("Order should contain a public reference before updating.");
+        }
+
+        Order old = this.getByReference(order.getPublicReference());
+
+        old.setOwner(order.getOwner());
+        old.setPaymentMethod(order.getPaymentMethod());
+        old.updateOrderAmount();
+        orderRepository.saveAndFlush(order);
+    }
+
+    /**
+     * Update OrderStatus of an Order.
+     *
+     * @param order  of type Order
+     * @param status of type OrderStatus
+     */
+    @Override
+    public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
+        HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {
+            {
+                put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
+                put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION, PAID));
+                put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
+                put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
+                put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
+                put(PAID, ImmutableList.of(REJECTED));
+                put(ERROR, ImmutableList.of());
+                put(REJECTED, ImmutableList.of());
+                put(EXPIRED, ImmutableList.of());
+            }
+        };
+
+        if (!allowedChanges.get(order.getStatus()).contains(status)) {
+            throw new OrderInvalidException("Not allowed to update status from " + order.getStatus() + " to " + status);
+        }
+
+        if (status == PAID) {
+            this.updateOrderStatusPaid(order);
+        } else if (status == RESERVATION) {
+            this.updateOrderStatusReservation(order);
+        } else if (status == REJECTED) {
+            this.deleteOrder(order);
+        }
+
+        order.setStatus(status);
+        orderRepository.saveAndFlush(order);
+    }
+
+    /**
+     * @param customer of type Customer
+     *
+     * @return
+     */
+    @Override
+    public List<Order> getReservationByCustomer(Customer customer) {
+        return orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(customer, OrderStatus.RESERVATION);
     }
 
     /**
@@ -106,117 +224,8 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order getByReference(String reference) throws OrderNotFoundException {
-        return orderRepository.findOneByPublicReference(reference).orElseThrow(() -> new OrderNotFoundException("reference " + reference));
-    }
-
-    /**
-     * Create an Order form a OrderProductDto.
-     *
-     * @param orderProductDto of type OrderProductDto
-     *
-     * @return Order
-     */
-    @Override
-    public Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException {
-        Order order = new Order();
-
-        for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
-            if (values.getValue() > 0) {
-                Product product = productService.getByKey(values.getKey());
-                order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));
-            }
-        }
-
-        return order;
-    }
-
-    /**
-     * Create and save and Order.
-     *
-     * @param order of type Order
-     */
-    @Override
-    public void create(Order order) throws OrderInvalidException {
-        if (order.getOrderProducts() == null) {
-            throw new OrderInvalidException("Order should contain a list of OrderProducts");
-        }
-
-        order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
-        order.updateOrderAmount();
-
-        orderRepository.saveAndFlush(order);
-    }
-
-    /**
-     * Update an Order.
-     *
-     * @param order of type Order
-     *
-     * @throws OrderNotFoundException when Order is not found.
-     * @throws OrderInvalidException  when Order is invalid to update.
-     */
-    @Override
-    public void update(Order order) throws OrderNotFoundException, OrderInvalidException {
-        if (order.getPublicReference() == null) {
-            throw new OrderInvalidException("Order should contain a public reference before updating.");
-        }
-
-        Order old = this.getByReference(order.getPublicReference());
-        old.setOwner(order.getOwner());
-        old.setPaymentMethod(order.getPaymentMethod());
-        old.updateOrderAmount();
-
-        orderRepository.saveAndFlush(order);
-    }
-
-    /**
-     * Update OrderStatus of an Order.
-     *
-     * @param order  of type Order
-     * @param status of type OrderStatus
-     */
-    @Override
-    public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
-        HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {{
-            put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
-            put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION, PAID));
-            put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
-            put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
-            put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
-
-            put(PAID, ImmutableList.of(REJECTED));
-            put(ERROR, ImmutableList.of());
-            put(REJECTED, ImmutableList.of());
-            put(EXPIRED, ImmutableList.of());
-        }};
-
-        if (!allowedChanges.get(order.getStatus()).contains(status)) {
-            throw new OrderInvalidException("Not allowed to update status from " + order.getStatus() + " to " + status);
-        }
-
-        if (status == PAID) {
-            this.updateOrderStatusPaid(order);
-        } else if (status == RESERVATION) {
-            this.updateOrderStatusReservation(order);
-        }
-
-        order.setStatus(status);
-        orderRepository.saveAndFlush(order);
-    }
-
-    /**
-     * Add Customer to an Order
-     *
-     * @param order    of type Order
-     * @param customer of type Customer
-     */
-    @Override
-    public void addCustomerToOrder(Order order, Customer customer) throws EventsException {
-        orderValidationService.assertOrderIsValidForCustomer(order, customer);
-
-        order.setOwner(customer);
-        this.update(order);
-        this.updateOrderStatus(order, OrderStatus.ASSIGNED);
+        return orderRepository.findOneByPublicReference(reference)
+                .orElseThrow(() -> new OrderNotFoundException("reference " + reference));
     }
 
     /**
@@ -239,17 +248,43 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Delete an order.
+     *
+     * @param order of type Order
+     */
+    private void deleteOrder(Order order) {
+        if (order.getStatus() == OrderStatus.RESERVATION) {
+            order.getOrderProducts().forEach(orderProduct -> {
+                orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue() * -1);
+
+                try {
+                    productService.update(orderProduct.getProduct());
+                } catch (ProductNotFoundException | ProductInvalidException ignored) {}
+            });
+        } else if (order.getStatus() == OrderStatus.PAID) {
+            order.getOrderProducts().forEach(orderProduct -> {
+                orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue() * -1);
+
+                try {
+                    productService.update(orderProduct.getProduct());
+                } catch (ProductNotFoundException | ProductInvalidException ignored) {}
+            });
+
+            ticketService.deleteByOrder(order);
+        }
+    }
+
+    /**
      * Update order status to PAID.
      *
      * @param order of type Order
      */
     private void updateOrderStatusPaid(Order order) {
         List<Ticket> tickets = this.createTicketForOrder(order);
-        mailService.sendOrderConfirmation(order, tickets);
 
+        mailService.sendOrderConfirmation(order, tickets);
         order.setPaidAt(LocalDateTime.now());
         orderRepository.save(order);
-
         this.updateProductSoldCount(order);
     }
 
@@ -260,7 +295,6 @@ public class OrderServiceImpl implements OrderService {
      */
     private void updateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
-
         this.updateProductReservedCount(order);
     }
 
@@ -272,10 +306,10 @@ public class OrderServiceImpl implements OrderService {
     private void updateProductReservedCount(Order order) {
         order.getOrderProducts().forEach(orderProduct -> {
             orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue());
+
             try {
                 productService.update(orderProduct.getProduct());
-            } catch (ProductNotFoundException | ProductInvalidException ignored) {
-            }
+            } catch (ProductNotFoundException | ProductInvalidException ignored) {}
         });
     }
 
@@ -287,10 +321,10 @@ public class OrderServiceImpl implements OrderService {
     private void updateProductSoldCount(Order order) {
         order.getOrderProducts().forEach(orderProduct -> {
             orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue());
+
             try {
                 productService.update(orderProduct.getProduct());
-            } catch (ProductNotFoundException | ProductInvalidException ignored) {
-            }
+            } catch (ProductNotFoundException | ProductInvalidException ignored) {}
         });
     }
 }
