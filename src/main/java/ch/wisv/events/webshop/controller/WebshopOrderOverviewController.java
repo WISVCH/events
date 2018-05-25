@@ -10,24 +10,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * WebshopOrderOverviewController class.
+ */
 @Controller
 @RequestMapping("/overview")
 @PreAuthorize("hasRole('ROLE_USER')")
 public class WebshopOrderOverviewController {
 
-    /**
-     *
-     */
+    /** AuthenticationService. */
     private final AuthenticationService authenticationService;
 
-    /**
-     *
-     */
+    /** OrderService. */
     private final OrderService orderService;
 
-    /**
-     *
-     */
+    /** TicketService. */
     private final TicketService ticketService;
 
     /**

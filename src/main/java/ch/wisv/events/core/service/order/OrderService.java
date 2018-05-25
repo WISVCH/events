@@ -20,6 +20,8 @@ public interface OrderService {
      *
      * @param order    of type Order
      * @param customer of type Customer
+     *
+     * @throws EventsException when Customer can not be added
      */
     void addCustomerToOrder(Order order, Customer customer) throws EventsException;
 
@@ -37,7 +39,7 @@ public interface OrderService {
      *
      * @param orderProductDto of type OrderProductDto
      *
-     * @return Order
+     * @return Order order
      *
      * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
      */
@@ -64,7 +66,7 @@ public interface OrderService {
     void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
     /**
-     * Get all order by a Customer
+     * Get all order by a Customer.
      *
      * @param customer of type Customer
      *
@@ -84,7 +86,7 @@ public interface OrderService {
      *
      * @param reference of type String
      *
-     * @return Order
+     * @return Order by reference
      *
      * @throws OrderNotFoundException when Order is not found
      */

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * WebshopIndexController class.
+ */
 @Controller
 public class WebshopIndexController {
 
@@ -20,7 +23,7 @@ public class WebshopIndexController {
     /** WebshopService. */
     private final WebshopService webshopService;
 
-    /** AuthenticationService */
+    /** AuthenticationService. */
     private final AuthenticationService authenticationService;
 
     /**
