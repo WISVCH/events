@@ -180,8 +180,8 @@ public class OrderServiceImpl implements OrderService {
                 break;
         }
 
-        orderRepository.save(order);
         order.setStatus(status);
+        orderRepository.saveAndFlush(order);
     }
 
     /**

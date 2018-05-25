@@ -254,7 +254,6 @@ public class OrderServiceImplTest extends ServiceTest {
         verify(mock, times(1)).setStatus(OrderStatus.PAID);
         verify(mock, times(1)).setPaidAt(any(LocalDateTime.class));
         verify(ticketService, atLeastOnce()).createByOrderProduct(any(Order.class), any(OrderProduct.class));
-        verify(productService, atLeastOnce()).update(any(Product.class));
     }
 
     @Test
@@ -291,7 +290,5 @@ public class OrderServiceImplTest extends ServiceTest {
         doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
 
         verify(mock, times(1)).setStatus(OrderStatus.RESERVATION);
-        verify(productService, atLeastOnce()).update(any(Product.class));
-        verify(orderRepository, times(1)).saveAndFlush(any(Order.class));
     }
 }
