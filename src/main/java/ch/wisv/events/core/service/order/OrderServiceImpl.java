@@ -3,7 +3,6 @@ package ch.wisv.events.core.service.order;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
@@ -84,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Add Customer to an Order
+     * Add Customer to an Order.
      *
      * @param order    of type Order
      * @param customer of type Customer
@@ -165,40 +164,27 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
-        HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {
-            {
-                put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
-                put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION, PAID));
-                put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
-                put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
-                put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
-                put(PAID, ImmutableList.of(REJECTED));
-                put(ERROR, ImmutableList.of());
-                put(REJECTED, ImmutableList.of());
-                put(EXPIRED, ImmutableList.of());
-            }
-        };
+        this.assertValidStatusChange(order, status);
 
-        if (!allowedChanges.get(order.getStatus()).contains(status)) {
-            throw new OrderInvalidException("Not allowed to update status from " + order.getStatus() + " to " + status);
+        switch (status) {
+            case PAID:
+                this.handleUpdateOrderStatusPaid(order);
+            case RESERVATION:
+                this.handleUpdateOrderStatusReservation(order);
+            case REJECTED:
+                this.handleUpdateOrderStatusRejected(order);
+            default:
+                order.setStatus(status);
+                orderRepository.save(order);
         }
-
-        if (status == PAID) {
-            this.updateOrderStatusPaid(order);
-        } else if (status == RESERVATION) {
-            this.updateOrderStatusReservation(order);
-        } else if (status == REJECTED) {
-            this.deleteOrder(order);
-        }
-
-        order.setStatus(status);
-        orderRepository.saveAndFlush(order);
     }
 
     /**
+     * Get all reservation by a Customer.
+     *
      * @param customer of type Customer
      *
-     * @return
+     * @return List of Order
      */
     @Override
     public List<Order> getReservationByCustomer(Customer customer) {
@@ -229,6 +215,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Assert if the status change is valid.
+     *
+     * @param order  of type Order
+     * @param status of type OrderStatus
+     *
+     * @throws OrderInvalidException when status change is invalid.
+     */
+    private void assertValidStatusChange(Order order, OrderStatus status) throws OrderInvalidException {
+        HashMap<OrderStatus, List<OrderStatus>> allowedChanges = new HashMap<OrderStatus, List<OrderStatus>>() {
+            {
+                put(ANONYMOUS, ImmutableList.of(ASSIGNED, CANCELLED));
+                put(ASSIGNED, ImmutableList.of(PENDING, CANCELLED, RESERVATION, PAID));
+                put(CANCELLED, ImmutableList.of(ASSIGNED, CANCELLED));
+                put(PENDING, ImmutableList.of(PAID, PENDING, ASSIGNED, ERROR, CANCELLED, EXPIRED));
+                put(RESERVATION, ImmutableList.of(PAID, EXPIRED, REJECTED));
+                put(PAID, ImmutableList.of(REJECTED));
+                put(ERROR, ImmutableList.of());
+                put(REJECTED, ImmutableList.of());
+                put(EXPIRED, ImmutableList.of());
+            }
+        };
+
+        if (!allowedChanges.get(order.getStatus()).contains(status)) {
+            throw new OrderInvalidException("Not allowed to update status from " + order.getStatus() + " to " + status);
+        }
+    }
+
+    /**
      * Create the ticket if an order has the status paid.
      *
      * @param order of type Order.
@@ -248,44 +262,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Delete an order.
-     *
-     * @param order of type Order
-     */
-    private void deleteOrder(Order order) {
-        if (order.getStatus() == OrderStatus.RESERVATION) {
-            order.getOrderProducts().forEach(orderProduct -> {
-                orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue() * -1);
-
-                try {
-                    productService.update(orderProduct.getProduct());
-                } catch (ProductNotFoundException | ProductInvalidException ignored) {}
-            });
-        } else if (order.getStatus() == OrderStatus.PAID) {
-            order.getOrderProducts().forEach(orderProduct -> {
-                orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue() * -1);
-
-                try {
-                    productService.update(orderProduct.getProduct());
-                } catch (ProductNotFoundException | ProductInvalidException ignored) {}
-            });
-
-            ticketService.deleteByOrder(order);
-        }
-    }
-
-    /**
      * Update order status to PAID.
      *
      * @param order of type Order
      */
-    private void updateOrderStatusPaid(Order order) {
+    private void handleUpdateOrderStatusPaid(Order order) {
         List<Ticket> tickets = this.createTicketForOrder(order);
 
         mailService.sendOrderConfirmation(order, tickets);
         order.setPaidAt(LocalDateTime.now());
-        orderRepository.save(order);
-        this.updateProductSoldCount(order);
+        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+    }
+
+    /**
+     * Delete an order.
+     *
+     * @param order of type Order
+     */
+    private void handleUpdateOrderStatusRejected(Order order) {
+        switch (order.getStatus()) {
+            case RESERVATION:
+                order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
+                        .increaseReserved(orderProduct.getAmount().intValue() * -1));
+                break;
+            case PAID:
+                order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
+                        .increaseSold(orderProduct.getAmount().intValue() * -1));
+                ticketService.deleteByOrder(order);
+                break;
+            default:
+
+        }
     }
 
     /**
@@ -293,38 +300,8 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order of type Order
      */
-    private void updateOrderStatusReservation(Order order) {
+    private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
-        this.updateProductReservedCount(order);
-    }
-
-    /**
-     * Update product reservation count.
-     *
-     * @param order of type Order
-     */
-    private void updateProductReservedCount(Order order) {
-        order.getOrderProducts().forEach(orderProduct -> {
-            orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue());
-
-            try {
-                productService.update(orderProduct.getProduct());
-            } catch (ProductNotFoundException | ProductInvalidException ignored) {}
-        });
-    }
-
-    /**
-     * Update product sold count.
-     *
-     * @param order of type Order
-     */
-    private void updateProductSoldCount(Order order) {
-        order.getOrderProducts().forEach(orderProduct -> {
-            orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue());
-
-            try {
-                productService.update(orderProduct.getProduct());
-            } catch (ProductNotFoundException | ProductInvalidException ignored) {}
-        });
+        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
     }
 }
