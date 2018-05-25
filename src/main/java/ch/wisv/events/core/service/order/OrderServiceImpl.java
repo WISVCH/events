@@ -169,14 +169,19 @@ public class OrderServiceImpl implements OrderService {
         switch (status) {
             case PAID:
                 this.handleUpdateOrderStatusPaid(order);
+                break;
             case RESERVATION:
                 this.handleUpdateOrderStatusReservation(order);
+                break;
             case REJECTED:
                 this.handleUpdateOrderStatusRejected(order);
+                break;
             default:
-                order.setStatus(status);
-                orderRepository.save(order);
+                break;
         }
+
+        orderRepository.save(order);
+        order.setStatus(status);
     }
 
     /**
