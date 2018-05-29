@@ -100,12 +100,10 @@ public class WebshopPaymentController extends WebshopController {
             }
 
             return "webshop/payment/index";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
-        } catch (EventsException ignore) {
-            return "redirect:/error";
         }
     }
 
@@ -124,13 +122,10 @@ public class WebshopPaymentController extends WebshopController {
             orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
             return "redirect:/return/" + order.getPublicReference() + "/reservation";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
-        } catch (EventsException ignore) {
-            // Should not happen
-            return "redirect:/error";
         }
     }
 
