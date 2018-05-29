@@ -16,22 +16,14 @@ import java.util.List;
 public interface OrderService {
 
     /**
-     * Method getAllOrders returns the allOrders of this OrderService object.
+     * Add a Customer to an Order.
      *
-     * @return List of Orders
+     * @param order    of type Order
+     * @param customer of type Customer
+     *
+     * @throws EventsException when Customer can not be added
      */
-    List<Order> getAllOrders();
-
-    /**
-     * Method getByReference returns Order with the given Reference.
-     *
-     * @param reference of type String
-     *
-     * @return Order
-     *
-     * @throws OrderNotFoundException when Order is not found
-     */
-    Order getByReference(String reference) throws OrderNotFoundException;
+    void addCustomerToOrder(Order order, Customer customer) throws EventsException;
 
     /**
      * Method create creates and order.
@@ -41,6 +33,17 @@ public interface OrderService {
      * @throws EventsException when something is wrong with the Order
      */
     void create(Order order) throws EventsException;
+
+    /**
+     * Create an Order form a OrderProductDto.
+     *
+     * @param orderProductDto of type OrderProductDto
+     *
+     * @return Order order
+     *
+     * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
+     */
+    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
 
     /**
      * Update an existing order.
@@ -53,17 +56,6 @@ public interface OrderService {
     void update(Order order) throws OrderNotFoundException, OrderInvalidException;
 
     /**
-     * Create an Order form a OrderProductDto.
-     *
-     * @param orderProductDto of type OrderProductDto
-     *
-     * @return Order
-     *
-     * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
-     */
-    Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
-
-    /**
      * Update the Order status.
      *
      * @param order  of type Order
@@ -74,10 +66,29 @@ public interface OrderService {
     void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
 
     /**
-     * Add a Customer to an Order.
+     * Get all order by a Customer.
      *
-     * @param order    of type Order
      * @param customer of type Customer
+     *
+     * @return List of Order
      */
-    void addCustomerToOrder(Order order, Customer customer) throws EventsException;
+    List<Order> getReservationByCustomer(Customer customer);
+
+    /**
+     * Method getAllOrders returns the allOrders of this OrderService object.
+     *
+     * @return List of Orders
+     */
+    List<Order> getAllOrders();
+
+    /**
+     * Method getByReference returns Order with the given Reference.
+     *
+     * @param reference of type String
+     *
+     * @return Order by reference
+     *
+     * @throws OrderNotFoundException when Order is not found
+     */
+    Order getByReference(String reference) throws OrderNotFoundException;
 }

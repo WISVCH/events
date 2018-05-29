@@ -85,6 +85,20 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
+     * Delete tickets by Order.
+     *
+     * @param order of type Order
+     */
+    @Override
+    public void deleteByOrder(Order order) {
+        order.getOrderProducts().forEach(orderProduct ->  {
+            List<Ticket> tickets = ticketRepository.findAllByProductAndOwner(orderProduct.getProduct(), order.getOwner());
+
+            ticketRepository.delete(tickets);
+        });
+    }
+
+    /**
      * Generate a Ticket unique String.
      *
      * @param product of type Product

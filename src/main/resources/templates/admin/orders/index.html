@@ -48,7 +48,7 @@
                     <tbody>
                     <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
                     <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
-                        <td th:text="'#' + ${order.getId()}"></td>
+                        <td><samp th:text="${order.getPublicReference().split('-')[0]}"></samp></td>
                         <td>
                             <a th:href="@{'/administrator/customers/view/' + ${order.getOwner().getKey()} + '/'}"
                                th:text="${order.getOwner().getName()}"></a>
@@ -90,7 +90,7 @@
                 [0, "desc"]
             ],
             columnDefs: [
-                {width: "20px", targets: 0},
+                {width: "40px", targets: 0},
                 {width: "160px", targets: 1},
                 {width: "80px", targets: [3, 4, 5]},
                 {width: "50px", targets: 6}

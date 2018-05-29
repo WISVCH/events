@@ -22,13 +22,23 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Optional<Order> findOneByPublicReference(String publicReference);
 
     /**
-     * Method findAllByOwner find Order by Customer.
+     * Find Order by Customer.
      *
      * @param owner of type Customer
      *
      * @return List
      */
-    List<Order> findAllByOwner(Customer owner);
+    List<Order> findAllByOwnerOrderByCreatedAt(Customer owner);
+
+    /**
+     * Find Reservation Orders by Customer.
+     *
+     * @param owner  of type Customer
+     * @param status of type OrderStatus
+     *
+     * @return List of Orders
+     */
+    List<Order> findAllByOwnerAndStatusOrderByCreatedAt(Customer owner, OrderStatus status);
 
     /**
      * Find all Order by a Customer that have a given status.

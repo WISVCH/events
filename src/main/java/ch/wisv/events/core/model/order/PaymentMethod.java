@@ -1,5 +1,8 @@
 package ch.wisv.events.core.model.order;
 
+/**
+ * Payment method enum.
+ */
 public enum PaymentMethod {
 
     CASH,       // User paid his order with cash

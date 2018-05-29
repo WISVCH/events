@@ -4,6 +4,7 @@ import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -79,6 +80,30 @@ public class DashboardOrderController {
             orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
             redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
+        } catch (EventsException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/administrator/orders/";
+    }
+
+    /**
+     * Approve a reservation.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     * @param payment  of type PaymentMethod
+     *
+     * @return String
+     */
+    @GetMapping("/approve/{key}/{payment}")
+    public String approve(RedirectAttributes redirect, @PathVariable String key, @PathVariable PaymentMethod payment) {
+        try {
+            Order order = orderService.getByReference(key);
+            order.setPaymentMethod(payment);
+            orderService.updateOrderStatus(order, OrderStatus.PAID);
+
+            redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been approved!");
         } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
