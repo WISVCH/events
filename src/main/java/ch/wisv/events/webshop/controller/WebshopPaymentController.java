@@ -85,6 +85,13 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("order", order);
 
+            if (order.getAmount() == 0.d) {
+                order.setPaymentMethod(PaymentMethod.OTHER);
+                orderService.updateOrderStatus(order, OrderStatus.PAID);
+
+                return "redirect:/return/" + order.getPublicReference();
+            }
+
             if (order.getOwner().getRfidToken() == null || order.getOwner().getRfidToken().equals("")) {
                 model.addAttribute(
                         "message",
@@ -97,6 +104,8 @@ public class WebshopPaymentController extends WebshopController {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
+        } catch (EventsException ignore) {
+            return "redirect:/error";
         }
     }
 
