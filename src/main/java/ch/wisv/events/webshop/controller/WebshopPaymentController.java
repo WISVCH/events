@@ -85,6 +85,13 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("order", order);
 
+            if (order.getAmount() == 0.d) {
+                order.setPaymentMethod(PaymentMethod.OTHER);
+                orderService.updateOrderStatus(order, OrderStatus.PAID);
+
+                return "redirect:/return/" + order.getPublicReference();
+            }
+
             if (order.getOwner().getRfidToken() == null || order.getOwner().getRfidToken().equals("")) {
                 model.addAttribute(
                         "message",
@@ -93,7 +100,7 @@ public class WebshopPaymentController extends WebshopController {
             }
 
             return "webshop/payment/index";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
@@ -115,13 +122,10 @@ public class WebshopPaymentController extends WebshopController {
             orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
             return "redirect:/return/" + order.getPublicReference() + "/reservation";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
-        } catch (EventsException ignore) {
-            // Should not happen
-            return "redirect:/error";
         }
     }
 

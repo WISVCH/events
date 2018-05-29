@@ -44,6 +44,17 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     }
 
     @Test
+    public void testPaymentOverviewOrderAmountZero() throws Exception {
+        Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
+        order.setAmount(0.d);
+        orderRepository.saveAndFlush(order);
+
+        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/return/" + order.getPublicReference()));
+    }
+
+    @Test
     public void testPaymentOverviewWrongStatus() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ANONYMOUS, "events-webshop");
 

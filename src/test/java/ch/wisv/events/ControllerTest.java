@@ -124,13 +124,11 @@ public abstract class ControllerTest {
         order.setStatus(status);
         order.setCreatedBy(createdBy);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
         products.forEach(product -> {
             OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
-            orderProducts.add(orderProduct);
             orderProductRepository.saveAndFlush(orderProduct);
+            order.addOrderProduct(orderProduct);
         });
-        order.setOrderProducts(orderProducts);
 
         orderRepository.saveAndFlush(order);
 
