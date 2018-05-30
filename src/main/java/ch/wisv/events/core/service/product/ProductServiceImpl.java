@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
@@ -78,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
             product.setSellStart(LocalDateTime.now());
         }
         this.assertIsValidProduct(product);
+        this.updateLinkedProducts(product, product.getProducts(), true);
 
         return productRepository.saveAndFlush(product);
     }
@@ -88,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
      * @param productDto of type ProductDto
      */
     @Override
-    public Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException {
+    public Product create(ProductDto productDto) throws ProductInvalidException {
         Product product = new Product();
 
         product.setTitle(productDto.getTitle());
@@ -108,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void update(Product product) throws ProductNotFoundException, ProductInvalidException {
         Product model = this.getByKey(product.getKey());
-        this.updateLinkedProducts(model.getProducts(), false);
+        this.updateLinkedProducts(product, model.getProducts(), false);
 
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
@@ -120,7 +122,7 @@ public class ProductServiceImpl implements ProductService {
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
 
         this.assertIsValidProduct(product);
-        this.updateLinkedProducts(model.getProducts(), true);
+        this.updateLinkedProducts(product, model.getProducts(), true);
         productRepository.save(model);
     }
 
@@ -136,19 +138,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.delete(product);
-    }
-
-    /**
-     * Update the linked status of Products.
-     *
-     * @param products List of Products
-     * @param linked   linked status
-     */
-    private void updateLinkedProducts(List<Product> products, boolean linked) {
-        products.forEach(p -> {
-            p.setLinked(linked);
-            productRepository.save(p);
-        });
     }
 
     /**
@@ -182,5 +171,21 @@ public class ProductServiceImpl implements ProductService {
         if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25) {
             throw new ProductInvalidException("Max sold per customer should be between 1 and 25!");
         }
+    }
+
+    /**
+     * Update the linked status of Products.
+     *
+     * @param product  of type Product
+     * @param products List of Products
+     * @param linked   linked status
+     */
+    private void updateLinkedProducts(Product product, List<Product> products, boolean linked) {
+        products.forEach(p -> {
+            p.setLinked(linked);
+            p.setSellEnd((linked) ? product.getSellEnd() : null);
+
+            productRepository.save(p);
+        });
     }
 }

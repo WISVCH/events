@@ -118,7 +118,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void create(Event event) throws EventInvalidException {
         this.assertIsValidEvent(event);
-        this.updateLinkedProducts(event.getProducts(), true);
+        this.updateLinkedProducts(event, event.getProducts(), true);
 
         eventRepository.saveAndFlush(event);
     }
@@ -131,7 +131,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void update(Event event) throws EventNotFoundException, EventInvalidException {
         Event update = this.getByKey(event.getKey());
-        this.updateLinkedProducts(update.getProducts(), false);
+        this.updateLinkedProducts(event, update.getProducts(), false);
 
         update.setTitle(event.getTitle());
         update.setDescription(event.getDescription());
@@ -148,7 +148,7 @@ public class EventServiceImpl implements EventService {
         update.setChOnly(event.isChOnly());
 
         this.assertIsValidEvent(event);
-        this.updateLinkedProducts(update.getProducts(), true);
+        this.updateLinkedProducts(event, update.getProducts(), true);
         eventRepository.save(update);
     }
 
@@ -160,22 +160,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Event event) {
         eventRepository.delete(event);
-    }
-
-    /**
-     * Update the linked status of Products.
-     *
-     * @param products List of Products
-     * @param linked   linked status
-     */
-    private void updateLinkedProducts(List<Product> products, boolean linked) {
-        products.forEach(p -> {
-            try {
-                p.setLinked(linked);
-                productService.update(p);
-            } catch (ProductNotFoundException | ProductInvalidException ignored) {
-            }
-        });
     }
 
     /**
@@ -211,5 +195,23 @@ public class EventServiceImpl implements EventService {
         if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
             throw new EventInvalidException("It is not possible to add the same product twice or more!");
         }
+    }
+
+    /**
+     * Update the linked status of Products.
+     *
+     * @param event    of type Event
+     * @param products of type List
+     * @param linked   of type boolean
+     */
+    private void updateLinkedProducts(Event event, List<Product> products, boolean linked) {
+        products.forEach(p -> {
+            try {
+                p.setLinked(linked);
+                p.setSellEnd((linked) ? event.getStart() : null);
+                productService.update(p);
+            } catch (ProductNotFoundException | ProductInvalidException ignored) {
+            }
+        });
     }
 }
