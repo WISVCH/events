@@ -276,7 +276,7 @@ public class OrderServiceImpl implements OrderService {
 
         mailService.sendOrderConfirmation(order, tickets);
         order.setPaidAt(LocalDateTime.now());
-        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
     }
 
     /**
@@ -307,6 +307,6 @@ public class OrderServiceImpl implements OrderService {
      */
     private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
-        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
+        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
     }
 }
