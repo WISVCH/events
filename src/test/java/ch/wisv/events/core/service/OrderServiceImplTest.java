@@ -1,10 +1,9 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.ServiceTest;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.UnassignedOrderException;
-import ch.wisv.events.core.exception.normal.UndefinedPaymentMethodOrderException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -12,7 +11,6 @@ import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.mail.MailServiceImpl;
@@ -20,18 +18,18 @@ import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -241,19 +239,15 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusPaid() throws Exception {
-        Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.PENDING).thenReturn(OrderStatus.PAID);
-        when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getPaymentMethod()).thenReturn(PaymentMethod.IDEAL);
-        when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
-        orderService.updateOrderStatus(mock, OrderStatus.PAID);
+        Order order = new Order();
+        order.setStatus(OrderStatus.PENDING);
 
-        when(ticketService.createByOrderProduct(any(Order.class), any(OrderProduct.class))).thenReturn(mock(Ticket.class));
-        doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
+        when(ticketService.createByOrder(order)).thenReturn(new ArrayList<>());
+        orderService.updateOrderStatus(order, OrderStatus.PAID);
 
-        verify(mock, times(1)).setStatus(OrderStatus.PAID);
-        verify(mock, times(1)).setPaidAt(any(LocalDateTime.class));
-        verify(ticketService, atLeastOnce()).createByOrderProduct(any(Order.class), any(OrderProduct.class));
+        assertEquals(OrderStatus.PAID, order.getStatus());
+        assertNotEquals(null, order.getPaidAt());
+        verify(ticketService, times(1)).createByOrder(order);
     }
 
     @Test
@@ -280,15 +274,39 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusReservation() throws Exception {
-        Order mock = mock(Order.class);
-        when(mock.getStatus()).thenReturn(OrderStatus.ASSIGNED);
-        when(mock.getOwner()).thenReturn(mock(Customer.class));
-        when(mock.getOrderProducts()).thenReturn(this.order.getOrderProducts());
+        Order order = new Order();
+        order.setStatus(OrderStatus.ASSIGNED);
 
-        orderService.updateOrderStatus(mock, OrderStatus.RESERVATION);
+        when(ticketService.createByOrder(order)).thenReturn(Collections.emptyList());
+        orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
-        doNothing().when(mailService).sendOrderConfirmation(mock, Collections.emptyList());
+        assertEquals(OrderStatus.RESERVATION, order.getStatus());
+    }
 
-        verify(mock, times(1)).setStatus(OrderStatus.RESERVATION);
+    @Test
+    public void testUpdateOrderStatusThreadSafety() {
+        thrown.expect(OrderInvalidException.class);
+
+        Order order = new Order();
+        order.setStatus(OrderStatus.PENDING);
+        when(ticketService.createByOrder(order)).thenReturn(new ArrayList<>());
+
+        Thread t1 = new Thread(() -> {
+            try {
+                orderService.updateOrderStatus(order, OrderStatus.PAID);
+            } catch (EventsException e) {
+                e.printStackTrace();
+            }
+        });
+        t1.start();
+
+        Thread t2 = new Thread(() -> {
+            try {
+                orderService.updateOrderStatus(order, OrderStatus.PAID);
+            } catch (EventsException e) {
+                e.printStackTrace();
+            }
+        });
+        t2.start();
     }
 }

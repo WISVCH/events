@@ -2,10 +2,10 @@ package ch.wisv.events.core.service.ticket;
 
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.TicketRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
@@ -26,25 +26,6 @@ public class TicketServiceImpl implements TicketService {
      */
     public TicketServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
-    }
-
-    /**
-     * Create a Ticket by an OrderProduct.
-     *
-     * @param order        of type Order
-     * @param orderProduct of type OrderProduct
-     */
-    @Override
-    public Ticket createByOrderProduct(Order order, OrderProduct orderProduct) {
-        Ticket ticket = new Ticket(
-                order.getOwner(),
-                orderProduct.getProduct(),
-                this.generateUniqueString(orderProduct.getProduct())
-        );
-
-        ticketRepository.saveAndFlush(ticket);
-
-        return ticket;
     }
 
     /**
@@ -91,11 +72,38 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public void deleteByOrder(Order order) {
-        order.getOrderProducts().forEach(orderProduct ->  {
+        order.getOrderProducts().forEach(orderProduct -> {
             List<Ticket> tickets = ticketRepository.findAllByProductAndOwner(orderProduct.getProduct(), order.getOwner());
 
             ticketRepository.delete(tickets);
         });
+    }
+
+    /**
+     * Create a Ticket by an OrderProduct.
+     *
+     * @param order of type Order
+     *
+     * @return List of Ticket
+     */
+    @Override
+    public List<Ticket> createByOrder(Order order) {
+        if (order.isTicketCreated()) {
+            return null;
+        }
+
+        List<Ticket> tickets = new ArrayList<>();
+
+        order.getOrderProducts().stream().map(orderProduct -> new Ticket(
+                order.getOwner(),
+                orderProduct.getProduct(),
+                this.generateUniqueString(orderProduct.getProduct())
+        )).forEach(ticket -> {
+            tickets.add(ticket);
+            ticketRepository.saveAndFlush(ticket);
+        });
+
+        return tickets;
     }
 
     /**

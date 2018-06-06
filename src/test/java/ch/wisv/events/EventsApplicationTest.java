@@ -56,7 +56,7 @@ public class EventsApplicationTest {
         Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-562")).thenReturn("PAID");
         Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-563")).thenReturn("CANCELLED");
         Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-564")).thenReturn("STATUS_EXCEPTION");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-565")).thenThrow(new PaymentsConnectionException());
+        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-565")).thenThrow(new PaymentsConnectionException(""));
 
         return paymentsService;
     }

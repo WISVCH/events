@@ -29,12 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout/{key}/payment")
 public class WebshopPaymentController extends WebshopController {
 
-    /** Max retry attempt to fetch payment status. */
-    private static final int MAX_PAYMENT_FETCH_ATTEMPT = 5;
-
-    /** Amount of milli secs between status fetch attempt. */
-    private static final int WAIT_BETWEEN_STATUS_FETCH_ATTEMPT = 500;
-
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
@@ -139,7 +133,7 @@ public class WebshopPaymentController extends WebshopController {
      * @return String string
      */
     @GetMapping("/ideal")
-    public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) throws Exception {
         try {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("model", order);
@@ -177,7 +171,7 @@ public class WebshopPaymentController extends WebshopController {
                 this.assertOrderIsSuitableForCheckout(order);
 
                 if (order.getStatus() == OrderStatus.PENDING) {
-                    this.fetchOrderStatus(order, paymentsReference);
+                    webshopService.fetchOrderStatus(order, paymentsReference);
 
                     return "redirect:/return/" + order.getPublicReference();
                 } else {
@@ -220,34 +214,6 @@ public class WebshopPaymentController extends WebshopController {
 
         if (order.getCreatedBy() == null || !order.getCreatedBy().equals("events-webshop")) {
             throw new OrderInvalidException("Order created by must be set before payment");
-        }
-    }
-
-    /**
-     * Fetch OrderStatus from CH Payments and retry if it fails the first time.
-     *
-     * @param order             of type Order
-     * @param paymentsReference of type String
-     *
-     * @throws EventsException when Payments Status is unknown
-     */
-    private void fetchOrderStatus(Order order, String paymentsReference) throws EventsException {
-        int count = 0;
-        int maxCount = MAX_PAYMENT_FETCH_ATTEMPT;
-
-        while (order.getStatus() == OrderStatus.PENDING && count < maxCount) {
-            try {
-                webshopService.updateOrderStatus(order, paymentsReference);
-                sleep(WAIT_BETWEEN_STATUS_FETCH_ATTEMPT);
-            } catch (InterruptedException ignored) {
-            }
-
-            count++;
-        }
-
-        if (count == maxCount) {
-            orderService.updateOrderStatus(order, OrderStatus.ERROR);
-            mailService.sendErrorPaymentOrder(order);
         }
     }
 

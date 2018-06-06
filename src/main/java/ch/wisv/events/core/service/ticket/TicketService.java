@@ -13,16 +13,6 @@ import java.util.List;
 public interface TicketService {
 
     /**
-     * Create a Ticket by an OrderProduct.
-     *
-     * @param order        of type Order
-     * @param orderProduct of type OrderProduct
-     *
-     * @return Ticket
-     */
-    Ticket createByOrderProduct(Order order, OrderProduct orderProduct);
-
-    /**
      * Get all Ticket by a Product and Customer.
      *
      * @param product  of type Product
@@ -49,6 +39,13 @@ public interface TicketService {
      * @return List of Tickets
      */
     List<Ticket> getAllByCustomer(Customer customer);
+
+    /**
+     * Create tickets by an Order.
+     *
+     * @param order of type Order
+     */
+    List<Ticket> createByOrder(Order order);
 
     /**
      * Delete tickets by an Order.

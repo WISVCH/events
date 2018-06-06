@@ -28,4 +28,12 @@ public interface WebshopService {
      * @throws EventsException when CH Payment status is unknown or the Order is invalid
      */
     void updateOrderStatus(Order order, String paymentsReference) throws EventsException;
+
+    /**
+     * Fetch the status of the Order via the Payments API.
+     *
+     * @param order             of type Order
+     * @param paymentsReference of type String
+     */
+    void fetchOrderStatus(Order order, String paymentsReference) throws EventsException;
 }
