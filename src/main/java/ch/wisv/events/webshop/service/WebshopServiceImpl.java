@@ -74,6 +74,8 @@ public class WebshopServiceImpl implements WebshopService {
      *
      * @param order             of type Order
      * @param paymentsReference of type String
+     *
+     * @throws EventsException when Order status update is invalid.
      */
     @Override
     public void updateOrderStatus(Order order, String paymentsReference) throws EventsException {
@@ -102,6 +104,8 @@ public class WebshopServiceImpl implements WebshopService {
      *
      * @param order             of type Order
      * @param paymentsReference of type String
+     *
+     * @throws EventsException when Order status update is invalid.
      */
     public void fetchOrderStatus(Order order, String paymentsReference) throws EventsException {
         int count = 0;
