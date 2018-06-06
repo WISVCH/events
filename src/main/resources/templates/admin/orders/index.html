@@ -51,7 +51,7 @@
                         <td><samp th:text="${order.getPublicReference().split('-')[0]}"></samp></td>
                         <td>
                             <a th:href="@{'/administrator/customers/view/' + ${order.getOwner().getKey()} + '/'}"
-                               th:text="${order.getOwner().getName()}"></a>
+                               th:text="${order.getOwner().getName()}" th:if="${order.getOwner() != null}"></a>
                         </td>
                         <td>
                             <span th:each="orderProduct : ${order.getOrderProducts()}"

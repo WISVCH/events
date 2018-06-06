@@ -4,6 +4,9 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
 
+/**
+ * MailService interface.
+ */
 public interface MailService {
 
     /**

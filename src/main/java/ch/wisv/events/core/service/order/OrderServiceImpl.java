@@ -27,7 +27,6 @@ import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,25 +162,27 @@ public class OrderServiceImpl implements OrderService {
      * @param status of type OrderStatus
      */
     @Override
-    public void updateOrderStatus(Order order, OrderStatus status) throws EventsException {
-        this.assertValidStatusChange(order, status);
+    public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
+        synchronized (Order.class) {
+            this.assertValidStatusChange(order, status);
 
-        switch (status) {
-            case PAID:
-                this.handleUpdateOrderStatusPaid(order);
-                break;
-            case RESERVATION:
-                this.handleUpdateOrderStatusReservation(order);
-                break;
-            case REJECTED:
-                this.handleUpdateOrderStatusRejected(order);
-                break;
-            default:
-                break;
+            switch (status) {
+                case PAID:
+                    this.handleUpdateOrderStatusPaid(order);
+                    break;
+                case RESERVATION:
+                    this.handleUpdateOrderStatusReservation(order);
+                    break;
+                case REJECTED:
+                    this.handleUpdateOrderStatusRejected(order);
+                    break;
+                default:
+                    break;
+            }
+
+            order.setStatus(status);
+            orderRepository.saveAndFlush(order);
         }
-
-        order.setStatus(status);
-        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -248,35 +249,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Create the ticket if an order has the status paid.
-     *
-     * @param order of type Order.
-     *
-     * @return List of Ticket
-     */
-    private List<Ticket> createTicketForOrder(Order order) {
-        List<Ticket> tickets = new ArrayList<>();
-
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            for (int i = 0; i < orderProduct.getAmount(); i++) {
-                tickets.add(ticketService.createByOrderProduct(order, orderProduct));
-            }
-        }
-
-        return tickets;
-    }
-
-    /**
      * Update order status to PAID.
      *
      * @param order of type Order
      */
     private void handleUpdateOrderStatusPaid(Order order) {
-        List<Ticket> tickets = this.createTicketForOrder(order);
-
+        List<Ticket> tickets = ticketService.createByOrder(order);
         mailService.sendOrderConfirmation(order, tickets);
+
+        order.setTicketCreated(true);
         order.setPaidAt(LocalDateTime.now());
         order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
+
+        orderRepository.saveAndFlush(order);
     }
 
     /**

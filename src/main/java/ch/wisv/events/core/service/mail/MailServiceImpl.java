@@ -38,6 +38,38 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
+     * Method mail Order to Customer.
+     *
+     * @param order of type Order
+     */
+    @Override
+    public void sendOrderConfirmation(Order order, List<Ticket> tickets) {
+        if (tickets.size() > 0) {
+            final Context ctx = new Context(new Locale("en"));
+            ctx.setVariable("order", order);
+            ctx.setVariable("tickets", tickets);
+
+            this.sendMailWithContent(order.getOwner().getEmail(), "Order overview", this.templateEngine.process("mail/order", ctx));
+        }
+    }
+
+    @Override
+    public void sendErrorPaymentOrder(Order order) {
+        final Context ctx = new Context(new Locale("en"));
+        ctx.setVariable("order", order);
+
+        this.sendMailWithContent("w3cie@ch.tudelft.nl", "Order payment failed", this.templateEngine.process("mail/order-error", ctx));
+    }
+
+    @Override
+    public void sendOrderReservation(Order order) {
+        final Context ctx = new Context(new Locale("en"));
+        ctx.setVariable("order", order);
+
+        this.sendMailWithContent(order.getOwner().getEmail(), "Ticket reservation", this.templateEngine.process("mail/order-reservation", ctx));
+    }
+
+    /**
      * Method send mail about Order to Customer.
      */
     private void sendMailWithContent(String recipientEmail, String subject, String content) {
@@ -61,35 +93,5 @@ public class MailServiceImpl implements MailService {
         } catch (MailException m) {
             throw new MailSendException("Unable to send email", m.getCause());
         }
-    }
-
-    /**
-     * Method mail Order to Customer.
-     *
-     * @param order of type Order
-     */
-    @Override
-    public void sendOrderConfirmation(Order order, List<Ticket> tickets) {
-        final Context ctx = new Context(new Locale("en"));
-        ctx.setVariable("order", order);
-        ctx.setVariable("tickets", tickets);
-
-        this.sendMailWithContent(order.getOwner().getEmail(), "Order overview", this.templateEngine.process("mail/order", ctx));
-    }
-
-    @Override
-    public void sendErrorPaymentOrder(Order order) {
-        final Context ctx = new Context(new Locale("en"));
-        ctx.setVariable("order", order);
-
-        this.sendMailWithContent("w3cie@ch.tudelft.nl", "Order payment failed", this.templateEngine.process("mail/order-error", ctx));
-    }
-
-    @Override
-    public void sendOrderReservation(Order order) {
-        final Context ctx = new Context(new Locale("en"));
-        ctx.setVariable("order", order);
-
-        this.sendMailWithContent(order.getOwner().getEmail(), "Ticket reservation", this.templateEngine.process("mail/order-reservation", ctx));
     }
 }

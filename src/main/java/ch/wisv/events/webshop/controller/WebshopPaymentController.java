@@ -8,12 +8,10 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
-import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.webshop.service.PaymentsService;
 import ch.wisv.events.webshop.service.WebshopService;
-import static java.lang.Thread.sleep;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout/{key}/payment")
 public class WebshopPaymentController extends WebshopController {
 
-    /** Max retry attempt to fetch payment status. */
-    private static final int MAX_PAYMENT_FETCH_ATTEMPT = 5;
-
-    /** Amount of milli secs between status fetch attempt. */
-    private static final int WAIT_BETWEEN_STATUS_FETCH_ATTEMPT = 500;
-
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
@@ -44,9 +36,6 @@ public class WebshopPaymentController extends WebshopController {
     /** WebshopService. */
     private final WebshopService webshopService;
 
-    /** MailService. */
-    private final MailService mailService;
-
     /**
      * Constructor WebshopController.
      *
@@ -54,20 +43,17 @@ public class WebshopPaymentController extends WebshopController {
      * @param orderValidationService of type OrderValidationService
      * @param paymentsService        of type PaymentsService
      * @param webshopService         of type WebshopService
-     * @param mailService            of type MailService
      */
     public WebshopPaymentController(
             OrderService orderService,
             OrderValidationService orderValidationService,
             PaymentsService paymentsService,
-            WebshopService webshopService,
-            MailService mailService
+            WebshopService webshopService
     ) {
         super(orderService);
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
         this.webshopService = webshopService;
-        this.mailService = mailService;
     }
 
     /**
@@ -177,7 +163,7 @@ public class WebshopPaymentController extends WebshopController {
                 this.assertOrderIsSuitableForCheckout(order);
 
                 if (order.getStatus() == OrderStatus.PENDING) {
-                    this.fetchOrderStatus(order, paymentsReference);
+                    webshopService.fetchOrderStatus(order, paymentsReference);
 
                     return "redirect:/return/" + order.getPublicReference();
                 } else {
@@ -220,34 +206,6 @@ public class WebshopPaymentController extends WebshopController {
 
         if (order.getCreatedBy() == null || !order.getCreatedBy().equals("events-webshop")) {
             throw new OrderInvalidException("Order created by must be set before payment");
-        }
-    }
-
-    /**
-     * Fetch OrderStatus from CH Payments and retry if it fails the first time.
-     *
-     * @param order             of type Order
-     * @param paymentsReference of type String
-     *
-     * @throws EventsException when Payments Status is unknown
-     */
-    private void fetchOrderStatus(Order order, String paymentsReference) throws EventsException {
-        int count = 0;
-        int maxCount = MAX_PAYMENT_FETCH_ATTEMPT;
-
-        while (order.getStatus() == OrderStatus.PENDING && count < maxCount) {
-            try {
-                webshopService.updateOrderStatus(order, paymentsReference);
-                sleep(WAIT_BETWEEN_STATUS_FETCH_ATTEMPT);
-            } catch (InterruptedException ignored) {
-            }
-
-            count++;
-        }
-
-        if (count == maxCount) {
-            orderService.updateOrderStatus(order, OrderStatus.ERROR);
-            mailService.sendErrorPaymentOrder(order);
         }
     }
 

@@ -3,7 +3,6 @@ package ch.wisv.events.webshop.service;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
-import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -79,10 +78,11 @@ public class PaymentsServiceImpl implements PaymentsService {
                     return (String) responseObject.get("status");
                 }
             }
-        } catch (IOException ignored) {
-        }
 
-        throw new PaymentsConnectionException();
+            throw new PaymentsConnectionException("Something");
+        } catch (Exception e) {
+            throw new PaymentsConnectionException(e.getMessage());
+        }
     }
 
     /**
@@ -94,9 +94,9 @@ public class PaymentsServiceImpl implements PaymentsService {
      */
     @Override
     public String getPaymentsMollieUrl(Order order) {
-        try {
-            HttpPost httpPost = this.createPaymentsOrderHttpPost(order);
+        HttpPost httpPost = this.createPaymentsOrderHttpPost(order);
 
+        try {
             HttpResponse response = this.httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
 
@@ -108,30 +108,11 @@ public class PaymentsServiceImpl implements PaymentsService {
 
                 return this.getRedirectUrl(statusCode, responseObject);
             }
-        } catch (IOException ignored) {
+        } catch (Exception e) {
+            throw new PaymentsConnectionException(e.getMessage());
         }
 
-        throw new PaymentsConnectionException();
-    }
-
-    /**
-     * Get redirect url.
-     *
-     * @param statusCode     of type int
-     * @param responseObject of type JSONObject
-     *
-     * @return String
-     */
-    private String getRedirectUrl(int statusCode, JSONObject responseObject) {
-        if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
-            if (responseObject.containsKey("url")) {
-                return (String) responseObject.get("url");
-            } else {
-                throw new PaymentsInvalidException("Redirect url is missing");
-            }
-        } else {
-            throw new PaymentsInvalidException((String) responseObject.get("message"));
-        }
+        throw new PaymentsConnectionException("Something went wrong.");
     }
 
     /**
@@ -176,5 +157,25 @@ public class PaymentsServiceImpl implements PaymentsService {
         object.put("productKeys", jsonArray);
 
         return object;
+    }
+
+    /**
+     * Get redirect url.
+     *
+     * @param statusCode     of type int
+     * @param responseObject of type JSONObject
+     *
+     * @return String
+     */
+    private String getRedirectUrl(int statusCode, JSONObject responseObject) {
+        if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
+            if (responseObject.containsKey("url")) {
+                return (String) responseObject.get("url");
+            } else {
+                throw new PaymentsInvalidException("Redirect url is missing");
+            }
+        } else {
+            throw new PaymentsInvalidException((String) responseObject.get("message"));
+        }
     }
 }
