@@ -1,9 +1,11 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.ServiceTest;
+import ch.wisv.events.core.exception.LogLevelEnum;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.runtime.EventsRuntimeException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -26,7 +28,6 @@ import java.util.Optional;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
@@ -285,17 +286,17 @@ public class OrderServiceImplTest extends ServiceTest {
 
     @Test
     public void testUpdateOrderStatusThreadSafety() {
-        thrown.expect(OrderInvalidException.class);
-
         Order order = new Order();
         order.setStatus(OrderStatus.PENDING);
         when(ticketService.createByOrder(order)).thenReturn(new ArrayList<>());
+
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> assertEquals("Not allowed to update status from PAID to PAID", e));
 
         Thread t1 = new Thread(() -> {
             try {
                 orderService.updateOrderStatus(order, OrderStatus.PAID);
             } catch (EventsException e) {
-                e.printStackTrace();
+                throw new EventsRuntimeException(LogLevelEnum.DEBUG, e.getMessage());
             }
         });
         t1.start();
@@ -304,7 +305,7 @@ public class OrderServiceImplTest extends ServiceTest {
             try {
                 orderService.updateOrderStatus(order, OrderStatus.PAID);
             } catch (EventsException e) {
-                e.printStackTrace();
+                throw new EventsRuntimeException(LogLevelEnum.DEBUG, e.getMessage());
             }
         });
         t2.start();

@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
      * @param status of type OrderStatus
      */
     @Override
-    public void updateOrderStatus(Order order, OrderStatus status) {
+    public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         synchronized (Order.class) {
             this.assertValidStatusChange(order, status);
 
