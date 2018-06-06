@@ -2,6 +2,9 @@ package ch.wisv.events.core.exception.normal;
 
 import ch.wisv.events.core.exception.LogLevelEnum;
 
+/**
+ * OrderInvalidException class.
+ */
 public class OrderInvalidException extends EventsException {
 
     /**

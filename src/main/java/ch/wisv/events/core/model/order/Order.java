@@ -94,6 +94,11 @@ public class Order {
     private boolean isChOnly;
 
     /**
+     * Tickets have been created.
+     */
+    private boolean ticketCreated;
+
+    /**
      * Constructor Order creates a new Order instance.
      */
     public Order() {

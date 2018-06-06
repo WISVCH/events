@@ -2,12 +2,17 @@ package ch.wisv.events.core.exception.runtime;
 
 import ch.wisv.events.core.exception.LogLevelEnum;
 
+/**
+ * PaymentsConnectionException class.
+ */
 public class PaymentsConnectionException extends EventsRuntimeException {
 
     /**
      * ProductAlreadyLinkedException exception.
+     *
+     * @param ex of type String
      */
-    public PaymentsConnectionException() {
-        super(LogLevelEnum.ERROR, "Can not connect to CH Payments");
+    public PaymentsConnectionException(String ex) {
+        super(LogLevelEnum.ERROR, ex);
     }
 }
