@@ -8,12 +8,10 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
-import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.webshop.service.PaymentsService;
 import ch.wisv.events.webshop.service.WebshopService;
-import static java.lang.Thread.sleep;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +36,6 @@ public class WebshopPaymentController extends WebshopController {
     /** WebshopService. */
     private final WebshopService webshopService;
 
-    /** MailService. */
-    private final MailService mailService;
-
     /**
      * Constructor WebshopController.
      *
@@ -48,20 +43,17 @@ public class WebshopPaymentController extends WebshopController {
      * @param orderValidationService of type OrderValidationService
      * @param paymentsService        of type PaymentsService
      * @param webshopService         of type WebshopService
-     * @param mailService            of type MailService
      */
     public WebshopPaymentController(
             OrderService orderService,
             OrderValidationService orderValidationService,
             PaymentsService paymentsService,
-            WebshopService webshopService,
-            MailService mailService
+            WebshopService webshopService
     ) {
         super(orderService);
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
         this.webshopService = webshopService;
-        this.mailService = mailService;
     }
 
     /**
@@ -133,7 +125,7 @@ public class WebshopPaymentController extends WebshopController {
      * @return String string
      */
     @GetMapping("/ideal")
-    public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) throws Exception {
+    public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("model", order);
