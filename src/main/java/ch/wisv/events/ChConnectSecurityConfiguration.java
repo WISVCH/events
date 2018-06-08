@@ -14,6 +14,7 @@ import org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder;
 import org.mitre.openid.connect.client.service.impl.StaticSingleIssuerService;
 import org.mitre.openid.connect.web.UserInfoInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
 @Profile("!test")
 public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -72,7 +73,7 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .authenticationEntryPoint(authenticationEntryPoint())
             .and().authorizeRequests()
                 .antMatchers("/administrator/**").hasRole("ADMIN")
-                .antMatchers("/").permitAll()
+                .antMatchers("/", "/management/health").permitAll()
                 .anyRequest().permitAll()
             .and()
                 .logout()
