@@ -182,6 +182,19 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <a th:href="'delete/' + ${event.getKey()} + '/'"
+                               th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
+                               class="btn btn-danger">
+                                <i class="far fa-trash-alt"></i> Delete event
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </div>
