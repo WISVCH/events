@@ -53,16 +53,7 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}">
-                            <td colspan="2">Transaction fee</td>
-                            <td>&euro; 0,35</td>
-                        </tr>
-                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() > 0}"
-                            style="border-top: 4px double #e7ebf1 !important;">
-                            <th colspan="2">Total</th>
-                            <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount() + 0.35, 1, 'POINT', 2, 'COMMA')}"></th>
-                        </tr>
-                        <tr th:if="${!order.getOrderProducts().isEmpty() && order.getAmount() == 0}">
+                        <tr style="border-top: 4px double #e7ebf1 !important;">
                             <th colspan="2">Total</th>
                             <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
                         </tr>

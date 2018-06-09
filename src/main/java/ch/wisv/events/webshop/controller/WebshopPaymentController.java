@@ -8,6 +8,7 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.webshop.service.PaymentsService;
@@ -43,14 +44,16 @@ public class WebshopPaymentController extends WebshopController {
      * @param orderValidationService of type OrderValidationService
      * @param paymentsService        of type PaymentsService
      * @param webshopService         of type WebshopService
+     * @param authenticationService  of type AuthenticationService
      */
     public WebshopPaymentController(
             OrderService orderService,
             OrderValidationService orderValidationService,
             PaymentsService paymentsService,
-            WebshopService webshopService
+            WebshopService webshopService,
+            AuthenticationService authenticationService
     ) {
-        super(orderService);
+        super(orderService, authenticationService);
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
         this.webshopService = webshopService;
@@ -70,6 +73,7 @@ public class WebshopPaymentController extends WebshopController {
         try {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute("order", order);
+            model.addAttribute("customer", authenticationService.getCurrentCustomer());
 
             if (order.getAmount() == 0.d) {
                 order.setPaymentMethod(PaymentMethod.OTHER);

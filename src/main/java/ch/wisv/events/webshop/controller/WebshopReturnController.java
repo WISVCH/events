@@ -2,6 +2,7 @@ package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +22,11 @@ public class WebshopReturnController extends WebshopController {
     /**
      * WebshopReturnController constructor.
      *
-     * @param orderService of type OrderService
+     * @param orderService          of type OrderService
+     * @param authenticationService of type AuthenticationService
      */
-    public WebshopReturnController(OrderService orderService) {
-        super(orderService);
+    public WebshopReturnController(OrderService orderService, AuthenticationService authenticationService) {
+        super(orderService, authenticationService);
     }
 
     /**

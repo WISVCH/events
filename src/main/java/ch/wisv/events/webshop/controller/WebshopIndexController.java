@@ -6,7 +6,6 @@ import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.webshop.service.WebshopService;
 import java.util.List;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,12 +52,7 @@ public class WebshopIndexController {
     @GetMapping("/")
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
-
-        try {
-            model.addAttribute("customer", authenticationService.getCurrentCustomer());
-        } catch (AccessDeniedException ignored) {
-        }
-
+        model.addAttribute("customer", authenticationService.getCurrentCustomer());
         model.addAttribute("events", webshopService.filterNotSalableProducts(upcoming));
         model.addAttribute("orderProduct", new OrderProductDto());
 

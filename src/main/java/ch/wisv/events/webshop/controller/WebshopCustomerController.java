@@ -45,7 +45,7 @@ public class WebshopCustomerController extends WebshopController {
             CustomerService customerService,
             AuthenticationService authenticationService
     ) {
-        super(orderService);
+        super(orderService, authenticationService);
         this.customerService = customerService;
         this.authenticationService = authenticationService;
     }
@@ -64,6 +64,7 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
+            model.addAttribute("customer", authenticationService.getCurrentCustomer());
             model.addAttribute("order", order);
 
             if (order.getStatus() != OrderStatus.ANONYMOUS) {

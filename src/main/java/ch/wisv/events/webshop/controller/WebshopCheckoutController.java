@@ -6,6 +6,7 @@ import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,12 @@ public class WebshopCheckoutController extends WebshopController {
      * @param orderService           of type OrderService
      * @param orderValidationService of type OrderValidationService
      */
-    public WebshopCheckoutController(OrderService orderService, OrderValidationService orderValidationService) {
-        super(orderService);
+    public WebshopCheckoutController(
+            OrderService orderService,
+            OrderValidationService orderValidationService,
+            AuthenticationService authenticationService
+    ) {
+        super(orderService, authenticationService);
         this.orderValidationService = orderValidationService;
     }
 
@@ -80,6 +85,7 @@ public class WebshopCheckoutController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
+            model.addAttribute("customer", authenticationService.getCurrentCustomer());
             model.addAttribute("order", order);
 
             return "webshop/checkout/index";
