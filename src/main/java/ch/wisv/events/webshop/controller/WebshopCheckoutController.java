@@ -18,9 +18,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * WebshopCheckoutController class.
+ */
 @Controller
 @RequestMapping("/checkout")
 public class WebshopCheckoutController extends WebshopController {
+
+    /** Error message no products in Order. */
+    private static final String ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS = "Shopping basket can not be empty!";
+
+    /** Username of the user that created this order. */
+    private static final String USERNAME_ORDER_CREATED = "events-webshop";
+
+    /** Success message Order cancelled. */
+    private static final String SUCCESS_MESSAGE_ORDER_CANCELLED = "Order has successfully been cancelled.";
 
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
@@ -30,6 +42,7 @@ public class WebshopCheckoutController extends WebshopController {
      *
      * @param orderService           of type OrderService
      * @param orderValidationService of type OrderValidationService
+     * @param authenticationService  of type AuthenticationService
      */
     public WebshopCheckoutController(
             OrderService orderService,
@@ -52,21 +65,21 @@ public class WebshopCheckoutController extends WebshopController {
     public String checkoutShoppingBasket(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         try {
             if (orderProductDto.getProducts().isEmpty()) {
-                redirect.addFlashAttribute("error", "Shopping basket can not be empty!");
+                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS);
 
-                return "redirect:/";
+                return REDIRECT_EVENTS_HOME;
             }
 
             Order order = orderService.createOrderByOrderProductDto(orderProductDto);
-            order.setCreatedBy("events-webshop");
+            order.setCreatedBy(USERNAME_ORDER_CREATED);
             orderValidationService.assertOrderIsValid(order);
             orderService.create(order);
 
             return "redirect:/checkout/" + order.getPublicReference();
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -85,14 +98,14 @@ public class WebshopCheckoutController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
-            model.addAttribute("customer", authenticationService.getCurrentCustomer());
-            model.addAttribute("order", order);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             return "webshop/checkout/index";
         } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -111,13 +124,13 @@ public class WebshopCheckoutController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
             orderService.updateOrderStatus(order, OrderStatus.CANCELLED);
 
-            redirect.addFlashAttribute("success", "Order has successfully been cancelled.");
+            redirect.addFlashAttribute(MODEL_ATTR_SUCCESS, SUCCESS_MESSAGE_ORDER_CANCELLED);
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 }

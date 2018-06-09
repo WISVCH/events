@@ -12,11 +12,29 @@ import org.thymeleaf.util.ArrayUtils;
  */
 abstract class WebshopController {
 
+    /** Redirect to events home. */
+    static final String REDIRECT_EVENTS_HOME = "redirect:/";
+
+    /** Model attr Customer. */
+    static final String MODEL_ATTR_CUSTOMER = "customer";
+
+    /** Model attr Order. */
+    static final String MODEL_ATTR_ORDER = "order";
+
+    /** Model attr message type error. */
+    static final String MODEL_ATTR_ERROR = "error";
+
+    /** Model attr message type success. */
+    static final String MODEL_ATTR_SUCCESS = "success";
+
+    /** Model attr message type message. */
+    static final String MODEL_ATTR_MESSAGE = "message";
+
     /** OrderService. */
-    protected final OrderService orderService;
+    final OrderService orderService;
 
     /** AuthenticationService. */
-    protected final AuthenticationService authenticationService;
+    final AuthenticationService authenticationService;
 
     /**
      * WebshopController constructor.

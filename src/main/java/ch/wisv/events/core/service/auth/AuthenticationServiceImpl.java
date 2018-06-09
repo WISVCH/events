@@ -7,12 +7,14 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import java.util.stream.Collectors;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Service;
 
+/**
+ * AuthenticationService class.
+ */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 

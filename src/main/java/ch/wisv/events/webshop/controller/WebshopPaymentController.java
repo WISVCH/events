@@ -72,8 +72,8 @@ public class WebshopPaymentController extends WebshopController {
     public String paymentOverview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.getOrderAndCheck(key);
-            model.addAttribute("order", order);
-            model.addAttribute("customer", authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_ORDER, order);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
 
             if (order.getAmount() == 0.d) {
                 order.setPaymentMethod(PaymentMethod.OTHER);
@@ -84,16 +84,16 @@ public class WebshopPaymentController extends WebshopController {
 
             if (order.getOwner().getRfidToken() == null || order.getOwner().getRfidToken().equals("")) {
                 model.addAttribute(
-                        "message",
+                        MODEL_ATTR_MESSAGE,
                         "No card linked to your account! Link a card to your account, for an easier and faster check-in at the event(s)."
                 );
             }
 
             return "webshop/payment/index";
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -113,9 +113,9 @@ public class WebshopPaymentController extends WebshopController {
 
             return "redirect:/return/" + order.getPublicReference() + "/reservation";
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -132,7 +132,7 @@ public class WebshopPaymentController extends WebshopController {
     public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.getOrderAndCheck(key);
-            model.addAttribute("model", order);
+            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             order.setPaymentMethod(PaymentMethod.IDEAL);
             order.setStatus(OrderStatus.PENDING);
@@ -141,9 +141,9 @@ public class WebshopPaymentController extends WebshopController {
 
             return "redirect:" + paymentsService.getPaymentsMollieUrl(order);
         } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -171,20 +171,20 @@ public class WebshopPaymentController extends WebshopController {
 
                     return "redirect:/return/" + order.getPublicReference();
                 } else {
-                    redirect.addFlashAttribute("error", "Order is in an invalid state.");
+                    redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Order is in an invalid state.");
 
                     return "redirect:/checkout/" + key + "/payment";
                 }
             } catch (PaymentsStatusUnknown | PaymentsConnectionException e) {
-                redirect.addFlashAttribute("error", "Something went wrong trying to fetch the payment status.");
+                redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Something went wrong trying to fetch the payment status.");
                 orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
 
                 return "redirect:/checkout/" + key + "/payment";
             }
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 

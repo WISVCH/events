@@ -74,7 +74,7 @@ public class WebshopReturnController extends WebshopController {
     public String returnStatus(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String status) {
         try {
             Order order = orderService.getByReference(key);
-            model.addAttribute("order", order);
+            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             String[] validStatus = new String[]{"success", "cancelled", "error", "reservation"};
 
@@ -84,7 +84,7 @@ public class WebshopReturnController extends WebshopController {
 
             return "webshop/return/error";
         } catch (OrderNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
             return "redirect:/";
         }
