@@ -79,12 +79,12 @@
                                         <div class="col">
                                             <span class="text-success"
                                                   th:if="${webhook.getWebhookTriggers().contains(webhookTrigger)}">
-                                                <i class="fa fa-check"></i>
+                                                <i class="fas fa-check"></i>
                                             </span>
 
                                             <span class="text-danger"
                                                   th:if="${!webhook.getWebhookTriggers().contains(webhookTrigger)}">
-                                                <i class="fa fa-remove"></i>
+                                                <i class="fas fa-times"></i>
                                             </span>
                                         </div>
                                         <div class="col-10">
