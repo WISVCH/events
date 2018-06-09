@@ -14,7 +14,13 @@ body.menu-open .page-header {
 }
 
 .logo-wrapper {
-    position: relative
+    position: relative;
+    height: 5.625rem;
+    margin-top: 1.5rem;
+}
+
+.logo-wrapper img {
+    height: 100% !important;
 }
 
 @media print, screen and (min-width: 73.75em) {
@@ -33,13 +39,21 @@ body.menu-open .page-header {
     }
 }
 
-.wisv-header {
-    height: 5.625rem
+.wisv-header .container-fluid .row {
+    height: 4.75rem;
+}
+
+.wisv-header-bg {
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
+}
+
+.navbar .logo img {
+    height: 5.625rem;
 }
 
 .wisv-header.header-left {
     width: 100%;
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 52px -180px repeat-x;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 100px repeat;
     position: relative;
     z-index: 3
 }
@@ -208,15 +222,20 @@ body.menu-open .page-header {
     border-bottom: 0;
 }
 
-@media print, screen and (min-width: 40em) {
-    .page-title .column, .page-title .columns, .page-title .col {
-        display: table;
-        height: 12rem
-    }
+.page-title .row, .page-title .col {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
 
-    .page-title .column h1, .page-title .columns h1, .page-title .col h1 {
-        display: table-cell;
-        vertical-align: middle;
-        padding: 0 10rem
-    }
+.page-title .column, .page-title .columns, .page-title .col {
+    display: table;
+    height: 12rem
+}
+
+.page-title .column h1, .page-title .columns h1, .page-title .col h1 {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 10rem
 }

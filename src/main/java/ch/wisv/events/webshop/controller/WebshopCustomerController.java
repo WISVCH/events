@@ -22,9 +22,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * WebshopCustomerController.
+ */
 @Controller
 @RequestMapping("/checkout/{key}/customer")
 public class WebshopCustomerController extends WebshopController {
+
+    /** Redirect to the payment page. */
+    private static final String REDIRECT_CHECKOUT_PAYMENT = "redirect:/checkout/%s/payment";
+
+    /** Redirect to the customer create page. */
+    private static final String REDIRECT_CHECKOUT_CUSTOMER_GUEST = "redirect:/checkout/%s/customer/guest";
 
     /** CustomerService. */
     private final CustomerService customerService;
@@ -45,7 +54,7 @@ public class WebshopCustomerController extends WebshopController {
             CustomerService customerService,
             AuthenticationService authenticationService
     ) {
-        super(orderService);
+        super(orderService, authenticationService);
         this.customerService = customerService;
         this.authenticationService = authenticationService;
     }
@@ -64,17 +73,18 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
-            model.addAttribute("order", order);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
             }
 
             return "webshop/checkout/customer";
         } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -94,17 +104,17 @@ public class WebshopCustomerController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
 
             if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
             }
 
             Customer customer = authenticationService.getCurrentCustomer();
             orderService.addCustomerToOrder(order, customer);
 
-            return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 
@@ -124,21 +134,21 @@ public class WebshopCustomerController extends WebshopController {
             this.assertOrderIsSuitableForCheckout(order);
 
             if (order.getStatus() == OrderStatus.ASSIGNED) {
-                return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
             } else if (order.getStatus() == OrderStatus.ANONYMOUS) {
-                if (!model.containsAttribute("customer")) {
-                    model.addAttribute("customer", new Customer());
+                if (!model.containsAttribute(MODEL_ATTR_CUSTOMER)) {
+                    model.addAttribute(MODEL_ATTR_CUSTOMER, new Customer());
                 }
 
-                model.addAttribute("order", order);
+                model.addAttribute(MODEL_ATTR_ORDER, order);
 
                 return "webshop/checkout/create";
             }
         } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
         }
 
-        return "redirect:/";
+        return REDIRECT_EVENTS_HOME;
     }
 
     /**
@@ -164,16 +174,16 @@ public class WebshopCustomerController extends WebshopController {
 
             orderService.addCustomerToOrder(order, orderCustomer);
 
-            return "redirect:/checkout/" + order.getPublicReference() + "/payment";
+            return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
         } catch (CustomerInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("customer", customer);
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_CUSTOMER, customer);
 
-            return "redirect:/checkout/" + key + "/customer/guest";
+            return String.format(REDIRECT_CHECKOUT_CUSTOMER_GUEST, key);
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return "redirect:/";
+            return REDIRECT_EVENTS_HOME;
         }
     }
 

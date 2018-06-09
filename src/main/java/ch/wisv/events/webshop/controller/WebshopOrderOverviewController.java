@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/overview")
 @PreAuthorize("hasRole('ROLE_USER')")
-public class WebshopOrderOverviewController {
+public class WebshopOrderOverviewController extends WebshopController {
 
-    /** AuthenticationService. */
-    private final AuthenticationService authenticationService;
+    /** Model attribute orders. */
+    private static final String MODEL_ATTR_ORDERS = "orders";
 
-    /** OrderService. */
-    private final OrderService orderService;
+    /** Model attribute tickets. */
+    private static final String MODEL_ATTR_TICKETS = "tickets";
 
     /** TicketService. */
     private final TicketService ticketService;
@@ -37,8 +37,7 @@ public class WebshopOrderOverviewController {
             OrderService orderService,
             TicketService ticketService
     ) {
-        this.authenticationService = authenticationService;
-        this.orderService = orderService;
+        super(orderService, authenticationService);
         this.ticketService = ticketService;
     }
 
@@ -53,9 +52,9 @@ public class WebshopOrderOverviewController {
     public String ticketOverview(Model model) {
         Customer customer = authenticationService.getCurrentCustomer();
 
-        model.addAttribute("customer", customer);
-        model.addAttribute("orders", orderService.getReservationByCustomer(customer));
-        model.addAttribute("tickets", ticketService.getAllByCustomer(customer));
+        model.addAttribute(MODEL_ATTR_CUSTOMER, customer);
+        model.addAttribute(MODEL_ATTR_ORDERS, orderService.getReservationByCustomer(customer));
+        model.addAttribute(MODEL_ATTR_TICKETS, ticketService.getAllByCustomer(customer));
 
         return "webshop/overview/index";
     }

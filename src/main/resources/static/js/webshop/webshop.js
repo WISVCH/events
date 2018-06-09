@@ -92,11 +92,6 @@ var ShoppingBasket;
                     shoppingBasketTotal += product.amount * product.cost;
                 });
 
-                if (shoppingBasketTotal > 0) {
-                    shoppingBasketTable += "<tr><td>Transaction fee</td><td></td><td>&euro; 0,35</td></tr>";
-                    shoppingBasketTotal += 0.35;
-                }
-
                 $("#shoppingBasketTable").html(shoppingBasketTable);
                 $("#shoppingBasketCount").html(countItems);
                 $("#shoppingBasketTotal").html("&euro; " + parseFloat(Math.round(shoppingBasketTotal * 100) / 100).toFixed(2).replace(".", ","));
@@ -177,7 +172,9 @@ var ShoppingBasket;
             x.innerHTML = text;
 
             document.body.appendChild(x);
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 3000);
         }
 
     };

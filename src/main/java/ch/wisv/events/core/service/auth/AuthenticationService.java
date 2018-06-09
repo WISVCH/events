@@ -2,6 +2,9 @@ package ch.wisv.events.core.service.auth;
 
 import ch.wisv.events.core.model.customer.Customer;
 
+/**
+ * AuthenticationService interface.
+ */
 public interface AuthenticationService {
 
     /**
