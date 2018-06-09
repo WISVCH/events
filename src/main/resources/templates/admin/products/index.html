@@ -70,15 +70,15 @@
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'edit/' + ${product.getKey()} + '/'" class="btn btn-sm btn-info">
-                                    <i class="fa fa-edit"></i>
+                                    <i class="fas fa-fw fa-edit"></i>
                                 </a>
                                 <a th:href="'overview/' + ${product.getKey()} + '/'" class="btn btn-sm btn-success">
-                                    <i class="fa fa-stack-overflow"></i>
+                                    <i class="fas fa-fw fa-ticket-alt"></i>
                                 </a>
                                 <a th:href="'delete/' + ${product.getKey()} + '/'"
                                    th:onclick="'return confirm(\'Are you sure you want to delete ' + ${product.getTitle()} + '?\');'"
                                    class="btn btn-sm btn-danger">
-                                    <i class="fa fa-remove"></i>
+                                    <i class="far fa-fw fa-trash-alt"></i>
                                 </a>
                             </div>
                         </td>
