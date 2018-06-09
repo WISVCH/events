@@ -43,3 +43,11 @@ wisvch.connect:
 wisvch.payments:
     issuerUri: https://ch.tudelft.nl/payments
     clientUri: http://localhost:8080/events
+
+#Spring Boot Actuator endpoint settings
+management:
+    context-path: /management
+    security.roles: ADMIN
+    endpoints:
+        enabled: false
+        health.enabled: true
