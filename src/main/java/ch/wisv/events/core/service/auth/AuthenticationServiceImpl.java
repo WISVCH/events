@@ -7,11 +7,14 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import java.util.stream.Collectors;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Service;
 
+/**
+ * AuthenticationService class.
+ */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -36,16 +39,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public Customer getCurrentCustomer() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CHUserInfo userInfo = this.getChUserInfo(auth);
-
         try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            CHUserInfo userInfo = this.getChUserInfo(auth);
+
             Customer customer = this.getCustomerByChUserInfo(userInfo);
             this.updateCustomerInfo(customer, userInfo);
 
             return customer;
-        } catch (CustomerInvalidException | CustomerNotFoundException e) {
-            throw new AccessDeniedException("Invalid authentication");
+        } catch (CustomerInvalidException | CustomerNotFoundException | InvalidTokenException e) {
+            return null;
         }
     }
 
@@ -58,13 +61,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     private CHUserInfo getChUserInfo(Authentication auth) {
         if (!(auth instanceof OIDCAuthenticationToken)) {
-            throw new AccessDeniedException("Invalid authentication");
+            throw new InvalidTokenException("Invalid authentication");
         }
 
         OIDCAuthenticationToken oidcToken = (OIDCAuthenticationToken) auth;
 
         if (!(oidcToken.getUserInfo() instanceof CHUserInfo)) {
-            throw new AccessDeniedException("Invalid UserInfo object");
+            throw new InvalidTokenException("Invalid UserInfo object");
         }
 
         return (CHUserInfo) oidcToken.getUserInfo();

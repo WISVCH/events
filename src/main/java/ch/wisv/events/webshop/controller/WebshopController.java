@@ -3,6 +3,7 @@ package ch.wisv.events.webshop.controller;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import org.thymeleaf.util.ArrayUtils;
 
@@ -11,16 +12,39 @@ import org.thymeleaf.util.ArrayUtils;
  */
 abstract class WebshopController {
 
+    /** Redirect to events home. */
+    static final String REDIRECT_EVENTS_HOME = "redirect:/";
+
+    /** Model attr Customer. */
+    static final String MODEL_ATTR_CUSTOMER = "customer";
+
+    /** Model attr Order. */
+    static final String MODEL_ATTR_ORDER = "order";
+
+    /** Model attr message type error. */
+    static final String MODEL_ATTR_ERROR = "error";
+
+    /** Model attr message type success. */
+    static final String MODEL_ATTR_SUCCESS = "success";
+
+    /** Model attr message type message. */
+    static final String MODEL_ATTR_MESSAGE = "message";
+
     /** OrderService. */
-    protected final OrderService orderService;
+    final OrderService orderService;
+
+    /** AuthenticationService. */
+    final AuthenticationService authenticationService;
 
     /**
      * WebshopController constructor.
      *
-     * @param orderService of type OrderService
+     * @param orderService          of type OrderService
+     * @param authenticationService of type AuthenticationService.
      */
-    protected WebshopController(OrderService orderService) {
+    protected WebshopController(OrderService orderService, AuthenticationService authenticationService) {
         this.orderService = orderService;
+        this.authenticationService = authenticationService;
     }
 
     /**

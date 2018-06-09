@@ -30,15 +30,17 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row">
-                <div class="col-5">
+                <div class="col-12 col-md-5">
                     <h4 class="display-5 mb-5">CH member</h4>
 
                     <p class="mb-2">
-                        Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V. 'Christiaan Huygens'
+                        Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V.
+                        'Christiaan Huygens'
                         and are in possession of a CH account or have your NetID be linked to your membership.
                     </p>
 
-                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chconnect'}" class="btn btn-block btn-info my-4">
+                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chconnect'}"
+                       class="btn btn-block btn-info my-4">
                         Checkout using CH Connect
                     </a>
 
@@ -46,7 +48,7 @@
                         Are you a CH member, but can not make use of CH Connect? Please send an email to <a href="#">board@ch.tudelft.nl</a>
                     </p>
                 </div>
-                <div class="col-2">
+                <div class="col-12 col-md-2">
                     <div class="d-flex flex-column align-self-stretch align-items-center h-100">
                         <div class="d-flex align-self-stretch h-100 justify-content-center">
                             <div class="vertical-line"></div>
@@ -58,14 +60,15 @@
                     </div>
 
                 </div>
-                <div class="col-5">
+                <div class="col-12 col-md-5">
                     <h4 class="display-5 mb-5">New customer</h4>
 
                     <p class="mb2">
                         Not a CH member? No problem, proceed the checkout as a guest.
                     </p>
 
-                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/guest'}" class="btn btn-block btn-info my-4">
+                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/guest'}"
+                       class="btn btn-block btn-info my-4">
                         Checkout as guest
                     </a>
                 </div>
