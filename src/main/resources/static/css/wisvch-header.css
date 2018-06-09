@@ -39,17 +39,21 @@ body.menu-open .page-header {
     }
 }
 
-.wisv-header {
-    height: 4.75rem
-}
-
 .wisv-header .container-fluid .row {
     height: 4.75rem;
 }
 
+.wisv-header-bg {
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
+}
+
+.navbar .logo img {
+    height: 5.625rem;
+}
+
 .wisv-header.header-left {
     width: 100%;
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 100px repeat;
     position: relative;
     z-index: 3
 }
