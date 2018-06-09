@@ -16,6 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
 
+    /** Ticket unique code length. */
+    private static final int TICKET_UNIQUE_LENGTH = 6;
+
+    /** Ticket unique code allowed chars. */
+    private static final String TICKET_UNIQUE_ALLOWED_CHARS = "0123456789";
+
     /** TicketRepository. */
     private final TicketRepository ticketRepository;
 
@@ -114,10 +120,10 @@ public class TicketServiceImpl implements TicketService {
      * @return String
      */
     private String generateUniqueString(Product product) {
-        String ticketUnique = RandomStringUtils.random(6, "0123456789");
+        String ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
 
         while (ticketRepository.existsByProductAndUniqueCode(product, ticketUnique)) {
-            ticketUnique = RandomStringUtils.random(6, "0123456789");
+            ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
         }
 
         return ticketUnique;
