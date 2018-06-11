@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.ticket;
 
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.TicketRepository;
@@ -100,14 +101,18 @@ public class TicketServiceImpl implements TicketService {
 
         List<Ticket> tickets = new ArrayList<>();
 
-        order.getOrderProducts().stream().map(orderProduct -> new Ticket(
-                order.getOwner(),
-                orderProduct.getProduct(),
-                this.generateUniqueString(orderProduct.getProduct())
-        )).forEach(ticket -> {
-            tickets.add(ticket);
-            ticketRepository.saveAndFlush(ticket);
-        });
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            for (int i = 0; i < orderProduct.getAmount(); i++) {
+                Ticket ticket = new Ticket(
+                        order.getOwner(),
+                        orderProduct.getProduct(),
+                        this.generateUniqueString(orderProduct.getProduct())
+                );
+
+                tickets.add(ticket);
+                ticketRepository.saveAndFlush(ticket);
+            }
+        }
 
         return tickets;
     }
