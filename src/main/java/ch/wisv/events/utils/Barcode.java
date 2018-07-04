@@ -14,6 +14,12 @@ public class Barcode {
     private static final int LENGTH_BARCODE_EAN_13 = 13;
 
     /**
+     * Utility classes should not have a public or default constructor.
+     */
+    private Barcode() {
+    }
+
+    /**
      * Is barcode a valid EanCode.
      *
      * @param barcode of type String

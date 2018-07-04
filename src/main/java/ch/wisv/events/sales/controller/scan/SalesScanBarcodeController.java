@@ -24,12 +24,6 @@ public class SalesScanBarcodeController {
     private static final String BARCODE_ALLOWED_CHARS = "0123456789";
 
     /**
-     * SalesScanEventController.
-     */
-    public SalesScanBarcodeController() {
-    }
-
-    /**
      * View to scan a ticket/code for an event.
      *
      * @param model      of type Model
