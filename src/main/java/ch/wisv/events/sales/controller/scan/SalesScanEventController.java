@@ -30,6 +30,15 @@ public class SalesScanEventController {
     /** Unique code length. */
     private static final int UNIQUE_CODE_LENGTH = 6;
 
+    /** Attribute event. */
+    private static final String ATTR_EVENT = "event";
+
+    /** Attribute error. */
+    private static final String ATTR_ERROR = "error";
+
+    /** Default return redirect on error. */
+    private static final String ERROR_REDIRECT = "redirect:/sales/scan/";
+
     /** EventService. */
     private final EventService eventService;
 
@@ -61,13 +70,13 @@ public class SalesScanEventController {
     public String barcodeScanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);
-            model.addAttribute("event", event);
+            model.addAttribute(ATTR_EVENT, event);
 
             return "sales/scan/event/" + method;
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(ATTR_ERROR, e.getMessage());
 
-            return "redirect:/sales/scan/";
+            return ERROR_REDIRECT;
         }
     }
 
@@ -135,7 +144,7 @@ public class SalesScanEventController {
         redirect.addFlashAttribute("redirect", redirectUrl);
 
         if (code.length() != UNIQUE_CODE_LENGTH) {
-            redirect.addFlashAttribute("error", "Invalid unique code length!");
+            redirect.addFlashAttribute(ATTR_ERROR, "Invalid unique code length!");
 
             return "redirect:/sales/scan/ticket/error";
         }
@@ -153,7 +162,7 @@ public class SalesScanEventController {
                 return "redirect:/sales/scan/ticket/double";
             }
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(ATTR_ERROR, e.getMessage());
 
             return "redirect:/sales/scan/ticket/error";
         }
