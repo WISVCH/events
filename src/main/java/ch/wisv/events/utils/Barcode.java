@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Barcode helper class.
  */
-public class Barcode {
+public final class Barcode {
 
     /** In ASCII code, the numbers (digits) start from 48. */
     private static final int ASCII_START_DIGITS = 48;
