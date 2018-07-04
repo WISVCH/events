@@ -1,10 +1,14 @@
 package ch.wisv.events;
 
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.mail.MailService;
+import ch.wisv.events.utils.LdapGroup;
 import ch.wisv.events.webshop.service.PaymentsService;
+import com.google.common.collect.ImmutableList;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
@@ -44,6 +48,17 @@ public class EventsApplicationTest {
     @Primary
     public MailService mailService() {
         return Mockito.mock(MailService.class);
+    }
+
+    @Bean
+    @Primary
+    public AuthenticationService authenticationService() {
+        AuthenticationService service = Mockito.mock(AuthenticationService.class);
+        Customer customer = new Customer();
+        customer.setLdapGroups(ImmutableList.of(LdapGroup.BEHEER));
+        Mockito.when(service.getCurrentCustomer()).thenReturn(customer);
+
+        return service;
     }
 
     @Bean
