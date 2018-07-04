@@ -67,7 +67,7 @@ public class SalesScanEventController {
      * @return String
      */
     @GetMapping("/{method}")
-    public String barcodeScanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
+    public String scanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);
             model.addAttribute(ATTR_EVENT, event);

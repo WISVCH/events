@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-    /**  /** Ticket unique code length. */
+    /** /** Ticket unique code length. */
     private static final int TICKET_UNIQUE_LENGTH = 6;
 
     /** Ticket unique code allowed chars. */
@@ -48,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket getByUniqueCode(Product product, String uniqueCode) throws TicketNotFoundException {
         return ticketRepository.findByProductAndUniqueCode(product, uniqueCode)
-                    .orElseThrow(() -> new TicketNotFoundException(""));
+                .orElseThrow(TicketNotFoundException::new);
     }
 
     /**
@@ -63,7 +63,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket getByKey(String key) throws TicketNotFoundException {
         return ticketRepository.findByKey(key)
-                .orElseThrow(() -> new TicketNotFoundException(""));
+                .orElseThrow(TicketNotFoundException::new);
     }
 
     /**

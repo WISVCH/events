@@ -1,16 +1,19 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.ServiceTest;
+import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
+import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -20,6 +23,7 @@ import org.junit.Test;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,6 +71,50 @@ public class TicketServiceTest extends ServiceTest {
     @After
     public void tearDown() {
         ticketService = null;
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void getByUniqueCode() throws Exception {
+        when(ticketRepository.findByProductAndUniqueCode(product, "123456")).thenReturn(Optional.of(ticket1));
+        Ticket tickets = ticketService.getByUniqueCode(product, "123456");
+
+        assertEquals(ticket1, tickets);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void getByUniqueCodeException() throws Exception {
+        thrown.expect(TicketNotFoundException.class);
+        when(ticketRepository.findByProductAndUniqueCode(product, "123456")).thenReturn(Optional.empty());
+
+        ticketService.getByUniqueCode(product, "123456");
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void getByKey() throws Exception {
+        when(ticketRepository.findByKey("123456")).thenReturn(Optional.of(ticket1));
+        Ticket tickets = ticketService.getByKey("123456");
+
+        assertEquals(ticket1, tickets);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void getByKeyException() throws Exception {
+        thrown.expect(TicketNotFoundException.class);
+        when(ticketRepository.findByKey("123456")).thenReturn(Optional.empty());
+
+        ticketService.getByKey("123456");
     }
 
     /**
@@ -154,6 +202,14 @@ public class TicketServiceTest extends ServiceTest {
 
         verify(ticketRepository, times(random)).findAllByProductAndOwner(product, customer);
         verify(ticketRepository, times(random)).delete(ImmutableList.of(ticket3));
+    }
+
+    @Test
+    public void updateStatus() {
+        Ticket ticket = mock(Ticket.class);
+        ticketService.updateStatus(ticket, TicketStatus.SCANNED);
+
+        verify(ticket, times(1)).setStatus(TicketStatus.SCANNED);
     }
 
     /**

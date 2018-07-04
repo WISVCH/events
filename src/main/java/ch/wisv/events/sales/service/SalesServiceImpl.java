@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public List<Event> getAllGrantedEventByCustomer(Customer customer) {
-        if (customer.getLdapGroups().contains(ch.wisv.events.utils.LdapGroup.BESTUUR)) {
+        if (customer.getLdapGroups().contains(LdapGroup.BESTUUR)) {
             return eventService.getUpcoming();
         } else {
             return eventService.getUpcoming().stream()

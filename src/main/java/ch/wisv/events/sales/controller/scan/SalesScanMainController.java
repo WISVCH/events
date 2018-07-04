@@ -48,21 +48,4 @@ public class SalesScanMainController {
 
         return "sales/scan/index";
     }
-
-    /**
-     * Results of the scanning.
-     *
-     * @param model of type Model
-     *
-     * @return String
-     */
-    @GetMapping("/result/")
-    public String result(Model model) {
-        if (!model.containsAttribute("result") && !model.containsAttribute("product")) {
-            return "redirect:/sales/scan/";
-        }
-
-        return "scan/result";
-    }
-
 }
