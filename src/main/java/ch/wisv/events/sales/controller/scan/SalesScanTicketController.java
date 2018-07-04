@@ -1,6 +1,5 @@
 package ch.wisv.events.sales.controller.scan;
 
-import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,33 +15,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('USER')")
 public class SalesScanTicketController {
 
-    /** TicketService. */
-    private final TicketService ticketService;
+    /** Attribute redirect. */
+    private static final String ATTR_REDIRECT = "redirect";
 
-    /**
-     * SalesScanEventController.
-     *
-     * @param ticketService of type TicketService
-     */
-    public SalesScanTicketController(TicketService ticketService) {
-        this.ticketService = ticketService;
-    }
+    /** Attribute error. */
+    private static final String ATTRIBUTE_ERROR = "error";
+
+    /** Attribute ticket. */
+    private static final String ATTR_TICKET = "ticket";
+
+    /** Default return redirect. */
+    private static final String DEFAULT_REDIRECT = "/sales/scan/";
+
+    /** Default return redirect on error. */
+    private static final String ERROR_REDIRECT = "redirect:/sales/scan/";
 
     /**
      * Ticket index view.
      *
-     * @param model  of type Model
+     * @param model of type Model
      *
      * @return String
      */
     @GetMapping("/error")
     public String error(Model model) {
-        if (!model.containsAttribute("error")) {
-            return "redirect:/sales/scan/";
+        if (!model.containsAttribute(ATTRIBUTE_ERROR)) {
+            return ERROR_REDIRECT;
         }
 
-        if (!model.containsAttribute("redirect")) {
-            model.addAttribute("redirect", "/sales/scan/");
+        if (!model.containsAttribute(ATTR_REDIRECT)) {
+            model.addAttribute(ATTR_REDIRECT, DEFAULT_REDIRECT);
         }
 
         return "sales/scan/ticket/error";
@@ -58,15 +60,14 @@ public class SalesScanTicketController {
      */
     @GetMapping("/{status}")
     public String index(Model model, @PathVariable String status) {
-        if (!model.containsAttribute("ticket")) {
-            return "redirect:/sales/scan/";
+        if (!model.containsAttribute(ATTR_TICKET)) {
+            return ERROR_REDIRECT;
         }
 
-        if (!model.containsAttribute("redirect")) {
-            model.addAttribute("redirect", "/sales/scan/");
+        if (!model.containsAttribute(ATTR_REDIRECT)) {
+            model.addAttribute(ATTR_REDIRECT, DEFAULT_REDIRECT);
         }
 
         return "sales/scan/ticket/" + status;
     }
-
 }
