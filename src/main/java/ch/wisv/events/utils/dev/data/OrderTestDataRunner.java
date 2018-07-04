@@ -21,10 +21,16 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * OrderTestDataRunner.
+ */
 @Component
 @Profile("dev")
 @Order(value = 6)
 public class OrderTestDataRunner extends TestDataRunner {
+
+    /** Ticket Unique code length. */
+    private static final int TICKET_UNIQUE_CODE_LENGTH = 6;
 
     /** OrderRepository. */
     private final OrderRepository orderRepository;
@@ -124,7 +130,7 @@ public class OrderTestDataRunner extends TestDataRunner {
                 Ticket ticket = new Ticket(
                         order.getOwner(),
                         orderProduct.getProduct(),
-                        RandomStringUtils.randomNumeric(6)
+                        RandomStringUtils.randomNumeric(TICKET_UNIQUE_CODE_LENGTH)
                 );
                 ticket.setKey(UUID.randomUUID().toString());
                 ticket.setStatus(TicketStatus.OPEN);
