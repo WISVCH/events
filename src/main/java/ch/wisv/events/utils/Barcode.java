@@ -40,7 +40,7 @@ public class Barcode {
      *
      * @return int
      */
-    static int calculateChecksum(char[] chars) {
+    public static int calculateChecksum(char[] chars) {
         int evenCount = 0;
         int oddCount = 0;
 

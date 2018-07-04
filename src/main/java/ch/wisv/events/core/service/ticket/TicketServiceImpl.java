@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-    /** Ticket unique code length. */
+    /**  /** Ticket unique code length. */
     private static final int TICKET_UNIQUE_LENGTH = 6;
 
     /** Ticket unique code allowed chars. */
