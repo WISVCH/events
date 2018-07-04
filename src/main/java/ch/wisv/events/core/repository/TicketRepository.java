@@ -51,7 +51,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     boolean existsByProductAndUniqueCode(Product product, String uniqueCode);
 
     /**
-     * Find a Ticket by Product and UniqueCode
+     * Find a Ticket by Product and UniqueCode.
      *
      * @param product    of type Product
      * @param uniqueCode of type String
