@@ -53,16 +53,17 @@ public class SalesScanEventController {
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
+     * @param method   of type String
      *
      * @return String
      */
-    @GetMapping("/barcode")
-    public String barcodeScanner(Model model, RedirectAttributes redirect, @PathVariable String key) {
+    @GetMapping("/{method}")
+    public String barcodeScanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);
             model.addAttribute("event", event);
 
-            return "sales/scan/event/barcode";
+            return "sales/scan/event/" + method;
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
@@ -82,29 +83,6 @@ public class SalesScanEventController {
         String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LENGTH - 1), barcode.length() - 1);
 
         return this.handleScanTicket(redirect, key, uniqueCode, "/sales/scan/event/" + key + "/barcode");
-    }
-
-    /**
-     * View to scan a ticket/code for an event.
-     *
-     * @param model    of type Model
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     *
-     * @return String
-     */
-    @GetMapping("/code")
-    public String codeScanner(Model model, RedirectAttributes redirect, @PathVariable String key) {
-        try {
-            Event event = eventService.getByKey(key);
-            model.addAttribute("event", event);
-
-            return "sales/scan/event/code";
-        } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-
-            return "redirect:/sales/scan/";
-        }
     }
 
     /**
