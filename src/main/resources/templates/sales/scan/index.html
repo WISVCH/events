@@ -30,15 +30,14 @@
 
             <div class="row mb-4">
                 <div class="col">
-                    <h3 class="text-center">Select a product</h3>
+                    <h3 class="text-center text-uppercase">Select an event</h3>
                 </div>
             </div>
-            <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-            <div class="row mb-4" th:each=" product : ${products}">
+            <div class="row mb-4" th:each=" event : ${events}">
                 <div class="col">
-                    <a th:href="@{'/scan/product/' + ${product.getKey()} + '/'}"
+                    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/barcode'}"
                        class="btn btn-lg btn-block btn-secondary">
-                        <span th:text="${product.getTitle()}"></span>
+                        <span th:text="${event.getTitle()}"></span>
                         <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>
                     </a>
                 </div>

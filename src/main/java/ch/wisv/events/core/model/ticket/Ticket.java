@@ -2,6 +2,7 @@ package ch.wisv.events.core.model.ticket;
 
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.product.Product;
+import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,6 +23,12 @@ public class Ticket {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     public Integer id;
+
+    /**
+     * Unique code of the ticket.
+     */
+    @NotNull
+    public String key;
 
     /**
      * Customer which owns the Ticket.
@@ -57,6 +64,7 @@ public class Ticket {
      * Ticket constructor.
      */
     public Ticket() {
+        this.key = UUID.randomUUID().toString();
         this.status = TicketStatus.OPEN;
     }
 
@@ -73,7 +81,6 @@ public class Ticket {
         this.product = product;
         this.uniqueCode = uniqueCode;
         this.valid = true;
-        this.status = TicketStatus.OPEN;
     }
 
 }

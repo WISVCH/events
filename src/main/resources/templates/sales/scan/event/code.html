@@ -18,55 +18,46 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            height: calc(100vh);
+            width: calc(100vw);
+        }
+
+        .container-fluid h3 {
+            border-bottom: 0;
+        }
+    </style>
 </head>
 
 <body id="scanPage">
 <nav th:replace="fragments/header :: header"></nav>
 
+
 <div class="container-fluid">
-    <div class="row">
-        <main class="col-12 ml-auto p-5" role="main">
+    <div class="row pt-5">
+        <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row text-center">
-                <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
-                <h3 class="w-100 mb-5" th:text="${product.getTitle()}"></h3>
+                <h3 class="w-100 mb-5" th:text="${event.getTitle()}"></h3>
 
-                <form th:action="@{./}" method="POST" id="formScan" class="w-100">
-                    <input type="hidden" name="rfidToken" id="rfidToken">
-
-                    <h4 class="text-center mb-4">Scan RFID- or NFC card</h4>
-
-                    <h1 class="mb-4 pb-0 border-bottom-0" style="font-weight: 100;">or</h1>
-
-                    <div class="col-10 mx-auto">
-                        <h4 class="mb-4">Fill in an unique code</h4>
+                <div class="col-12">
+                    <form th:action="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" method="POST">
                         <div class="form-group">
-                            <input type="text" class="form-control input-lg" id="uniqueCode" name="uniqueCode"
+                            <input type="text" class="form-control input-lg" id="code" name="code"
                                    placeholder="Unique code">
                         </div>
 
                         <button type="submit" class="btn btn-lg btn-block btn-secondary">Submit</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </main>
     </div>
 </div>
 
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script>
-    $("#scanPage").on('keypress', function (e) {
-        var token = $("#rfidToken");
-
-        if (e.which === 13) {
-            $("#formScan").submit();
-            return false;
-        }
-        token.val(token.val() + e.key);
-    });
-</script>
 </body>

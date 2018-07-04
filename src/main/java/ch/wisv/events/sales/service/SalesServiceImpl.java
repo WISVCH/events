@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * SalesServiceImpl class.
+ */
 @Service
 public class SalesServiceImpl implements SalesService {
 
@@ -38,8 +41,9 @@ public class SalesServiceImpl implements SalesService {
         if (customer.getLdapGroups().contains(ch.wisv.events.utils.LdapGroup.BESTUUR)) {
             return eventService.getUpcoming();
         } else {
-            return eventService.getUpcoming().stream().filter(events -> customer.getLdapGroups().contains(events.getOrganizedBy())).collect(Collectors
-                                                                                                                                                    .toList());
+            return eventService.getUpcoming().stream()
+                    .filter(events -> customer.getLdapGroups().contains(events.getOrganizedBy()))
+                    .collect(Collectors.toList());
         }
     }
 
@@ -52,7 +56,8 @@ public class SalesServiceImpl implements SalesService {
     public List<Product> getAllGrantedProductByCustomer(Customer customer) {
         List<Event> events = this.getAllGrantedEventByCustomer(customer);
 
-        return events.stream().flatMap(event -> event.getProducts().stream()).filter(product -> LocalDateTime.now()
-                .isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd())).collect(Collectors.toList());
+        return events.stream().flatMap(event -> event.getProducts().stream())
+                .filter(product -> LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd()))
+                .collect(Collectors.toList());
     }
 }
