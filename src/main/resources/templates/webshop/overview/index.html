@@ -73,16 +73,20 @@
                     <table class="table table-sm" id="ticketTable">
                         <thead class="thead-inverse bg-primary">
                         <tr>
-                            <th class="w-50">Description</th>
-                            <th class="w-25">Code</th>
-                            <th class="w-25">Status</th>
+                            <th>Description</th>
+                            <th>Code</th>
+                            <th class="text-right">Status</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="ticket : ${tickets}">
                             <td th:text="${ticket.getProduct().getTitle()}"></td>
-                            <td th:text="${ticket.getUniqueCode()}"></td>
-                            <td th:text="${ticket.getStatus()}"></td>
+                            <td>
+                                <a th:href="@{'/sales/scan/barcode/' + ${ticket.getUniqueCode()}}"
+                                   th:text="${ticket.getUniqueCode()}">
+                                </a>
+                            </td>
+                            <td class="text-right" th:text="${ticket.getStatus()}"></td>
                         </tr>
                         </tbody>
                     </table>

@@ -1,15 +1,40 @@
 package ch.wisv.events.core.service.ticket;
 
+import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
+import ch.wisv.events.core.model.ticket.TicketStatus;
 import java.util.List;
 
 /**
  * TicketService.
  */
 public interface TicketService {
+
+    /**
+     * Get ticket by unique code.
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     *
+     * @return Ticket
+     *
+     * @throws TicketNotFoundException when ticket is not found
+     */
+    Ticket getByUniqueCode(Product product, String uniqueCode) throws TicketNotFoundException;
+
+    /**
+     * Get ticket by key.
+     *
+     * @param key of type String
+     *
+     * @return Ticket
+     *
+     * @throws TicketNotFoundException when ticket is not found
+     */
+    Ticket getByKey(String key) throws TicketNotFoundException;
 
     /**
      * Get all Ticket by a Product and Customer.
@@ -54,4 +79,12 @@ public interface TicketService {
      * @param order of type Order
      */
     void deleteByOrder(Order order);
+
+    /**
+     * Update the Ticket status.
+     *
+     * @param ticket of type Ticket
+     * @param status of type TicketStatus
+     */
+    void updateStatus(Ticket ticket, TicketStatus status);
 }

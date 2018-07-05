@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales > Scan</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            height: calc(100vh);
+            width: calc(100vw);
+        }
+
+        .overlay, .container-fluid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .container-fluid {
+            z-index: 2;
+        }
+
+        .container-fluid h3 {
+            border-bottom: 0;
+            color: #f3f3f3;
+            font-size: 18px;
+        }
+
+        .overlay-upper,
+        .overlay-lower {
+            position: relative;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            height: calc(33vh);
+        }
+
+        .overlay-upper {
+            top: 0;
+        }
+
+        .overlay-lower {
+            top: calc(34vh);
+        }
+
+        #interactive video,
+        #interactive canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body id="scanPage">
+<nav th:replace="fragments/header :: header"></nav>
+
+
+<div class="overlay">
+    <div class="overlay-upper"></div>
+    <div class="overlay-lower">
+        <div th:if="${error}" class="alert alert-dismissible fade show alert-danger w-100" role="alert">
+            <span class="fa fa-exclamation" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <strong>ERROR:</strong> <span th:text="${error}"></span>
+        </div>
+    </div>
+</div>
+<div id="interactive" class="viewport"></div>
+
+
+<div class="container-fluid">
+    <div class="row align-items-center" style="height: calc(33vh - 56px);">
+        <div class="col-12 text-center text-light">
+            <p>Scan barcode for event</p>
+            <h3 th:text="${event.getTitle()}"></h3>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-bottom p-3">
+    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" class="btn btn-lg btn-block btn-dark">
+        go to code scanner
+    </a>
+</div>
+
+<form th:action="@{'/sales/scan/event/' + ${event.getKey()} + '/barcode'}" method="POST" id="formScan">
+    <input type="hidden" name="barcode" id="barcode">
+</form>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="https://serratus.github.io/quaggaJS/examples/js/quagga.min.js"></script>
+<script>
+    $(function () {
+        var App = {
+            state: {
+                inputStream: {
+                    type: "LiveStream",
+                    constraints: {
+                        width: {min: 640},
+                        height: {min: 480},
+                        aspectRatio: {min: 1, max: 100},
+                        facingMode: "environment" // or user
+                    }
+                },
+                locator: {
+                    patchSize: "medium",
+                    halfSample: true
+                },
+                numOfWorkers: 2,
+                frequency: 10,
+                decoder: {
+                    readers: [{
+                        format: "ean_reader",
+                        config: {}
+                    }]
+                },
+                locate: true
+            },
+            init: function () {
+                Quagga.init(this.state, function (err) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    Quagga.start();
+                });
+            }
+        };
+
+        App.init();
+
+        Quagga.onProcessed(function (result) {
+            var drawingCtx = Quagga.canvas.ctx.overlay,
+                drawingCanvas = Quagga.canvas.dom.overlay;
+
+            if (result) {
+                if (result.boxes) {
+                    drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                    result.boxes.filter(function (box) {
+                        return box !== result.box;
+                    }).forEach(function (box) {
+                        Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, {color: "green", lineWidth: 2});
+                    });
+                }
+
+                if (result.box) {
+                    Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "#00F", lineWidth: 2});
+                }
+
+                if (result.codeResult && result.codeResult.code) {
+                    Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx, {color: 'red', lineWidth: 3});
+                }
+            }
+        });
+
+        Quagga.onDetected(function (result) {
+            var code = result.codeResult.code;
+
+            $("#barcode").val(code);
+            $("#formScan").submit();
+        });
+    });
+</script>
+</body>

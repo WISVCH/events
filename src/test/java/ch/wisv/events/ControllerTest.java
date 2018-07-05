@@ -1,6 +1,7 @@
 package ch.wisv.events;
 
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -12,8 +13,11 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -58,6 +62,9 @@ public abstract class ControllerTest {
     protected CustomerRepository customerRepository;
 
     @Autowired
+    protected TicketService ticketService;
+
+    @Autowired
     protected OrderProductRepository orderProductRepository;
 
     @Autowired
@@ -83,6 +90,16 @@ public abstract class ControllerTest {
         productRepository.deleteAll();
         customerRepository.deleteAll();
         orderProductRepository.deleteAll();
+    }
+
+    protected Event createEvent() {
+        Event event = new Event();
+        event.setTitle(RandomStringUtils.random(12));
+        event.setKey(UUID.randomUUID().toString());
+
+        eventRepository.saveAndFlush(event);
+
+        return event;
     }
 
     protected Customer createCustomer() {
