@@ -101,6 +101,12 @@
     </div>
 </div>
 
+<div class="fixed-bottom p-3">
+    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" class="btn btn-lg btn-block btn-dark">
+        go to code scanner
+    </a>
+</div>
+
 <form th:action="@{'/sales/scan/event/' + ${event.getKey()} + '/barcode'}" method="POST" id="formScan">
     <input type="hidden" name="barcode" id="barcode">
 </form>
