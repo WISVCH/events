@@ -42,6 +42,15 @@ public class SalesScanEventController {
     /** Default return redirect on error. */
     private static final String ERROR_REDIRECT = "redirect:/sales/scan/";
 
+    /** Redirect when ticket scan results in an error. */
+    private static final String REDIRECT_TICKET_ERROR = "redirect:/sales/scan/ticket/error";
+
+    /** Redirect when ticket scan is successful. */
+    private static final String REDIRECT_TICKET_SUCCESS = "redirect:/sales/scan/ticket/success";
+
+    /** Redirect when ticket has already been scanned. */
+    private static final String REDIRECT_TICKET_DOUBLE = "redirect:/sales/scan/ticket/double";
+
     /** EventService. */
     private final EventService eventService;
 
@@ -95,7 +104,7 @@ public class SalesScanEventController {
         if (barcode.length() != BARCODE_LENGTH) {
             redirect.addFlashAttribute(ATTR_ERROR, "Invalid EAN 13 barcode length!");
 
-            return "redirect:/sales/scan/ticket/error";
+            return REDIRECT_TICKET_ERROR;
         }
 
         String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LENGTH + 1), barcode.length() - 1);
@@ -115,7 +124,7 @@ public class SalesScanEventController {
         if (code.length() != UNIQUE_CODE_LENGTH) {
             redirect.addFlashAttribute(ATTR_ERROR, "Invalid unique code length!");
 
-            return "redirect:/sales/scan/ticket/error";
+            return REDIRECT_TICKET_ERROR;
         }
 
         return this.handleScanTicket(redirect, key, code, "/sales/scan/event/" + key + "/code");
@@ -166,14 +175,14 @@ public class SalesScanEventController {
             if (ticket.getStatus() == TicketStatus.OPEN) {
                 ticketService.updateStatus(ticket, TicketStatus.SCANNED);
 
-                return "redirect:/sales/scan/ticket/success";
+                return REDIRECT_TICKET_SUCCESS;
             } else {
-                return "redirect:/sales/scan/ticket/double";
+                return REDIRECT_TICKET_DOUBLE;
             }
         } catch (EventsException e) {
             redirect.addFlashAttribute(ATTR_ERROR, e.getMessage());
 
-            return "redirect:/sales/scan/ticket/error";
+            return REDIRECT_TICKET_ERROR;
         }
     }
 
