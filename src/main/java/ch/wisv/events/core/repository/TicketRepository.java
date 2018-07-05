@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -48,4 +49,23 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
      * @return boolean
      */
     boolean existsByProductAndUniqueCode(Product product, String uniqueCode);
+
+    /**
+     * Find a Ticket by Product and UniqueCode.
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     *
+     * @return Optional
+     */
+    Optional<Ticket> findByProductAndUniqueCode(Product product, String uniqueCode);
+
+    /**
+     * Find Ticket by key.
+     *
+     * @param key of type String
+     *
+     * @return Optional
+     */
+    Optional<Ticket> findByKey(String key);
 }

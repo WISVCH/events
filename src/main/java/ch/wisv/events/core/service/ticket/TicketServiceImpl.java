@@ -1,10 +1,12 @@
 package ch.wisv.events.core.service.ticket;
 
+import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
+import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-    /** Ticket unique code length. */
+    /** /** Ticket unique code length. */
     private static final int TICKET_UNIQUE_LENGTH = 6;
 
     /** Ticket unique code allowed chars. */
@@ -33,6 +35,35 @@ public class TicketServiceImpl implements TicketService {
      */
     public TicketServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
+    }
+
+    /**
+     * Get Ticket by unique code.
+     *
+     * @param product    of type Product
+     * @param uniqueCode of type String
+     *
+     * @return Ticket
+     */
+    @Override
+    public Ticket getByUniqueCode(Product product, String uniqueCode) throws TicketNotFoundException {
+        return ticketRepository.findByProductAndUniqueCode(product, uniqueCode)
+                .orElseThrow(TicketNotFoundException::new);
+    }
+
+    /**
+     * Get ticket by key.
+     *
+     * @param key of type String
+     *
+     * @return Ticket
+     *
+     * @throws TicketNotFoundException when ticket is not found
+     */
+    @Override
+    public Ticket getByKey(String key) throws TicketNotFoundException {
+        return ticketRepository.findByKey(key)
+                .orElseThrow(TicketNotFoundException::new);
     }
 
     /**
@@ -84,6 +115,18 @@ public class TicketServiceImpl implements TicketService {
 
             ticketRepository.delete(tickets);
         });
+    }
+
+    /**
+     * Update the Ticket status.
+     *
+     * @param ticket of type Ticket
+     * @param status of type TicketStatus
+     */
+    @Override
+    public void updateStatus(Ticket ticket, TicketStatus status) {
+        ticket.setStatus(status);
+        ticketRepository.saveAndFlush(ticket);
     }
 
     /**

@@ -68,9 +68,6 @@ public class OrderServiceImplTest extends ServiceTest {
     @MockBean
     private TicketService ticketService;
 
-    @MockBean
-    private MailServiceImpl mailService;
-
     /** OrderService. */
     @Autowired
     private OrderService orderService;

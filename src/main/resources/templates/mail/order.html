@@ -129,7 +129,7 @@
     </style>
     <style type="text/css" media="screen">
         @media screen {
-        @import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
+            @import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
             /* Thanks Outlook 2013! */
             * {
                 font-family: 'PT Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
@@ -311,7 +311,9 @@
                                                             <td class="white-header"
                                                                 th:text="${ticket.getUniqueCode()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                236429
+                                                                <a th:href="@{'/sales/scan/barcode/' + ${ticket.getUniqueCode()}}"
+                                                                   th:text="${ticket.getUniqueCode()}">
+                                                                </a>
                                                             </td>
                                                             <td class="white-header"
                                                                 th:text="'€ ' + ${#numbers.formatDecimal(ticket.getProduct().getCost(), 1, 'POINT', 2, 'COMMA')}"

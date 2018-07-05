@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events - Sales > Scan</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body style="width: calc(100vw); height: calc(100vh); background-color: #6dc04f">
+<!--/*@thymesVar id="ticket" type="ch.wisv.events.core.model.ticket.Ticket"*/-->
+<div class="container-fluid py-2 text-white" style="height: calc(100vh - .5rem);">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fa fa-check" aria-hidden="true"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;"
+                th:text="${ticket.getProduct().getTitle()}"></h4>
+            <h4 class="display-4 text-white" style="font-size: 2rem;" th:text="${ticket.getOwner().getName()}"></h4>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    document.addEventListener("click", function (ev) {
+        window.location.href = '[[@{${redirect}}]]'
+    })
+</script>
+</html>
