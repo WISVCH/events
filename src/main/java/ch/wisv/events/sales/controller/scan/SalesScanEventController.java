@@ -30,6 +30,9 @@ public class SalesScanEventController {
     /** Unique code length. */
     private static final int UNIQUE_CODE_LENGTH = 6;
 
+    /** Barcode length. */
+    private static final int BARCODE_LENGTH = 13;
+
     /** Attribute event. */
     private static final String ATTR_EVENT = "event";
 
@@ -89,7 +92,13 @@ public class SalesScanEventController {
      */
     @PostMapping("/barcode")
     public String barcodeScanner(RedirectAttributes redirect, @PathVariable String key, @RequestParam("barcode") String barcode) {
-        String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LENGTH - 1), barcode.length() - 1);
+        if (barcode.length() != BARCODE_LENGTH) {
+            redirect.addFlashAttribute(ATTR_ERROR, "Invalid EAN 13 barcode length!");
+
+            return "redirect:/sales/scan/ticket/error";
+        }
+
+        String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LENGTH + 1), barcode.length() - 1);
 
         return this.handleScanTicket(redirect, key, uniqueCode, "/sales/scan/event/" + key + "/barcode");
     }
@@ -103,6 +112,12 @@ public class SalesScanEventController {
      */
     @PostMapping("/code")
     public String codeScanner(RedirectAttributes redirect, @PathVariable String key, @RequestParam("code") String code) {
+        if (code.length() != UNIQUE_CODE_LENGTH) {
+            redirect.addFlashAttribute(ATTR_ERROR, "Invalid unique code length!");
+
+            return "redirect:/sales/scan/ticket/error";
+        }
+
         return this.handleScanTicket(redirect, key, code, "/sales/scan/event/" + key + "/code");
     }
 
@@ -127,7 +142,7 @@ public class SalesScanEventController {
                 })
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new TicketNotFoundException("Ticket  " + uniqueCode + " does not exists"));
+                .orElseThrow(() -> new TicketNotFoundException("Ticket " + uniqueCode + " does not exists"));
     }
 
     /**
@@ -142,12 +157,6 @@ public class SalesScanEventController {
      */
     private String handleScanTicket(RedirectAttributes redirect, String key, String code, String redirectUrl) {
         redirect.addFlashAttribute("redirect", redirectUrl);
-
-        if (code.length() != UNIQUE_CODE_LENGTH) {
-            redirect.addFlashAttribute(ATTR_ERROR, "Invalid unique code length!");
-
-            return "redirect:/sales/scan/ticket/error";
-        }
 
         try {
             Event event = eventService.getByKey(key);

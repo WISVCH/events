@@ -76,11 +76,12 @@ public class Ticket {
      * @param uniqueCode of type String
      */
     public Ticket(Customer owner, Product product, String uniqueCode) {
-        super();
         this.owner = owner;
         this.product = product;
         this.uniqueCode = uniqueCode;
         this.valid = true;
+        this.key = UUID.randomUUID().toString();
+        this.status = TicketStatus.OPEN;
     }
 
 }

@@ -1,5 +1,7 @@
 package ch.wisv.events.sales.controller.scan;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.HashSet;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +62,11 @@ public class SalesScanTicketController {
      */
     @GetMapping("/{status}")
     public String index(Model model, @PathVariable String status) {
+        ImmutableSet<String> validStatus = ImmutableSet.of("success", "double");
+        if (!validStatus.contains(status)) {
+            return ERROR_REDIRECT;
+        }
+
         if (!model.containsAttribute(ATTR_TICKET)) {
             return ERROR_REDIRECT;
         }

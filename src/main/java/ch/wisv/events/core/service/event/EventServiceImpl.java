@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * EventService implementation.
+ */
 @Service
 public class EventServiceImpl implements EventService {
 
@@ -166,6 +169,8 @@ public class EventServiceImpl implements EventService {
      * Method assertIsValidEvent ...
      *
      * @param event of type Event
+     *
+     * @throws EventInvalidException when there is something missing in the event.
      */
     private void assertIsValidEvent(Event event) throws EventInvalidException {
         if (event.getTitle() == null || event.getTitle().equals("")) {
