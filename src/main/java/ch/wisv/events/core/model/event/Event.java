@@ -195,15 +195,15 @@ public class Event {
         return this.calcProgress(this.getReserved());
     }
 
-    private double calcProgress(double reserved) {
-        return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
-    }
-
     public int getSold() {
         return products.stream().mapToInt(Product::getSold).sum();
     }
 
     public int getReserved() {
         return products.stream().mapToInt(Product::getReserved).sum();
+    }
+
+    private double calcProgress(double reserved) {
+        return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }
 }

@@ -90,85 +90,34 @@ public class DashboardController {
     }
 
     /**
-     * Method determineTotalCustomersLastMonth ...
+     * Method calculateChangePercentage ...
      *
-     * @return int
-     */
-    private int determineTotalCustomersLastMonth() {
-        return this.customerService.getAllCustomerCreatedAfter(LocalDateTime.now().minusMonths(1)).size();
-    }
-
-    /**
-     * Method determineTotalEventsLastMonth ...
+     * @param previous of type double
+     * @param current  of type double
      *
      * @return double
      */
-    private double determineTotalEventsLastMonth() {
-        return this.eventService.getAllBetween(LocalDateTime.of(2016, 9, 1, 0, 0), LocalDateTime.now().minusMonths(1)).size();
+    private double calculateChangePercentage(double previous, double current) {
+        return Math.round((current - previous) / previous * 10000.d) / 100.d;
     }
 
     /**
-     * Method determineAverageTargetRateCurrentBoard ...
+     * Method determineAttendanceRateEvent ...
+     *
+     * @param event of type Event
      *
      * @return double
      */
-    private double determineAverageTargetRateCurrentBoard() {
-        List<Event> eventsCurrentBoard = this.getEventsCurrentBoard().stream().filter(x -> x.getEnding().isBefore(LocalDateTime.now())).collect(
+    private double determineAttendanceRateEvent(Event event) {
+        List<Ticket> eventTickets = event.getProducts().stream().flatMap(product -> ticketService.getAllByProduct(product).stream()).collect(
                 Collectors.toList());
+        long numberTicketsScanned = eventTickets.stream().filter(ticket -> ticket.getStatus() == TicketStatus.SCANNED).count();
 
-        return this.determineAverageTargetRate(eventsCurrentBoard);
-    }
-
-    /**
-     * Method determineAverageTargetRatePreviousBoard ...
-     *
-     * @return double
-     */
-    private double determineAverageTargetRatePreviousBoard() {
-        List<Event> eventsCurrentBoard = this.getEventsPreviousBoard();
-
-        return this.determineAverageTargetRate(eventsCurrentBoard);
-    }
-
-    /**
-     * Method getEventsCurrentBoard returns the eventsCurrentBoard of this DashboardController object.
-     *
-     * @return the eventsCurrentBoard (type List) of this DashboardController object.
-     */
-    private List<Event> getEventsCurrentBoard() {
-        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear(), 9, 1, 0, 0);
-
-        if (LocalDateTime.now().getMonthValue() < 9) {
-            lowerbound = lowerbound.minusYears(1);
+        if (eventTickets.size() == 0) {
+            return 0.d;
         }
 
-        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
-    }
-
-    /**
-     * Method getEventsPreviousBoard returns the eventsPreviousBoard of this DashboardController object.
-     *
-     * @return the eventsPreviousBoard (type List) of this DashboardController object.
-     */
-    private List<Event> getEventsPreviousBoard() {
-        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear() - 1, 9, 1, 0, 0);
-
-        if (LocalDateTime.now().getMonthValue() < 9) {
-            lowerbound = lowerbound.minusYears(1);
-        }
-
-        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
-    }
-
-    /**
-     * Method determineAverageTargetRate ...
-     *
-     * @param events of type List
-     *
-     * @return double
-     */
-    private double determineAverageTargetRate(List<Event> events) {
-        return events.stream().mapToDouble(Event::calcSoldProgress).average().orElse(0);
+        return Math.round(numberTicketsScanned / eventTickets.size() * 10000.d) / 100.d;
     }
 
     /**
@@ -199,22 +148,37 @@ public class DashboardController {
     }
 
     /**
-     * Method determineAttendanceRateEvent ...
+     * Method determineAverageTargetRate ...
      *
-     * @param event of type Event
+     * @param events of type List
      *
      * @return double
      */
-    private double determineAttendanceRateEvent(Event event) {
-        List<Ticket> eventTickets = event.getProducts().stream().flatMap(product -> ticketService.getAllByProduct(product).stream()).collect(
+    private double determineAverageTargetRate(List<Event> events) {
+        return events.stream().mapToDouble(Event::calcSoldProgress).average().orElse(0);
+    }
+
+    /**
+     * Method determineAverageTargetRateCurrentBoard ...
+     *
+     * @return double
+     */
+    private double determineAverageTargetRateCurrentBoard() {
+        List<Event> eventsCurrentBoard = this.getEventsCurrentBoard().stream().filter(x -> x.getEnding().isBefore(LocalDateTime.now())).collect(
                 Collectors.toList());
-        long numberTicketsScanned = eventTickets.stream().filter(ticket -> ticket.getStatus() == TicketStatus.SCANNED).count();
 
-        if (eventTickets.size() == 0) {
-            return 0.d;
-        }
+        return this.determineAverageTargetRate(eventsCurrentBoard);
+    }
 
-        return Math.round(numberTicketsScanned / eventTickets.size() * 10000.d) / 100.d;
+    /**
+     * Method determineAverageTargetRatePreviousBoard ...
+     *
+     * @return double
+     */
+    private double determineAverageTargetRatePreviousBoard() {
+        List<Event> eventsCurrentBoard = this.getEventsPreviousBoard();
+
+        return this.determineAverageTargetRate(eventsCurrentBoard);
     }
 
     /**
@@ -231,6 +195,24 @@ public class DashboardController {
     }
 
     /**
+     * Method determineTotalCustomersLastMonth ...
+     *
+     * @return int
+     */
+    private int determineTotalCustomersLastMonth() {
+        return this.customerService.getAllCustomerCreatedAfter(LocalDateTime.now().minusMonths(1)).size();
+    }
+
+    /**
+     * Method determineTotalEventsLastMonth ...
+     *
+     * @return double
+     */
+    private double determineTotalEventsLastMonth() {
+        return this.eventService.getAllBetween(LocalDateTime.of(2016, 9, 1, 0, 0), LocalDateTime.now().minusMonths(1)).size();
+    }
+
+    /**
      * Method determineUpcomingEvents ...
      *
      * @return List
@@ -241,14 +223,32 @@ public class DashboardController {
     }
 
     /**
-     * Method calculateChangePercentage ...
+     * Method getEventsCurrentBoard returns the eventsCurrentBoard of this DashboardController object.
      *
-     * @param previous of type double
-     * @param current  of type double
-     *
-     * @return double
+     * @return the eventsCurrentBoard (type List) of this DashboardController object.
      */
-    private double calculateChangePercentage(double previous, double current) {
-        return Math.round((current - previous) / previous * 10000.d) / 100.d;
+    private List<Event> getEventsCurrentBoard() {
+        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear(), 9, 1, 0, 0);
+
+        if (LocalDateTime.now().getMonthValue() < 9) {
+            lowerbound = lowerbound.minusYears(1);
+        }
+
+        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
+    }
+
+    /**
+     * Method getEventsPreviousBoard returns the eventsPreviousBoard of this DashboardController object.
+     *
+     * @return the eventsPreviousBoard (type List) of this DashboardController object.
+     */
+    private List<Event> getEventsPreviousBoard() {
+        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear() - 1, 9, 1, 0, 0);
+
+        if (LocalDateTime.now().getMonthValue() < 9) {
+            lowerbound = lowerbound.minusYears(1);
+        }
+
+        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
     }
 }

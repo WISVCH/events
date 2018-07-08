@@ -10,20 +10,19 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.event.EventServiceImpl;
 import ch.wisv.events.core.service.product.ProductService;
 import com.google.common.collect.ImmutableList;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
-
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class EventServiceImplTest extends ServiceTest {
 

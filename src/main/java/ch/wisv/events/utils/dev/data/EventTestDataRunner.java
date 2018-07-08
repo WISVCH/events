@@ -40,16 +40,27 @@ public class EventTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method loop.
+     * Method addProduct.
      *
+     * @param event      of type Event
      * @param jsonObject of type JSONObject
+     *
+     * @return Event
      */
-    @Override
-    protected void loop(JSONObject jsonObject) {
-        Event event = this.createEvent(jsonObject);
-        event = this.addProduct(event, jsonObject);
+    private Event addProduct(Event event, JSONObject jsonObject) {
+        if (jsonObject.get("productNumber") != null) {
+            int productNumber = ((Long) jsonObject.get("productNumber")).intValue();
+            Optional<Product> optional = this.productRepository.findById(productNumber);
 
-        this.eventRepository.save(event);
+            optional.ifPresent(product -> {
+                product.setLinked(true);
+                this.productRepository.saveAndFlush(product);
+
+                event.addProduct(product);
+            });
+        }
+
+        return event;
     }
 
     /**
@@ -82,26 +93,15 @@ public class EventTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method addProduct.
+     * Method loop.
      *
-     * @param event      of type Event
      * @param jsonObject of type JSONObject
-     *
-     * @return Event
      */
-    private Event addProduct(Event event, JSONObject jsonObject) {
-        if (jsonObject.get("productNumber") != null) {
-            int productNumber = ((Long) jsonObject.get("productNumber")).intValue();
-            Optional<Product> optional = this.productRepository.findById(productNumber);
+    @Override
+    protected void loop(JSONObject jsonObject) {
+        Event event = this.createEvent(jsonObject);
+        event = this.addProduct(event, jsonObject);
 
-            optional.ifPresent(product -> {
-                product.setLinked(true);
-                this.productRepository.saveAndFlush(product);
-
-                event.addProduct(product);
-            });
-        }
-
-        return event;
+        this.eventRepository.save(event);
     }
 }

@@ -11,17 +11,18 @@ import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.customer.CustomerServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CustomerServiceTest extends ServiceTest {
 
@@ -300,7 +301,7 @@ public class CustomerServiceTest extends ServiceTest {
         userInfo.setEmail(null);
         userInfo.setLdapUsername("ldapUsername");
 
-       customerService.createByChUserInfo(userInfo);
+        customerService.createByChUserInfo(userInfo);
     }
 
     /**

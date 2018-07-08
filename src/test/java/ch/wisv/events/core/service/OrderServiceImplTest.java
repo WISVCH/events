@@ -15,7 +15,6 @@ import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
-import ch.wisv.events.core.service.mail.MailServiceImpl;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;

@@ -96,13 +96,22 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                 .andExpect(redirectedUrlPattern("/checkout/*"));
     }
 
-
     @Test
     public void testCheckoutShoppingBasketExceedEventLimit() throws Exception {
         Product product = new Product("test", "test ticket", 1.33d, 20, LocalDateTime.now(), LocalDateTime.now());
         productRepository.saveAndFlush(product);
 
-        Event event = new Event("title event", "description", "location", 10, 10, "", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), "short description");
+        Event event = new Event(
+                "title event",
+                "description",
+                "location",
+                10,
+                10,
+                "",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2),
+                "short description"
+        );
         event.addProduct(product);
         eventService.create(event);
 

@@ -35,9 +35,12 @@
 </div>
 
 <script>
-    document.addEventListener("click", function (ev) {
+    document.addEventListener("click", redirect);
+    document.addEventListener("touchstart", redirect);
+
+    function redirect() {
         window.location.href = '[[@{${redirect}}]]'
-    })
+    }
 </script>
 </body>
 </html>

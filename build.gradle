@@ -98,6 +98,7 @@ dependencies {
 
     compile 'org.fluttercode.datafactory:datafactory:0.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.security:spring-security-test'
     testCompile 'com.tngtech.java:junit-dataprovider:1.5.0'
 }
 

@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class EventsApplication {
+
     /**
      * Application runner default.
      *
