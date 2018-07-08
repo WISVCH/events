@@ -36,9 +36,9 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     /**
      * OrderValidationServiceImpl constructor.
      *
-     * @param orderRepository  of type OrderRepository
-     * @param ticketService of type TicketService
-     * @param eventService  of type EventService
+     * @param orderRepository of type OrderRepository
+     * @param ticketService   of type TicketService
+     * @param eventService    of type EventService
      */
     @Autowired
     public OrderValidationServiceImpl(OrderRepository orderRepository, TicketService ticketService, EventService eventService) {
@@ -57,83 +57,6 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         this.assertDefaultOrderChecks(order);
         this.assertOrderNotExceedEventLimit(order);
         this.assertOrderNotExceedProductLimit(order);
-    }
-
-    /**
-     * Assert the default Order checks.
-     *
-     * @param order of type Order
-     *
-     * @throws OrderInvalidException when Order is invalid.
-     */
-    private void assertDefaultOrderChecks(Order order) throws OrderInvalidException {
-        if (order.getAmount() == null) {
-            throw new OrderInvalidException("Order amount can not be null");
-        }
-
-        Double amountShouldBe = order.getOrderProducts()
-                .stream()
-                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
-                .sum();
-
-        if (!order.getAmount().equals(amountShouldBe)) {
-            throw new OrderInvalidException("Order amount does not match");
-        }
-
-        if (order.getCreatedBy() == null || order.getCreatedBy().equals("")) {
-            throw new OrderInvalidException("Order created by can not be null");
-        }
-
-        if (order.getOrderProducts().size() == 0) {
-            throw new OrderInvalidException("Order should contain products");
-        }
-    }
-
-    /**
-     * Assert if the Product in the Order does not exceed the Product limit.
-     *
-     * @param order of type Order
-     *
-     * @throws OrderExceedProductLimitException when Product limit will be exceed.
-     */
-    private void assertOrderNotExceedProductLimit(Order order) throws OrderExceedProductLimitException {
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            Product product = orderProduct.getProduct();
-            int ticketSold = product.getSold() + product.getReserved();
-
-            if (product.getMaxSold() == null) {
-                continue;
-            }
-
-            if (ticketSold + orderProduct.getAmount() > product.getMaxSold()) {
-                throw new OrderExceedProductLimitException(product.getMaxSold() - ticketSold);
-            }
-        }
-    }
-
-    /**
-     * Assert if the Product in the Order do not exceed the Event limit.
-     *
-     * @param order of type Order
-     *
-     * @throws OrderExceedEventLimitException when Event limit will be exceeded.
-     */
-    private void assertOrderNotExceedEventLimit(Order order) throws OrderExceedEventLimitException {
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            try {
-                Event event = eventService.getByProduct(orderProduct.getProduct());
-                int ticketSold = event.getSold() + event.getReserved();
-
-                if (event.getMaxSold() == null) {
-                    continue;
-                }
-
-                if (ticketSold + orderProduct.getAmount() > event.getMaxSold()) {
-                    throw new OrderExceedEventLimitException(event.getMaxSold() - ticketSold);
-                }
-            } catch (EventNotFoundException ignored) {
-            }
-        }
     }
 
     /**
@@ -181,5 +104,82 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         }
 
         this.assertDefaultOrderChecks(order);
+    }
+
+    /**
+     * Assert the default Order checks.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderInvalidException when Order is invalid.
+     */
+    private void assertDefaultOrderChecks(Order order) throws OrderInvalidException {
+        if (order.getAmount() == null) {
+            throw new OrderInvalidException("Order amount can not be null");
+        }
+
+        Double amountShouldBe = order.getOrderProducts()
+                .stream()
+                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
+                .sum();
+
+        if (!order.getAmount().equals(amountShouldBe)) {
+            throw new OrderInvalidException("Order amount does not match");
+        }
+
+        if (order.getCreatedBy() == null || order.getCreatedBy().equals("")) {
+            throw new OrderInvalidException("Order created by can not be null");
+        }
+
+        if (order.getOrderProducts().size() == 0) {
+            throw new OrderInvalidException("Order should contain products");
+        }
+    }
+
+    /**
+     * Assert if the Product in the Order do not exceed the Event limit.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderExceedEventLimitException when Event limit will be exceeded.
+     */
+    private void assertOrderNotExceedEventLimit(Order order) throws OrderExceedEventLimitException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            try {
+                Event event = eventService.getByProduct(orderProduct.getProduct());
+                int ticketSold = event.getSold() + event.getReserved();
+
+                if (event.getMaxSold() == null) {
+                    continue;
+                }
+
+                if (ticketSold + orderProduct.getAmount() > event.getMaxSold()) {
+                    throw new OrderExceedEventLimitException(event.getMaxSold() - ticketSold);
+                }
+            } catch (EventNotFoundException ignored) {
+            }
+        }
+    }
+
+    /**
+     * Assert if the Product in the Order does not exceed the Product limit.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderExceedProductLimitException when Product limit will be exceed.
+     */
+    private void assertOrderNotExceedProductLimit(Order order) throws OrderExceedProductLimitException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Product product = orderProduct.getProduct();
+            int ticketSold = product.getSold() + product.getReserved();
+
+            if (product.getMaxSold() == null) {
+                continue;
+            }
+
+            if (ticketSold + orderProduct.getAmount() > product.getMaxSold()) {
+                throw new OrderExceedProductLimitException(product.getMaxSold() - ticketSold);
+            }
+        }
     }
 }

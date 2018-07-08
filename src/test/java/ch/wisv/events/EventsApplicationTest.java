@@ -3,13 +3,11 @@ package ch.wisv.events;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.utils.LdapGroup;
 import ch.wisv.events.webshop.service.PaymentsService;
 import com.google.common.collect.ImmutableList;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,14 +19,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration(exclude = {FlywayAutoConfiguration.class})
 @ActiveProfiles("test")
 public class EventsApplicationTest {
-
 
     /**
      * Method main ...
@@ -83,6 +79,7 @@ public class EventsApplicationTest {
          * Callback used to run the bean.
          *
          * @param args incoming main method arguments
+         *
          * @throws Exception on error
          */
         @Override

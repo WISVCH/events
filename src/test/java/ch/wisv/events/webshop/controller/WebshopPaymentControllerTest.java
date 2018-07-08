@@ -6,7 +6,6 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import java.util.ArrayList;
-import java.util.UUID;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -250,7 +249,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
                                 .param("reference", "123-345-562"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
-        }
+    }
 
     @Test
     public void testReturnAfterMolliePaymentNotPending() throws Exception {

@@ -2,7 +2,6 @@ package ch.wisv.events.sales.controller.scan;
 
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

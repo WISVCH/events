@@ -44,9 +44,9 @@ public class WebshopCustomerController extends WebshopController {
     /**
      * Constructor WebshopController.
      *
-     * @param orderService           of type OrderService
-     * @param customerService        of type CustomerService
-     * @param authenticationService  of type AuthenticationService
+     * @param orderService          of type OrderService
+     * @param customerService       of type CustomerService
+     * @param authenticationService of type AuthenticationService
      */
     @Autowired
     public WebshopCustomerController(

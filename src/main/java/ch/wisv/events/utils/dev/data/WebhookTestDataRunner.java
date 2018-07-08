@@ -31,15 +31,21 @@ public class WebhookTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method loop.
+     * Method addTriggers.
      *
-     * @param jsonObject of type JSONObject
+     * @param webhook   of type Webhook
+     * @param jsonArray of type JSONArray
+     *
+     * @return Webhook
      */
-    @Override
-    protected void loop(JSONObject jsonObject) {
-        Webhook webhook = this.createWebhook(jsonObject);
+    private Webhook addTriggers(Webhook webhook, JSONArray jsonArray) {
+        List<WebhookTrigger> triggers = new ArrayList<>();
+        for (Object o : jsonArray) {
+            triggers.add(WebhookTrigger.valueOf((String) o));
+        }
+        webhook.setWebhookTriggers(triggers);
 
-        this.webhookRepository.save(webhook);
+        return webhook;
     }
 
     /**
@@ -60,20 +66,14 @@ public class WebhookTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method addTriggers.
+     * Method loop.
      *
-     * @param webhook   of type Webhook
-     * @param jsonArray of type JSONArray
-     *
-     * @return Webhook
+     * @param jsonObject of type JSONObject
      */
-    private Webhook addTriggers(Webhook webhook, JSONArray jsonArray) {
-        List<WebhookTrigger> triggers = new ArrayList<>();
-        for (Object o : jsonArray) {
-            triggers.add(WebhookTrigger.valueOf((String) o));
-        }
-        webhook.setWebhookTriggers(triggers);
+    @Override
+    protected void loop(JSONObject jsonObject) {
+        Webhook webhook = this.createWebhook(jsonObject);
 
-        return webhook;
+        this.webhookRepository.save(webhook);
     }
 }

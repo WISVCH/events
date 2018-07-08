@@ -18,9 +18,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,8 +41,7 @@ public class SalesScanRestControllerTest extends ControllerTest {
         mockMvc.perform(
                 post("/api/v1/sales/scan/event/" + event.getKey() + "/barcode").with(csrf())
                         .param("barcode", barcode))
-                .andExpect(status().is(200))
-                .andExpect(content().contentType("json"));
+                .andExpect(status().is(200));
     }
 
     @Test

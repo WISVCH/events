@@ -27,18 +27,6 @@ public class CustomerTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method loop.
-     *
-     * @param jsonObject of type JSONObject
-     */
-    @Override
-    protected void loop(JSONObject jsonObject) {
-        Customer customer = this.createCustomer(jsonObject);
-
-        this.customerRepository.saveAndFlush(customer);
-    }
-
-    /**
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
@@ -53,5 +41,17 @@ public class CustomerTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("chUsername"),
                 (String) jsonObject.get("rfidToken")
         );
+    }
+
+    /**
+     * Method loop.
+     *
+     * @param jsonObject of type JSONObject
+     */
+    @Override
+    protected void loop(JSONObject jsonObject) {
+        Customer customer = this.createCustomer(jsonObject);
+
+        this.customerRepository.saveAndFlush(customer);
     }
 }

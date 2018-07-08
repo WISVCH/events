@@ -29,18 +29,6 @@ public class ProductTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method loop.
-     *
-     * @param jsonObject of type JSONObject
-     */
-    @Override
-    protected void loop(JSONObject jsonObject) {
-        Product product = this.createProduct(jsonObject);
-
-        this.productRepository.save(product);
-    }
-
-    /**
      * Method createProduct ...
      *
      * @param jsonObject of type JSONObject
@@ -62,5 +50,17 @@ public class ProductTestDataRunner extends TestDataRunner {
         product.setMaxSoldPerCustomer(((Long) jsonObject.get("maxSoldPerCustomer")).intValue());
 
         return product;
+    }
+
+    /**
+     * Method loop.
+     *
+     * @param jsonObject of type JSONObject
+     */
+    @Override
+    protected void loop(JSONObject jsonObject) {
+        Product product = this.createProduct(jsonObject);
+
+        this.productRepository.save(product);
     }
 }

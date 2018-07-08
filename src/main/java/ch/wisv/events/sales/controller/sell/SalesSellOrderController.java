@@ -35,7 +35,7 @@ public class SalesSellOrderController {
     /**
      * Method overview ...
      *
-     * @param model of type Model
+     * @param model    of type Model
      * @param redirect of type RedirectAttributes
      *
      * @return String
