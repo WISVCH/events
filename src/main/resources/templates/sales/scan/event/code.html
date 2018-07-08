@@ -46,14 +46,12 @@
                 <h3 class="w-100 mb-5" th:text="${event.getTitle()}"></h3>
 
                 <div class="col-12">
-                    <form th:action="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" method="POST">
-                        <div class="form-group">
-                            <input type="text" class="form-control input-lg" id="code" name="code"
-                                   placeholder="Unique code">
-                        </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" id="code" name="code"
+                               placeholder="Unique code">
+                    </div>
 
-                        <button type="submit" class="btn btn-lg btn-block btn-secondary">Submit</button>
-                    </form>
+                    <button id="submit" class="btn btn-lg btn-block btn-secondary">Submit</button>
                 </div>
             </div>
         </main>
@@ -65,5 +63,83 @@
         go to barcode scanner
     </a>
 </div>
+
+<div class="fixed-top py-2 text-white d-none" id="errorPage"
+     style="height: calc(100vh); z-index: 1100; background-color: #ff3b30;">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-exclamation"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="errorMessage"></h4>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-top py-2 text-white d-none" id="doublePage"
+     style="height: calc(100vh - .5rem); background-color: #ffb142">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-check-double"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="doubleTicket"></h4>
+            <h4 class="display-4 text-white" style="font-size: 2rem;" id="doubleCustomer"></h4>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-top py-2 text-white d-none" id="successPage"
+     style="height: calc(100vh - .5rem); background-color: #6dc04f">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-check"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="successTicket"></h4>
+            <h4 class="display-4 text-white" style="font-size: 2rem;" id="successCustomer"></h4>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#submit").on('click touchstart', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                method: "POST",
+                url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
+                type: "json",
+                data: {
+                    _csrf: "[[${_csrf.token}]]",
+                    code: $("#code").val()
+                }
+            }).always(function (data) {
+                if (data.status === "200") {
+                    $("#successTicket").html(data.object.ticket.product.title);
+                    $("#successCustomer").html(data.object.ticket.owner.name);
+                    $("#successPage").removeClass("d-none");
+                } else if (data.status === "208") {
+                    $("#doubleTicket").html(data.object.ticket.product.title);
+                    $("#doubleCustomer").html(data.object.ticket.owner.name);
+                    $("#doublePage").removeClass("d-none");
+                } else {
+                    $("#errorMessage").html(data.responseJSON.message);
+                    $("#errorPage").removeClass("d-none");
+                }
+            });
+        });
+
+        $("#errorPage, #successPage, #doublePage").on('click touchstart', function (e) {
+            e.preventDefault();
+
+            $("#errorPage").addClass("d-none");
+            $("#doublePage").addClass("d-none");
+            $("#successPage").addClass("d-none");
+        });
+    });
+</script>
 
 </body>
