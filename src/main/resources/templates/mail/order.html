@@ -309,9 +309,8 @@
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="${ticket.getUniqueCode()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                <a th:href="@{'/sales/scan/barcode/' + ${ticket.getUniqueCode()}}"
+                                                                <a th:href="'http://localhost:8080/events/sales/scan/barcode/' + ${ticket.getUniqueCode()}"
                                                                    th:text="${ticket.getUniqueCode()}">
                                                                 </a>
                                                             </td>

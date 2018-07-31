@@ -221,6 +221,30 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Check if order contains CH only Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean containsChOnlyProduct(Order order) {
+        return order.getOrderProducts().stream().anyMatch(orderProduct -> orderProduct.getProduct().isChOnly());
+    }
+
+    /**
+     * Check if order contains registration Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean containsRegistrationProduct(Order order) {
+        return order.getOrderProducts().stream().anyMatch(orderProduct -> orderProduct.getProduct().isIncludesRegistration());
+    }
+
+    /**
      * Assert if the status change is valid.
      *
      * @param order  of type Order

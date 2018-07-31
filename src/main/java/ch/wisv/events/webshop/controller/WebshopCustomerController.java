@@ -35,6 +35,9 @@ public class WebshopCustomerController extends WebshopController {
     /** Redirect to the customer create page. */
     private static final String REDIRECT_CHECKOUT_CUSTOMER_GUEST = "redirect:/checkout/%s/customer/guest";
 
+    /** Redirect to the registration page. */
+    private static final String REDIRECT_MEMBER_REGISTRATION = "redirect:/checkout/%s/registration";
+
     /** CustomerService. */
     private final CustomerService customerService;
 
@@ -73,12 +76,18 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
-            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
-            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             if (order.getStatus() != OrderStatus.ANONYMOUS) {
                 return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
             }
+
+            if (orderService.containsRegistrationProduct(order)) {
+                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            }
+
+            this.assertOrderIsSuitableForCheckout(order);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_ORDER, order);
 
             return "webshop/checkout/customer";
         } catch (OrderNotFoundException | OrderInvalidException e) {
@@ -107,6 +116,10 @@ public class WebshopCustomerController extends WebshopController {
                 return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
             }
 
+            if (orderService.containsRegistrationProduct(order)) {
+                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            }
+
             Customer customer = authenticationService.getCurrentCustomer();
             orderService.addCustomerToOrder(order, customer);
 
@@ -133,17 +146,20 @@ public class WebshopCustomerController extends WebshopController {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
 
-            if (order.getStatus() == OrderStatus.ASSIGNED) {
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
                 return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
-            } else if (order.getStatus() == OrderStatus.ANONYMOUS) {
-                if (!model.containsAttribute(MODEL_ATTR_CUSTOMER)) {
-                    model.addAttribute(MODEL_ATTR_CUSTOMER, new Customer());
-                }
-
-                model.addAttribute(MODEL_ATTR_ORDER, order);
-
-                return "webshop/checkout/create";
             }
+
+            if (orderService.containsRegistrationProduct(order)) {
+                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            }
+
+            if (!model.containsAttribute(MODEL_ATTR_CUSTOMER)) {
+                model.addAttribute(MODEL_ATTR_CUSTOMER, new Customer());
+            }
+            model.addAttribute(MODEL_ATTR_ORDER, order);
+
+            return "webshop/checkout/create";
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
         }
@@ -165,6 +181,14 @@ public class WebshopCustomerController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             this.assertOrderIsSuitableForCheckout(order);
+
+            if (order.getStatus() != OrderStatus.ANONYMOUS) {
+                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
+            }
+
+            if (orderService.containsRegistrationProduct(order)) {
+                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            }
 
             Customer orderCustomer = this.getExistingCustomer(customer);
             if (orderCustomer == null) {

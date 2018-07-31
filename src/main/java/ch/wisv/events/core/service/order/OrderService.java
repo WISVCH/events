@@ -91,4 +91,22 @@ public interface OrderService {
      * @throws OrderNotFoundException when Order is not found
      */
     Order getByReference(String reference) throws OrderNotFoundException;
+
+    /**
+     * Check if order contains CH only Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    boolean containsChOnlyProduct(Order order);
+
+    /**
+     * Check if order contains registration Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    boolean containsRegistrationProduct(Order order);
 }

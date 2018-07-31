@@ -100,6 +100,16 @@ public class Product {
     public boolean linked;
 
     /**
+     * Includes registration.
+     */
+    private boolean includesRegistration;
+
+    /**
+     * Includes registration.
+     */
+    private boolean chOnly;
+
+    /**
      * Product constructor.
      */
     public Product() {

@@ -41,7 +41,7 @@
 
             <div class="row justify-content-left">
                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-                <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12" th:each="event: ${events}"
+                <div class="mb-3 col" th:each="event: ${events}"
                      th:if="${event.getProducts().size() > 0}">
                     <div class="card h-100">
                         <div class="card-body h-100">
@@ -80,8 +80,8 @@
                                             <p class="card-text" th:text="${product.getDescription()}"></p>
                                             <h6 th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></h6>
 
-                                            <small th:if="${event.isChOnly()}" class="text-danger">
-                                                This product is only for CH members.
+                                            <small th:if="${product.isChOnly()}">
+                                                CH members only.
                                             </small>
                                             <small>
                                                 Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.

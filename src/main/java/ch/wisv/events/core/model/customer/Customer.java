@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.customer;
 
+import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -61,8 +62,8 @@ public class Customer {
     /**
      * Field ldapGroups.
      */
-    @ElementCollection(targetClass = ch.wisv.events.utils.LdapGroup.class)
-    private List<ch.wisv.events.utils.LdapGroup> ldapGroups;
+    @ElementCollection(targetClass = LdapGroup.class)
+    private List<LdapGroup> ldapGroups;
 
     /**
      * Field createdAt when the Customer has been created.

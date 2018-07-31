@@ -18,6 +18,9 @@ abstract class WebshopController {
     /** Model attr Customer. */
     static final String MODEL_ATTR_CUSTOMER = "customer";
 
+    /** Model attr Registration. */
+    static final String MODEL_ATTR_REGISTRATION = "registration";
+
     /** Model attr Order. */
     static final String MODEL_ATTR_ORDER = "order";
 
