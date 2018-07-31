@@ -75,17 +75,10 @@ public class WebshopCustomerController extends WebshopController {
     public String customerOptions(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertOrderIsSuitableForCheckout(order);
-
-            if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
+            if (!this.orderCheck(order).equals("")) {
+                return this.orderCheck(order);
             }
 
-            if (orderService.containsRegistrationProduct(order)) {
-                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
-            }
-
-            this.assertOrderIsSuitableForCheckout(order);
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
@@ -110,14 +103,8 @@ public class WebshopCustomerController extends WebshopController {
     public String customerChConnect(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertOrderIsSuitableForCheckout(order);
-
-            if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
-            }
-
-            if (orderService.containsRegistrationProduct(order)) {
-                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            if (!this.orderCheck(order).equals("")) {
+                return this.orderCheck(order);
             }
 
             Customer customer = authenticationService.getCurrentCustomer();
@@ -144,14 +131,8 @@ public class WebshopCustomerController extends WebshopController {
     public String customerGuest(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertOrderIsSuitableForCheckout(order);
-
-            if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
-            }
-
-            if (orderService.containsRegistrationProduct(order)) {
-                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            if (!this.orderCheck(order).equals("")) {
+                return this.orderCheck(order);
             }
 
             if (!model.containsAttribute(MODEL_ATTR_CUSTOMER)) {
@@ -160,11 +141,11 @@ public class WebshopCustomerController extends WebshopController {
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
             return "webshop/checkout/create";
-        } catch (OrderNotFoundException | OrderInvalidException e) {
+        } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
-        }
 
-        return REDIRECT_EVENTS_HOME;
+            return REDIRECT_EVENTS_HOME;
+        }
     }
 
     /**
@@ -180,14 +161,8 @@ public class WebshopCustomerController extends WebshopController {
     public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);
-            this.assertOrderIsSuitableForCheckout(order);
-
-            if (order.getStatus() != OrderStatus.ANONYMOUS) {
-                return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
-            }
-
-            if (orderService.containsRegistrationProduct(order)) {
-                return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+            if (!this.orderCheck(order).equals("")) {
+                return this.orderCheck(order);
             }
 
             Customer orderCustomer = this.getExistingCustomer(customer);
@@ -229,5 +204,28 @@ public class WebshopCustomerController extends WebshopController {
         }
 
         return null;
+    }
+
+    /**
+     * Check if this step is suitable for the Order.
+     *
+     * @param order of type Order
+     *
+     * @return String
+     *
+     * @throws OrderInvalidException when Order is not suitable for checkout
+     */
+    private String orderCheck(Order order) throws OrderInvalidException {
+        this.assertOrderIsSuitableForCheckout(order);
+
+        if (order.getStatus() != OrderStatus.ANONYMOUS) {
+            return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
+        }
+
+        if (orderService.containsRegistrationProduct(order)) {
+            return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
+        }
+
+        return "";
     }
 }
