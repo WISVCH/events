@@ -82,6 +82,13 @@ public interface OrderService {
     List<Order> getAllOrders();
 
     /**
+     * Get a list of all the Reservation Orders.
+     *
+     * @return List of Orders
+     */
+    List<Order> getAllReservations();
+
+    /**
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
@@ -109,4 +116,11 @@ public interface OrderService {
      * @return boolean
      */
     boolean containsRegistrationProduct(Order order);
+
+    /**
+     * Delete an Order (use with caution!).
+     *
+     * @param order of type Order
+     */
+    void delete(Order order);
 }

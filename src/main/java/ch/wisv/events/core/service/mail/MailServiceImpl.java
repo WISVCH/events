@@ -48,8 +48,9 @@ public class MailServiceImpl implements MailService {
             final Context ctx = new Context(new Locale("en"));
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
+            String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, 8));
 
-            this.sendMailWithContent(order.getOwner().getEmail(), "Order overview", this.templateEngine.process("mail/order", ctx));
+            this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx));
         }
     }
 

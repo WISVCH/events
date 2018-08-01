@@ -13,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+/**
+ * Customer object.
+ */
 @Entity
 @Data
 public class Customer {
@@ -55,9 +58,14 @@ public class Customer {
     private String chUsername;
 
     /**
-     * Field rfidToken of the customers pass.
+     * Field rfidToken of the customer.
      */
     private String rfidToken;
+
+    /**
+     * Field verifiedChMember of the customers.
+     */
+    private boolean verifiedChMember;
 
     /**
      * Field ldapGroups.
@@ -76,6 +84,7 @@ public class Customer {
     public Customer() {
         this.key = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
+        this.verifiedChMember = false;
     }
 
     /**

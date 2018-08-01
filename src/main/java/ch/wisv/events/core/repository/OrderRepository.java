@@ -50,4 +50,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      */
     List<Order> findAllByOwnerAndStatus(Customer owner, OrderStatus status);
 
+    /**
+     * Find all Order with a certain status.
+     *
+     * @param status of type OrderStatus
+     *
+     * @return List of Orders.
+     */
+    List<Order> findAllByStatus(OrderStatus status);
 }

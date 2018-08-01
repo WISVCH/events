@@ -75,12 +75,13 @@ public class WebshopCustomerController extends WebshopController {
     public String customerOptions(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            if (!this.orderCheck(order).equals("")) {
+            if (this.orderCheck(order) != null) {
                 return this.orderCheck(order);
             }
 
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
             model.addAttribute(MODEL_ATTR_ORDER, order);
+            model.addAttribute("chOnly", orderService.containsChOnlyProduct(order));
 
             return "webshop/checkout/customer";
         } catch (OrderNotFoundException | OrderInvalidException e) {
@@ -103,7 +104,7 @@ public class WebshopCustomerController extends WebshopController {
     public String customerChConnect(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            if (!this.orderCheck(order).equals("")) {
+            if (this.orderCheck(order) != null) {
                 return this.orderCheck(order);
             }
 
@@ -131,7 +132,7 @@ public class WebshopCustomerController extends WebshopController {
     public String customerGuest(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            if (!this.orderCheck(order).equals("")) {
+            if (this.orderCheck(order) != null) {
                 return this.orderCheck(order);
             }
 
@@ -161,14 +162,13 @@ public class WebshopCustomerController extends WebshopController {
     public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);
-            if (!this.orderCheck(order).equals("")) {
+            if (this.orderCheck(order) != null) {
                 return this.orderCheck(order);
             }
 
-            Customer orderCustomer = this.getExistingCustomer(customer);
-            if (orderCustomer == null) {
-                customerService.create(customer);
-                orderCustomer = customer;
+            Customer orderCustomer = this.getOrCreateCustomer(customer);
+            if (orderService.containsChOnlyProduct(order) && !orderCustomer.isVerifiedChMember()) {
+                throw new CustomerInvalidException("Customer has not been verified as CH member");
             }
 
             orderService.addCustomerToOrder(order, orderCustomer);
@@ -192,8 +192,10 @@ public class WebshopCustomerController extends WebshopController {
      * @param customer of type Customer
      *
      * @return Customer
+     *
+     * @throws CustomerInvalidException when Customer is invalid.
      */
-    private Customer getExistingCustomer(Customer customer) {
+    private Customer getOrCreateCustomer(Customer customer) throws CustomerInvalidException {
         try {
             return customerService.getByEmail(customer.getEmail());
         } catch (CustomerNotFoundException e) {
@@ -203,7 +205,9 @@ public class WebshopCustomerController extends WebshopController {
             }
         }
 
-        return null;
+        customerService.create(customer);
+
+        return customer;
     }
 
     /**
@@ -226,6 +230,6 @@ public class WebshopCustomerController extends WebshopController {
             return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
         }
 
-        return "";
+        return null;
     }
 }

@@ -64,6 +64,15 @@
                                            th:field="*{rfidToken}">
                                 </label>
                             </div>
+                            <div class="form-check col-6">
+                                <label class="form-check-label custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           th:field="*{verifiedChMember}"
+                                           th:checked="${customer.isVerifiedChMember()}">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description text-dark font-weight-normal">Verified CH member</span>
+                                </label>
+                            </div>
                         </div>
 
                         <p class="form-text text-muted">* is a required field!</p>

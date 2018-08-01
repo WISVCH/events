@@ -74,19 +74,18 @@
                         <thead class="thead-inverse bg-primary">
                         <tr>
                             <th>Description</th>
-                            <th>Code</th>
-                            <th class="text-right">Status</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Barcode</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="ticket : ${tickets}">
-                            <td th:text="${ticket.getProduct().getTitle()}"></td>
-                            <td>
-                                <a th:href="@{'/sales/scan/barcode/' + ${ticket.getUniqueCode()}}"
-                                   th:text="${ticket.getUniqueCode()}">
-                                </a>
+                            <td class="align-middle" th:text="${ticket.getProduct().getTitle()}"></td>
+                            <td class="align-middle text-center" th:text="${ticket.getStatus()}"></td>
+                            <td class="text-center" style="width: 223px;">
+                                <img th:src="'https://barcode.tec-it.com/barcode.ashx?data=978020' + ${ticket.getUniqueCode()} + '&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0'"
+                                     alt="">
                             </td>
-                            <td class="text-right" th:text="${ticket.getStatus()}"></td>
                         </tr>
                         </tbody>
                     </table>
