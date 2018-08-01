@@ -27,19 +27,29 @@
                                     th:selected="${year} == ${#dates.year(#dates.createNow())}">
                             </option>
                         </select>
+                        <small class="form-text text-muted help-text">
+                            The year you started one of the studies that is associated with W.I.S.V. 'Christiaan
+                            Huygens'
+                        </small>
                     </label>
                 </div>
-                <div class="form-group">
-                    <label>Student number*
-                        <input type="text" class="form-control"
-                               th:field="*{studyDetails.studentNumber}" required>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>NetID*
-                        <input type="text" class="form-control"
-                               th:field="*{studyDetails.netId}" required>
-                    </label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Student number*
+                                <input type="text" class="form-control"
+                                       th:field="*{studyDetails.studentNumber}" required>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>NetID*
+                                <input type="text" class="form-control"
+                                       th:field="*{studyDetails.netId}" required>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
