@@ -84,7 +84,7 @@ public class RegistrationServiceImpl implements RegistrationService {
      */
     private void assertIsValidAddress(Address address) throws RegistrationInvalidException {
         if (address == null) {
-            throw new RegistrationInvalidException("Profile can not be null!");
+            throw new RegistrationInvalidException("Address can not be null!");
         }
 
         if (address.getStreetName() == null || address.getStreetName().equals("")) {
@@ -157,10 +157,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationInvalidException("Date of Birth is empty, but a required field, please fill in this field!");
         }
 
-        if (profile.getAddress() == null) {
-            throw new RegistrationInvalidException("Address can not be null!");
-        }
-
         this.assertIsValidAddress(profile.getAddress());
 
         if (profile.getIceContactName() == null || profile.getIceContactName().equals("")) {
@@ -188,21 +184,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationInvalidException("Registration should contain a created at timestamp.");
         }
 
-        if (registration.getProfile() == null) {
-            throw new RegistrationInvalidException("Profile can not be null!");
-        }
-
         this.assertIsValidProfile(registration.getProfile());
 
-        if (registration.getPermissions() == null) {
-            throw new RegistrationInvalidException("Permissions can not be null!");
-        }
-
         this.assertIsValidPermissions(registration.getPermissions());
-
-        if (registration.getStudy() == null) {
-            throw new RegistrationInvalidException("Study can not be null!");
-        }
 
         this.assertIsValidStudy(registration.getStudy());
 
