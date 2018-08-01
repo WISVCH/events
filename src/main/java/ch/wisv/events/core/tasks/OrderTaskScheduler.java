@@ -25,6 +25,9 @@ public class OrderTaskScheduler {
     /** Max number of days a reservation is valid. */
     private static final int MAX_RESERVATION_DAYS = 3;
 
+    /** Amount of milli seconds in a seconds. */
+    private static final int MILLISEC_IN_SEC = 1000;
+
     /** OrderService. */
     private final OrderService orderService;
 
@@ -40,7 +43,7 @@ public class OrderTaskScheduler {
     /**
      * Cancel all overdue reservation.
      */
-    @Scheduled(fixedRate = CANCEL_RESERVATION_TASK_INTERVAL_SECONDS * 1000)
+    @Scheduled(fixedRate = CANCEL_RESERVATION_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cancelReservationTask() {
         orderService.getAllReservations().forEach(order -> {
             if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(MAX_RESERVATION_DAYS))) {
@@ -56,7 +59,7 @@ public class OrderTaskScheduler {
     /**
      * Clean up order.
      */
-    @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * 1000)
+    @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
             OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.CANCELLED, OrderStatus.PENDING};

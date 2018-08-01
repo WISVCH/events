@@ -16,8 +16,14 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
+/**
+ * MailService implementation.
+ */
 @Service
 public class MailServiceImpl implements MailService {
+
+    /** Order number length. */
+    private static final int ORDER_NUMBER_LENGTH = 8;
 
     /** JavaMailSender. */
     private final JavaMailSender mailSender;
@@ -48,12 +54,17 @@ public class MailServiceImpl implements MailService {
             final Context ctx = new Context(new Locale("en"));
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
-            String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, 8));
+            String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx));
         }
     }
 
+    /**
+     * Send payment order error.
+     *
+     * @param order of type Order
+     */
     @Override
     public void sendErrorPaymentOrder(Order order) {
         final Context ctx = new Context(new Locale("en"));
@@ -62,16 +73,26 @@ public class MailServiceImpl implements MailService {
         this.sendMailWithContent("w3cie@ch.tudelft.nl", "Order payment failed", this.templateEngine.process("mail/order-error", ctx));
     }
 
+    /**
+     * Send an Order Reservation mail.
+     *
+     * @param order of type Order
+     */
     @Override
     public void sendOrderReservation(Order order) {
         final Context ctx = new Context(new Locale("en"));
         ctx.setVariable("order", order);
+        String subject = String.format("Ticket reservation %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
-        this.sendMailWithContent(order.getOwner().getEmail(), "Ticket reservation", this.templateEngine.process("mail/order-reservation", ctx));
+        this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order-reservation", ctx));
     }
 
     /**
      * Method send mail about Order to Customer.
+     *
+     * @param recipientEmail of type String
+     * @param subject        of type String
+     * @param content        of type String
      */
     private void sendMailWithContent(String recipientEmail, String subject, String content) {
         // Prepare message using a Spring helper

@@ -43,10 +43,11 @@ public class WebshopRegistrationController extends WebshopController {
 
     /**
      * Constructor WebshopController.
-     *  @param orderService          of type OrderService.
+     *
+     * @param orderService          of type OrderService.
      * @param authenticationService of type AuthenticationService
      * @param registrationService   of type RegistrationService
-     * @param customerService
+     * @param customerService       of type CustomerService
      */
     @Autowired
     public WebshopRegistrationController(

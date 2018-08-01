@@ -22,11 +22,23 @@ public class Permissions {
     @Setter(AccessLevel.NONE)
     private Integer id;
 
+    /**
+     * NOT get general mailing.
+     */
     private boolean generalMailing;
 
+    /**
+     * NOT get career mailing.
+     */
     private boolean careerMailing;
 
+    /**
+     * NOT get education mailing.
+     */
     private boolean educationMailing;
 
+    /**
+     * GET maCHazine.
+     */
     private boolean maCHazine;
 }

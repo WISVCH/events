@@ -23,15 +23,27 @@ public class Study {
     @Setter(AccessLevel.NONE)
     private Integer id;
 
+    /**
+     * Study name.
+     */
     @NotEmpty
     private String studyName;
 
+    /**
+     * First study year.
+     */
     @NotEmpty
     private int firstStudyYear;
 
+    /**
+     * Student number.
+     */
     @NotEmpty
     private String studentNumber;
 
+    /**
+     * NetID.
+     */
     @NotEmpty
     private String netId;
 
