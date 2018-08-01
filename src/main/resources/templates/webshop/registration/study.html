@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-<!--/*@thymesVar id="study" type="ch.wisv.events.core.model.registration.Study"*/-->
+<!--/*@thymesVar id="studyDetails" type="ch.wisv.events.core.model.registration.StudyDetails"*/-->
 <div th:fragment="study">
     <div class="card mb-4">
         <h6 class="card-header">Study</h6>
@@ -10,35 +10,30 @@
             <div class="form">
                 <div class="form-group">
                     <label>Study*
-                        <select class="form-control" th:field="*{study.studyName}" required>
-                            <option value="Bachelor Computer Science and Engineering">Bachelor Computer Science
-                                and Engineering
+                        <select class="form-control" th:field="*{studyDetails.study}" required>
+                            <option th:each="study : ${T(ch.wisv.events.core.model.registration.Study).values()}"
+                                    th:value="${study}"
+                                    th:text="${study.getFullName()}">
                             </option>
-                            <option value="Bachelor Applied Mathematics">Bachelor Applied Mathematics</option>
-                            <option value="Double Bachelor (AP /AM)">Double Bachelor (AP /AM)</option>
-                            <option value="Master Applied Mathematics">Master Applied Mathematics</option>
-                            <option value="Master Computer Science">Master Computer Science</option>
-                            <option value="Master Embedded Systems">Master Embedded Systems</option>
-                            <option value="Master Computer Engineering">Master Computer Engineering</option>
                         </select>
                     </label>
                 </div>
                 <div class="form-group">
-                    <label>First study year*
+                    <label>First studyDetails year*
                         <input type="number" min="2014" class="form-control"
-                               th:field="*{study.firstStudyYear}" required>
+                               th:field="*{studyDetails.firstStudyYear}" required>
                     </label>
                 </div>
                 <div class="form-group">
                     <label>Student number*
                         <input type="text" class="form-control"
-                               th:field="*{study.studentNumber}" required>
+                               th:field="*{studyDetails.studentNumber}" required>
                     </label>
                 </div>
                 <div class="form-group">
                     <label>NetID*
                         <input type="text" class="form-control"
-                               th:field="*{study.netId}" required>
+                               th:field="*{studyDetails.netId}" required>
                     </label>
                 </div>
             </div>

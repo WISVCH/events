@@ -7,7 +7,7 @@ import ch.wisv.events.core.model.registration.Gender;
 import ch.wisv.events.core.model.registration.Permissions;
 import ch.wisv.events.core.model.registration.Profile;
 import ch.wisv.events.core.model.registration.Registration;
-import ch.wisv.events.core.model.registration.Study;
+import ch.wisv.events.core.model.registration.StudyDetails;
 import ch.wisv.events.core.repository.registration.AddressRepository;
 import ch.wisv.events.core.repository.registration.PermissionsRepository;
 import ch.wisv.events.core.repository.registration.ProfileRepository;
@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,10 +78,10 @@ public class RegistrationServiceTest extends ServiceTest {
         registration.getProfile().setIceContactName("Carly Simon");
         registration.getProfile().setIceContactPhone("+31687654321");
 
-        registration.getStudy().setStudyName("Master Computer Science");
-        registration.getStudy().setFirstStudyYear(2018);
-        registration.getStudy().setStudentNumber("1234567");
-        registration.getStudy().setNetId("jtravolta");
+        registration.getStudyDetails().setStudy("Master Computer Science");
+        registration.getStudyDetails().setFirstStudyYear(2018);
+        registration.getStudyDetails().setStudentNumber("1234567");
+        registration.getStudyDetails().setNetId("jtravolta");
     }
 
     @After
@@ -270,17 +269,17 @@ public class RegistrationServiceTest extends ServiceTest {
 
     @Test
     public void testCreateInvalidStudy() throws Exception {
-        registration.setStudy(null);
+        registration.setStudyDetails(null);
 
         thrown.expect(RegistrationInvalidException.class);
-        thrown.expectMessage("Study can not be null!");
+        thrown.expectMessage("StudyDetails can not be null!");
 
         registrationService.create(registration);
     }
 
     @Test
     public void testCreateInvalidStudyName() throws Exception {
-        registration.getStudy().setStudyName(null);
+        registration.getStudyDetails().setStudy(null);
 
         thrown.expect(RegistrationInvalidException.class);
         thrown.expectMessage("I am studying is empty, but a required field, please fill in this field!");
@@ -290,17 +289,17 @@ public class RegistrationServiceTest extends ServiceTest {
 
     @Test
     public void testCreateInvalidStudyFirstYear() throws Exception {
-        registration.getStudy().setFirstStudyYear(0);
+        registration.getStudyDetails().setFirstStudyYear(0);
 
         thrown.expect(RegistrationInvalidException.class);
-        thrown.expectMessage("First year of study is empty, but a required field, please fill in this field!");
+        thrown.expectMessage("First year of studyDetails is empty, but a required field, please fill in this field!");
 
         registrationService.create(registration);
     }
 
     @Test
     public void testCreateInvalidStudyStudentNumber() throws Exception {
-        registration.getStudy().setStudentNumber(null);
+        registration.getStudyDetails().setStudentNumber(null);
 
         thrown.expect(RegistrationInvalidException.class);
         thrown.expectMessage("Student number is empty, but a required field, please fill in this field!");
@@ -310,7 +309,7 @@ public class RegistrationServiceTest extends ServiceTest {
 
     @Test
     public void testCreateInvalidStudyNetId() throws Exception {
-        registration.getStudy().setNetId(null);
+        registration.getStudyDetails().setNetId(null);
 
         thrown.expect(RegistrationInvalidException.class);
         thrown.expectMessage("NetID is empty, but a required field, please fill in this field!");
@@ -342,7 +341,7 @@ public class RegistrationServiceTest extends ServiceTest {
     public void testCreate() throws Exception {
         when(addressRepository.saveAndFlush(any(Address.class))).thenReturn(new Address());
         when(profileRepository.saveAndFlush(any(Profile.class))).thenReturn(new Profile());
-        when(studyRepository.saveAndFlush(any(Study.class))).thenReturn(new Study());
+        when(studyRepository.saveAndFlush(any(StudyDetails.class))).thenReturn(new StudyDetails());
         when(permissionsRepository.saveAndFlush(any(Permissions.class))).thenReturn(new Permissions());
         when(registrationRepository.saveAndFlush(any(Registration.class))).thenReturn(new Registration());
 
@@ -350,7 +349,7 @@ public class RegistrationServiceTest extends ServiceTest {
 
         verify(addressRepository, times(1)).saveAndFlush(any(Address.class));
         verify(profileRepository, times(1)).saveAndFlush(any(Profile.class));
-        verify(studyRepository, times(1)).saveAndFlush(any(Study.class));
+        verify(studyRepository, times(1)).saveAndFlush(any(StudyDetails.class));
         verify(permissionsRepository, times(1)).saveAndFlush(any(Permissions.class));
         verify(registrationRepository, times(1)).saveAndFlush(any(Registration.class));
     }

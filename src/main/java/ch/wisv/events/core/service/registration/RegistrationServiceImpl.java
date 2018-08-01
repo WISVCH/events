@@ -5,7 +5,7 @@ import ch.wisv.events.core.model.registration.Address;
 import ch.wisv.events.core.model.registration.Permissions;
 import ch.wisv.events.core.model.registration.Profile;
 import ch.wisv.events.core.model.registration.Registration;
-import ch.wisv.events.core.model.registration.Study;
+import ch.wisv.events.core.model.registration.StudyDetails;
 import ch.wisv.events.core.repository.registration.AddressRepository;
 import ch.wisv.events.core.repository.registration.PermissionsRepository;
 import ch.wisv.events.core.repository.registration.ProfileRepository;
@@ -70,7 +70,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         addressRepository.saveAndFlush(registration.getProfile().getAddress());
         profileRepository.saveAndFlush(registration.getProfile());
-        studyRepository.saveAndFlush(registration.getStudy());
+        studyRepository.saveAndFlush(registration.getStudyDetails());
         permissionsRepository.saveAndFlush(registration.getPermissions());
         registrationRepository.saveAndFlush(registration);
     }
@@ -188,7 +188,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         this.assertIsValidPermissions(registration.getPermissions());
 
-        this.assertIsValidStudy(registration.getStudy());
+        this.assertIsValidStudy(registration.getStudyDetails());
 
         if (registration.getDateOfSigning() == null) {
             throw new RegistrationInvalidException("Date of signing is empty, but a required field, please fill in this field!");
@@ -200,30 +200,30 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     /**
-     * Assert is study is valid.
+     * Assert is studyDetails is valid.
      *
-     * @param study of type Study
+     * @param studyDetails of type StudyDetails
      *
-     * @throws RegistrationInvalidException when Study object is invalid.
+     * @throws RegistrationInvalidException when StudyDetails object is invalid.
      */
-    private void assertIsValidStudy(Study study) throws RegistrationInvalidException {
-        if (study == null) {
-            throw new RegistrationInvalidException("Study can not be null!");
+    private void assertIsValidStudy(StudyDetails studyDetails) throws RegistrationInvalidException {
+        if (studyDetails == null) {
+            throw new RegistrationInvalidException("StudyDetails can not be null!");
         }
 
-        if (study.getStudyName() == null || study.getStudyName().equals("")) {
+        if (studyDetails.getStudy() == null || studyDetails.getStudy().equals("")) {
             throw new RegistrationInvalidException("I am studying is empty, but a required field, please fill in this field!");
         }
 
-        if (study.getFirstStudyYear() == 0) {
-            throw new RegistrationInvalidException("First year of study is empty, but a required field, please fill in this field!");
+        if (studyDetails.getFirstStudyYear() == 0) {
+            throw new RegistrationInvalidException("First year of studyDetails is empty, but a required field, please fill in this field!");
         }
 
-        if (study.getStudentNumber() == null || study.getStudentNumber().equals("")) {
+        if (studyDetails.getStudentNumber() == null || studyDetails.getStudentNumber().equals("")) {
             throw new RegistrationInvalidException("Student number is empty, but a required field, please fill in this field!");
         }
 
-        if (study.getNetId() == null || study.getNetId().equals("")) {
+        if (studyDetails.getNetId() == null || studyDetails.getNetId().equals("")) {
             throw new RegistrationInvalidException("NetID is empty, but a required field, please fill in this field!");
         }
     }

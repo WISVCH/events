@@ -1,50 +1,38 @@
 package ch.wisv.events.core.model.registration;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
+import lombok.Getter;
 
 /**
- * Study data object.
+ * Study enum.
  */
-@Entity
-@Data
-public class Study {
+public enum Study {
+
+    BS_AM("Bachelor Applied Mathematics"),
+
+    BS_CSE("Bachelor Computer Science and Engineering"),
+
+    BS_DOUBLE("Double Bachelor (AP /AM)"),
+
+    MS_AM("Master Applied Mathematics"),
+
+    MS_CE("Master Computer Engineering"),
+
+    MS_CS("Master Computer Science"),
+
+    MS_ES("Master Embedded Systems");
 
     /**
-     * Field id of the study.
+     * Full name of the study.
      */
-    @Id
-    @GeneratedValue
-    @Setter(AccessLevel.NONE)
-    private Integer id;
+    @Getter
+    private final String fullName;
 
     /**
-     * Study name.
+     * Study constructor.
+     *
+     * @param fullName of type String.
      */
-    @NotEmpty
-    private String studyName;
-
-    /**
-     * First study year.
-     */
-    @NotEmpty
-    private int firstStudyYear;
-
-    /**
-     * Student number.
-     */
-    @NotEmpty
-    private String studentNumber;
-
-    /**
-     * NetID.
-     */
-    @NotEmpty
-    private String netId;
-
+    Study(String fullName) {
+        this.fullName = fullName;
+    }
 }

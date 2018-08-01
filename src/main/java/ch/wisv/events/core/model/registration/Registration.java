@@ -66,9 +66,9 @@ public class Registration {
     /**
      * Field permissions of the Registration.
      */
-    @OneToOne(cascade = CascadeType.MERGE, targetEntity = Study.class, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE, targetEntity = StudyDetails.class, fetch = FetchType.EAGER)
     @NotEmpty
-    private Study study;
+    private StudyDetails studyDetails;
 
     /**
      * Constructor Registration creates a new Registration instance.
@@ -76,7 +76,7 @@ public class Registration {
     public Registration() {
         this.createdAt = LocalDateTime.now();
         this.profile = new Profile();
-        this.study = new Study();
+        this.studyDetails = new StudyDetails();
         this.permissions = new Permissions();
     }
 }
