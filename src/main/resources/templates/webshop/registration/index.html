@@ -61,13 +61,15 @@
 <script th:src="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.js}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        console.log('ready');
-        $('#dateOfBirth').flatpickr({
+        var config = {
             enableTime: false,
             altInput: true,
             altFormat: 'F j, Y',
             dateFormat: "Y-m-d"
-        });
+        };
+
+        $('#dateOfBirth').flatpickr(config);
+        $('#dateOfSigning').flatpickr(config);
     });
 </script>
 </body>

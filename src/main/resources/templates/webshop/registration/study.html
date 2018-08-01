@@ -19,9 +19,14 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    <label>First studyDetails year*
-                        <input type="number" min="2014" class="form-control"
-                               th:field="*{studyDetails.firstStudyYear}" required>
+                    <label>First study year*
+                        <span></span>
+                        <select class="form-control" th:field="*{studyDetails.firstStudyYear}" required>
+                            <option th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()) - 9, #dates.year(#dates.createNow()))}"
+                                    th:value="${year}" th:text="${year}"
+                                    th:selected="${year} == ${#dates.year(#dates.createNow())}">
+                            </option>
+                        </select>
                     </label>
                 </div>
                 <div class="form-group">

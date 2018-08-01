@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.registration;
 
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -46,5 +47,12 @@ public class StudyDetails {
      */
     @NotEmpty
     private String netId;
+
+    /**
+     * StudyDetails.
+     */
+    public StudyDetails() {
+        this.firstStudyYear = LocalDate.now().getYear();
+    }
 
 }
