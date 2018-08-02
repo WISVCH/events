@@ -1,5 +1,11 @@
 version: "2"
 
+
+exclude_patterns:
+- "src/main/java/db/migration/"
+- "**/*.js"
+- "**/*.css"
+
 plugins:
   checkstyle:
       enabled: true
