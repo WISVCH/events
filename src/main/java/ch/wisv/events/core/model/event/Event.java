@@ -185,24 +185,47 @@ public class Event {
      * Calculate the progress of the products sold and the target of the event and round number to
      * two decimals.
      *
-     * @return progress of event
+     * @return double
      */
     public double calcSoldProgress() {
         return this.calcProgress(this.getSold());
     }
 
+    /**
+     * Calculate the progress of the products reserved and the target of the event and round number to
+     * two decimals.
+     *
+     * @return double
+     */
     public double calcReservedProcess() {
         return this.calcProgress(this.getReserved());
     }
 
+    /**
+     * Get amount of tickets sold for this event
+     *
+     * @return int
+     */
     public int getSold() {
         return products.stream().mapToInt(Product::getSold).sum();
     }
 
+    /**
+     * Get amount of tickets reserved for this event
+     *
+     * @return int
+     */
     public int getReserved() {
         return products.stream().mapToInt(Product::getReserved).sum();
     }
 
+    /**
+     * Calculate the progress of target
+     *
+     * @param reserved of type double
+     *
+     * @return double
+     */
     private double calcProgress(double reserved) {
         return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }

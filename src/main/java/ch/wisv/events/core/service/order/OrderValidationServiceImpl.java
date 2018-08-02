@@ -80,11 +80,12 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
             int ticketSold = ticketService.getAllByProductAndCustomer(orderProduct.getProduct(), customer).size();
 
-            ticketSold += reservationOrders.stream().mapToInt(reservationOrder -> reservationOrder.getOrderProducts()
-                    .stream()
-                    .filter(product -> orderProduct.getProduct().equals(product.getProduct()))
-                    .mapToInt(product -> product.getAmount().intValue())
-                    .sum()).sum();
+            ticketSold += reservationOrders.stream()
+                    .mapToInt(reservationOrder -> reservationOrder.getOrderProducts().stream()
+                            .filter(reservationOrderProduct -> orderProduct.getProduct().equals(reservationOrderProduct.getProduct()))
+                            .mapToInt(reservationOrderProduct -> reservationOrderProduct.getAmount().intValue())
+                            .sum()
+                    ).sum();
 
             if (ticketSold + orderProduct.getAmount() > maxSoldPerCustomer) {
                 throw new OrderExceedCustomerLimitException(maxSoldPerCustomer - ticketSold);

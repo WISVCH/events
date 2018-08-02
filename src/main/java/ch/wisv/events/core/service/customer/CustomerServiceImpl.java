@@ -14,6 +14,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * CustomerService implementation.
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -86,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getBySub(String sub) throws CustomerNotFoundException {
         Optional<Customer> customer = customerRepository.findBySub(sub);
 
-        return customer.orElseThrow(() -> new CustomerNotFoundException("sub" + sub));
+        return customer.orElseThrow(() -> new CustomerNotFoundException("sub " + sub));
     }
 
     /**
@@ -100,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getByUsername(String username) throws CustomerNotFoundException {
         Optional<Customer> customer = customerRepository.findByChUsername(username);
 
-        return customer.orElseThrow(() -> new CustomerNotFoundException("username" + username));
+        return customer.orElseThrow(() -> new CustomerNotFoundException("username " + username));
     }
 
     /**

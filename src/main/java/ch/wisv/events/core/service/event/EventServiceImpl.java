@@ -176,27 +176,35 @@ public class EventServiceImpl implements EventService {
         if (event.getTitle() == null || event.getTitle().equals("")) {
             throw new EventInvalidException("Title is required, and therefore should be filled in!");
         }
+
         if (event.getShortDescription() == null || event.getTitle().equals("")) {
             throw new EventInvalidException("Short description is required, and therefore should be filled in!");
         }
+
         if (event.getDescription() == null || event.getTitle().equals("")) {
             throw new EventInvalidException("Description is required, and therefore should be filled in!");
         }
+
         if (event.getStart() == null) {
             throw new EventInvalidException("Starting time is required, and therefore should be filled in!");
         }
+
         if (event.getEnding() == null) {
             throw new EventInvalidException("Ending time is required, and therefore should be filled in!");
         }
+
         if (event.getStart().isAfter(event.getEnding())) {
             throw new EventInvalidException("Starting time should be before the ending time");
         }
+
         if (event.getTarget() == null || event.getTarget().equals(0)) {
             throw new EventInvalidException("Target is required, and therefore should be filled in!");
         }
+
         if (event.getMaxSold() != null && event.getTarget() > event.getMaxSold()) {
             throw new EventInvalidException("Limit should be greater or equal to the target!");
         }
+
         if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
             throw new EventInvalidException("It is not possible to add the same product twice or more!");
         }
