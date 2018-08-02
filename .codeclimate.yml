@@ -2,6 +2,7 @@ version: "2"
 
 
 exclude_patterns:
+- "src/test/"
 - "src/main/java/db/migration/"
 - "**/*.js"
 - "**/*.css"
