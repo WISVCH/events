@@ -7,6 +7,7 @@ import ch.wisv.events.core.model.registration.Gender;
 import ch.wisv.events.core.model.registration.Permissions;
 import ch.wisv.events.core.model.registration.Profile;
 import ch.wisv.events.core.model.registration.Registration;
+import ch.wisv.events.core.model.registration.Study;
 import ch.wisv.events.core.model.registration.StudyDetails;
 import ch.wisv.events.core.repository.registration.AddressRepository;
 import ch.wisv.events.core.repository.registration.PermissionsRepository;
@@ -78,7 +79,7 @@ public class RegistrationServiceTest extends ServiceTest {
         registration.getProfile().setIceContactName("Carly Simon");
         registration.getProfile().setIceContactPhone("+31687654321");
 
-        registration.getStudyDetails().setStudy("Master Computer Science");
+        registration.getStudyDetails().setStudy(Study.BS_CSE);
         registration.getStudyDetails().setFirstStudyYear(2018);
         registration.getStudyDetails().setStudentNumber("1234567");
         registration.getStudyDetails().setNetId("jtravolta");
