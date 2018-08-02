@@ -208,6 +208,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Get a list of all the Reservation Orders.
+     *
+     * @return List of Orders
+     */
+    @Override
+    public List<Order> getAllReservations() {
+        return orderRepository.findAllByStatus(OrderStatus.RESERVATION);
+    }
+
+    /**
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
@@ -218,6 +228,40 @@ public class OrderServiceImpl implements OrderService {
     public Order getByReference(String reference) throws OrderNotFoundException {
         return orderRepository.findOneByPublicReference(reference)
                 .orElseThrow(() -> new OrderNotFoundException("reference " + reference));
+    }
+
+    /**
+     * Check if order contains CH only Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean containsChOnlyProduct(Order order) {
+        return order.getOrderProducts().stream().anyMatch(orderProduct -> orderProduct.getProduct().isChOnly());
+    }
+
+    /**
+     * Check if order contains registration Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean containsRegistrationProduct(Order order) {
+        return order.getOrderProducts().stream().anyMatch(orderProduct -> orderProduct.getProduct().isIncludesRegistration());
+    }
+
+    /**
+     * Delete an Order (use with caution!).
+     *
+     * @param order of type Order
+     */
+    @Override
+    public void delete(Order order) {
+        orderRepository.delete(order);
     }
 
     /**

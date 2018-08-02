@@ -82,6 +82,13 @@ public interface OrderService {
     List<Order> getAllOrders();
 
     /**
+     * Get a list of all the Reservation Orders.
+     *
+     * @return List of Orders
+     */
+    List<Order> getAllReservations();
+
+    /**
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
@@ -91,4 +98,29 @@ public interface OrderService {
      * @throws OrderNotFoundException when Order is not found
      */
     Order getByReference(String reference) throws OrderNotFoundException;
+
+    /**
+     * Check if order contains CH only Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    boolean containsChOnlyProduct(Order order);
+
+    /**
+     * Check if order contains registration Product.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    boolean containsRegistrationProduct(Order order);
+
+    /**
+     * Delete an Order (use with caution!).
+     *
+     * @param order of type Order
+     */
+    void delete(Order order);
 }

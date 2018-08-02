@@ -123,6 +123,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             customer.setEmail(userInfo.getEmail());
         }
 
+        customer.setVerifiedChMember(true);
+
         customer.setLdapGroups(userInfo.getLdapGroups().stream().map(ldapString -> {
             try {
                 return ch.wisv.events.utils.LdapGroup.valueOf(ldapString.toUpperCase());

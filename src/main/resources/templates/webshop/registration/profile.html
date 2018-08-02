@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<!--/*@thymesVar id="profile" type="ch.wisv.events.core.model.registration.Profile"*/-->
+<div th:fragment="profile">
+    <div class="card mb-4">
+        <h6 class="card-header">Profile</h6>
+        <div class="card-body">
+            <div class="form">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Initials*
+                                <input type="text" class="form-control" th:field="*{profile.initials}"
+                                       th:value="*{profile.initials}" required>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label>First name*
+                                <input type="text" class="form-control" th:field="*{profile.firstName}" required>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Prefix
+                                <input type="text" class="form-control" th:field="*{profile.surnamePrefix}">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label>Surname*
+                                <input type="text" class="form-control" th:field="*{profile.surname}" required>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>E-mail*
+                        <input type="text" class="form-control" th:field="*{profile.email}" required>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Phone number*
+                        <input type="text" class="form-control" th:field="*{profile.phoneNumber}" required>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Gender*
+                        <select class="form-control" th:field="*{profile.gender}" required>
+                            <option th:each="gender : ${T(ch.wisv.events.core.model.registration.Gender).values()}"
+                                    th:value="${gender}"
+                                    th:text="${gender}">
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth*
+                        <input type="datetime-local" class="form-control" th:field="*{profile.dateOfBirth}"
+                               id="dateOfBirth" placeholder="Click to select a date..." required>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

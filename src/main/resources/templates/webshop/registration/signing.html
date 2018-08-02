@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="signing">
+    <div class="card mb-4">
+        <h6 class="card-header">Singing</h6>
+        <div class="card-body">
+            <div class="form">
+                <div class="form-group">
+                    <label>Date of Signing*
+                        <input type="datetime-local" class="form-control" th:field="*{dateOfSigning}" id="dateOfSigning"
+                               placeholder="Click to select a date..." required>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input"
+                               th:field="*{signed}" required>
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description text-dark font-weight-normal">
+                            I hereby agree to become a member of the studyDetails association for applied mathematics and
+                            computer science 'Christiaan Huygens' and agree to the Privacy Statement
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
