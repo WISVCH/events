@@ -1,13 +1,15 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.ServiceTest;
+import ch.wisv.events.api.request.ProductDto;
+import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
-import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.ProductServiceImpl;
+import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,18 +30,12 @@ public class ProductServiceImplTest extends ServiceTest {
      * Mock of ProductRepository
      */
     @Mock
-    private ProductRepository repository;
-
-    /**
-     * Mock of EventService
-     */
-    @Mock
-    private EventService eventService;
+    private ProductRepository productRepository;
 
     /**
      * ProductService
      */
-    private ProductService service;
+    private ProductService productService;
 
     /**
      * Default Product
@@ -49,9 +46,9 @@ public class ProductServiceImplTest extends ServiceTest {
      * Method setUp
      */
     @Before
-    public void setUp() throws Exception {
-        this.service = new ProductServiceImpl(repository);
-        this.product = new Product(
+    public void setUp() {
+        productService = new ProductServiceImpl(productRepository);
+        product = new Product(
                 "Product",
                 "Description",
                 1.d,
@@ -59,157 +56,267 @@ public class ProductServiceImplTest extends ServiceTest {
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(1)
         );
-        this.product.setMaxSoldPerCustomer(1);
+        product.setMaxSoldPerCustomer(1);
     }
 
     /**
      * Method tearDown
      */
     @After
-    public void tearDown() throws Exception {
-        this.product = null;
+    public void tearDown() {
+        product = null;
     }
 
     /**
      * Test get all product method
-     *
-     * @throws Exception when
      */
     @Test
-    public void testGetAllProducts() throws Exception {
-        when(repository.findAll()).thenReturn(Collections.singletonList(this.product));
+    public void testGetAllProducts() {
+        when(productRepository.findAll()).thenReturn(Collections.singletonList(product));
 
-        assertEquals(Collections.singletonList(this.product), service.getAllProducts());
+        assertEquals(Collections.singletonList(product), productService.getAllProducts());
     }
 
     /**
      * Test get all product method
-     *
-     * @throws Exception when
      */
     @Test
-    public void testGetAllProductsEmpty() throws Exception {
-        when(repository.findAll()).thenReturn(Collections.emptyList());
+    public void testGetAllProductsEmpty() {
+        when(productRepository.findAll()).thenReturn(Collections.emptyList());
 
-        assertEquals(Collections.emptyList(), service.getAllProducts());
+        assertEquals(Collections.emptyList(), productService.getAllProducts());
     }
 
     /**
      * Method testGetAvailableProducts ...
-     *
-     * @throws Exception when
      */
     @Test
-    public void testGetAvailableProducts() throws Exception {
-        this.product.setSellStart(LocalDateTime.now().minusHours(10));
-        when(repository.findAllBySellStartBefore(any(LocalDateTime.class))).thenReturn(Collections.singletonList(this.product));
+    public void testGetAvailableProducts() {
+        product.setSellStart(LocalDateTime.now().minusHours(10));
+        when(productRepository.findAllBySellStartBefore(any(LocalDateTime.class))).thenReturn(Collections.singletonList(product));
 
-        assertEquals(Collections.singletonList(this.product), service.getAvailableProducts());
+        assertEquals(Collections.singletonList(product), productService.getAvailableProducts());
     }
 
     /**
      * Method testGetAvailableProducts ...
-     *
-     * @throws Exception when
      */
     @Test
-    public void testGetAvailableProductsEmpty() throws Exception {
-        this.product.setSold(100);
-        this.product.setMaxSold(100);
-        when(repository.findAllBySellStartBefore(any(LocalDateTime.class))).thenReturn(Collections.singletonList(this.product));
+    public void testGetAvailableProductsEmpty() {
+        product.setSold(100);
+        product.setMaxSold(100);
+        when(productRepository.findAllBySellStartBefore(any(LocalDateTime.class))).thenReturn(Collections.singletonList(product));
 
-        assertEquals(Collections.emptyList(), service.getAvailableProducts());
+        assertEquals(Collections.emptyList(), productService.getAvailableProducts());
     }
 
     /**
-     * Test get product by key
-     *
-     * @throws Exception when..
+     * Test get product by key..
      */
     @Test
     public void testGetByKey() throws Exception {
-        when(repository.findByKey(this.product.getKey())).thenReturn(Optional.of(this.product));
+        when(productRepository.findByKey(product.getKey())).thenReturn(Optional.of(product));
 
-        assertEquals(this.product, service.getByKey(this.product.getKey()));
+        assertEquals(product, productService.getByKey(product.getKey()));
     }
 
     /**
-     * Test get product by key empty
-     *
-     * @throws Exception when..
+     * Test get product by key empty..
      */
     @Test
     public void testGetByKeyEmpty() throws Exception {
         thrown.expect(ProductNotFoundException.class);
-        thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
+        thrown.expectMessage("Product with key " + product.getKey() + " not found!");
 
-        when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());
-        service.getByKey(this.product.getKey());
+        when(productRepository.findByKey(product.getKey())).thenReturn(Optional.empty());
+        productService.getByKey(product.getKey());
     }
 
     /**
-     * Test update
-     *
-     * @throws Exception when..
+     * Test update..
      */
     @Test
     public void testUpdate() throws Exception {
-        when(repository.findByKey(this.product.getKey())).thenReturn(Optional.of(this.product));
+        when(productRepository.findByKey(product.getKey())).thenReturn(Optional.of(product));
 
-        service.update(this.product);
-        verify(repository, times(1)).save(this.product);
+        productService.update(product);
+        verify(productRepository, times(1)).save(product);
     }
 
     /**
      * Test update empty
-     *
-     * @throws Exception when
      */
     @Test
     public void testUpdateEmpty() throws Exception {
         thrown.expect(ProductNotFoundException.class);
-        thrown.expectMessage("Product with key " + this.product.getKey() + " not found!");
+        thrown.expectMessage("Product with key " + product.getKey() + " not found!");
 
-        when(repository.findByKey(this.product.getKey())).thenReturn(Optional.empty());
+        when(productRepository.findByKey(product.getKey())).thenReturn(Optional.empty());
 
-        service.update(this.product);
+        productService.update(product);
     }
 
     /**
-     * Test create
-     *
-     * @throws Exception when
+     * Test create from a ProductDto.
+     */
+    @Test
+    public void testCreateDto() throws Exception {
+        ProductDto productDto = new ProductDto();
+        productDto.setTitle("Tile");
+        productDto.setCost(1.d);
+        productDto.setDescription("Test");
+        productDto.setMaxSold(1);
+        productDto.setMaxSoldPerCustomer(1);
+
+        when(productRepository.saveAndFlush(any(Product.class))).thenReturn(new Product(productDto));
+
+        Product product = productService.create(productDto);
+        verify(productRepository, times(1)).saveAndFlush(any(Product.class));
+        assertEquals(productDto.getTitle(), product.getTitle());
+        assertEquals(productDto.getCost(), product.getCost());
+        assertEquals(productDto.getDescription(), product.getDescription());
+        assertEquals(productDto.getMaxSold(), product.getMaxSold());
+        assertEquals(productDto.getMaxSoldPerCustomer(), product.getMaxSoldPerCustomer());
+    }
+
+    /**
+     * Test create.
      */
     @Test
     public void testCreate() throws Exception {
-        service.create(this.product);
-        verify(repository, times(1)).saveAndFlush(this.product);
+        productService.create(product);
+        verify(productRepository, times(1)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create when sell start not set.
+     */
+    @Test
+    public void testCreateSellStartNotSet() throws Exception {
+        Product product1 = mock(Product.class);
+
+        when(product1.getTitle()).thenReturn("Title");
+        when(product1.getSellEnd()).thenReturn(null);
+        when(product1.getCost()).thenReturn(0.d);
+        when(product1.getMaxSoldPerCustomer()).thenReturn(1);
+        when(product1.getSellStart()).thenReturn(null).thenReturn(LocalDateTime.now());
+
+        productService.create(product1);
+
+        verify(product1, times(1)).setSellStart(any(LocalDateTime.class));
+    }
+
+    /**
+     * Test create when title is invalid.
+     */
+    @Test
+    public void testCreateInvalidTitle() throws Exception {
+        product.setTitle(null);
+
+        thrown.expect(ProductInvalidException.class);
+        thrown.expectMessage("Title is required, and therefore should be filled in!");
+
+        productService.create(product);
+
+        verify(productRepository, times(0)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create when sell end is before sell start.
+     */
+    @Test
+    public void testCreateInvalidSellEndBeforeSellStart() throws Exception {
+        product.setSellEnd(LocalDateTime.now().minusDays(1));
+        product.setSellStart(LocalDateTime.now());
+
+        thrown.expect(ProductInvalidException.class);
+        thrown.expectMessage("Starting date for selling should be before the ending time");
+
+        productService.create(product);
+
+        verify(productRepository, times(0)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create when cost is invalid.
+     */
+    @Test
+    public void testCreateInvalidCost() throws Exception {
+        product.setCost(null);
+
+        thrown.expect(ProductInvalidException.class);
+        thrown.expectMessage("Price is required, and therefore should be filled in!");
+
+        productService.create(product);
+
+        verify(productRepository, times(0)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create when same sub product has been added twice.
+     */
+    @Test
+    public void testCreateInvalidSameProduct() throws Exception {
+        Product otherProduct = new Product();
+        product.setProducts(ImmutableList.of(otherProduct, otherProduct));
+
+        thrown.expect(ProductInvalidException.class);
+        thrown.expectMessage("It is not possible to add the same product twice or more!");
+
+        productService.create(product);
+
+        verify(productRepository, times(0)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create when max sold per Customer is invalid.
+     */
+    @Test
+    public void testCreateInvalidMaxSoldPerCustomer() throws Exception {
+        product.setMaxSoldPerCustomer(26);
+
+        thrown.expect(ProductInvalidException.class);
+        thrown.expectMessage("Max sold per customer should be between 1 and 25!");
+
+        productService.create(product);
+
+        verify(productRepository, times(0)).saveAndFlush(product);
+    }
+
+    /**
+     * Test create.
+     */
+    @Test
+    public void testCreateLinkProducts() throws Exception {
+        Product mock = mock(Product.class);
+        product.setProducts(ImmutableList.of(mock));
+        productService.create(product);
+
+        verify(mock, times(1)).setLinked(true);
+        verify(productRepository, times(1)).save(mock);
+        verify(productRepository, times(1)).saveAndFlush(product);
     }
 
     /**
      * Test delete
-     *
-     * @throws Exception when
      */
     @Test
-    public void testDelete() throws Exception {
-        service.delete(this.product);
-        verify(repository, times(1)).delete(this.product);
+    public void testDelete() {
+        productService.delete(product);
+        verify(productRepository, times(1)).delete(product);
     }
 
     /**
      * Test delete when the product is added to an event
-     *
-     * @throws Exception when
      */
     @Test
-    public void testDeleteProductAddedToEvent() throws Exception {
+    public void testDeleteProductAddedToEvent() {
         thrown.expect(ProductAlreadyLinkedException.class);
         thrown.expectMessage("Product is already added to an Event");
 
-        this.product.setLinked(true);
+        product.setLinked(true);
 
-        service.delete(this.product);
+        productService.delete(product);
     }
 
 }
