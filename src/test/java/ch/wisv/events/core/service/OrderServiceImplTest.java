@@ -15,9 +15,13 @@ import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.order.OrderServiceImpl;
+import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,16 +30,18 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
+import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 /**
  * Copyright (c) 2016  W.I.S.V. 'Christiaan Huygens'
@@ -55,20 +61,31 @@ import org.springframework.boot.test.mock.mockito.MockBean;
  */
 public class OrderServiceImplTest extends ServiceTest {
 
-    @MockBean
+    /** OrderRepository. */
+    @Mock
     private OrderRepository orderRepository;
 
-    @MockBean
+    /** OrderProductRepository. */
+    @Mock
     private OrderProductRepository orderProductRepository;
 
-    @MockBean
+    /** OrderValidationService. */
+    @Mock
+    private OrderValidationService orderValidationService;
+
+    /** ProductService. */
+    @Mock
     private ProductService productService;
 
-    @MockBean
+    /** MailService. */
+    @Mock
+    private MailService mailService;
+
+    /** TicketService. */
+    @Mock
     private TicketService ticketService;
 
     /** OrderService. */
-    @Autowired
     private OrderService orderService;
 
     /** Order. */
@@ -82,19 +99,27 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        this.product = mock(Product.class);
+        orderService = new OrderServiceImpl(
+                orderRepository,
+                orderProductRepository,
+                orderValidationService,
+                productService,
+                mailService,
+                ticketService
+        );
+        product = mock(Product.class);
 
-        this.order = new Order();
-        this.order.setOwner(mock(Customer.class));
-        this.order.setCreatedBy("events-online");
-        this.order.setAmount(1.d);
-        this.order.setPaymentMethod(PaymentMethod.CASH);
-        this.order.setStatus(OrderStatus.PAID);
-        this.order.updateOrderAmount();
+        order = new Order();
+        order.setOwner(mock(Customer.class));
+        order.setCreatedBy("events-online");
+        order.setAmount(1.d);
+        order.setPaymentMethod(PaymentMethod.CASH);
+        order.setStatus(OrderStatus.PAID);
+        order.updateOrderAmount();
 
-        OrderProduct orderProduct = new OrderProduct(this.product, 1.d, 1L);
-        this.order.setOrderProducts(
-                Collections.singletonList(orderProduct)
+        OrderProduct orderProduct = new OrderProduct(product, 1.d, 1L);
+        order.setOrderProducts(
+                ImmutableList.of(orderProduct)
         );
     }
 
@@ -103,8 +128,39 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @After
     public void tearDown() {
-        this.order = null;
-        this.product = null;
+        orderService = null;
+        order = null;
+        product = null;
+    }
+
+    /**
+     * Test add Customer to Order.
+     */
+    @Test
+    public void testAddCustomerToOrder() throws EventsException {
+        order.setStatus(OrderStatus.ANONYMOUS);
+        doNothing().when(orderValidationService).assertOrderIsValidForCustomer(order, order.getOwner());
+        when(orderRepository.saveAndFlush(order)).thenReturn(order);
+        when(orderRepository.findOneByPublicReference(order.getPublicReference())).thenReturn(Optional.of(order));
+        orderService.addCustomerToOrder(order, order.getOwner());
+
+        verify(orderValidationService, times(1)).assertOrderIsValidForCustomer(order, order.getOwner());
+        verify(orderRepository, times(2)).saveAndFlush(order);
+
+        assertEquals(OrderStatus.ASSIGNED, order.getStatus());
+    }
+
+    /**
+     * Test add Customer to Order when OrderStatus is not ANONYMOUS.
+     */
+    @Test
+    public void testAddCustomerToOrderInvalidStatus() throws EventsException {
+        order.setStatus(OrderStatus.ASSIGNED);
+
+        thrown.expect(OrderInvalidException.class);
+        thrown.expectMessage("This is not possible to add a Customer to an Order with status " + order.getStatus());
+
+        orderService.addCustomerToOrder(order, order.getOwner());
     }
 
     /**
@@ -112,9 +168,9 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetAllProducts() {
-        when(orderRepository.findAll()).thenReturn(Collections.singletonList(this.order));
+        when(orderRepository.findAll()).thenReturn(ImmutableList.of(order));
 
-        assertEquals(Collections.singletonList(this.order), orderService.getAllOrders());
+        assertEquals(ImmutableList.of(order), orderService.getAllOrders());
     }
 
     /**
@@ -122,9 +178,30 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetAllProductsEmpty() {
-        when(orderRepository.findAll()).thenReturn(Collections.emptyList());
+        when(orderRepository.findAll()).thenReturn(ImmutableList.of());
 
-        assertEquals(Collections.emptyList(), orderService.getAllOrders());
+        assertEquals(ImmutableList.of(), orderService.getAllOrders());
+    }
+
+    /**
+     * Test get all product method
+     */
+    @Test
+    public void testGetReservationByCustomer() {
+        when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION))
+                .thenReturn(ImmutableList.of(order));
+
+        assertEquals(ImmutableList.of(order), orderService.getReservationByCustomer(order.getOwner()));
+    }
+
+    /**
+     * Test get all product method
+     */
+    @Test
+    public void testGetReservationByCustomerEmpty() {
+        when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION)).thenReturn(ImmutableList.of());
+
+        assertEquals(ImmutableList.of(), orderService.getReservationByCustomer(order.getOwner()));
     }
 
     /**
@@ -134,9 +211,9 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Test
     public void testGetByReference() throws Exception {
-        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(this.order));
+        when(orderRepository.findOneByPublicReference(order.getPublicReference())).thenReturn(Optional.of(order));
 
-        assertEquals(this.order, orderService.getByReference(this.order.getPublicReference()));
+        assertEquals(order, orderService.getByReference(order.getPublicReference()));
     }
 
     /**
@@ -147,27 +224,36 @@ public class OrderServiceImplTest extends ServiceTest {
     @Test
     public void testGetByReferenceEmpty() throws Exception {
         thrown.expect(OrderNotFoundException.class);
-        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.empty());
+        when(orderRepository.findOneByPublicReference(order.getPublicReference())).thenReturn(Optional.empty());
 
-        orderService.getByReference(this.order.getPublicReference());
+        orderService.getByReference(order.getPublicReference());
     }
 
+    /**
+     * Create test.
+     */
     @Test
     public void testCreate() throws Exception {
-        orderService.create(this.order);
+        orderService.create(order);
 
-        verify(orderProductRepository, times(1)).saveAndFlush(this.order.getOrderProducts().get(0));
-        verify(orderRepository, times(1)).saveAndFlush(this.order);
+        verify(orderProductRepository, times(1)).saveAndFlush(order.getOrderProducts().get(0));
+        verify(orderRepository, times(1)).saveAndFlush(order);
     }
 
+    /**
+     * Create test with no products.
+     */
     @Test
     public void testCreateNoProducts() throws Exception {
         thrown.expect(OrderInvalidException.class);
-        this.order.setOrderProducts(null);
+        order.setOrderProducts(null);
 
-        orderService.create(this.order);
+        orderService.create(order);
     }
 
+    /**
+     * Create test using OrderProductDto.
+     */
     @Test
     public void testCreateByOrderProductDto() throws Exception {
         HashMap<String, Long> products = new HashMap<>();
@@ -181,14 +267,17 @@ public class OrderServiceImplTest extends ServiceTest {
 
         Order order = orderService.createOrderByOrderProductDto(orderProductDto);
 
-        assertEquals(order.getOrderProducts(), Collections.singletonList(new OrderProduct(mockProduct, 1.d, 1L)));
+        assertEquals(order.getOrderProducts(), ImmutableList.of(new OrderProduct(mockProduct, 1.d, 1L)));
     }
 
+    /**
+     * Update test.
+     */
     @Test
     public void testUpdate() throws Exception {
         Order mock = mock(Order.class);
 
-        when(orderRepository.findOneByPublicReference(this.order.getPublicReference())).thenReturn(Optional.of(mock));
+        when(orderRepository.findOneByPublicReference(order.getPublicReference())).thenReturn(Optional.of(mock));
         orderService.update(order);
 
         // Updates that should happen
@@ -204,9 +293,12 @@ public class OrderServiceImplTest extends ServiceTest {
         verify(mock, times(0)).setCreatedAt(any(LocalDateTime.class));
         verify(mock, times(0)).setPaidAt(any(LocalDateTime.class));
 
-        verify(orderRepository, times(1)).saveAndFlush(this.order);
+        verify(orderRepository, times(1)).saveAndFlush(order);
     }
 
+    /**
+     * Update test with new Order.
+     */
     @Test
     public void testUpdateNewOrder() throws Exception {
         thrown.expect(OrderNotFoundException.class);
@@ -215,15 +307,21 @@ public class OrderServiceImplTest extends ServiceTest {
         orderService.update(new Order());
     }
 
+    /**
+     * Update test missing public reference.
+     */
     @Test
     public void testUpdateMissingPublicReference() throws Exception {
-        this.order.setPublicReference(null);
+        order.setPublicReference(null);
         thrown.expect(OrderInvalidException.class);
         when(orderRepository.findOneByPublicReference(any(String.class))).thenReturn(Optional.empty());
 
-        orderService.update(this.order);
+        orderService.update(order);
     }
 
+    /**
+     * Update OrderStatus.
+     */
     @Test
     public void testUpdateOrderStatus() throws Exception {
         Order mock = mock(Order.class);
@@ -234,6 +332,9 @@ public class OrderServiceImplTest extends ServiceTest {
         verify(orderRepository, times(1)).saveAndFlush(mock);
     }
 
+    /**
+     * Update OrderStatus.
+     */
     @Test
     public void testUpdateOrderStatusPaid() throws Exception {
         Order order = new Order();
@@ -247,6 +348,9 @@ public class OrderServiceImplTest extends ServiceTest {
         verify(ticketService, times(1)).createByOrder(order);
     }
 
+    /**
+     * Update OrderStatus.
+     */
     @Test
     public void testUpdateOrderStatusPaidButWasAlreadyPaid() throws Exception {
         thrown.expect(OrderInvalidException.class);
@@ -258,6 +362,9 @@ public class OrderServiceImplTest extends ServiceTest {
         orderService.updateOrderStatus(order, OrderStatus.PAID);
     }
 
+    /**
+     * Update OrderStatus.
+     */
     @Test
     public void testUpdateOrderStatusPaidMissingOwner() throws Exception {
         thrown.expect(OrderInvalidException.class);
@@ -274,10 +381,47 @@ public class OrderServiceImplTest extends ServiceTest {
         Order order = new Order();
         order.setStatus(OrderStatus.ASSIGNED);
 
-        when(ticketService.createByOrder(order)).thenReturn(Collections.emptyList());
+        when(ticketService.createByOrder(order)).thenReturn(ImmutableList.of());
         orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
         assertEquals(OrderStatus.RESERVATION, order.getStatus());
+    }
+
+    @Test
+    public void testUpdateOrderStatusRejectedFromPaid() throws Exception {
+        Product product2 = new Product();
+        product2.setSold(2);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.setStatus(OrderStatus.PAID);
+        order.setOrderProducts(ImmutableList.of(orderProduct));
+
+        doNothing().when(ticketService).deleteByOrder(order);
+        orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+
+        assertEquals(OrderStatus.REJECTED, order.getStatus());
+        verify(ticketService, times(1)).deleteByOrder(order);
+        verify(orderRepository, times(1)).saveAndFlush(order);
+
+        assertEquals(1, product2.getSold());
+    }
+
+    @Test
+    public void testUpdateOrderStatusRejectedFromReservation() throws Exception {
+        Product product2 = new Product();
+        product2.setReserved(2);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.setStatus(OrderStatus.RESERVATION);
+        order.setOrderProducts(ImmutableList.of(orderProduct));
+
+        doNothing().when(ticketService).deleteByOrder(order);
+        orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+
+        assertEquals(OrderStatus.REJECTED, order.getStatus());
+        verify(orderRepository, times(1)).saveAndFlush(order);
+
+        assertEquals(1, product2.getReserved());
     }
 
     @Test
@@ -286,7 +430,7 @@ public class OrderServiceImplTest extends ServiceTest {
         order.setStatus(OrderStatus.PENDING);
         when(ticketService.createByOrder(order)).thenReturn(new ArrayList<>());
 
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> assertEquals("Not allowed to update status from PAID to PAID", e));
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> assertEquals("Not allowed to update status from PAID to PAID", e.getMessage()));
 
         Thread t1 = new Thread(() -> {
             try {
@@ -305,5 +449,85 @@ public class OrderServiceImplTest extends ServiceTest {
             }
         });
         t2.start();
+    }
+
+    /**
+     * Test containsChOnlyProduct when is true.
+     */
+    @Test
+    public void testContainsChOnlyProductTrue() {
+        Product product2 = new Product();
+        product2.setChOnly(true);
+        product2.setCost(1.d);
+
+        when(product.isChOnly()).thenReturn(false);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.addOrderProduct(orderProduct);
+
+        assertTrue(orderService.containsChOnlyProduct(order));
+    }
+
+    /**
+     * Test containsChOnlyProduct when is false.
+     */
+    @Test
+    public void testContainsChOnlyProductFalse() {
+        Product product2 = new Product();
+        product2.setChOnly(false);
+        product2.setCost(1.d);
+
+        when(product.isChOnly()).thenReturn(false);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.addOrderProduct(orderProduct);
+
+        assertFalse(orderService.containsChOnlyProduct(order));
+    }
+
+    /**
+     * Test containsRegistrationProduct when is true.
+     */
+    @Test
+    public void testContainsRegistrationProductTrue() {
+        Product product2 = new Product();
+        product2.setIncludesRegistration(true);
+        product2.setCost(1.d);
+
+        when(product.isIncludesRegistration()).thenReturn(false);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.addOrderProduct(orderProduct);
+
+        assertTrue(orderService.containsRegistrationProduct(order));
+    }
+
+    /**
+     * Test containsRegistrationProduct when is false.
+     */
+    @Test
+    public void testContainsRegistrationProductFalse() {
+        Product product2 = new Product();
+        product2.setIncludesRegistration(false);
+        product2.setCost(1.d);
+
+        when(product.isIncludesRegistration()).thenReturn(false);
+        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
+        Order order = new Order();
+        order.addOrderProduct(orderProduct);
+
+        assertFalse(orderService.containsRegistrationProduct(order));
+    }
+
+    /**
+     * Test containsRegistrationProduct when is false.
+     */
+    @Test
+    public void testDelete() {
+        doNothing().when(orderRepository).delete(order);
+
+        orderService.delete(order);
+
+        verify(orderRepository, times(1)).delete(order);
     }
 }
