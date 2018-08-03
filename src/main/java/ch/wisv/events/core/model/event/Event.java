@@ -140,14 +140,15 @@ public class Event {
     /**
      * Constructor.
      *
-     * @param title       Title of the Event
-     * @param description Description of the Event
-     * @param location    Location of the Event
-     * @param target      Target of the Event
-     * @param maxSold     Limit of the Event
-     * @param imageUrl    Path to the Image of the Event
-     * @param start       Starting DateTime of the Event
-     * @param ending      Ending DateTime of the Event
+     * @param title            Title of the Event
+     * @param description      Description of the Event
+     * @param location         Location of the Event
+     * @param target           Target of the Event
+     * @param maxSold          Limit of the Event
+     * @param imageUrl         Path to the Image of the Event
+     * @param start            Starting DateTime of the Event
+     * @param ending           Ending DateTime of the Event
+     * @param shortDescription of type String
      */
     public Event(
             String title,
@@ -202,7 +203,7 @@ public class Event {
     }
 
     /**
-     * Get amount of tickets sold for this event
+     * Get amount of tickets sold for this event.
      *
      * @return int
      */
@@ -211,7 +212,7 @@ public class Event {
     }
 
     /**
-     * Get amount of tickets reserved for this event
+     * Get amount of tickets reserved for this event.
      *
      * @return int
      */
@@ -220,7 +221,7 @@ public class Event {
     }
 
     /**
-     * Calculate the progress of target
+     * Calculate the progress of target.
      *
      * @param reserved of type double
      *
