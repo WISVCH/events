@@ -89,8 +89,13 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void addCustomerToOrder(Order order, Customer customer) throws EventsException {
+        if (order.getStatus() != OrderStatus.ANONYMOUS) {
+            throw new OrderInvalidException("This is not possible to add a Customer to an Order with status " + order.getStatus());
+        }
+
         orderValidationService.assertOrderIsValidForCustomer(order, customer);
         order.setOwner(customer);
+
         this.update(order);
         this.updateOrderStatus(order, OrderStatus.ASSIGNED);
     }

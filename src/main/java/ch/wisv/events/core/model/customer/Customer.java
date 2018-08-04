@@ -2,6 +2,7 @@ package ch.wisv.events.core.model.customer;
 
 import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -84,6 +85,7 @@ public class Customer {
     public Customer() {
         this.key = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
+        this.ldapGroups = new ArrayList<>();
         this.verifiedChMember = false;
     }
 

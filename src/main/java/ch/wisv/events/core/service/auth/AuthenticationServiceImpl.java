@@ -5,6 +5,8 @@ import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.utils.LdapGroup;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -119,19 +121,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             customer.setChUsername(userInfo.getLdapUsername());
         }
 
-        if (customer.getChUsername() == null || customer.getEmail().equals("")) {
+        if (customer.getEmail() == null || customer.getEmail().equals("")) {
             customer.setEmail(userInfo.getEmail());
         }
 
         customer.setVerifiedChMember(true);
 
-        customer.setLdapGroups(userInfo.getLdapGroups().stream().map(ldapString -> {
-            try {
-                return ch.wisv.events.utils.LdapGroup.valueOf(ldapString.toUpperCase());
-            } catch (IllegalArgumentException ignored) {
-                return null;
-            }
-        }).collect(Collectors.toList()));
+        customer.setLdapGroups(
+                userInfo.getLdapGroups().stream()
+                        .map(ldapString -> {
+                            try {
+                                return LdapGroup.valueOf(ldapString.toUpperCase());
+                            } catch (IllegalArgumentException ignored) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
+        );
 
         customerService.update(customer);
     }

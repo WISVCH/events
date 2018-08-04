@@ -2,8 +2,13 @@ package ch.wisv.events.api.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * ProductDto object.
+ */
 @Getter
+@Setter
 public class ProductDto {
 
     /**
