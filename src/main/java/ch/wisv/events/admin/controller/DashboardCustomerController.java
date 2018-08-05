@@ -1,5 +1,6 @@
 package ch.wisv.events.admin.controller;
 
+import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
@@ -56,13 +57,14 @@ public class DashboardCustomerController {
      * Edit an existing customer page. It will redirect the user when the key provided does not belong to any of the
      * customers available.
      *
-     * @param model String model
-     * @param key   key of the customer some want to edit
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return path to the customer edit template
      */
     @GetMapping("/view/{key}")
-    public String view(Model model, @PathVariable String key) {
+    public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
             model.addAttribute("customer", customer);
@@ -70,6 +72,8 @@ public class DashboardCustomerController {
 
             return "admin/customers/view";
         } catch (CustomerNotFoundException e) {
+            redirect.addFlashAttribute("warning", e.getMessage());
+
             return "redirect:/administrator/customers/";
         }
     }
@@ -106,7 +110,7 @@ public class DashboardCustomerController {
             redirect.addFlashAttribute("success", "Customer with name " + model.getName() + "  has been created!");
 
             return "redirect:/administrator/customers/";
-        } catch (Exception e) {
+        } catch (CustomerInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("customer", model);
 
@@ -125,7 +129,7 @@ public class DashboardCustomerController {
      * @return path to the customer edit template
      */
     @GetMapping("/edit/{key}")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
             if (!model.containsAttribute("customer")) {
@@ -135,6 +139,8 @@ public class DashboardCustomerController {
 
             return "admin/customers/customer";
         } catch (CustomerNotFoundException e) {
+            redirect.addFlashAttribute("warning", e.getMessage());
+
             return "redirect:/administrator/customers/";
         }
     }
@@ -155,12 +161,12 @@ public class DashboardCustomerController {
             customerService.update(customer);
             redirect.addFlashAttribute("success", "Customer changes have been saved!");
 
-            return "redirect:/administrator/customers/view/" + customer.getKey() + "/";
-        } catch (Exception e) {
+            return "redirect:/administrator/customers/view/" + customer.getKey();
+        } catch (CustomerInvalidException | CustomerNotFoundException e) {
             redirect.addFlashAttribute("customer", customer);
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/administrator/customers/edit/" + customer.getKey() + "/";
+            return "redirect:/administrator/customers/edit/" + customer.getKey();
         }
     }
 
@@ -180,7 +186,7 @@ public class DashboardCustomerController {
             Customer customer = customerService.getByKey(key);
             customerService.delete(customer);
 
-            redirect.addFlashAttribute("message", "Customer with name " + customer.getName() + " has been deleted!");
+            redirect.addFlashAttribute("success", "Customer with name " + customer.getName() + " has been deleted!");
 
             return "redirect:/administrator/customers/";
         } catch (CustomerNotFoundException e) {

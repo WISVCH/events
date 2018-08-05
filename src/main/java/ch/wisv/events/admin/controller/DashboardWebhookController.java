@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * DashboardWebhookController class.
+ */
 @Controller
 @RequestMapping("/administrator/webhooks")
 @PreAuthorize("hasRole('ADMIN')")
@@ -50,8 +53,9 @@ public class DashboardWebhookController {
     /**
      * Edit existing vendor [GET "/edit/{key}"].
      *
-     * @param model Spring model
-     * @param key   key of the vendor
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return path to Thymeleaf template location
      */
@@ -72,7 +76,7 @@ public class DashboardWebhookController {
     /**
      * Create a new vendor [GET "/create/"].
      *
-     * @param model Spring model
+     * @param model of type Model
      *
      * @return path to Thymeleaf template location
      */
@@ -111,8 +115,9 @@ public class DashboardWebhookController {
     /**
      * Edit existing vendor [GET "/edit/{key}"].
      *
-     * @param model Spring model
-     * @param key   key of the vendor
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return path to Thymeleaf template location
      */
@@ -124,7 +129,7 @@ public class DashboardWebhookController {
 
             return "admin/webhooks/webhook";
         } catch (WebhookNotFoundException e) {
-            redirect.addFlashAttribute("waring", e.getMessage());
+            redirect.addFlashAttribute("warning", e.getMessage());
 
             return "redirect:/administrator/webhooks/";
         }
@@ -133,8 +138,9 @@ public class DashboardWebhookController {
     /**
      * Update a existing Webhook.
      *
-     * @param redirect RedirectAttributes
-     * @param webhook  Webhook webhook with the needed information
+     * @param redirect of type RedirectAttributes
+     * @param webhook  of type Webhook
+     * @param key      of type String
      *
      * @return redirect to edit page
      */
@@ -145,12 +151,12 @@ public class DashboardWebhookController {
             webhookService.update(webhook);
             redirect.addFlashAttribute("success", "Webhook changes saves!");
 
-            return "redirect:/administrator/webhooks/view/" + webhook.getKey() + "/";
+            return "redirect:/administrator/webhooks/view/" + webhook.getKey();
         } catch (WebhookInvalidException | WebhookNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("webhook", webhook);
 
-            return "redirect:/administrator/webhooks/edit/" + webhook.getKey() + "/";
+            return "redirect:/administrator/webhooks/edit/" + webhook.getKey();
         }
     }
 

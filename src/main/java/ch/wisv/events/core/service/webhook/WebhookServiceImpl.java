@@ -10,11 +10,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * WebhookService implementation.
+ */
 @Service
 public class WebhookServiceImpl implements WebhookService {
 
     /**
-     * Field this.repository
+     * Field repository.
      */
     private final WebhookRepository repository;
 
@@ -35,7 +38,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public List<Webhook> getAll() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 
     /**
@@ -47,7 +50,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public Webhook getByKey(String key) throws WebhookNotFoundException {
-        Optional<Webhook> webhookOptional = this.repository.findByKey(key);
+        Optional<Webhook> webhookOptional = repository.findByKey(key);
 
         return webhookOptional.orElseThrow(() -> new WebhookNotFoundException("key " + key));
     }
@@ -61,7 +64,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public List<Webhook> getByTrigger(WebhookTrigger webhookTrigger) {
-        return this.repository.findAllByWebhookTriggersIsContaining(webhookTrigger);
+        return repository.findAllByWebhookTriggersIsContaining(webhookTrigger);
     }
 
     /**
@@ -73,7 +76,7 @@ public class WebhookServiceImpl implements WebhookService {
     public void create(Webhook model) throws WebhookInvalidException {
         this.assertIsValidWebhook(model);
 
-        this.repository.saveAndFlush(model);
+        repository.saveAndFlush(model);
     }
 
     /**
@@ -91,7 +94,7 @@ public class WebhookServiceImpl implements WebhookService {
 
         this.assertIsValidWebhook(webhook);
 
-        this.repository.saveAndFlush(webhook);
+        repository.saveAndFlush(webhook);
     }
 
     /**
@@ -101,7 +104,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public void delete(Webhook model) {
-        this.repository.delete(model);
+        repository.delete(model);
     }
 
     /**
@@ -118,6 +121,10 @@ public class WebhookServiceImpl implements WebhookService {
 
         if (model.getLdapGroup() == null) {
             throw new WebhookInvalidException("LDAP group can not be null!");
+        }
+
+        if (model.getWebhookTriggers() == null) {
+            throw new WebhookInvalidException("WebhookTriggers can not be null!");
         }
     }
 }

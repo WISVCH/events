@@ -180,6 +180,10 @@ public class CustomerServiceImpl implements CustomerService {
         model.setLdapGroups(customer.getLdapGroups());
         model.setVerifiedChMember(customer.isVerifiedChMember());
 
+        if (customer.getChUsername() != null) {
+            model.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
+        }
+
         this.assertIsValidCustomer(model);
 
         customerRepository.save(model);
