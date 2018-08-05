@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * DashboardCustomerController class.
+ */
 @Controller
 @RequestMapping(value = "/administrator/customers")
 @PreAuthorize("hasRole('ADMIN')")
@@ -123,8 +126,9 @@ public class DashboardCustomerController {
      * Edit an existing customer page. It will redirect the user when the key provided does not belong to any of the
      * customers available.
      *
-     * @param model String model
-     * @param key   key of the customer some want to edit
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return path to the customer edit template
      */
@@ -149,8 +153,9 @@ public class DashboardCustomerController {
      * Updates an existing customer using the Customer customer. It will show an error when not all the required fields
      * are filled in.
      *
-     * @param redirect RedirectAttributes for the user feedback
-     * @param customer Customer customer
+     * @param redirect of type RedirectAttributes
+     * @param customer of type Customer
+     * @param key      of type String
      *
      * @return redirect
      */
