@@ -4,7 +4,6 @@ import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.model.customer.Customer;
 import com.google.common.collect.ImmutableList;
-import java.util.UUID;
 import static org.hamcrest.Matchers.any;
 import org.junit.Test;
 import org.junit.runner.RunWith;
