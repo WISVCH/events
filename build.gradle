@@ -85,7 +85,7 @@ dependencies {
     compile 'org.webjars.bower:quagga:0.11.6'
     compile 'org.webjars:sprintf.js:1.0.0'
     compile 'org.webjars:font-awesome:5.0.6'
-    compile 'org.webjars.npm:flatpickr:3.0.6'
+    compile 'org.webjars.npm:flatpickr:4.5.1'
 
     compile 'org.flywaydb:flyway-core:4.2.0'
     compile 'org.projectlombok:lombok:1.16.10'

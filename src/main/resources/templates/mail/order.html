@@ -281,7 +281,7 @@
                                                style="border-collapse: collapse !important;">
                                             <tr>
                                                 <td>
-                                                    <h3>Order overview</h3>
+                                                    <h3>Ticket overview</h3>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -295,11 +295,7 @@
                                                             </td>
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                Unique code
-                                                            </td>
-                                                            <td class="grey-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                Cost
+                                                                Barcode
                                                             </td>
                                                         </tr>
                                                         <tr th:each="ticket : ${tickets}">
@@ -309,47 +305,9 @@
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="${ticket.getUniqueCode()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                <a th:href="@{'/sales/scan/barcode/' + ${ticket.getUniqueCode()}}"
-                                                                   th:text="${ticket.getUniqueCode()}">
-                                                                </a>
-                                                            </td>
-                                                            <td class="white-header"
-                                                                th:text="'€ ' + ${#numbers.formatDecimal(ticket.getProduct().getCost(), 1, 'POINT', 2, 'COMMA')}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                € 2,00
-                                                            </td>
-                                                        </tr>
-                                                        <tr th:if="${order.getPaymentMethod() == T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}">
-                                                            <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                Transaction fee
-                                                            </td>
-                                                            <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                            </td>
-                                                            <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                € 0,35
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="grey-header" colspan="2"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: right;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                Total
-                                                            </td>
-                                                            <td class="grey-header"
-                                                                th:if="${order.getPaymentMethod() != T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}"
-                                                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                € 2,00
-                                                            </td>
-                                                            <td class="grey-header"
-                                                                th:if="${order.getPaymentMethod() == T(ch.wisv.events.core.model.order.PaymentMethod).IDEAL}"
-                                                                th:text="'€ ' + ${#numbers.formatDecimal((order.getAmount() + 0.35), 1, 'POINT', 2, 'COMMA')}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                € 2,00
+                                                                <img th:src="'https://barcode.tec-it.com/barcode.ashx?data=978020' + ${ticket.getUniqueCode()} + '&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0'"
+                                                                     alt="">
                                                             </td>
                                                         </tr>
                                                     </table>

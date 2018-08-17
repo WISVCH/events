@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<!--/*@thymesVar id="permissions" type="ch.wisv.events.core.model.registration.Permissions"*/-->
+<div th:fragment="permissions">
+    <div class="card mb-4">
+        <h6 class="card-header">Permissions</h6>
+        <div class="card-body">
+            <div class="form">
+                <div class="form-check">
+                    <label class="form-check-label custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input"
+                               th:field="*{permissions.generalMailing}">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description text-dark font-weight-normal">I <b>DO NOT</b> want to register for the general mailing list</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input"
+                               th:field="*{permissions.careerMailing}">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description text-dark font-weight-normal">I <b>DO NOT</b> want to register for the career mailing list</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input"
+                               th:field="*{permissions.educationMailing}">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description text-dark font-weight-normal">I <b>DO NOT</b> want to register for the education mailing list</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input"
+                               th:field="*{permissions.maCHazine}">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description text-dark font-weight-normal">I <b>DO</b> want to receive the MaCHazine</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package ch.wisv.events.core.model.customer;
 
+import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -12,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+/**
+ * Customer object.
+ */
 @Entity
 @Data
 public class Customer {
@@ -54,15 +59,20 @@ public class Customer {
     private String chUsername;
 
     /**
-     * Field rfidToken of the customers pass.
+     * Field rfidToken of the customer.
      */
     private String rfidToken;
 
     /**
+     * Field verifiedChMember of the customers.
+     */
+    private boolean verifiedChMember;
+
+    /**
      * Field ldapGroups.
      */
-    @ElementCollection(targetClass = ch.wisv.events.utils.LdapGroup.class)
-    private List<ch.wisv.events.utils.LdapGroup> ldapGroups;
+    @ElementCollection(targetClass = LdapGroup.class)
+    private List<LdapGroup> ldapGroups;
 
     /**
      * Field createdAt when the Customer has been created.
@@ -75,6 +85,8 @@ public class Customer {
     public Customer() {
         this.key = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
+        this.ldapGroups = new ArrayList<>();
+        this.verifiedChMember = false;
     }
 
     /**

@@ -112,6 +112,28 @@ public class CustomerServiceTest extends ServiceTest {
     }
 
     /**
+     * Test get by sub method
+     */
+    @Test
+    public void testGetBySub() throws Exception {
+        when(repository.findBySub(this.customer.getSub())).thenReturn(Optional.of(this.customer));
+
+        assertEquals(this.customer, customerService.getBySub(this.customer.getSub()));
+    }
+
+    /**
+     * Test get by sub not found
+     */
+    @Test
+    public void testGetBySubNotFound() throws Exception {
+        thrown.expect(CustomerNotFoundException.class);
+        thrown.expectMessage("Customer with sub sub not found!");
+        when(repository.findBySub(anyString())).thenReturn(Optional.empty());
+
+        customerService.getBySub("sub");
+    }
+
+    /**
      * Test get by key method
      */
     @Test

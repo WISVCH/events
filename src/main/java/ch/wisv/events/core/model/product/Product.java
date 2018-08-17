@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.product;
 
+import ch.wisv.events.api.request.ProductDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,16 @@ public class Product {
     public boolean linked;
 
     /**
+     * Includes registration.
+     */
+    private boolean includesRegistration;
+
+    /**
+     * Includes registration.
+     */
+    private boolean chOnly;
+
+    /**
      * Product constructor.
      */
     public Product() {
@@ -109,6 +120,20 @@ public class Product {
         // Set default sold to zero.
         this.sold = 0;
         this.reserved = 0;
+    }
+
+    /**
+     * ProductDto constructor.
+     *
+     * @param productDto of type ProductDto
+     */
+    public Product(ProductDto productDto) {
+        this();
+        this.title = productDto.getTitle();
+        this.description = productDto.getDescription();
+        this.cost = productDto.getCost();
+        this.maxSold = productDto.getMaxSold();
+        this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();
     }
 
     /**

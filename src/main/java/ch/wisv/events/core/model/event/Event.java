@@ -140,14 +140,15 @@ public class Event {
     /**
      * Constructor.
      *
-     * @param title       Title of the Event
-     * @param description Description of the Event
-     * @param location    Location of the Event
-     * @param target      Target of the Event
-     * @param maxSold     Limit of the Event
-     * @param imageUrl    Path to the Image of the Event
-     * @param start       Starting DateTime of the Event
-     * @param ending      Ending DateTime of the Event
+     * @param title            Title of the Event
+     * @param description      Description of the Event
+     * @param location         Location of the Event
+     * @param target           Target of the Event
+     * @param maxSold          Limit of the Event
+     * @param imageUrl         Path to the Image of the Event
+     * @param start            Starting DateTime of the Event
+     * @param ending           Ending DateTime of the Event
+     * @param shortDescription of type String
      */
     public Event(
             String title,
@@ -185,24 +186,47 @@ public class Event {
      * Calculate the progress of the products sold and the target of the event and round number to
      * two decimals.
      *
-     * @return progress of event
+     * @return double
      */
     public double calcSoldProgress() {
         return this.calcProgress(this.getSold());
     }
 
+    /**
+     * Calculate the progress of the products reserved and the target of the event and round number to
+     * two decimals.
+     *
+     * @return double
+     */
     public double calcReservedProcess() {
         return this.calcProgress(this.getReserved());
     }
 
+    /**
+     * Get amount of tickets sold for this event.
+     *
+     * @return int
+     */
     public int getSold() {
         return products.stream().mapToInt(Product::getSold).sum();
     }
 
+    /**
+     * Get amount of tickets reserved for this event.
+     *
+     * @return int
+     */
     public int getReserved() {
         return products.stream().mapToInt(Product::getReserved).sum();
     }
 
+    /**
+     * Calculate the progress of target.
+     *
+     * @param reserved of type double
+     *
+     * @return double
+     */
     private double calcProgress(double reserved) {
         return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }

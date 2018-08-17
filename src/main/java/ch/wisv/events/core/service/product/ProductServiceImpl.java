@@ -78,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
             // Set sell start by default to now.
             product.setSellStart(LocalDateTime.now());
         }
+
         this.assertIsValidProduct(product);
         this.updateLinkedProducts(product, product.getProducts(), true);
 
@@ -91,13 +92,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product create(ProductDto productDto) throws ProductInvalidException {
-        Product product = new Product();
-
-        product.setTitle(productDto.getTitle());
-        product.setDescription(productDto.getDescription());
-        product.setCost(productDto.getCost());
-        product.setMaxSold(productDto.getMaxSold());
-        product.setMaxSoldPerCustomer(productDto.getMaxSoldPerCustomer());
+        Product product = new Product(productDto);
 
         return this.create(product);
     }
@@ -120,6 +115,7 @@ public class ProductServiceImpl implements ProductService {
         model.setSellEnd(product.getSellEnd());
         model.setProducts(product.getProducts());
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
+        model.setIncludesRegistration(product.isIncludesRegistration());
 
         this.assertIsValidProduct(product);
         this.updateLinkedProducts(product, model.getProducts(), true);
@@ -154,10 +150,8 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInvalidException("Starting date for selling is required, and therefore should be filled in!");
         }
 
-        if (product.getSellStart() != null && product.getSellEnd() != null) {
-            if (product.getSellStart().isAfter(product.getSellEnd())) {
-                throw new ProductInvalidException("Starting date for selling should be before the ending time");
-            }
+        if (product.getSellEnd() != null && product.getSellStart().isAfter(product.getSellEnd())) {
+            throw new ProductInvalidException("Starting date for selling should be before the ending time");
         }
 
         if (product.getCost() == null) {

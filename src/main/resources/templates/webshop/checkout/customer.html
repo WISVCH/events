@@ -31,7 +31,7 @@
 
             <div class="row">
                 <div class="col-12 col-md-5">
-                    <h4 class="display-5 mb-5">CH member</h4>
+                    <h4 class="display-5 mb-5">CH Connect</h4>
 
                     <p class="mb-2">
                         Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V.
@@ -61,10 +61,16 @@
 
                 </div>
                 <div class="col-12 col-md-5">
-                    <h4 class="display-5 mb-5">New customer</h4>
+                    <h4 class="display-5 mb-5">Guest</h4>
 
-                    <p class="mb2">
-                        Not a CH member? No problem, proceed the checkout as a guest.
+                    <p class="mb-2">
+                        Not a CH member or does CH Connect not work for you? No problem, proceed the checkout as a
+                        guest.
+                    </p>
+
+                    <p class="mb-2 text-danger" th:if="${chOnly}">
+                        There is a CH only product in the order, so it is only possible to
+                        checkout with a verified email address.
                     </p>
 
                     <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/guest'}"
