@@ -58,7 +58,7 @@ public class DashboardProductController {
      *
      * @return thymeleaf template path
      */
-    @GetMapping()
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("products", this.productService.getAllProducts());
 
@@ -81,7 +81,7 @@ public class DashboardProductController {
 
             return "admin/products/view";
         } catch (ProductNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute("warning", e.getMessage());
 
             return "redirect:/administrator/products/";
         }
@@ -118,7 +118,7 @@ public class DashboardProductController {
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
 
-            return "redirect:/administrator/products/view/" + product.getKey() + "/";
+            return "redirect:/administrator/products/view/" + product.getKey();
         } catch (ProductInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
@@ -162,14 +162,14 @@ public class DashboardProductController {
             product.setKey(key);
             productService.update(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
-            redirect.addFlashAttribute("success", "Changes have been saved!");
+            redirect.addFlashAttribute("success", "Product changes have been saved!");
 
-            return "redirect:/administrator/products/view/" + product.getKey() + "/";
+            return "redirect:/administrator/products/view/" + product.getKey();
         } catch (ProductNotFoundException | ProductInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("product", product);
 
-            return "redirect:/administrator/products/edit/" + product.getKey() + "/";
+            return "redirect:/administrator/products/edit/" + product.getKey();
         }
     }
 
@@ -210,7 +210,7 @@ public class DashboardProductController {
             productService.delete(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_DELETE, product);
 
-            redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
+            redirectAttributes.addFlashAttribute("success", "Product " + product.getTitle() + " has been deleted!");
         } catch (ProductNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

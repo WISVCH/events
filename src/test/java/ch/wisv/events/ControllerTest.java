@@ -140,7 +140,11 @@ public abstract class ControllerTest {
 
     protected Product createProduct() {
         Product product = new Product();
+        product.setTitle("Product product");
         product.setCost(1.d);
+        product.setSellStart(LocalDateTime.now());
+        product.setProducts(new ArrayList<>());
+        product.setMaxSoldPerCustomer(1);
         productRepository.saveAndFlush(product);
 
         return product;
