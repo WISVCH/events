@@ -6,7 +6,7 @@
     "location": "Lecture hall D@ta + /Pub",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ing_logo-2.png?itok=Tm1Xskao",
+    "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
     "productNumber": 1
   },
   {
@@ -16,7 +16,7 @@
     "location": "Theater de Veste",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/sympo_slot.png?itok=wS0WI0hy"
+    "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
     "productNumber": 2
   },
   {
@@ -26,7 +26,7 @@
     "location": "/pub",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/tv-just-dance-ch_0.png?itok=_pNAz-Ba"
+    "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
     "productNumber": 4
   },
   {
@@ -36,7 +36,7 @@
     "location": "Unknown",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/rallyposterphotoshop.png?itok=tdgvGKIl"
+    "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
     "productNumber": 3
   },
   {
@@ -46,7 +46,7 @@
     "location": "/pub",
     "target": 50,
     "maxSold": 100,
-    "imageUrl": "https://ch.tudelft.nl/sites/default/files/styles/w3cie_colorbox_large/public/ch-vignet_3.png?itok=upBfqQpL",
+    "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
     "productNumber": 5
   }
 ]

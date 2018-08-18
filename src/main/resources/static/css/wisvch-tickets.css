@@ -31,6 +31,69 @@
     color: #40556a;
 }
 
+.card-columns-tickets {
+    column-count: 1;
+}
+
+.card-deck {
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: stretch;
+}
+
+.card-deck > .card {
+    display: block;
+    flex-basis: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+}
+
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {
+    .card-columns-tickets {
+        column-count: 1;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+    .card-columns-tickets {
+        column-count: 2;
+    }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(50% - 30px);
+        max-width: calc(50% - 30px);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .card-columns-tickets {
+        column-count: 3;
+    }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(33.33% - 30px);
+        max-width: calc(33.33% - 30px);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .card-columns-tickets {
+        column-count: 4;
+    }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(25% - 30px);
+        max-width: calc(25% - 30px);
+    }
+}
+
 /*
 Max width before this PARTICULAR table gets nasty
 This query will take effect for any screen smaller than 760px
@@ -89,18 +152,18 @@ and also iPads specifically.
 }
 
 .toast {
- visibility: hidden;
- min-width: 250px;
- background-color: rgba(51, 51, 51, 0.9);
- color: #fff;
- text-align: center;
- border-radius: 2px;
- padding: 16px;
- position: fixed;
- z-index: 1;
- left: 30px;
- bottom: 30px;
- font-size: 17px;
+    visibility: hidden;
+    min-width: 250px;
+    background-color: rgba(51, 51, 51, 0.9);
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 30px;
+    bottom: 30px;
+    font-size: 17px;
 }
 
 .toast.show {
@@ -110,21 +173,62 @@ and also iPads specifically.
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
+
+.carousel-indicators {
+    top: 10px;
+}
+
+.carousel-indicators li {
+    background-color: #40556a;
+}
+
+.carousel-indicators li.active {
+    background-color: #ef4545;
+}
+
+.carousel-control-prev span, .carousel-control-next span {
+    color: #40556a;
+}
+

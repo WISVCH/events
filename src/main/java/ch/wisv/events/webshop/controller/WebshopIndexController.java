@@ -1,5 +1,6 @@
 package ch.wisv.events.webshop.controller;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.service.auth.AuthenticationService;
@@ -10,6 +11,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * WebshopIndexController class.
@@ -19,6 +21,9 @@ public class WebshopIndexController extends WebshopController {
 
     /** Model attr events. */
     private static final String MODEL_ATTR_EVENTS = "events";
+
+    /** Model attr event. */
+    private static final String MODEL_ATTR_EVENT = "event";
 
     /** Model attr of the OrderProductDTO. */
     private static final String MODEL_ATTR_ORDER_PRODUCT = "orderProduct";
@@ -59,9 +64,30 @@ public class WebshopIndexController extends WebshopController {
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
-        model.addAttribute(MODEL_ATTR_EVENTS, webshopService.filterNotSalableProducts(upcoming));
+        model.addAttribute(MODEL_ATTR_EVENTS, webshopService.filterEventProductNotSalable(upcoming));
         model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
 
         return "webshop/index";
+    }
+
+    /**
+     * Front page of the webshop.
+     *
+     * @param model of type Model
+     * @param key   of type String
+     *
+     * @return String
+     */
+    @GetMapping("/{key}")
+    public String index(Model model, @PathVariable String key) {
+        try {
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_EVENT, webshopService.filterEventProductNotSalable(eventService.getByKey(key)));
+            model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
+
+            return "webshop/event";
+        } catch (EventNotFoundException e) {
+            return "redirect:/";
+        }
     }
 }

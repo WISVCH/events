@@ -11,13 +11,22 @@ import java.util.List;
 public interface WebshopService {
 
     /**
+     * Filter the products in a Event which are not sold now.
+     *
+     * @param event of type Event
+     *
+     * @return Event
+     */
+    Event filterEventProductNotSalable(Event event);
+
+    /**
      * Filter the products by events if they can be sold or not.
      *
      * @param events of type List
      *
      * @return List
      */
-    List<Event> filterNotSalableProducts(List<Event> events);
+    List<Event> filterEventProductNotSalable(List<Event> events);
 
     /**
      * Update the status of the Order via the Payments API.

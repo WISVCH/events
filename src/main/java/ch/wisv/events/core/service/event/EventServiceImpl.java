@@ -4,6 +4,7 @@ import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.model.document.Document;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +29,10 @@ public class EventServiceImpl implements EventService {
 
     /** ProductRepository. */
     private final ProductService productService;
+
+    /** Image location. */
+    @Value("${wisvch.events.image.path}")
+    private String imageLocation;
 
     /**
      * Constructor EventServiceImpl creates a new EventServiceImpl instance.
@@ -163,6 +169,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Event event) {
         eventRepository.delete(event);
+    }
+
+    /**
+     * Add document image to Event.
+     *
+     * @param event    of type Event
+     * @param document of type Document
+     */
+    @Override
+    public void addDocumentImage(Event event, Document document) {
+        event.setImageUrl(this.imageLocation + document.getFullName());
     }
 
     /**

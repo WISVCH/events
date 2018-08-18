@@ -5,49 +5,77 @@
 
 spring:
   datasource:
+    # DATABASE PROPERTIES
     driverClassName: org.postgresql.Driver
+    # Change <MyDb> with the name of your database name
     url: jdbc:postgresql://localhost:5432/events
+
+    # Username to log in to the database
+    # It's recommended to create a dedicated Database user instead of using the default postgres user
     username: postgres
+
+    # Password to log in with <MyDbPassword> in database <MyDb>
     password:
 
   data.jpa.repositories.enabled: true
 
   jpa:
+    # Set to false in production to prevent spamming of console
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate.ddl-auto: create-drop
 
+    # This setting defines the database creation/update behaviour. Change with caution.
     properties.hibernate.default_schema: public
 
+  # Spring mail
   mail:
     host: 127.0.0.1
     port: 1025
 
+  # Thymeleaf
   thymeleaf:
-    mode: HTML5
+    check-template-location: true
+    suffix: .html
+    mode: HTML
     encoding: UTF-8
+    content-type: text/html
 
+security.basic.enabled: false
+
+# Database migration automation. Set to false for development
 flyway.enabled: false
+# spring.jpa.properties.hibernate.hbm2ddl.auto: none
+
+# Serve connect
 server:
     port: 8080
     context-path: /events
 
+# CH Connect Configuration
 wisvch.connect:
   issuerUri: https://connect.ch.tudelft.nl
-  clientUri: http://localhost:8080/events
+  clientUri: https://localhost:8080/events
 
-  admin-groups: test
+  # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
+  admin-groups: chbeheer
   beta-users: test
 
+# CH Events Configuration
+wisvch.events:
+  image.path: http://localhost:8080/events/api/v1/documents/
+
+# CH Payments Configuration
 wisvch.payments:
-    issuerUri: https://ch.tudelft.nl/payments
-    clientUri: http://localhost:8080/events
+    issuerUri: http://localhost:8080/payments
+    clientUri: https://localhost:8080/events
+
 
 #Spring Boot Actuator endpoint settings
 management:
-    context-path: /management
-    security.roles: ADMIN
-    endpoints:
-        enabled: false
-        health.enabled: true
+  context-path: /management
+  security.roles: ADMIN
+  endpoints:
+    enabled: false
+    health.enabled: true

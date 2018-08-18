@@ -5,9 +5,11 @@ import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
+import ch.wisv.events.core.service.document.DocumentService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
+import java.io.IOException;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -36,23 +40,33 @@ public class DashboardEventController {
     /** WebhookPublisher. */
     private final WebhookPublisher webhookPublisher;
 
+    /** DocumentService. */
+    private final DocumentService documentService;
+
     /**
      * DashboardEventController constructor.
      *
-     * @param eventService     EventService
-     * @param ticketService    TicketService
-     * @param webhookPublisher WebhookPublisher
+     * @param eventService     of type EventService
+     * @param ticketService    of type TicketService
+     * @param webhookPublisher of type WebhookPublisher
+     * @param documentService  of type DocumentService
      */
-    public DashboardEventController(EventService eventService, TicketService ticketService, WebhookPublisher webhookPublisher) {
+    public DashboardEventController(
+            EventService eventService,
+            TicketService ticketService,
+            WebhookPublisher webhookPublisher,
+            DocumentService documentService
+    ) {
         this.eventService = eventService;
         this.ticketService = ticketService;
         this.webhookPublisher = webhookPublisher;
+        this.documentService = documentService;
     }
 
     /**
      * Get request on "/admin/events/" will show overview of all Events.
      *
-     * @param model SpringUI model
+     * @param model of type Model
      *
      * @return path to Thymeleaf template
      */
@@ -88,7 +102,7 @@ public class DashboardEventController {
     /**
      * Get request on "/admin/events/create/" will show page to create Event.
      *
-     * @param model SpringUI model
+     * @param model of type Model
      *
      * @return path to Thymeleaf template
      */
@@ -104,14 +118,18 @@ public class DashboardEventController {
     /**
      * Post request to create a new Event.
      *
-     * @param event    EventRequest model attr.
-     * @param redirect Spring RedirectAttributes
+     * @param redirect of type RedirectAttributes
+     * @param event    of type Event
+     * @param file     of type MultipartFile
      *
      * @return redirect
      */
     @PostMapping("/create")
-    public String create(RedirectAttributes redirect, @ModelAttribute Event event) {
+    public String create(RedirectAttributes redirect, @ModelAttribute Event event, @RequestParam("file") MultipartFile file) {
         try {
+            if (file != null) {
+                eventService.addDocumentImage(event, documentService.storeDocument(file));
+            }
             eventService.create(event);
             redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
 
@@ -120,7 +138,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/administrator/events/";
-        } catch (EventInvalidException e) {
+        } catch (EventInvalidException | IOException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
@@ -131,7 +149,8 @@ public class DashboardEventController {
     /**
      * Get request on "/admin/events/edit/{key}" will show the edit page to edit Event with requested key.
      *
-     * @param model SpringUI model
+     * @param model of type Model
+     * @param key   of type String
      *
      * @return path to Thymeleaf template
      */
@@ -151,14 +170,24 @@ public class DashboardEventController {
     /**
      * Post request to update an Event.
      *
-     * @param event    EventRequest model attr.
-     * @param redirect Spring RedirectAttributes
+     * @param redirect of type RedirectAttributes
+     * @param event    of type Event
+     * @param key      of type String
+     * @param file     of type MultipartFile
      *
      * @return redirect
      */
     @PostMapping("/edit/{key}")
-    public String update(RedirectAttributes redirect, @ModelAttribute Event event, @PathVariable String key) {
+    public String update(
+            RedirectAttributes redirect,
+            @ModelAttribute Event event,
+            @PathVariable String key,
+            @RequestParam("file") MultipartFile file
+    ) {
         try {
+            if (file != null) {
+                eventService.addDocumentImage(event, documentService.storeDocument(file));
+            }
             event.setKey(key);
             eventService.update(event);
             redirect.addFlashAttribute("success", "Event changes saved!");
@@ -170,7 +199,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/administrator/events/view/" + event.getKey() + "/";
-        } catch (EventNotFoundException | EventInvalidException e) {
+        } catch (EventNotFoundException | EventInvalidException | IOException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
@@ -206,7 +235,7 @@ public class DashboardEventController {
     /**
      * Get request to delete event by Key.
      *
-     * @param redirect Spring RedirectAttributes
+     * @param redirect of type RedirectAttributes
      * @param key      PathVariable key of the Event
      *
      * @return redirect

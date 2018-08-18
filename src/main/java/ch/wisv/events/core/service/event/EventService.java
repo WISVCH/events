@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.event;
 
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.model.document.Document;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import java.time.LocalDateTime;
@@ -42,6 +43,8 @@ public interface EventService {
      * @param key key of an Event
      *
      * @return Event
+     *
+     * @throws EventNotFoundException when Event is not found
      */
     Event getByKey(String key) throws EventNotFoundException;
 
@@ -51,13 +54,24 @@ public interface EventService {
      * @param product of type Product
      *
      * @return List of Events
+     *
+     * @throws EventNotFoundException when Event is not found
      */
     Event getByProduct(Product product) throws EventNotFoundException;
+
+    /**
+     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
+     *
+     * @return List of Events
+     */
+    List<Event> getPreviousEventsLastTwoWeeks();
 
     /**
      * Add a new Event by a EventRequest.
      *
      * @param event Event
+     *
+     * @throws EventInvalidException when Event is invalid
      */
     void create(Event event) throws EventInvalidException;
 
@@ -65,6 +79,9 @@ public interface EventService {
      * Update event by Event.
      *
      * @param event Event
+     *
+     * @throws EventNotFoundException when Event is not found
+     * @throws EventInvalidException  when Event is invalid
      */
     void update(Event event) throws EventNotFoundException, EventInvalidException;
 
@@ -76,9 +93,11 @@ public interface EventService {
     void delete(Event event);
 
     /**
-     * Method getPreviousEventsLastTwoWeeks returns the previousEventsLastTwoWeeks of this EventService object.
+     * Add document image to Event.
      *
-     * @return List of Events
+     * @param event    of type Event
+     * @param document of type Document
      */
-    List<Event> getPreviousEventsLastTwoWeeks();
+    void addDocumentImage(Event event, Document document);
+
 }
