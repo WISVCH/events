@@ -127,6 +127,9 @@ public class DashboardEventController {
     @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Event event, @RequestParam("file") MultipartFile file) {
         try {
+            if (file != null) {
+                eventService.addDocumentImage(event, documentService.storeDocument(file));
+            }
             eventService.create(event);
             redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
 
@@ -135,7 +138,7 @@ public class DashboardEventController {
             }
 
             return "redirect:/administrator/events/";
-        } catch (EventInvalidException e) {
+        } catch (EventInvalidException | IOException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
 
