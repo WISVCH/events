@@ -99,35 +99,33 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <div class="row justify-content-center">
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 align-self-start mb-3"
-                     th:each="product : ${event.getProducts()}">
-                    <div class="card">
-                        <div class="card-body bg-light text-center">
-                            <h4 class="card-title my-1" th:text="${product.getTitle()}"></h4>
-                        </div>
-                        <div class="card-body bg-transparent text-center my-4" style="background-color: #f1f3f7;">
-                            <h1 th:text="'€' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"
-                                th:if="${product.getCost() > 0}"></h1>
-                            <h1 th:if="${product.getCost() == 0}">FREE</h1>
-                            <small>
-                                Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
-                            </small>
-                        </div>
+            <div class="card-deck">
+                <div class="card mb-3" th:each="product : ${event.getProducts()}">
+                    <div class="card-header bg-light text-center">
+                        <h4 class="card-title my-1" th:text="${product.getTitle()}"></h4>
+                    </div>
+                    <div class="card-body bg-transparent text-center my-4" style="background-color: #f1f3f7;">
+                        <h1 th:text="'€' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"
+                            th:if="${product.getCost() > 0}"></h1>
+                        <h1 th:if="${product.getCost() == 0}">FREE</h1>
+                        <small>
+                            Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
+                        </small>
+                    </div>
 
-                        <div class="card-body bt-3">
-                            <p class="card-text" th:text="${product.getDescription()}"></p>
+                    <div class="card-body">
+                        <p class="card-text" th:text="${product.getDescription()}"></p>
 
-                            <small th:if="${product.isChOnly()}">
-                                CH members only.
-                            </small>
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="#" class="btn btn-primary btn-block"
-                               th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
-                                Add to basket
-                            </a>
-                        </div>
+                        <small th:if="${product.isChOnly()}">
+                            CH members only.
+                        </small>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary btn-block"
+                           th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
+                            Add to basket
+                        </a>
                     </div>
                 </div>
             </div>
