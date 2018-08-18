@@ -35,6 +35,19 @@
     column-count: 1;
 }
 
+.card-deck {
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: stretch;
+}
+
+.card-deck > .card {
+    display: block;
+    flex-basis: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+}
+
 /* Small devices (landscape phones, 544px and up) */
 @media (min-width: 544px) {
     .card-columns-tickets {
@@ -47,6 +60,12 @@
     .card-columns-tickets {
         column-count: 2;
     }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(50% - 30px);
+        max-width: calc(50% - 30px);
+    }
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -54,12 +73,24 @@
     .card-columns-tickets {
         column-count: 3;
     }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(33.33% - 30px);
+        max-width: calc(33.33% - 30px);
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .card-columns-tickets {
         column-count: 4;
+    }
+
+    .card-deck > .card {
+        display: block;
+        flex-basis: calc(25% - 30px);
+        max-width: calc(25% - 30px);
     }
 }
 
@@ -200,3 +231,4 @@ and also iPads specifically.
 .carousel-control-prev span, .carousel-control-next span {
     color: #40556a;
 }
+

@@ -41,88 +41,93 @@
 
             <div class="row justify-content-left">
                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-                <div class="card-deck col card-columns-tickets" th:if="${events.size() > 0}">
-                    <div class="card" th:each="event: ${events}">
-                        <div class="card-body h-100">
-                            <div class="row h-100">
-                                <div class="col-12 align-self-start mb-3">
-                                    <div class="row">
-                                        <h5 class="col-12 card-title mb-1" th:text="${event.getTitle()}"></h5>
+                <div class="col-12">
+                    <div class="card-deck card-columns-tickets" th:if="${events.size() > 0}">
+                        <div class="card mb-4" th:each="event: ${events}">
+                            <div class="card-body h-100">
+                                <div class="row h-100">
+                                    <div class="col-12 align-self-start mb-3">
+                                        <div class="row">
+                                            <h5 class="col-12 card-title mb-1" th:text="${event.getTitle()}"></h5>
 
-                                        <div class="col-12 mb-4">
-                                            <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
-                                            <div class="badge badge-secondary"
-                                                 th:each="cat : ${event.getCategories()}"
-                                                 th:text="${cat.getDisplayName()}"></div>
-                                        </div>
+                                            <div class="col-12 mb-4">
+                                                <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
+                                                <div class="badge badge-secondary"
+                                                     th:each="cat : ${event.getCategories()}"
+                                                     th:text="${cat.getDisplayName()}"></div>
+                                            </div>
 
-                                        <div class="col-12">
-                                            <i class="far fa-fw fa-calendar-alt"></i>
-                                            <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
-                                        </div>
-                                        <div class="col-12" th:if="${event.getLocation() != ''}">
-                                            <i class="fas fa-map-marker fa-fw"></i>
-                                            <span th:text="${event.getLocation()}"></span>
-                                        </div>
-                                        <div class="col-12" th:if="${event.getShortDescription() != ''}">
-                                            <i class="fas fa-map-marker fa-fw"></i>
-                                            <span th:text="${event.getShortDescription()}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div th:id="${event.getKey()}" class="carousel slide align-self-end w-100 "
-                                     data-ride="carousel">
-                                    <ol class="carousel-indicators">
-                                        <li th:data-target="'#' + ${event.getKey()}"
-                                            th:each="product, iter : ${event.getProducts()}"
-                                            th:data-slide-to="${iter.count - 1}"
-                                            th:classappend="${iter.count == 1 ? 'active' : ''}"></li>
-                                    </ol>
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item" th:classappend="${iter.count == 1 ? 'active' : ''}"
-                                             th:each="product, iter : ${event.getProducts()}">
-                                            <div class="card">
-                                                <div class="card-body bg-light text-center">
-                                                    <h5 class="card-title my-0" th:text="${product.getTitle()}"></h5>
-                                                </div>
-                                                <div class="card-body bg-transparent text-center my-4"
-                                                     style="background-color: #f1f3f7;">
-                                                    <h1 th:text="'€' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"
-                                                        th:if="${product.getCost() > 0}"></h1>
-                                                    <h1 th:if="${product.getCost() == 0}">FREE</h1>
-                                                    <small>
-                                                        Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per person.
-                                                    </small>
-                                                    <small th:if="${product.isChOnly()}">
-                                                        CH members only.
-                                                    </small>
-                                                </div>
-
-                                                <div class="card-footer text-center">
-                                                    <a href="#" class="btn btn-primary btn-block"
-                                                       th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
-                                                        Add to basket
-                                                    </a>
-                                                </div>
+                                            <div class="col-12">
+                                                <i class="far fa-fw fa-calendar-alt"></i>
+                                                <span th:text="${event.getStart().toLocalDate()} + ' @ ' + ${event.getStart().toLocalTime()}"></span>
+                                            </div>
+                                            <div class="col-12" th:if="${event.getLocation() != ''}">
+                                                <i class="fas fa-map-marker fa-fw"></i>
+                                                <span th:text="${event.getLocation()}"></span>
+                                            </div>
+                                            <div class="col-12" th:if="${event.getShortDescription() != ''}">
+                                                <i class="fas fa-map-marker fa-fw"></i>
+                                                <span th:text="${event.getShortDescription()}"></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="carousel-control-prev" th:href="'#' + ${event.getKey()}" role="button"
-                                       data-slide="prev">
+                                    <div th:id="${event.getKey()}" class="carousel slide align-self-end w-100 "
+                                         data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            <li th:data-target="'#' + ${event.getKey()}"
+                                                th:each="product, iter : ${event.getProducts()}"
+                                                th:data-slide-to="${iter.count - 1}"
+                                                th:classappend="${iter.count == 1 ? 'active' : ''}"></li>
+                                        </ol>
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item"
+                                                 th:classappend="${iter.count == 1 ? 'active' : ''}"
+                                                 th:each="product, iter : ${event.getProducts()}">
+                                                <div class="card">
+                                                    <div class="card-body bg-light text-center">
+                                                        <h5 class="card-title my-0"
+                                                            th:text="${product.getTitle()}"></h5>
+                                                    </div>
+                                                    <div class="card-body bg-transparent text-center my-4"
+                                                         style="background-color: #f1f3f7;">
+                                                        <h1 th:text="'€' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"
+                                                            th:if="${product.getCost() > 0}"></h1>
+                                                        <h1 th:if="${product.getCost() == 0}">FREE</h1>
+                                                        <small>
+                                                            Max [[${product.getMaxSoldPerCustomer()}]] ticket(s) per
+                                                            person.
+                                                        </small>
+                                                        <small th:if="${product.isChOnly()}">
+                                                            CH members only.
+                                                        </small>
+                                                    </div>
+
+                                                    <div class="card-footer text-center">
+                                                        <a href="#" class="btn btn-primary btn-block"
+                                                           th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
+                                                            Add to basket
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="carousel-control-prev" th:href="'#' + ${event.getKey()}" role="button"
+                                           data-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true">
                                             <i class="fas fa-chevron-left"></i>
                                         </span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" th:href="'#' + ${event.getKey()}" role="button"
-                                       data-slide="next">
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" th:href="'#' + ${event.getKey()}" role="button"
+                                           data-slide="next">
                                         <span class="carousel-control-next-icon" aria-hidden="true">
                                             <i class="fas fa-chevron-right"></i>
                                         </span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
