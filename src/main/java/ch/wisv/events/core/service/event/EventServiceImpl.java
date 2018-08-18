@@ -144,7 +144,6 @@ public class EventServiceImpl implements EventService {
 
         update.setTitle(event.getTitle());
         update.setDescription(event.getDescription());
-        update.setImageUrl(event.getImageUrl());
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
         update.setEnding(event.getEnding());
@@ -155,6 +154,10 @@ public class EventServiceImpl implements EventService {
         update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
         update.setChOnly(event.isChOnly());
+
+        if (event.getImageUrl() != null) {
+            update.setImageUrl(event.getImageUrl());
+        }
 
         this.assertIsValidEvent(event);
         this.updateLinkedProducts(event, update.getProducts(), true);
@@ -179,7 +182,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void addDocumentImage(Event event, Document document) {
-        event.setImageUrl(this.imageLocation + document.getFullName());
+        event.setImageUrl(this.imageLocation + document.getFileName() + ".png");
     }
 
     /**

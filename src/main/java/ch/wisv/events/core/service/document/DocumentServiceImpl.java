@@ -4,6 +4,7 @@ import ch.wisv.events.core.exception.normal.DocumentNotFoundException;
 import ch.wisv.events.core.model.document.Document;
 import ch.wisv.events.core.repository.document.DocumentRepository;
 import java.io.IOException;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +38,7 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = new Document();
         document.setFile(multipartFile.getBytes());
         document.setFullName(multipartFile.getOriginalFilename());
-        document.setFileName(multipartFile.getOriginalFilename().split("\\.")[0]);
+        document.setFileName(UUID.randomUUID().toString());
         document.setType(multipartFile.getContentType());
 
         return this.storeDocument(document);
