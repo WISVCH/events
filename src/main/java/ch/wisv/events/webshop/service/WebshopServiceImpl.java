@@ -50,23 +50,33 @@ public class WebshopServiceImpl implements WebshopService {
     }
 
     /**
-     * Remove Event Products when there are not salable.
+     * Filter the products in a Event which are not sold now.
+     *
+     * @param event of type Event
+     *
+     * @return Event
+     */
+    @Override
+    public Event filterEventProductNotSalable(Event event) {
+        List<Product> salableProducts = event.getProducts().stream()
+                .filter(this.filterProductBySellInterval())
+                .filter(this.filterProductSoldOut())
+                .collect(Collectors.toList());
+        event.setProducts(salableProducts);
+
+        return event;
+    }
+
+    /**
+     * Filter the products by events if they can be sold or not.
      *
      * @param events of type List
      *
      * @return List
      */
     @Override
-    public List<Event> filterNotSalableProducts(List<Event> events) {
-        events.forEach(event -> {
-            List<Product> filterSalableProducts = event.getProducts()
-                    .stream()
-                    .filter(this.filterProductBySellInterval())
-                    .collect(Collectors.toList());
-            event.setProducts(filterSalableProducts);
-        });
-
-        return events.stream().filter(event -> event.getProducts().size() > 0).collect(Collectors.toList());
+    public List<Event> filterEventProductNotSalable(List<Event> events) {
+        return events.stream().map(this::filterEventProductNotSalable).filter(event -> event.getProducts().size() > 0).collect(Collectors.toList());
     }
 
     /**
@@ -134,5 +144,14 @@ public class WebshopServiceImpl implements WebshopService {
      */
     private Predicate<Product> filterProductBySellInterval() {
         return product -> LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
+    }
+
+    /**
+     * Check if Product is not sold out.
+     *
+     * @return Predicate
+     */
+    private Predicate<Product> filterProductSoldOut() {
+        return product -> product.getMaxSold() == null || product.getSold() != product.getMaxSold();
     }
 }
