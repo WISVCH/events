@@ -127,7 +127,7 @@ public class DashboardEventController {
     @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Event event, @RequestParam("file") MultipartFile file) {
         try {
-            if (file != null) {
+            if (file.getSize() > 0) {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
             eventService.create(event);
@@ -185,7 +185,7 @@ public class DashboardEventController {
             @RequestParam("file") MultipartFile file
     ) {
         try {
-            if (file != null) {
+            if (file.getSize() > 0) {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
             event.setKey(key);
