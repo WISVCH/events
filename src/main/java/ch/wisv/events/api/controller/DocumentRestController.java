@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * DocumentRestController class.
+ */
 @RestController
 @RequestMapping("/api/v1/documents")
 public class DocumentRestController {

@@ -2,7 +2,6 @@ package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
-import ch.wisv.events.core.model.document.Document;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
@@ -120,7 +119,8 @@ public class DashboardEventController {
      * Post request to create a new Event.
      *
      * @param redirect of type RedirectAttributes
-     * @param event    of type Event.
+     * @param event    of type Event
+     * @param file     of type MultipartFile
      *
      * @return redirect
      */

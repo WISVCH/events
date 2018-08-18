@@ -16,6 +16,8 @@ public interface DocumentService {
      * @param multipartFile of type MultipartFile
      *
      * @return Document
+     *
+     * @throws IOException when something is wrong
      */
     Document storeDocument(MultipartFile multipartFile) throws IOException;
 
