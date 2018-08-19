@@ -13,7 +13,6 @@ import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.model.registration.Profile;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
@@ -249,7 +248,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         order.setAmount(1.d);
         order.setStatus(OrderStatus.PENDING);
 
-        orderValidationService.assertOrderIsValidForIdealPayment(order);
+        orderValidationService.assertOrderIsValidForPayment(order);
     }
 
     @Test
@@ -258,6 +257,6 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         thrown.expectMessage("Invalid status of the Order");
         order.setStatus(OrderStatus.ERROR);
 
-        orderValidationService.assertOrderIsValidForIdealPayment(order);
+        orderValidationService.assertOrderIsValidForPayment(order);
     }
 }

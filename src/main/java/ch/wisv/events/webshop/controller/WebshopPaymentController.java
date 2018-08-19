@@ -122,29 +122,27 @@ public class WebshopPaymentController extends WebshopController {
     /**
      * Payment method using iDeal.
      *
-     * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String string
      */
     @GetMapping("/ideal")
-    public String paymentIdeal(Model model, RedirectAttributes redirect, @PathVariable String key) {
-        try {
-            Order order = this.getOrderAndCheck(key);
-            model.addAttribute(MODEL_ATTR_ORDER, order);
+    public String paymentIdeal(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.IDEAL);
+    }
 
-            order.setPaymentMethod(PaymentMethod.IDEAL);
-            order.setStatus(OrderStatus.PENDING);
-            orderService.update(order);
-            orderValidationService.assertOrderIsValidForIdealPayment(order);
-
-            return "redirect:" + paymentsService.getPaymentsMollieUrl(order);
-        } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
-
-            return REDIRECT_EVENTS_HOME;
-        }
+    /**
+     * Payment method using iDeal.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String string
+     */
+    @GetMapping("/creditcard")
+    public String paymentCreditCard(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.CREDIT_CARD);
     }
 
     /**
@@ -230,5 +228,30 @@ public class WebshopPaymentController extends WebshopController {
         this.assertOrderIsSuitableForPayment(order);
 
         return order;
+    }
+
+    /**
+     * Handle a type of payment.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     * @param method   of type PaymentMethod
+     *
+     * @return String
+     */
+    private String payment(RedirectAttributes redirect, String key, PaymentMethod method) {
+        try {
+            Order order = this.getOrderAndCheck(key);
+            order.setPaymentMethod(method);
+            order.setStatus(OrderStatus.PENDING);
+            orderService.update(order);
+            orderValidationService.assertOrderIsValidForPayment(order);
+
+            return "redirect:" + paymentsService.getPaymentsMollieUrl(order);
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+
+            return REDIRECT_EVENTS_HOME;
+        }
     }
 }
