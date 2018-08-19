@@ -99,7 +99,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
      * @param order of type Order
      */
     @Override
-    public void assertOrderIsValidForIdealPayment(Order order) throws OrderInvalidException {
+    public void assertOrderIsValidForPayment(Order order) throws OrderInvalidException {
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new OrderInvalidException("Invalid status of the Order");
         }

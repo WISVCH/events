@@ -145,6 +145,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         JSONObject object = new JSONObject();
         object.put("name", order.getOwner().getName());
         object.put("email", order.getOwner().getEmail());
+        object.put("method", order.getPaymentMethod().toString());
         object.put("returnUrl", clientUri + "/checkout/" + order.getPublicReference() + "/payment/return");
         object.put("mailConfirmation", false);
 
