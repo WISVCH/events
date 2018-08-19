@@ -35,6 +35,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * OrderServiceImpl class.
@@ -175,14 +177,18 @@ public class OrderServiceImpl implements OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      */
+    @Transactional(isolation = REPEATABLE_READ)
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         synchronized (this) {
-            log.info("Order " + order.getPublicReference() + ": Update status from " + order.getStatus() + " to " + status);
             queueLock.lock();
+            OrderStatus prevStatus = order.getStatus();
+            log.info("Order " + order.getPublicReference() + ": Update status from " + prevStatus + " to " + status);
 
             try {
                 this.assertValidStatusChange(order, status);
+                order.setStatus(status);
+                orderRepository.saveAndFlush(order);
 
                 switch (status) {
                     case PAID:
@@ -192,14 +198,11 @@ public class OrderServiceImpl implements OrderService {
                         this.handleUpdateOrderStatusReservation(order);
                         break;
                     case REJECTED:
-                        this.handleUpdateOrderStatusRejected(order);
+                        this.handleUpdateOrderStatusRejected(order, prevStatus);
                         break;
                     default:
                         break;
                 }
-
-                order.setStatus(status);
-                orderRepository.saveAndFlush(order);
             } finally {
                 queueLock.unlock();
             }
@@ -333,10 +336,11 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Delete an order.
      *
-     * @param order of type Order
+     * @param order      of type Order
+     * @param prevStatus of type OrderStatus
      */
-    private void handleUpdateOrderStatusRejected(Order order) {
-        switch (order.getStatus()) {
+    private void handleUpdateOrderStatusRejected(Order order, OrderStatus prevStatus) {
+        switch (prevStatus) {
             case RESERVATION:
                 order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
                         .increaseReserved(orderProduct.getAmount().intValue() * -1));
@@ -347,8 +351,8 @@ public class OrderServiceImpl implements OrderService {
                 ticketService.deleteByOrder(order);
                 break;
             default:
-
         }
+        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -359,5 +363,7 @@ public class OrderServiceImpl implements OrderService {
     private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
         order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+
+        orderRepository.saveAndFlush(order);
     }
 }

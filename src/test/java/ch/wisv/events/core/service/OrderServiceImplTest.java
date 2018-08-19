@@ -401,7 +401,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
         verify(ticketService, times(1)).deleteByOrder(order);
-        verify(orderRepository, times(1)).saveAndFlush(order);
+        verify(orderRepository, times(2)).saveAndFlush(order);
 
         assertEquals(1, product2.getSold());
     }
@@ -419,7 +419,7 @@ public class OrderServiceImplTest extends ServiceTest {
         orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
-        verify(orderRepository, times(1)).saveAndFlush(order);
+        verify(orderRepository, times(2)).saveAndFlush(order);
 
         assertEquals(1, product2.getReserved());
     }
