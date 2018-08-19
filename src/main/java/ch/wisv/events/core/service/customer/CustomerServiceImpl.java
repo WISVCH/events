@@ -142,7 +142,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void create(Customer customer) throws CustomerInvalidException {
         this.assertIsValidCustomer(customer);
-        customer.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
+        if (customer.getChUsername() != null) {
+            customer.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
+        }
 
         customerRepository.saveAndFlush(customer);
     }
@@ -170,7 +172,9 @@ public class CustomerServiceImpl implements CustomerService {
         Customer model = this.getByKey(customer.getKey());
 
         model.setName(customer.getName());
-        model.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
+        if (customer.getChUsername() != null) {
+            model.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
+        }
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
         model.setLdapGroups(customer.getLdapGroups());
