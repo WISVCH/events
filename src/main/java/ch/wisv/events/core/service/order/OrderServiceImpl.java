@@ -35,6 +35,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * OrderServiceImpl class.
@@ -175,6 +177,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      */
+    @Transactional(isolation = REPEATABLE_READ)
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         synchronized (this) {
