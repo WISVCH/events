@@ -37,6 +37,12 @@ public class WebshopPaymentController extends WebshopController {
     /** WebshopService. */
     private final WebshopService webshopService;
 
+    EventsException e
+
+    {
+
+    }
+
     /**
      * Constructor WebshopController.
      *
@@ -130,7 +136,7 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/ideal")
     public String paymentIdeal(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.IDEAL);
-    }
+    } catch(
 
     /**
      * Payment method using iDeal.
@@ -143,7 +149,7 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/creditcard")
     public String paymentCreditCard(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.CREDIT_CARD);
-    }
+    })
 
     /**
      * Return url after iDeal payment.
@@ -156,11 +162,13 @@ public class WebshopPaymentController extends WebshopController {
      */
     @GetMapping("/return")
     public String returnAfterMolliePayment(
-            RedirectAttributes redirect, @PathVariable String key, @RequestParam("reference") String paymentsReference
-    ) {
-        try {
-            Order order = orderService.getByReference(key);
+            RedirectAttributes redirect,
+            @PathVariable String key,
+            @RequestParam("reference") String paymentsReference
+    ) throws OrderNotFoundException {
+        Order order = orderService.getByReference(key);
 
+        try {
             try {
                 this.assertOrderIsSuitableForCheckout(order);
 
@@ -182,7 +190,7 @@ public class WebshopPaymentController extends WebshopController {
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
-            return REDIRECT_EVENTS_HOME;
+            return "redirect:/return/" + order.getPublicReference();
         }
     }
 
