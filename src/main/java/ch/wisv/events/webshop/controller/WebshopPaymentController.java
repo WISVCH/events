@@ -187,7 +187,7 @@ public class WebshopPaymentController extends WebshopController {
 
                 return "redirect:/checkout/" + key + "/payment";
             }
-        } catch (EventsException e) {
+        } catch (Exception e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
             return "redirect:/return/" + order.getPublicReference();
