@@ -37,12 +37,6 @@ public class WebshopPaymentController extends WebshopController {
     /** WebshopService. */
     private final WebshopService webshopService;
 
-    EventsException e
-
-    {
-
-    }
-
     /**
      * Constructor WebshopController.
      *
@@ -136,7 +130,7 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/ideal")
     public String paymentIdeal(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.IDEAL);
-    } catch(
+    }
 
     /**
      * Payment method using iDeal.
@@ -149,7 +143,7 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/creditcard")
     public String paymentCreditCard(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.CREDIT_CARD);
-    })
+    }
 
     /**
      * Return url after iDeal payment.
@@ -159,6 +153,8 @@ public class WebshopPaymentController extends WebshopController {
      * @param paymentsReference of type String
      *
      * @return String string
+     *
+     * @throws OrderNotFoundException when Order is not found
      */
     @GetMapping("/return")
     public String returnAfterMolliePayment(
