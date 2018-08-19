@@ -41,14 +41,13 @@
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail"
-                                         src="https://www.ideal.nl/img/statisch/mobiel/iDEAL_144x144.png" alt="">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-ideal.png}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
                                             <h5 class="d-inline mt-0">IDEAL</h5> - Online payment using your
-                                            Dutch bank. Easy, fast and secure!
+                                            Dutch bank. Easy, fast and secure! <br>
 
                                             <span class="text-danger">(+ &euro; 0,35 transaction cost)</span>
                                         </div>
@@ -70,9 +69,35 @@
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail"
-                                         src="https://st3.depositphotos.com/1269954/16765/v/450/depositphotos_167650974-stock-illustration-pay-later-rubber-stamp.jpg"
-                                         alt="">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-creditcard.png}" alt="">
+                                </div>
+                                <div class="col-9 h-100">
+                                    <div class="row h-100">
+                                        <div class="col-12 align-self-start mb-4">
+                                            <h5 class="d-inline mt-0">CREDIT CARD</h5> - Pay using the most widely used
+                                            online payment method in the world. <br>
+
+                                            <span class="text-danger">(+ &euro; 0,30 + 3,4% transaction cost)</span>
+                                        </div>
+
+                                        <div class="col-12 align-self-end">
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/creditcard'}"
+                                               class="btn btn-block btn-primary">
+                                                Pay with Credit Card
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-3 px-3">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-later.jpg}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row">
