@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import org.springframework.web.util.NestedServletException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -245,10 +246,9 @@ public class WebshopPaymentControllerTest extends ControllerTest {
 
     @Test
     public void testReturnAfterMolliePaymentNotFound() throws Exception {
+        thrown.expect(NestedServletException.class);
         mockMvc.perform(get("/checkout/1345-4567-5678/payment/return")
-                                .param("reference", "123-345-562"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                                .param("reference", "123-345-562"));
     }
 
     @Test
