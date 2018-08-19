@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  * WebshopServiceImpl class.
  */
+@Slf4j
 @Service
 public class WebshopServiceImpl implements WebshopService {
 
@@ -76,7 +78,9 @@ public class WebshopServiceImpl implements WebshopService {
      */
     @Override
     public List<Event> filterEventProductNotSalable(List<Event> events) {
-        return events.stream().map(this::filterEventProductNotSalable).filter(event -> event.getProducts().size() > 0).collect(Collectors.toList());
+        return events.stream().map(this::filterEventProductNotSalable)
+                .filter(event -> event.getProducts().size() > 0)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -90,6 +94,7 @@ public class WebshopServiceImpl implements WebshopService {
     @Override
     public void updateOrderStatus(Order order, String paymentsReference) throws EventsException {
         String status = paymentsService.getPaymentsOrderStatus(paymentsReference);
+        log.info("Order " + order.getPublicReference() + ": CH Payments status " + status);
 
         switch (status) {
             case "WAITING":
@@ -122,10 +127,12 @@ public class WebshopServiceImpl implements WebshopService {
         int maxCount = MAX_PAYMENT_FETCH_ATTEMPT;
 
         while (order.getStatus() == OrderStatus.PENDING && count < maxCount) {
+            log.info("Order " + order.getPublicReference() + ": Fetching order status attempt" + count);
             try {
                 this.updateOrderStatus(order, paymentsReference);
                 sleep(WAIT_BETWEEN_STATUS_FETCH_ATTEMPT);
             } catch (InterruptedException ignored) {
+                count = maxCount;
             }
 
             count++;
