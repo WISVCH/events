@@ -30,14 +30,21 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * OrderServiceImpl class.
  */
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    /** Lock. */
+    private final Lock queueLock = new ReentrantLock();
 
     /** OrderRepository. */
     private final OrderRepository orderRepository;
@@ -98,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
 
         this.update(order);
         this.updateOrderStatus(order, OrderStatus.ASSIGNED);
+        log.info("Order " + order.getPublicReference() + ": Added customer " + customer.getName() + "(" + customer.getId() + ")");
     }
 
     /**
@@ -158,6 +166,7 @@ public class OrderServiceImpl implements OrderService {
         old.setPaymentMethod(order.getPaymentMethod());
         old.updateOrderAmount();
         orderRepository.saveAndFlush(order);
+        log.info("Order " + order.getPublicReference() + ": Update saved");
     }
 
     /**
@@ -169,24 +178,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         synchronized (this) {
-            this.assertValidStatusChange(order, status);
+            log.info("Order " + order.getPublicReference() + ": Update status from " + order.getStatus() + " to " + status);
+            queueLock.lock();
 
-            switch (status) {
-                case PAID:
-                    this.handleUpdateOrderStatusPaid(order);
-                    break;
-                case RESERVATION:
-                    this.handleUpdateOrderStatusReservation(order);
-                    break;
-                case REJECTED:
-                    this.handleUpdateOrderStatusRejected(order);
-                    break;
-                default:
-                    break;
+            try {
+                this.assertValidStatusChange(order, status);
+
+                switch (status) {
+                    case PAID:
+                        this.handleUpdateOrderStatusPaid(order);
+                        break;
+                    case RESERVATION:
+                        this.handleUpdateOrderStatusReservation(order);
+                        break;
+                    case REJECTED:
+                        this.handleUpdateOrderStatusRejected(order);
+                        break;
+                    default:
+                        break;
+                }
+
+                order.setStatus(status);
+                orderRepository.saveAndFlush(order);
+            } finally {
+                queueLock.unlock();
             }
-
-            order.setStatus(status);
-            orderRepository.saveAndFlush(order);
         }
     }
 
@@ -311,6 +327,7 @@ public class OrderServiceImpl implements OrderService {
         order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
 
         orderRepository.saveAndFlush(order);
+        log.info("Order " + order.getPublicReference() + ": Tickets created!");
     }
 
     /**
