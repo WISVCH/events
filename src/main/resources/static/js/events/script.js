@@ -12,6 +12,9 @@ $(document).ready(function () {
     $('#ending').flatpickr(config);
     $('#start').flatpickr(config);
 
+    $('#productSellStart').flatpickr(config);
+    $('#productSellEnd').flatpickr(config);
+
     $('#q').autocomplete({
         serviceUrl: '/events/api/v1/products/search/unused',
         onSelect: function (suggestion) {
@@ -56,14 +59,17 @@ $(document).ready(function () {
                 description: $("#productDescription").val(),
                 cost: $("#productCost").val(),
                 maxSold: $("#maxSold").val(),
-                maxSoldPerCustomer: $("#maxSoldPerCustomer").val()
+                maxSoldPerCustomer: $("#maxSoldPerCustomer").val(),
+                sellStart: $("#productSellStart").val() === '' ? null : $("#productSellStart").val(),
+                sellEnd: $("#productSellEnd").val() === '' ? null : $("#productSellEnd").val(),
+                chOnly: $("#productIsChOnly").val() === "on",
+                includesRegistration: $("#productIsIncludingRegistration").val() === "on"
             };
 
             $.ajax({
                 url: '/events/api/v1/products',
                 type: 'POST',
                 headers: {
-                    "X-CSRF-TOKEN": $('input[name="_csrf"]').val(),
                     'Content-Type': "application/json"
                 },
                 dataType: 'json',
@@ -75,7 +81,7 @@ $(document).ready(function () {
                     $('#addProduct').modal('hide');
                 },
                 error: function (data) {
-
+                    alert(data.message);
                 }
             })
         }
@@ -100,8 +106,8 @@ $(document).ready(function () {
     }
 
     function addProductToEvent(product_id, product_title) {
-        const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
-        const productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger text-white remove-product' data-product-id='{1}'><i class='fa fa-remove'></i></a></td></tr>";
+        var productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
+        var productTableRow = "<tr><td><span class='fa fa-exclamation-triangle' data-toggle='tooltip' data-placement='right' title='Do not forget to update the event!'></span> {0}</td><td style='width: 40px;'><a class='btn btn-xs btn-danger text-white remove-product' data-product-id='{1}'><i class='fas fa-trash-alt'></i></a></td></tr>";
 
         var products = $("#products");
         var count = products.children().length;
