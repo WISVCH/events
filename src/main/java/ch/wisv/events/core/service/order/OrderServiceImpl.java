@@ -181,8 +181,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
         synchronized (this) {
-            log.info("Order " + order.getPublicReference() + ": Update status from " + order.getStatus() + " to " + status);
             queueLock.lock();
+            OrderStatus prevStatus = order.getStatus();
+            log.info("Order " + order.getPublicReference() + ": Update status from " + prevStatus + " to " + status);
 
             try {
                 this.assertValidStatusChange(order, status);
@@ -197,7 +198,7 @@ public class OrderServiceImpl implements OrderService {
                         this.handleUpdateOrderStatusReservation(order);
                         break;
                     case REJECTED:
-                        this.handleUpdateOrderStatusRejected(order);
+                        this.handleUpdateOrderStatusRejected(order, prevStatus);
                         break;
                     default:
                         break;
@@ -335,10 +336,11 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Delete an order.
      *
-     * @param order of type Order
+     * @param order      of type Order
+     * @param prevStatus of type OrderStatus
      */
-    private void handleUpdateOrderStatusRejected(Order order) {
-        switch (order.getStatus()) {
+    private void handleUpdateOrderStatusRejected(Order order, OrderStatus prevStatus) {
+        switch (prevStatus) {
             case RESERVATION:
                 order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
                         .increaseReserved(orderProduct.getAmount().intValue() * -1));
@@ -361,6 +363,7 @@ public class OrderServiceImpl implements OrderService {
     private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
         order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+
         orderRepository.saveAndFlush(order);
     }
 }
