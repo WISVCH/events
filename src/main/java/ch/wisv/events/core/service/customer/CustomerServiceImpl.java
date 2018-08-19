@@ -142,6 +142,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void create(Customer customer) throws CustomerInvalidException {
         this.assertIsValidCustomer(customer);
+        customer.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
 
         customerRepository.saveAndFlush(customer);
     }
