@@ -197,10 +197,14 @@ public class WebshopCustomerController extends WebshopController {
      */
     private Customer getOrCreateCustomer(Customer customer) throws CustomerInvalidException {
         try {
-            return customerService.getByEmail(customer.getEmail());
+            if (customer.getEmail() != null && !customer.getEmail().equals("")) {
+                return customerService.getByEmail(customer.getEmail());
+            }
         } catch (CustomerNotFoundException e) {
             try {
-                return customerService.getByUsername(customer.getChUsername());
+                if (customer.getChUsername() != null && !customer.getChUsername().equals("")) {
+                    return customerService.getByUsername(customer.getChUsername());
+                }
             } catch (CustomerNotFoundException ignored) {
             }
         }
