@@ -237,7 +237,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel">
+<div class="modal fade" id="addProduct" tabindex="-1" role="dialog"
+     aria-labelledby="addProductLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -275,14 +276,34 @@
                     <label>Price*</label>
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa fa-fw fa-eur"></i>
+                            <i class="fas fa-fw fa-euro-sign"></i>
                         </div>
                         <input type="number" id="productCost" step="0.01" class="form-control required"
                                placeholder="Price of the product">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="form-group col-6">
+                        <label>Starting time
+                            <input type="text" class="form-control" placeholder="Click to select a date..."
+                                   id="productSellStart">
+                            <small class="form-text text-muted">
+                                If left empty, it will be set to the current timestamp.
+                            </small>
+                        </label>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Ending time
+                            <input type="text" class="form-control" placeholder="Click to select a date..."
+                                   id="productSellEnd">
+                            <small class="form-text text-muted">
+                                If left empty, the ticket sales will stop right after the event.
+                            </small>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
                         <div class="form-group">
                             <label>Available</label>
                             <input type="number" id="maxSold" step="0.01" class="form-control"
@@ -290,12 +311,29 @@
                             <small class="form-text text-muted">Leave blank for no limit!</small>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-6">
                         <div class="form-group">
                             <label>Max sold per customer*</label>
                             <input type="number" step="1" class="form-control required" min="1" max="25"
                                    id="maxSoldPerCustomer" placeholder="Amount of ticket that one customer can buy">
+                            <small class="form-text text-muted">Between 1 and 25!</small>
                         </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="form-check col-6">
+                        <label class="form-check-label custom-control custom-checkbox">
+                            CH members only
+                            <input type="checkbox" class="custom-control-input" id="productIsChOnly">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                    <div class="form-check col-6">
+                        <label class="form-check-label custom-control custom-checkbox">
+                            Including association registration
+                            <input type="checkbox" class="custom-control-input" id="productIsIncludingRegistration">
+                            <span class="custom-control-indicator"></span>
+                        </label>
                     </div>
                 </div>
 

@@ -44,8 +44,8 @@
 
 .card-columns-tickets > .card {
     display: block;
-    flex-basis: calc(100% - 30px);
-    max-width: calc(100% - 30px);
+    flex-basis: 100%;
+    max-width: 100%;
 }
 
 /* Small devices (landscape phones, 544px and up) */

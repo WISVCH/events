@@ -2,6 +2,7 @@ package ch.wisv.events.core.model.product;
 
 import ch.wisv.events.api.request.ProductDto;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -129,11 +130,22 @@ public class Product {
      */
     public Product(ProductDto productDto) {
         this();
+
         this.title = productDto.getTitle();
         this.description = productDto.getDescription();
         this.cost = productDto.getCost();
         this.maxSold = productDto.getMaxSold();
         this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();
+        this.chOnly = productDto.isChOnly();
+        this.includesRegistration = productDto.isIncludesRegistration();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        if (productDto.getSellStart() != null) {
+            this.sellStart = LocalDateTime.parse(productDto.getSellStart(), formatter);
+        }
+        if (productDto.getSellEnd() != null) {
+            this.sellEnd = LocalDateTime.parse(productDto.getSellEnd(), formatter);
+        }
     }
 
     /**

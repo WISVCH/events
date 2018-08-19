@@ -79,7 +79,8 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .logoutSuccessUrl("/")
             .and()
                 .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringAntMatchers("/api/v1/**");
     }
 
     /**

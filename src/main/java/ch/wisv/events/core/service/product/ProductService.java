@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.product;
 
+import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.model.product.Product;
@@ -30,6 +31,8 @@ public interface ProductService {
      * @param key key of a Product
      *
      * @return Product
+     *
+     * @throws ProductNotFoundException when Product is not found
      */
     Product getByKey(String key) throws ProductNotFoundException;
 
@@ -37,20 +40,31 @@ public interface ProductService {
      * Add a new Product using a Product.
      *
      * @param product of type Product
+     *
+     * @return Product
+     *
+     * @throws ProductInvalidException when Product is invalid
      */
     Product create(Product product) throws ProductInvalidException;
 
     /**
-     * Method create ...
+     * Create a new Product from a ProductDTO.
      *
      * @param productDto of type ProductDto
+     *
+     * @return Product
+     *
+     * @throws ProductInvalidException when Product is invalid
      */
-    Product create(ch.wisv.events.api.request.ProductDto productDto) throws ProductInvalidException;
+    Product create(ProductDto productDto) throws ProductInvalidException;
 
     /**
      * Update Product using a Product.
      *
      * @param product Product containing the new product information
+     *
+     * @throws ProductNotFoundException when Product is not found
+     * @throws ProductInvalidException  when Product is invalid
      */
     void update(Product product) throws ProductNotFoundException, ProductInvalidException;
 
