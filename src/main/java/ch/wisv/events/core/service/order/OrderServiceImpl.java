@@ -186,6 +186,8 @@ public class OrderServiceImpl implements OrderService {
 
             try {
                 this.assertValidStatusChange(order, status);
+                order.setStatus(status);
+                orderRepository.saveAndFlush(order);
 
                 switch (status) {
                     case PAID:
@@ -200,9 +202,6 @@ public class OrderServiceImpl implements OrderService {
                     default:
                         break;
                 }
-
-                order.setStatus(status);
-                orderRepository.saveAndFlush(order);
             } finally {
                 queueLock.unlock();
             }
@@ -350,8 +349,8 @@ public class OrderServiceImpl implements OrderService {
                 ticketService.deleteByOrder(order);
                 break;
             default:
-
         }
+        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -362,5 +361,6 @@ public class OrderServiceImpl implements OrderService {
     private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
         order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+        orderRepository.saveAndFlush(order);
     }
 }
