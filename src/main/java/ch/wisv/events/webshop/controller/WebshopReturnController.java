@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.util.ArrayUtils;
 
 /**
  * WebshopReturnController class.
@@ -32,63 +31,35 @@ public class WebshopReturnController extends WebshopController {
     /**
      * Completion page index.
      *
+     * @param model    of type Model
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String
      */
     @GetMapping
-    public String returnIndex(RedirectAttributes redirect, @PathVariable String key) {
-        try {
-            Order order = orderService.getByReference(key);
-            switch (order.getStatus()) {
-                case PENDING:
-                    return "redirect:/return/" + order.getPublicReference() + "/pending";
-                case EXPIRED:
-                    return "redirect:/return/" + order.getPublicReference() + "/expired";
-                case PAID:
-                    return "redirect:/return/" + order.getPublicReference() + "/success";
-                case CANCELLED:
-                    return "redirect:/return/" + order.getPublicReference() + "/cancelled";
-                case ERROR:
-                    return "redirect:/return/" + order.getPublicReference() + "/error";
-                case RESERVATION:
-                    return "redirect:/return/" + order.getPublicReference() + "/reservation";
-                default:
-                    return "redirect:/return/" + order.getPublicReference() + "/error";
-            }
-        } catch (OrderNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-
-            return "redirect:/";
-        }
-    }
-
-    /**
-     * Return page depending on status.
-     *
-     * @param model    of type Model
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     * @param status   of type String
-     *
-     * @return String
-     */
-    @GetMapping("/{status}")
-    public String returnStatus(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String status) {
+    public String returnIndex(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
-            String[] validStatus = new String[]{"success", "cancelled", "error", "reservation", "pending", "expired"};
-
-            if (ArrayUtils.contains(validStatus, status)) {
-                return "webshop/return/" + status;
+            switch (order.getStatus()) {
+                case PENDING:
+                    return "webshop/return/pending";
+                case EXPIRED:
+                    return "webshop/return/expired";
+                case PAID:
+                    return "webshop/return/success";
+                case CANCELLED:
+                    return "webshop/return/cancelled";
+                case RESERVATION:
+                    return "webshop/return/reservation";
+                case ERROR:
+                default:
+                    return "webshop/return/error";
             }
-
-            return "webshop/return/error";
         } catch (OrderNotFoundException e) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+            redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/";
         }

@@ -49,8 +49,7 @@
         Storages.localStorage.set('shoppingBasket', []);
 
         setTimeout(function () {
-            var orderKey = /*[[${order.getPublicReference()}]]*/;
-            window.location = "http://localhost:8080/events/return/" + orderKey;
+            location.reload();
         }, (Math.floor(Math.random() * 6000) + 1000));
     });
 </script>
