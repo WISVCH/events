@@ -35,6 +35,7 @@
                         <i class="fas fa-spin fa-circle-notch"></i>
                     </h1>
                     <h4 class="display-4">Payment pending</h4>
+                    <small class="text-muted">(Do not close this tab)</small>
                 </div>
             </div>
         </main>
@@ -50,7 +51,7 @@
         setTimeout(function () {
             var orderKey = /*[[${order.getPublicReference()}]]*/;
             window.location = "http://localhost:8080/events/return/" + orderKey;
-        }, 5000)
+        }, (Math.floor(Math.random() * 6000) + 1000));
     });
 </script>
 </body>

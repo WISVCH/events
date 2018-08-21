@@ -22,7 +22,7 @@
 </head>
 
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Something went wrong', 'event_order-error.jpg')"></nav>
+<nav th:replace="webshop/fragments/header :: header ('Payment is expired!', 'events_order-error.jpg')"></nav>
 
 <div class="container">
     <div class="row">
@@ -31,13 +31,14 @@
 
             <div class="row">
                 <div class="col my-4">
-                    <h4 class="display-4">Order is expired!</h4>
+                    <h4 class="display-4">Payment is expired!</h4>
                 </div>
             </div>
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
                     <p class="text-justify">
-                        Order is expired!
+                        Your payment has been expired and therefor your order has been cancelled! If you want to try to
+                        purchase the tickets again, please go back to the homepage and order them again.
                     </p>
                 </div>
             </div>
