@@ -27,24 +27,4 @@ public interface WebshopService {
      * @return List
      */
     List<Event> filterEventProductNotSalable(List<Event> events);
-
-    /**
-     * Update the status of the Order via the Payments API.
-     *
-     * @param order             of type Order
-     * @param paymentsReference of type String
-     *
-     * @throws EventsException when the Order is invalid
-     */
-    void updateOrderStatus(Order order, String paymentsReference) throws EventsException;
-
-    /**
-     * Fetch the status of the Order via the Payments API.
-     *
-     * @param order             of type Order
-     * @param paymentsReference of type String
-     *
-     * @throws EventsException when CH Payment status is unknown or the Order is invalid
-     */
-    void fetchOrderStatus(Order order, String paymentsReference) throws EventsException;
 }

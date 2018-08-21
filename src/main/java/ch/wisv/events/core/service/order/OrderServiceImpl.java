@@ -35,8 +35,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * OrderServiceImpl class.
@@ -166,7 +164,9 @@ public class OrderServiceImpl implements OrderService {
 
         old.setOwner(order.getOwner());
         old.setPaymentMethod(order.getPaymentMethod());
+        old.setChPaymentsReference(order.getChPaymentsReference());
         old.updateOrderAmount();
+
         orderRepository.saveAndFlush(order);
         log.info("Order " + order.getPublicReference() + ": Update saved");
     }
@@ -177,36 +177,29 @@ public class OrderServiceImpl implements OrderService {
      * @param order  of type Order
      * @param status of type OrderStatus
      */
-    @Transactional(isolation = REPEATABLE_READ)
     @Override
     public void updateOrderStatus(Order order, OrderStatus status) throws OrderInvalidException {
-        synchronized (this) {
-            queueLock.lock();
-            OrderStatus prevStatus = order.getStatus();
-            log.info("Order " + order.getPublicReference() + ": Update status from " + prevStatus + " to " + status);
+        OrderStatus prevStatus = order.getStatus();
+        log.info("Order " + order.getPublicReference() + ": Update status from " + prevStatus + " to " + status);
 
-            try {
-                this.assertValidStatusChange(order, status);
-                order.setStatus(status);
-                orderRepository.saveAndFlush(order);
+        this.assertValidStatusChange(order, status);
+        order.setStatus(status);
 
-                switch (status) {
-                    case PAID:
-                        this.handleUpdateOrderStatusPaid(order);
-                        break;
-                    case RESERVATION:
-                        this.handleUpdateOrderStatusReservation(order);
-                        break;
-                    case REJECTED:
-                        this.handleUpdateOrderStatusRejected(order, prevStatus);
-                        break;
-                    default:
-                        break;
-                }
-            } finally {
-                queueLock.unlock();
-            }
+        switch (status) {
+            case PAID:
+                this.handleUpdateOrderStatusPaid(order);
+                break;
+            case RESERVATION:
+                this.handleUpdateOrderStatusReservation(order);
+                break;
+            case REJECTED:
+                this.handleUpdateOrderStatusRejected(order, prevStatus);
+                break;
+            default:
+                break;
         }
+
+        orderRepository.saveAndFlush(order);
     }
 
     /**
@@ -239,6 +232,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllReservations() {
         return orderRepository.findAllByStatus(OrderStatus.RESERVATION);
+    }
+
+    /**
+     * Get all the pending Order.
+     *
+     * @return List of Orders
+     */
+    @Override
+    public List<Order> getAllPending() {
+        return orderRepository.findAllByStatus(OrderStatus.PENDING);
     }
 
     /**

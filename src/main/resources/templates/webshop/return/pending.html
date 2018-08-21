@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="webshop/fragments/header :: header ('Payment pending', 'events_order-pending.jpg')"></nav>
+
+<div class="container">
+    <div class="row">
+        <main class="col-12 col-lg-8 mx-auto py-5" role="main">
+            <div th:replace="fragments/messages :: messages"></div>
+
+            <div class="row">
+                <div class="col my-4  text-center">
+                    <h1 class="display-1 mb-4">
+                        <i class="fas fa-spin fa-circle-notch"></i>
+                    </h1>
+                    <h4 class="display-4">Payment pending</h4>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
+<script th:inline="javascript">
+    jQuery(document).ready(function ($) {
+        Storages.localStorage.set('shoppingBasket', []);
+
+        setTimeout(function () {
+            var orderKey = /*[[${order.getPublicReference()}]]*/;
+            window.location = "http://localhost:8080/events/return/" + orderKey;
+        }, 5000)
+    });
+</script>
+</body>

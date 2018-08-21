@@ -89,6 +89,13 @@ public interface OrderService {
     List<Order> getAllReservations();
 
     /**
+     * Get all the pending Order.
+     *
+     * @return List of Orders
+     */
+    List<Order> getAllPending();
+
+    /**
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String

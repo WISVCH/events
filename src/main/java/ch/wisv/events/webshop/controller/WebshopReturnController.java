@@ -42,6 +42,10 @@ public class WebshopReturnController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             switch (order.getStatus()) {
+                case PENDING:
+                    return "redirect:/return/" + order.getPublicReference() + "/pending";
+                case EXPIRED:
+                    return "redirect:/return/" + order.getPublicReference() + "/expired";
                 case PAID:
                     return "redirect:/return/" + order.getPublicReference() + "/success";
                 case CANCELLED:
@@ -76,7 +80,7 @@ public class WebshopReturnController extends WebshopController {
             Order order = orderService.getByReference(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
-            String[] validStatus = new String[]{"success", "cancelled", "error", "reservation"};
+            String[] validStatus = new String[]{"success", "cancelled", "error", "reservation", "pending", "expired"};
 
             if (ArrayUtils.contains(validStatus, status)) {
                 return "webshop/return/" + status;

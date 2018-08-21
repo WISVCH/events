@@ -30,7 +30,7 @@ public class WebshopServiceImplTest extends ServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.webshopService = new WebshopServiceImpl(paymentsService, orderService, mailService);
+        this.webshopService = new WebshopServiceImpl();
     }
 
     @Test
