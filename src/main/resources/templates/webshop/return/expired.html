@@ -22,7 +22,7 @@
 </head>
 
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Order has been cancelled!', 'events_order-cancelled-owl.jpg')"></nav>
+<nav th:replace="webshop/fragments/header :: header ('Payment is expired!', 'events_order-error.jpg')"></nav>
 
 <div class="container">
     <div class="row">
@@ -31,14 +31,14 @@
 
             <div class="row">
                 <div class="col my-4">
-                    <h4 class="display-4">Order has been cancelled!</h4>
+                    <h4 class="display-4">Payment is expired!</h4>
                 </div>
             </div>
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
-                    <p class="text-justify">Your order has been cancelled. If you want to try it again the
-                        payment again, click on the 'Try payment again' button. Otherwise click on the
-                        'Back to the homepage' to go back to the homepage.
+                    <p class="text-justify">
+                        Your payment has been expired and therefor your order has been cancelled! If you want to try to
+                        purchase the tickets again, please go back to the homepage and order them again.
                     </p>
                 </div>
             </div>
@@ -48,12 +48,6 @@
                     <a th:href="@{/}" class="btn btn-secondary">
                         <i class="fa fa-fw fa-arrow-left"></i>
                         Back to the homepage
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment'}" class="btn btn-info">
-                        Try payment again
-                        <i class="fas fa-fw fa-sync"></i>
                     </a>
                 </div>
             </div>

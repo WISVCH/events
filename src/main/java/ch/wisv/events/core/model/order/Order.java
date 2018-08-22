@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -55,7 +56,7 @@ public class Order {
     /**
      * Field products list of Products in the Order.
      */
-    @ManyToMany(targetEntity = OrderProduct.class)
+    @ManyToMany(targetEntity = OrderProduct.class, fetch = FetchType.EAGER)
     private List<OrderProduct> orderProducts;
 
     /**
@@ -97,6 +98,11 @@ public class Order {
      * Tickets have been created.
      */
     private boolean ticketCreated;
+
+    /**
+     * CH payments public reference.
+     */
+    private String chPaymentsReference;
 
     /**
      * Constructor Order creates a new Order instance.

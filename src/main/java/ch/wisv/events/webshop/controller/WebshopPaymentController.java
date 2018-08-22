@@ -3,8 +3,6 @@ package ch.wisv.events.webshop.controller;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderInvalidException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
@@ -12,13 +10,11 @@ import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.webshop.service.PaymentsService;
-import ch.wisv.events.webshop.service.WebshopService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -28,14 +24,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout/{key}/payment")
 public class WebshopPaymentController extends WebshopController {
 
+    /** Error message order not suitable for checkout. */
+    private static final String ERROR_ORDER_NOT_SUITABLE_CHECKOUT = "Order is not suitable for checkout!";
+
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
     /** PaymentsService. */
     private final PaymentsService paymentsService;
-
-    /** WebshopService. */
-    private final WebshopService webshopService;
 
     /**
      * Constructor WebshopController.
@@ -43,20 +39,17 @@ public class WebshopPaymentController extends WebshopController {
      * @param orderService           of type OrderService
      * @param orderValidationService of type OrderValidationService
      * @param paymentsService        of type PaymentsService
-     * @param webshopService         of type WebshopService
      * @param authenticationService  of type AuthenticationService
      */
     public WebshopPaymentController(
             OrderService orderService,
             OrderValidationService orderValidationService,
             PaymentsService paymentsService,
-            WebshopService webshopService,
             AuthenticationService authenticationService
     ) {
         super(orderService, authenticationService);
         this.orderValidationService = orderValidationService;
         this.paymentsService = paymentsService;
-        this.webshopService = webshopService;
     }
 
     /**
@@ -148,45 +141,22 @@ public class WebshopPaymentController extends WebshopController {
     /**
      * Return url after iDeal payment.
      *
-     * @param redirect          of type RedirectAttributes
-     * @param key               of type String
-     * @param paymentsReference of type String
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return String string
-     *
-     * @throws OrderNotFoundException when Order is not found
      */
     @GetMapping("/return")
-    public String returnAfterMolliePayment(
-            RedirectAttributes redirect,
-            @PathVariable String key,
-            @RequestParam("reference") String paymentsReference
-    ) throws OrderNotFoundException {
-        Order order = orderService.getByReference(key);
-
+    public String returnAfterMolliePayment(RedirectAttributes redirect, @PathVariable String key) {
         try {
-            try {
-                this.assertOrderIsSuitableForCheckout(order);
-
-                if (order.getStatus() == OrderStatus.PENDING) {
-                    webshopService.fetchOrderStatus(order, paymentsReference);
-
-                    return "redirect:/return/" + order.getPublicReference();
-                } else {
-                    redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Order is in an invalid state.");
-
-                    return "redirect:/checkout/" + key + "/payment";
-                }
-            } catch (PaymentsStatusUnknown | PaymentsConnectionException e) {
-                redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Something went wrong trying to fetch the payment status.");
-                orderService.updateOrderStatus(order, OrderStatus.ASSIGNED);
-
-                return "redirect:/checkout/" + key + "/payment";
-            }
-        } catch (Exception e) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+            Order order = orderService.getByReference(key);
+            this.assertOrderIsSuitableForCheckout(order);
 
             return "redirect:/return/" + order.getPublicReference();
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+
+            return "redirect:/";
         }
     }
 
@@ -198,20 +168,20 @@ public class WebshopPaymentController extends WebshopController {
      * @throws OrderInvalidException when Order is not suitable for Payment
      */
     private void assertOrderIsSuitableForPayment(Order order) throws OrderInvalidException {
-        if (order.getStatus() != OrderStatus.ASSIGNED) {
-            throw new OrderInvalidException("Order status must be ASSIGNED before payment");
+        if (order.getStatus() != OrderStatus.ASSIGNED && order.getStatus() != OrderStatus.CANCELLED) {
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getOrderProducts().size() == 0) {
-            throw new OrderInvalidException("Order must contain products before payment");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getOwner() == null) {
-            throw new OrderInvalidException("Order owner must be set before payment");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getCreatedBy() == null || !order.getCreatedBy().equals("events-webshop")) {
-            throw new OrderInvalidException("Order created by must be set before payment");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
     }
 

@@ -1,8 +1,13 @@
 package ch.wisv.events.webshop.service;
 
+import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.service.order.OrderService;
 import javax.validation.constraints.NotNull;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,16 +20,23 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * PaymentsService implementation.
+ */
 @Validated
 @Service
 public class PaymentsServiceImpl implements PaymentsService {
 
     /** HTTP success status code of CH Payments. */
     private static final int SUCCESS_PAYMENT_STATUS_CODE = 201;
+
+    /** OrderService. */
+    private final OrderService orderService;
 
     /** Payments issuer url. */
     @Value("${wisvch.payments.issuerUri}")
@@ -41,17 +53,23 @@ public class PaymentsServiceImpl implements PaymentsService {
 
     /**
      * Default constructor.
+     *
+     * @param orderService of type OrderService
      */
-    public PaymentsServiceImpl() {
+    @Autowired
+    public PaymentsServiceImpl(OrderService orderService) {
+        this.orderService = orderService;
         this.httpClient = HttpClients.createDefault();
     }
 
     /**
-     * Constructor with own HttpClient.
+     * Constructor with HttpClient.
      *
-     * @param httpClient of type HttpClient
+     * @param orderService of type OrderService
+     * @param httpClient   of type HttpClient
      */
-    public PaymentsServiceImpl(HttpClient httpClient) {
+    public PaymentsServiceImpl(OrderService orderService, HttpClient httpClient) {
+        this.orderService = orderService;
         this.httpClient = httpClient;
     }
 
@@ -102,11 +120,15 @@ public class PaymentsServiceImpl implements PaymentsService {
 
             if (entity != null) {
                 int statusCode = response.getStatusLine().getStatusCode();
-
                 String responseString = EntityUtils.toString(entity);
                 JSONObject responseObject = (JSONObject) JSONValue.parse(responseString);
 
-                return this.getRedirectUrl(statusCode, responseObject);
+                if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
+                    this.setChPaymentsReference(order, responseObject);
+                    return this.getRedirectUrl(responseObject);
+                } else {
+                    throw new PaymentsInvalidException((String) responseObject.get("message"));
+                }
             }
         } catch (Exception e) {
             throw new PaymentsConnectionException(e.getMessage());
@@ -116,22 +138,26 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
-     * Create a HttpPost to create a Payments Order request.
+     * Map a CH Payments status to a OrderStatus.
      *
-     * @param order of type Order
+     * @param status of type String
      *
-     * @return HttpPost
+     * @return OrderStatus
      */
-    public HttpPost createPaymentsOrderHttpPost(Order order) {
-        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
-
-        JSONObject object = this.createPaymentsHttpPostBody(order);
-
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        return httpPost;
+    @Override
+    public OrderStatus mapStatusToOrderStatus(String status) throws PaymentsStatusUnknown {
+        switch (status) {
+            case "WAITING":
+                return OrderStatus.PENDING;
+            case "PAID":
+                return OrderStatus.PAID;
+            case "CANCELLED":
+                return OrderStatus.CANCELLED;
+            case "EXPIRED":
+                return OrderStatus.EXPIRED;
+            default:
+                throw new PaymentsStatusUnknown(status);
+        }
     }
 
     /**
@@ -161,22 +187,56 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
+     * Create a HttpPost to create a Payments Order request.
+     *
+     * @param order of type Order
+     *
+     * @return HttpPost
+     */
+    private HttpPost createPaymentsOrderHttpPost(Order order) {
+        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
+
+        JSONObject object = this.createPaymentsHttpPostBody(order);
+
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+
+        return httpPost;
+    }
+
+    /**
      * Get redirect url.
      *
-     * @param statusCode     of type int
      * @param responseObject of type JSONObject
      *
      * @return String
      */
-    private String getRedirectUrl(int statusCode, JSONObject responseObject) {
-        if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
-            if (responseObject.containsKey("url")) {
-                return (String) responseObject.get("url");
-            } else {
-                throw new PaymentsInvalidException("Redirect url is missing");
-            }
+    private String getRedirectUrl(JSONObject responseObject) {
+        if (responseObject.containsKey("url")) {
+            return (String) responseObject.get("url");
         } else {
-            throw new PaymentsInvalidException((String) responseObject.get("message"));
+            throw new PaymentsInvalidException("Redirect url is missing");
+        }
+    }
+
+    /**
+     * Set the CH Payments public reference.
+     *
+     * @param order          of type Order
+     * @param responseObject of type JSONObject
+     */
+    private void setChPaymentsReference(Order order, JSONObject responseObject) {
+        try {
+            if (responseObject.containsKey("publicReference")) {
+                order.setChPaymentsReference((String) responseObject.get("publicReference"));
+
+                orderService.update(order);
+            } else {
+                throw new PaymentsInvalidException("Missing public reference");
+            }
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            throw new PaymentsInvalidException(e.getMessage());
         }
     }
 }

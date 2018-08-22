@@ -1,8 +1,10 @@
 package ch.wisv.events.core.tasks;
 
 import ch.wisv.events.core.exception.normal.EventsException;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.webshop.service.PaymentsService;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,16 +30,24 @@ public class OrderTaskScheduler {
     /** Amount of milli seconds in a seconds. */
     private static final int MILLISEC_IN_SEC = 1000;
 
+    /** Amount of seconds between each OrderStatus update. */
+    private static final int MILLISEC_UPDATE_ORDER_STATUS = 100;
+
     /** OrderService. */
     private final OrderService orderService;
+
+    /** PaymentsService. */
+    private final PaymentsService paymentsService;
 
     /**
      * OrderTaskScheduler constructor.
      *
-     * @param orderService of type OrderService
+     * @param orderService    of type OrderService
+     * @param paymentsService of type PaymentsService
      */
-    public OrderTaskScheduler(OrderService orderService) {
+    public OrderTaskScheduler(OrderService orderService, PaymentsService paymentsService) {
         this.orderService = orderService;
+        this.paymentsService = paymentsService;
     }
 
     /**
@@ -48,7 +58,7 @@ public class OrderTaskScheduler {
         orderService.getAllReservations().forEach(order -> {
             if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(MAX_RESERVATION_DAYS))) {
                 try {
-                    orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+                    orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
                 } catch (EventsException e) {
                     log.warn(e.getMessage());
                 }
@@ -62,11 +72,39 @@ public class OrderTaskScheduler {
     @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
-            OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.CANCELLED, OrderStatus.PENDING};
+            OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.PENDING};
 
             if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
                 orderService.delete(order);
             }
         });
+    }
+
+    /**
+     * Fetch the CH Payments order status.
+     */
+    @Scheduled(fixedDelay = MILLISEC_UPDATE_ORDER_STATUS)
+    public void updateOrderStatus() {
+        orderService.getAllPending().forEach(this::fetchOrderStatus);
+    }
+
+    /**
+     * Fetch order status.
+     *
+     * @param order of type Order
+     */
+    private void fetchOrderStatus(Order order) {
+        try {
+            if (order.getChPaymentsReference() != null) {
+                String paymentsStatus = paymentsService.getPaymentsOrderStatus(order.getChPaymentsReference());
+                OrderStatus status = paymentsService.mapStatusToOrderStatus(paymentsStatus);
+
+                if (status != OrderStatus.PENDING) {
+                    orderService.updateOrderStatus(order, status);
+                }
+            }
+        } catch (EventsException e) {
+            log.error(e.getMessage());
+        }
     }
 }

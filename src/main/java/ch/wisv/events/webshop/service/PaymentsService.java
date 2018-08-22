@@ -1,8 +1,12 @@
 package ch.wisv.events.webshop.service;
 
+import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Order;
-import org.apache.http.client.methods.HttpPost;
+import ch.wisv.events.core.model.order.OrderStatus;
 
+/**
+ * PaymentsService interface.
+ */
 public interface PaymentsService {
 
     /**
@@ -24,11 +28,13 @@ public interface PaymentsService {
     String getPaymentsMollieUrl(Order order);
 
     /**
-     * Create a HttpPost to create a Payments Order request.
+     * Map a CH Payments status to a OrderStatus.
      *
-     * @param order of type Order
+     * @param status of type String
      *
-     * @return HttpPost
+     * @return OrderStatus
+     *
+     * @throws PaymentsStatusUnknown when the PaymentsStatus is unknown.
      */
-    HttpPost createPaymentsOrderHttpPost(Order order);
+    OrderStatus mapStatusToOrderStatus(String status) throws PaymentsStatusUnknown;
 }
