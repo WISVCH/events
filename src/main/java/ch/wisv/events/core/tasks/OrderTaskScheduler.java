@@ -72,7 +72,7 @@ public class OrderTaskScheduler {
     @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
-            OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.CANCELLED, OrderStatus.PENDING};
+            OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.PENDING};
 
             if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
                 orderService.delete(order);
