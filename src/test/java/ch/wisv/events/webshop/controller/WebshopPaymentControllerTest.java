@@ -228,31 +228,6 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         this.requestPaymentCheckoutException(order, "/payment/ideal", "Order with status PAID is not suitable for checkout");
     }
 
-    /**
-     * Return after Mollie payment tests
-     */
-    @Test
-    public void testReturnAfterMolliePayment() throws Exception {
-        Order order = this.createPaymentOrder(OrderStatus.PENDING, "events-webshop");
-        order.setPaymentMethod(PaymentMethod.IDEAL);
-
-        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment/return")
-                                .param("reference", "123-345-562"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/return/" + order.getPublicReference()));
-
-        assertEquals(OrderStatus.PENDING, order.getStatus());
-        assertEquals(PaymentMethod.IDEAL, order.getPaymentMethod());
-    }
-
-    @Test
-    public void testReturnAfterMolliePaymentOrderInvalid() throws Exception {
-        mockMvc.perform(get("/checkout/blablabla/payment/return")
-                                .param("reference", "blablabla"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
-    }
-
     private void requestPaymentCheckoutException(Order order, String path, String error) throws Exception {
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + path))
                 .andExpect(status().is3xxRedirection())

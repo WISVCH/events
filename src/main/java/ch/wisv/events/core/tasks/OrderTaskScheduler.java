@@ -104,6 +104,11 @@ public class OrderTaskScheduler {
                 }
             }
         } catch (EventsException e) {
+            try {
+                orderService.updateOrderStatus(order, OrderStatus.ERROR);
+            } catch (EventsException ignored) {
+            }
+
             log.error(e.getMessage());
         }
     }

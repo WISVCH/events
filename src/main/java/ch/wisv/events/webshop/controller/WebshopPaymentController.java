@@ -139,28 +139,6 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Return url after iDeal payment.
-     *
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     *
-     * @return String string
-     */
-    @GetMapping("/return")
-    public String returnAfterMolliePayment(RedirectAttributes redirect, @PathVariable String key) {
-        try {
-            Order order = orderService.getByReference(key);
-            this.assertOrderIsSuitableForCheckout(order);
-
-            return "redirect:/return/" + order.getPublicReference();
-        } catch (OrderNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
-
-            return "redirect:/";
-        }
-    }
-
-    /**
      * Assert if an Order is suitable for Payment.
      *
      * @param order of type Order
