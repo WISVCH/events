@@ -3,7 +3,6 @@ package ch.wisv.events.webshop.service;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
-import org.apache.http.client.methods.HttpPost;
 
 /**
  * PaymentsService interface.
@@ -27,15 +26,6 @@ public interface PaymentsService {
      * @return String
      */
     String getPaymentsMollieUrl(Order order);
-
-    /**
-     * Create a HttpPost to create a Payments Order request.
-     *
-     * @param order of type Order
-     *
-     * @return HttpPost
-     */
-    HttpPost createPaymentsOrderHttpPost(Order order);
 
     /**
      * Map a CH Payments status to a OrderStatus.

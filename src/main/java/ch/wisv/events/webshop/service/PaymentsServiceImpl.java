@@ -20,6 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -55,9 +56,21 @@ public class PaymentsServiceImpl implements PaymentsService {
      *
      * @param orderService of type OrderService
      */
+    @Autowired
     public PaymentsServiceImpl(OrderService orderService) {
         this.orderService = orderService;
         this.httpClient = HttpClients.createDefault();
+    }
+
+    /**
+     * Constructor with HttpClient.
+     *
+     * @param orderService of type OrderService
+     * @param httpClient   of type HttpClient
+     */
+    public PaymentsServiceImpl(OrderService orderService, HttpClient httpClient) {
+        this.orderService = orderService;
+        this.httpClient = httpClient;
     }
 
     /**
@@ -125,25 +138,6 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
-     * Create a HttpPost to create a Payments Order request.
-     *
-     * @param order of type Order
-     *
-     * @return HttpPost
-     */
-    public HttpPost createPaymentsOrderHttpPost(Order order) {
-        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
-
-        JSONObject object = this.createPaymentsHttpPostBody(order);
-
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        return httpPost;
-    }
-
-    /**
      * Map a CH Payments status to a OrderStatus.
      *
      * @param status of type String
@@ -190,6 +184,25 @@ public class PaymentsServiceImpl implements PaymentsService {
         object.put("productKeys", jsonArray);
 
         return object;
+    }
+
+    /**
+     * Create a HttpPost to create a Payments Order request.
+     *
+     * @param order of type Order
+     *
+     * @return HttpPost
+     */
+    private HttpPost createPaymentsOrderHttpPost(Order order) {
+        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
+
+        JSONObject object = this.createPaymentsHttpPostBody(order);
+
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
+
+        return httpPost;
     }
 
     /**
