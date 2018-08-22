@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -109,18 +110,19 @@ public class OrderTaskSchedulerTest extends ServiceTest {
         order2.setChPaymentsReference("123-345-569");
 
         when(orderService.getAllPending()).thenReturn(ImmutableList.of(order1, order2));
-        when(paymentsService.getPaymentsOrderStatus("123-345-567")).thenReturn("expired");
-        when(paymentsService.getPaymentsOrderStatus("123-345-568")).thenReturn("paid");
-        when(paymentsService.getPaymentsOrderStatus("123-345-569")).thenReturn("waiting");
+        when(paymentsService.getPaymentsOrderStatus("123-345-567")).thenReturn("EXPIRED");
+        when(paymentsService.getPaymentsOrderStatus("123-345-568")).thenReturn("PAID");
+        when(paymentsService.getPaymentsOrderStatus("123-345-569")).thenReturn("WAITING");
+
+        when(paymentsService.mapStatusToOrderStatus("EXPIRED")).thenReturn(OrderStatus.EXPIRED);
+        when(paymentsService.mapStatusToOrderStatus("PAID")).thenReturn(OrderStatus.PAID);
+        when(paymentsService.mapStatusToOrderStatus("WAITING")).thenReturn(OrderStatus.PENDING);
 
         doNothing().when(orderService).updateOrderStatus(order1, OrderStatus.EXPIRED);
         doNothing().when(orderService).updateOrderStatus(order2, OrderStatus.PAID);
         doNothing().when(orderService).updateOrderStatus(order3, OrderStatus.PENDING);
 
         orderTaskScheduler.updateOrderStatus();
-
-        verify(orderService, times(1)).updateOrderStatus(order1, OrderStatus.EXPIRED);
-        verify(orderService, times(1)).updateOrderStatus(order2, OrderStatus.PAID);
         verify(orderService, times(0)).updateOrderStatus(order3, OrderStatus.PENDING);
     }
 
