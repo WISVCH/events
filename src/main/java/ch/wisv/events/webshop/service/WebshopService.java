@@ -1,8 +1,6 @@
 package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.order.Order;
 import java.util.List;
 
 /**

@@ -24,6 +24,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/checkout/{key}/payment")
 public class WebshopPaymentController extends WebshopController {
 
+    /** Error message order not suitable for checkout. */
+    private static final String ERROR_ORDER_NOT_SUITABLE_CHECKOUT = "Order is not suitable for checkout!";
+
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
@@ -166,19 +169,19 @@ public class WebshopPaymentController extends WebshopController {
      */
     private void assertOrderIsSuitableForPayment(Order order) throws OrderInvalidException {
         if (order.getStatus() != OrderStatus.ASSIGNED && order.getStatus() != OrderStatus.CANCELLED) {
-            throw new OrderInvalidException("Order is not suitable for checkout!");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getOrderProducts().size() == 0) {
-            throw new OrderInvalidException("Order is not suitable for checkout!");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getOwner() == null) {
-            throw new OrderInvalidException("Order is not suitable for checkout!");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
 
         if (order.getCreatedBy() == null || !order.getCreatedBy().equals("events-webshop")) {
-            throw new OrderInvalidException("Order is not suitable for checkout!");
+            throw new OrderInvalidException(ERROR_ORDER_NOT_SUITABLE_CHECKOUT);
         }
     }
 

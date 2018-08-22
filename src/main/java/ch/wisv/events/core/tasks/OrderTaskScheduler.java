@@ -30,6 +30,9 @@ public class OrderTaskScheduler {
     /** Amount of milli seconds in a seconds. */
     private static final int MILLISEC_IN_SEC = 1000;
 
+    /** Amount of seconds between each OrderStatus update. */
+    private static final int MILLISEC_UPDATE_ORDER_STATUS = 100;
+
     /** OrderService. */
     private final OrderService orderService;
 
@@ -80,7 +83,7 @@ public class OrderTaskScheduler {
     /**
      * Fetch the CH Payments order status.
      */
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = MILLISEC_UPDATE_ORDER_STATUS)
     public void updateOrderStatus() {
         orderService.getAllPending().forEach(this::fetchOrderStatus);
     }

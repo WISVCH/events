@@ -144,7 +144,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     /**
-     * Map a CH Payments status to a OrderStatus
+     * Map a CH Payments status to a OrderStatus.
      *
      * @param status of type String
      *
