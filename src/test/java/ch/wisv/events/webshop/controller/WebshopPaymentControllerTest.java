@@ -2,6 +2,7 @@ package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
+import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
@@ -58,14 +59,14 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentOverviewWrongStatus() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ANONYMOUS, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment", "Order status must be ASSIGNED before payment");
+        this.requestPaymentCheckoutException(order, "/payment", "Order is not suitable for checkout!");
     }
 
     @Test
     public void testPaymentOverviewWrongCreatedBy() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
 
-        this.requestPaymentCheckoutException(order, "/payment", "Order created by must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -73,7 +74,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
         order.setOwner(null);
 
-        this.requestPaymentCheckoutException(order, "/payment", "Order owner must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -81,7 +82,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
         order.setOrderProducts(new ArrayList<>());
 
-        this.requestPaymentCheckoutException(order, "/payment", "Order must contain products before payment");
+        this.requestPaymentCheckoutException(order, "/payment", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -120,14 +121,14 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentReservationWrongStatus() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ANONYMOUS, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order status must be ASSIGNED before payment");
+        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order is not suitable for checkout!");
     }
 
     @Test
     public void testPaymentReservationWrongCreatedBy() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
 
-        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order created by must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -135,7 +136,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
         order.setOwner(null);
 
-        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order owner must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -143,7 +144,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
         order.setOrderProducts(new ArrayList<>());
 
-        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order must contain products before payment");
+        this.requestPaymentCheckoutException(order, "/payment/reservation", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -184,14 +185,14 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     public void testPaymentIdealWrongStatus() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ANONYMOUS, "events-webshop");
 
-        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order status must be ASSIGNED before payment");
+        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order is not suitable for checkout!");
     }
 
     @Test
     public void testPaymentIdealWrongCreatedBy() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
 
-        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order created by must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -199,7 +200,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "somebody");
         order.setOwner(null);
 
-        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order owner must be set before payment");
+        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -207,7 +208,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
         order.setOrderProducts(new ArrayList<>());
 
-        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order must contain products before payment");
+        this.requestPaymentCheckoutException(order, "/payment/ideal", "Order is not suitable for checkout!");
     }
 
     @Test
@@ -240,52 +241,16 @@ public class WebshopPaymentControllerTest extends ControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/return/" + order.getPublicReference()));
 
-        assertEquals(OrderStatus.PAID, order.getStatus());
+        assertEquals(OrderStatus.PENDING, order.getStatus());
         assertEquals(PaymentMethod.IDEAL, order.getPaymentMethod());
     }
 
     @Test
-    public void testReturnAfterMolliePaymentNotFound() throws Exception {
-        thrown.expect(NestedServletException.class);
-        mockMvc.perform(get("/checkout/1345-4567-5678/payment/return")
-                                .param("reference", "123-345-562"));
-    }
-
-    @Test
-    public void testReturnAfterMolliePaymentNotPending() throws Exception {
-        Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
-        order.setPaymentMethod(PaymentMethod.IDEAL);
-
-        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment/return")
-                                .param("reference", "123-345-562"))
+    public void testReturnAfterMolliePaymentOrderInvalid() throws Exception {
+        mockMvc.perform(get("/checkout/blablabla/payment/return")
+                                .param("reference", "blablabla"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"))
-                .andExpect(flash().attribute("error", "Order is in an invalid state."));
-    }
-
-    @Test
-    public void testReturnAfterMolliePaymentError() throws Exception {
-        Order order = this.createPaymentOrder(OrderStatus.PENDING, "events-webshop");
-        order.setPaymentMethod(PaymentMethod.IDEAL);
-
-        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment/return")
-                                .param("reference", "123-345-561"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/return/" + order.getPublicReference()));
-
-        assertEquals(OrderStatus.ERROR, order.getStatus());
-    }
-
-    @Test
-    public void testReturnAfterMolliePaymentFailure() throws Exception {
-        Order order = this.createPaymentOrder(OrderStatus.PENDING, "events-webshop");
-        order.setPaymentMethod(PaymentMethod.IDEAL);
-
-        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment/return")
-                                .param("reference", "123-345-564"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"))
-                .andExpect(flash().attribute("error", "Something went wrong trying to fetch the payment status."));
+                .andExpect(redirectedUrl("/"));
     }
 
     private void requestPaymentCheckoutException(Order order, String path, String error) throws Exception {
