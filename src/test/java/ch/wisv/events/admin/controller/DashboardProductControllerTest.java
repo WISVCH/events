@@ -4,8 +4,8 @@ import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.contains;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -77,59 +78,98 @@ public class DashboardProductControllerTest extends ControllerTest {
     }
 
     @Test
-    public void testCreatePostMissingName() throws Exception {
+    public void testCreatePostMissingTitle() throws Exception {
         Product product = new Product();
 
         mockMvc.perform(post("/administrator/products/create")
-                                .param("name", "")
-                                .param("email", "piet@hein.nl")
-                                .param("rfidToken", "RF123456")
+                                .param("title", "")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
-                .andExpect(flash().attribute("error", "Name is empty, but a required field, so please fill in this field!"));
+                .andExpect(flash().attribute("error", "Title is required, and therefore should be filled in!"));
     }
 
     @Test
-    public void testCreatePostMissingEmail() throws Exception {
+    public void testCreatePostMissingSellStart() throws Exception {
         Product product = new Product();
 
         mockMvc.perform(post("/administrator/products/create")
-                                .param("name", "Piet Hein")
-                                .param("email", "")
-                                .param("rfidToken", "RF123456")
+                                .param("title", "Product")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
-                .andExpect(flash().attribute("error", "Email is empty, but a required field, so please fill in this field!"));
+                .andExpect(flash().attribute("error", "Starting date for selling should be before the ending time"));
     }
 
     @Test
-    public void testCreatePostDoubleEmail() throws Exception {
-        Product product = this.createProduct();
-        productRepository.saveAndFlush(product);
+    public void testCreatePostMissingSellEndBeforeSellStart() throws Exception {
+        Product product = new Product();
 
         mockMvc.perform(post("/administrator/products/create")
-                                .param("name", "Piet Hein")
-                                .param("rfidToken", "RF123458")
-                                .sessionAttr("product", new Product()))
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T18:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
-                .andExpect(flash().attribute("error", "Email address is already used!"));
+                .andExpect(flash().attribute("error", "Starting date for selling should be before the ending time"));
     }
 
     @Test
-    public void testCreatePostDoubleRfidToken() throws Exception {
-        Product product = this.createProduct();
-        productRepository.saveAndFlush(product);
+    public void testCreatePostMissingCost() throws Exception {
+        Product product = new Product();
 
         mockMvc.perform(post("/administrator/products/create")
-                                .param("name", "Piet Hein")
-                                .param("email", "piet@hein.nl")
-                                .sessionAttr("product", new Product()))
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
-                .andExpect(flash().attribute("error", "RFID token is already used!"));
+                .andExpect(flash().attribute("error", "Price is required, and therefore should be filled in!"));
+    }
+
+    @Test
+    public void testCreatePostMissingMaxSoldPerCustomerToHigh() throws Exception {
+        Product product = new Product();
+
+        mockMvc.perform(post("/administrator/products/create")
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "26")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
+    }
+
+    @Test
+    public void testCreatePostMissingMaxSoldPerCustomerToLow() throws Exception {
+        Product product = new Product();
+
+        mockMvc.perform(post("/administrator/products/create")
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "0")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
     }
 
     @Test
@@ -137,13 +177,15 @@ public class DashboardProductControllerTest extends ControllerTest {
         Product product = new Product();
 
         mockMvc.perform(post("/administrator/products/create")
-                                .param("name", "Piet Hein")
-                                .param("email", "piet@hein.nl")
-                                .param("rfidToken", "RF123456")
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
-                .andExpect(flash().attribute("success", "Product with name Piet Hein  has been created!"));
+                .andExpect(redirectedUrlPattern("/administrator/products/view/*"))
+                .andExpect(flash().attribute("success", "Product with title Product has been created!"));
     }
 
     @Test
@@ -165,7 +207,108 @@ public class DashboardProductControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/products/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/"))
-                .andExpect(flash().attribute("warning", "Product with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Product with key not-found not found!"));
+    }
+
+    @Test
+    public void testEditPostMissingTitle() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Title is required, and therefore should be filled in!"));
+    }
+
+    @Test
+    public void testEditPostMissingSellStart() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "Product")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Starting date for selling is required, and therefore should be filled in!"));
+    }
+
+    @Test
+    public void testEditPostMissingSellEndBeforeSellStart() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T18:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Starting date for selling should be before the ending time"));
+    }
+
+    @Test
+    public void testEditPostMissingCost() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Price is required, and therefore should be filled in!"));
+    }
+
+    @Test
+    public void testEditPostMissingMaxSoldPerCustomerToHigh() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "26")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
+    }
+
+    @Test
+    public void testEditPostMissingMaxSoldPerCustomerToLow() throws Exception {
+        Product product = this.createProduct();
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "0")
+                                .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
+                .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
     }
 
     @Test
@@ -174,46 +317,15 @@ public class DashboardProductControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
-                                .param("title", product.getTitle())
-                                .param("sellStart", product.getSellStart().toString())
-                                .param("cost", product.getCost().toString())
-                                .param("maxSoldPerCustomer", product.getMaxSoldPerCustomer().toString())
-                                .sessionAttr("product", new Product()))
+                                .param("title", "Product")
+                                .param("sellStart", "2018-01-02T16:00")
+                                .param("sellEnd", "2018-01-02T17:00")
+                                .param("cost", "1.50")
+                                .param("maxSoldPerCustomer", "1")
+                                .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/view/" + product.getKey()))
                 .andExpect(flash().attribute("success", "Product changes have been saved!"));
-    }
-
-    @Test
-    public void testEditPostInvalidName() throws Exception {
-        Product product = this.createProduct();
-        productRepository.saveAndFlush(product);
-
-        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
-                                .param("name", "")
-                                .param("email", "piet@hein.nl")
-                                .param("rfidToken", "RF123456")
-                                .sessionAttr("product", product))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
-                .andExpect(flash().attribute("error", "Name is empty, but a required field, so please fill in this field!"))
-                .andExpect(flash().attribute("product", any(Product.class)));
-    }
-
-    @Test
-    public void testEditPostInvalidEmail() throws Exception {
-        Product product = this.createProduct();
-        productRepository.saveAndFlush(product);
-
-        mockMvc.perform(post("/administrator/products/edit/" + product.getKey())
-                                .param("name", "Piet Hein")
-                                .param("email", "")
-                                .param("rfidToken", "RF123456")
-                                .sessionAttr("product", product))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/edit/" + product.getKey()))
-                .andExpect(flash().attribute("error", "Email is empty, but a required field, so please fill in this field!"))
-                .andExpect(flash().attribute("product", any(Product.class)));
     }
 
     @Test
@@ -224,15 +336,33 @@ public class DashboardProductControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/products/delete/" + product.getKey()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/"))
-                .andExpect(flash().attribute("success", "Product with name has been deleted!"));
+                .andExpect(flash().attribute("success", "Product Product product has been deleted!"));
     }
 
     @Test
     public void testDeleteGetNotFound() throws Exception {
+        mockMvc.perform(get("/administrator/products/delete/not-found"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(flash().attribute("error", "Product with key not-found not found!"));
+    }
+
+
+    @Test
+    public void testOverviewGet() throws Exception {
         Product product = this.createProduct();
         productRepository.saveAndFlush(product);
 
-        mockMvc.perform(get("/administrator/products/delete/not-found"))
+        mockMvc.perform(get("/administrator/products/overview/" + product.getKey()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("admin/products/overview"))
+                .andExpect(model().attributeExists("tickets"))
+                .andExpect(model().attribute("product", product));
+    }
+
+    @Test
+    public void testOverviewGetNotFound() throws Exception {
+        mockMvc.perform(get("/administrator/products/overview/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/"))
                 .andExpect(flash().attribute("error", "Product with key not-found not found!"));

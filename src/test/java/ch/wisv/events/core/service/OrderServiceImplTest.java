@@ -24,7 +24,6 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -401,11 +400,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
         verify(ticketService, times(1)).deleteByOrder(order);
-<<<<<<< HEAD
         verify(orderRepository, times(2)).saveAndFlush(order);
-=======
-        verify(orderRepository, times(1)).saveAndFlush(order);
->>>>>>> Improve OrderServiceImpl test coverage
 
         assertEquals(1, product2.getSold());
     }
@@ -423,11 +418,7 @@ public class OrderServiceImplTest extends ServiceTest {
         orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
-<<<<<<< HEAD
         verify(orderRepository, times(2)).saveAndFlush(order);
-=======
-        verify(orderRepository, times(1)).saveAndFlush(order);
->>>>>>> Improve OrderServiceImpl test coverage
 
         assertEquals(1, product2.getReserved());
     }

@@ -116,7 +116,7 @@ public class DashboardProductController {
         try {
             productService.create(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
-            redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
+            redirect.addFlashAttribute("success", "Product with title " + product.getTitle() + " has been created!");
 
             return "redirect:/administrator/products/view/" + product.getKey();
         } catch (ProductInvalidException e) {
@@ -131,12 +131,14 @@ public class DashboardProductController {
      * Get request to edit a Product or if the key does not exists it will redirect to the
      * Product Overview page.
      *
-     * @param model SpringUI model
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return thymeleaf template path
      */
     @GetMapping("/edit/{key}")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             if (!model.containsAttribute("product")) {
                 model.addAttribute("product", productService.getByKey(key));
@@ -144,6 +146,8 @@ public class DashboardProductController {
 
             return "admin/products/product";
         } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
             return "redirect:/administrator/products/";
         }
     }
@@ -153,6 +157,7 @@ public class DashboardProductController {
      *
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
+     * @param key      of type String
      *
      * @return String
      */
@@ -176,13 +181,14 @@ public class DashboardProductController {
     /**
      * Method overview will show a list of the users with this product.
      *
-     * @param model of type Model
-     * @param key   of type String
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return String
      */
     @GetMapping("/overview/{key}")
-    public String overview(Model model, @PathVariable String key) {
+    public String overview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);
 
@@ -191,6 +197,8 @@ public class DashboardProductController {
 
             return "admin/products/overview";
         } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
             return "redirect:/administrator/products/";
         }
     }
