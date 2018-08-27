@@ -24,12 +24,6 @@ public enum PaymentMethod {
      * User paid his order via Mollie SOFORT.
      */
     SOFORT,
-
-    /**
-     * User paid his order via Mollie BANCONTACT.
-     */
-    BANCONTACT,
-
     /**
      * User paid his order via another method.
      */

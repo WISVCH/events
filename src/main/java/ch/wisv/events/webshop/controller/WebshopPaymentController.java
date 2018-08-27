@@ -139,19 +139,6 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Payment method using BANCONTACT.
-     *
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     *
-     * @return String string
-     */
-    @GetMapping("/bancontact")
-    public String paymentBanContact(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.BANCONTACT);
-    }
-
-    /**
      * Assert if an Order is suitable for Payment.
      *
      * @param order of type Order
