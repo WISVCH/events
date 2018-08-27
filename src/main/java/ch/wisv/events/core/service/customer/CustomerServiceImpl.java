@@ -101,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByUsername(String username) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByChUsername(username);
+        Optional<Customer> customer = customerRepository.findByChUsernameIgnoreCase(username);
 
         return customer.orElseThrow(() -> new CustomerNotFoundException("username " + username));
     }
@@ -115,7 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByEmail(String email) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByEmail(email);
+        Optional<Customer> customer = customerRepository.findByEmailIgnoreCase(email);
 
         return customer.orElseThrow(() -> new CustomerNotFoundException("email " + email));
     }
@@ -241,7 +241,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
-        Optional<Customer> optional = customerRepository.findByEmail(customer.getEmail());
+        Optional<Customer> optional = customerRepository.findByEmailIgnoreCase(customer.getEmail());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();

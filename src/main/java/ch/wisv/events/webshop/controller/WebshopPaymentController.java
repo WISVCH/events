@@ -104,7 +104,7 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
-            return "redirect:/return/" + order.getPublicReference() + "/reservation";
+            return "redirect:/return/" + order.getPublicReference();
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 

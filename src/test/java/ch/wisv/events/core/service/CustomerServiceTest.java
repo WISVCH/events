@@ -138,7 +138,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testGetByChUserName() throws Exception {
-        when(repository.findByEmail(customer.getChUsername())).thenReturn(Optional.of(this.customer));
+        when(repository.findByEmailIgnoreCase(customer.getChUsername())).thenReturn(Optional.of(this.customer));
 
         assertEquals(this.customer, customerService.getByEmail(this.customer.getChUsername()));
     }
@@ -150,7 +150,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testGetByChUserNameNotFound() throws Exception {
         thrown.expect(CustomerNotFoundException.class);
         thrown.expectMessage("Customer with email testt not found!");
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         customerService.getByEmail("testt");
     }
@@ -183,7 +183,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreate() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         customerService.create(this.customer);
         verify(repository, times(1)).saveAndFlush(any(Customer.class));
@@ -243,7 +243,7 @@ public class CustomerServiceTest extends ServiceTest {
     public void testCreateAlreadyUsedRFIDToken() throws Exception {
         Customer duplicate = new Customer("", "Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", this.customer.getRfidToken());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("RFID token is already used!");
@@ -257,7 +257,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreateAlreadyUsedEmail() throws Exception {
         Customer duplicate = new Customer("", "Constantijn Huygens", this.customer.getEmail(), "constantijnh", this.customer.getRfidToken() + "0");
-        when(repository.findByEmail(anyString())).thenReturn(Optional.of(this.customer));
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         thrown.expect(CustomerInvalidException.class);
@@ -280,7 +280,7 @@ public class CustomerServiceTest extends ServiceTest {
 
         Customer mock = new Customer();
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(mock));
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         customerService.update(update);
@@ -298,7 +298,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreateByChUserInfo() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         CHUserInfo userInfo = new CHUserInfo();
         userInfo.setName("name");

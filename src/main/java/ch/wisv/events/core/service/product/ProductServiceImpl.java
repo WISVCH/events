@@ -116,6 +116,7 @@ public class ProductServiceImpl implements ProductService {
         model.setProducts(product.getProducts());
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
         model.setIncludesRegistration(product.isIncludesRegistration());
+        model.setChOnly(product.isChOnly());
 
         this.assertIsValidProduct(product);
         this.updateLinkedProducts(product, model.getProducts(), true);

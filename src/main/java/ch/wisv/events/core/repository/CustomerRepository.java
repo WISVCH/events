@@ -33,7 +33,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      *
      * @return Optional
      */
-    Optional<Customer> findByEmail(String email);
+    Optional<Customer> findByEmailIgnoreCase(String email);
 
     /**
      * Method findAllByCreatedAtAfter ...
@@ -60,5 +60,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      *
      * @return Optional
      */
-    Optional<Customer> findByChUsername(String username);
+    Optional<Customer> findByChUsernameIgnoreCase(String username);
 }
