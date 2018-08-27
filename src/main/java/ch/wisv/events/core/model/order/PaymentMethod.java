@@ -21,9 +21,14 @@ public enum PaymentMethod {
     IDEAL,
 
     /**
-     * User paid his order via Mollie Credit Card.
+     * User paid his order via Mollie SOFORT.
      */
-    CREDIT_CARD,
+    SOFORT,
+
+    /**
+     * User paid his order via Mollie BANCONTACT.
+     */
+    BANCONTACT,
 
     /**
      * User paid his order via another method.

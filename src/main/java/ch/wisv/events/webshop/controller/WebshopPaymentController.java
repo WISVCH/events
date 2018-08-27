@@ -126,16 +126,29 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Payment method using iDeal.
+     * Payment method using SOFORT.
      *
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String string
      */
-    @GetMapping("/creditcard")
-    public String paymentCreditCard(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.CREDIT_CARD);
+    @GetMapping("/sofort")
+    public String paymentSofort(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.SOFORT);
+    }
+
+    /**
+     * Payment method using BANCONTACT.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String string
+     */
+    @GetMapping("/bancontact")
+    public String paymentBanContact(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.BANCONTACT);
     }
 
     /**
