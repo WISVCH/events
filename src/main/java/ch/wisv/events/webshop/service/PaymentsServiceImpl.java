@@ -7,6 +7,7 @@ import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import javax.validation.constraints.NotNull;
 import org.apache.http.HttpEntity;
@@ -38,6 +39,9 @@ public class PaymentsServiceImpl implements PaymentsService {
     /** OrderService. */
     private final OrderService orderService;
 
+    /** MailService. */
+    private final MailService mailService;
+
     /** Payments issuer url. */
     @Value("${wisvch.payments.issuerUri}")
     @NotNull
@@ -55,10 +59,12 @@ public class PaymentsServiceImpl implements PaymentsService {
      * Default constructor.
      *
      * @param orderService of type OrderService
+     * @param mailService  of type MailService
      */
     @Autowired
-    public PaymentsServiceImpl(OrderService orderService) {
+    public PaymentsServiceImpl(OrderService orderService, MailService mailService) {
         this.orderService = orderService;
+        this.mailService = mailService;
         this.httpClient = HttpClients.createDefault();
     }
 
@@ -67,10 +73,12 @@ public class PaymentsServiceImpl implements PaymentsService {
      *
      * @param orderService of type OrderService
      * @param httpClient   of type HttpClient
+     * @param mailService  of type MailService
      */
-    public PaymentsServiceImpl(OrderService orderService, HttpClient httpClient) {
+    public PaymentsServiceImpl(OrderService orderService, HttpClient httpClient, MailService mailService) {
         this.orderService = orderService;
         this.httpClient = httpClient;
+        this.mailService = mailService;
     }
 
     /**
@@ -96,11 +104,11 @@ public class PaymentsServiceImpl implements PaymentsService {
                     return (String) responseObject.get("status");
                 }
             }
-
-            throw new PaymentsConnectionException("Something");
         } catch (Exception e) {
-            throw new PaymentsConnectionException(e.getMessage());
+            mailService.sendError("Payment provider is not responding", e);
         }
+
+        throw new PaymentsConnectionException("Payment provider is not responding");
     }
 
     /**
@@ -131,10 +139,10 @@ public class PaymentsServiceImpl implements PaymentsService {
                 }
             }
         } catch (Exception e) {
-            throw new PaymentsConnectionException(e.getMessage());
+            mailService.sendError("Can't fetch mollie url", e);
         }
 
-        throw new PaymentsConnectionException("Something went wrong.");
+        throw new PaymentsConnectionException("Payment provider is not responding");
     }
 
     /**

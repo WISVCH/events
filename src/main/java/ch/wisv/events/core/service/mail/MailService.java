@@ -20,9 +20,10 @@ public interface MailService {
     /**
      * Method mails about a payment error.
      *
-     * @param order of type Order
+     * @param subject   of type String
+     * @param exception of type Exception
      */
-    void sendErrorPaymentOrder(Order order);
+    void sendError(String subject, Exception exception);
 
     /**
      * Send mail about order reservation.

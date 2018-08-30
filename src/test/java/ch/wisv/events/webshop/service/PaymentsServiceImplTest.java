@@ -10,6 +10,7 @@ import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        this.paymentsService = new PaymentsServiceImpl(orderService, httpClient);
+        this.paymentsService = new PaymentsServiceImpl(orderService, httpClient, mock(MailService.class));
     }
 
     @After
@@ -126,7 +127,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
     @Test
     public void testGetPaymentsMollieUrlMissingUrl() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Redirect url is missing");
+        thrown.expectMessage("Payment provider is not responding");
 
         JSONObject object = new JSONObject();
         object.put("publicReference", "123-345-567");
@@ -147,7 +148,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
     @Test
     public void testGetPaymentsMollieUrlMissingPaymentsReference() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Missing public reference");
+        thrown.expectMessage("Payment provider is not responding");
 
         JSONObject object = new JSONObject();
         object.put("url", "https://ch.tudelft.nl/payments/some/url");
@@ -168,7 +169,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
     @Test
     public void testGetPaymentsMollieUrlPaymentsException() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Connection lost");
+        thrown.expectMessage("Payment provider is not responding");
 
         JSONObject object = new JSONObject();
         object.put("message", "No valid products in the order.");
@@ -187,7 +188,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
     @Test
     public void testGetPaymentsMollieUrlConnectionException() throws Exception {
         thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("No valid products in the order.");
+        thrown.expectMessage("Payment provider is not responding");
 
         JSONObject object = new JSONObject();
         object.put("message", "No valid products in the order.");
