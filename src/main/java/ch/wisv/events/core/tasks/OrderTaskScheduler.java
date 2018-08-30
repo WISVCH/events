@@ -76,7 +76,7 @@ public class OrderTaskScheduler {
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
             if (order.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(CLEAN_UP_INTERVAL))) {
-                OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.PENDING};
+                OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED};
 
                 if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
                     orderService.delete(order);
