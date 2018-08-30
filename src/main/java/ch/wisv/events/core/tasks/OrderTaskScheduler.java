@@ -24,8 +24,8 @@ public class OrderTaskScheduler {
     /** Clean up task interval in seconds (30 minutes). */
     private static final int CLEAN_UP_TASK_INTERVAL_SECONDS = 1800;
 
-    /** Clean up orders after 7 days. */
-    private static final int CLEAN_UP_INTERVAL = 7;
+    /** Clean up orders after when inactive (60 minutes). */
+    private static final int CLEAN_UP_INTERVAL = 60;
 
     /** Max number of days a reservation is valid. */
     private static final int MAX_RESERVATION_DAYS = 3;
@@ -75,7 +75,7 @@ public class OrderTaskScheduler {
     @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
-            if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(CLEAN_UP_INTERVAL))) {
+            if (order.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(CLEAN_UP_INTERVAL))) {
                 OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.PENDING};
 
                 if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
