@@ -76,7 +76,7 @@ public class OrderTaskSchedulerTest extends ServiceTest {
     public void testCleanUpTask() {
         Order order1 = new Order();
         order1.setStatus(OrderStatus.ANONYMOUS);
-        order1.setCreatedAt(LocalDateTime.now().minusDays(1));
+        order1.setCreatedAt(LocalDateTime.now().minusMinutes(61));
 
         Order order2 = new Order();
         order2.setStatus(OrderStatus.ANONYMOUS);
