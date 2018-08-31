@@ -113,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getOrderProducts() == null) {
             throw new OrderInvalidException("Order should contain a list of OrderProducts");
         }
+        log.info("Order " + order.getPublicReference() + ": Order has been created!");
 
         order.getOrderProducts().forEach(orderProductRepository::saveAndFlush);
         order.updateOrderAmount();
@@ -163,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
         old.updateOrderAmount();
 
         orderRepository.saveAndFlush(order);
-        log.info("Order " + order.getPublicReference() + ": Update saved");
+        log.info("Order " + order.getPublicReference() + ": Order has been updated!");
     }
 
     /**
@@ -331,7 +332,7 @@ public class OrderServiceImpl implements OrderService {
         ));
 
         orderRepository.saveAndFlush(order);
-        log.info("Order " + order.getPublicReference() + ": Tickets created!");
+        log.info("Order " + order.getPublicReference() + ": Status changed to PAID and tickets created!");
     }
 
     /**
@@ -373,6 +374,7 @@ public class OrderServiceImpl implements OrderService {
                 orderProduct.getAmount().intValue()
         ));
 
+        log.info("Order " + order.getPublicReference() + ": Status changed to RESERVATION!");
         orderRepository.saveAndFlush(order);
     }
 }
