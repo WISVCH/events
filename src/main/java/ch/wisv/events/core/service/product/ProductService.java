@@ -75,4 +75,20 @@ public interface ProductService {
      */
     void delete(Product product);
 
+    /**
+     * Change Product sold count.
+     *
+     * @param product  of type Product
+     * @param increase of type int
+     */
+    void changeSoldCount(Product product, int increase);
+
+    /**
+     * Change Product reserved count.
+     *
+     * @param product  of type Product
+     * @param increase of type int
+     */
+    void changeReservedCount(Product product, int increase);
+
 }
