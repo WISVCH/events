@@ -30,8 +30,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,9 +40,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-
-    /** Lock. */
-    private final Lock queueLock = new ReentrantLock();
 
     /** OrderRepository. */
     private final OrderRepository orderRepository;
@@ -330,7 +325,10 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTicketCreated(true);
         order.setPaidAt(LocalDateTime.now());
-        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue()));
+        order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
+                orderProduct.getProduct(),
+                orderProduct.getAmount().intValue()
+        ));
 
         orderRepository.saveAndFlush(order);
         log.info("Order " + order.getPublicReference() + ": Tickets created!");
@@ -345,16 +343,21 @@ public class OrderServiceImpl implements OrderService {
     private void handleUpdateOrderStatusRejected(Order order, OrderStatus prevStatus) {
         switch (prevStatus) {
             case RESERVATION:
-                order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
-                        .increaseReserved(orderProduct.getAmount().intValue() * -1));
+                order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
+                        orderProduct.getProduct(),
+                        orderProduct.getAmount().intValue() * -1
+                ));
                 break;
             case PAID:
-                order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct()
-                        .increaseSold(orderProduct.getAmount().intValue() * -1));
+                order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
+                        orderProduct.getProduct(),
+                        orderProduct.getAmount().intValue() * -1
+                ));
                 ticketService.deleteByOrder(order);
                 break;
             default:
         }
+
         orderRepository.saveAndFlush(order);
     }
 
@@ -365,7 +368,10 @@ public class OrderServiceImpl implements OrderService {
      */
     private void handleUpdateOrderStatusReservation(Order order) {
         mailService.sendOrderReservation(order);
-        order.getOrderProducts().forEach(orderProduct -> orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue()));
+        order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
+                orderProduct.getProduct(),
+                orderProduct.getAmount().intValue()
+        ));
 
         orderRepository.saveAndFlush(order);
     }
