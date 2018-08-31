@@ -62,6 +62,7 @@ public class OrderTaskScheduler {
             if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(MAX_RESERVATION_DAYS))) {
                 try {
                     orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
+                    log.info("Order " + order.getPublicReference() + ": Has been EXPIRED!");
                 } catch (EventsException e) {
                     log.warn(e.getMessage());
                 }
@@ -79,6 +80,7 @@ public class OrderTaskScheduler {
                 OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED};
 
                 if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
+                    log.info("Order " + order.getPublicReference() + ": Order has been deleted!");
                     orderService.delete(order);
                 }
             }
