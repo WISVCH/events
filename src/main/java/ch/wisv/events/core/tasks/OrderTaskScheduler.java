@@ -79,6 +79,7 @@ public class OrderTaskScheduler {
                 OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED};
 
                 if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
+                    log.info("Order " + order.getPublicReference() + ": Order has been deleted!");
                     orderService.delete(order);
                 }
             }
