@@ -201,15 +201,8 @@ public class WebshopCustomerController extends WebshopController {
                 return customerService.getByEmail(customer.getEmail());
             }
         } catch (CustomerNotFoundException e) {
-            try {
-                if (customer.getChUsername() != null && !customer.getChUsername().equals("")) {
-                    return customerService.getByUsername(customer.getChUsername());
-                }
-            } catch (CustomerNotFoundException ignored) {
-            }
+            customerService.create(customer);
         }
-
-        customerService.create(customer);
 
         return customer;
     }
