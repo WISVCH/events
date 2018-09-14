@@ -35,9 +35,6 @@ public class WebshopCustomerController extends WebshopController {
     /** Redirect to the customer create page. */
     private static final String REDIRECT_CHECKOUT_CUSTOMER_GUEST = "redirect:/checkout/%s/customer/guest";
 
-    /** Redirect to the registration page. */
-    private static final String REDIRECT_MEMBER_REGISTRATION = "redirect:/checkout/%s/registration";
-
     /** CustomerService. */
     private final CustomerService customerService;
 
@@ -221,10 +218,6 @@ public class WebshopCustomerController extends WebshopController {
 
         if (order.getStatus() != OrderStatus.ANONYMOUS) {
             return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
-        }
-
-        if (orderService.containsRegistrationProduct(order)) {
-            return String.format(REDIRECT_MEMBER_REGISTRATION, order.getPublicReference());
         }
 
         return null;

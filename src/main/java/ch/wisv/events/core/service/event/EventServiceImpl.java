@@ -153,7 +153,6 @@ public class EventServiceImpl implements EventService {
         update.setOrganizedBy(event.getOrganizedBy());
         update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
-        update.setChOnly(event.isChOnly());
 
         if (event.getImageUrl() != null) {
             update.setImageUrl(event.getImageUrl());

@@ -116,15 +116,6 @@ public interface OrderService {
     boolean containsChOnlyProduct(Order order);
 
     /**
-     * Check if order contains registration Product.
-     *
-     * @param order of type Order
-     *
-     * @return boolean
-     */
-    boolean containsRegistrationProduct(Order order);
-
-    /**
      * Delete an Order (use with caution!).
      *
      * @param order of type Order
