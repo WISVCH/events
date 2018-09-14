@@ -31,6 +31,11 @@
                             <span th:text="${customer.getName()}" th:if="${customer != null}"></span>
                         </a>
                     </li>
+                    <li class="nav-item m-2" th:if="${customer == null}">
+                        <a th:href="@{/overview/}" class="btn btn-block btn-secondary">
+                            login
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
