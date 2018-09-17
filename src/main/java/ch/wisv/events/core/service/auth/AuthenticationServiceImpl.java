@@ -112,10 +112,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             customer.setSub(userInfo.getSub());
         }
 
-        if (customer.getChUsername() == null || customer.getChUsername().equals("")) {
-            customer.setChUsername(userInfo.getLdapUsername());
-        }
-
         if (customer.getEmail() == null || customer.getEmail().equals("")) {
             customer.setEmail(userInfo.getEmail());
         }

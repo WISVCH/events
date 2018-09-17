@@ -53,12 +53,6 @@ public class Customer {
     private String email;
 
     /**
-     * Field chUsername of the customer, this will be the ldap username.
-     */
-    @Column(unique = true)
-    private String chUsername;
-
-    /**
      * Field rfidToken of the customer.
      */
     private String rfidToken;
@@ -95,15 +89,13 @@ public class Customer {
      * @param sub        of type String
      * @param name       of type String
      * @param email      of type String
-     * @param chUsername of type String
      * @param rfidToken  of type String
      */
-    public Customer(String sub, String name, String email, String chUsername, String rfidToken) {
+    public Customer(String sub, String name, String email, String rfidToken) {
         this();
         this.sub = sub;
         this.name = name;
         this.email = email;
-        this.chUsername = chUsername;
         this.rfidToken = rfidToken;
     }
 }

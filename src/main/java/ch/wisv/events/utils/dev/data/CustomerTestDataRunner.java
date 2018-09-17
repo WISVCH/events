@@ -38,7 +38,6 @@ public class CustomerTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("sub"),
                 (String) jsonObject.get("name"),
                 (String) jsonObject.get("email"),
-                (String) jsonObject.get("chUsername"),
                 (String) jsonObject.get("rfidToken")
         );
     }

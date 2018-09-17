@@ -42,7 +42,7 @@
                     <tr>
                         <th>Name</th>
                         <th>E-mail</th>
-                        <th>LDAP username</th>
+                        <th>WISVCH Sub</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -52,7 +52,7 @@
                         <td th:text="${customer.getName()}"></td>
                         <td th:text="${customer.getEmail()}"></td>
                         <td>
-                            <span th:text="${customer.getChUsername()}"></span>
+                            <span th:text="${customer.getSub()}"></span>
                             <span class="text-warning">
                                 <i class="fa fa-question-circle-o fa-fw" data-toggle="tooltip"
                                    title="Not verified by dienst2 yet"
