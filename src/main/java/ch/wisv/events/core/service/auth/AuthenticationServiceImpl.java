@@ -91,11 +91,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try {
-            return customerService.getByUsername(userInfo.getLdapUsername());
-        } catch (CustomerNotFoundException ignored) {
-        }
-
-        try {
             return customerService.getByEmail(userInfo.getEmail());
         } catch (CustomerNotFoundException ignored) {
         }
