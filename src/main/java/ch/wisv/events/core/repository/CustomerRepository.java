@@ -53,12 +53,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      */
     Optional<Customer> findBySub(String sub);
 
-    /**
-     * Find a Customer by its username.
-     *
-     * @param username of type username.
-     *
-     * @return Optional
-     */
-    Optional<Customer> findByChUsernameIgnoreCase(String username);
 }
