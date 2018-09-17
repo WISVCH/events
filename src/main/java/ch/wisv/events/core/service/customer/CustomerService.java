@@ -7,6 +7,9 @@ import ch.wisv.events.core.model.customer.Customer;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * CustomerService interface.
+ */
 public interface CustomerService {
 
     /**
@@ -31,6 +34,8 @@ public interface CustomerService {
      * @param key key
      *
      * @return Customer
+     *
+     * @throws CustomerNotFoundException when Customer is not found
      */
     Customer getByKey(String key) throws CustomerNotFoundException;
 
@@ -40,17 +45,10 @@ public interface CustomerService {
      * @param sub of type String
      *
      * @return Customer
+     *
+     * @throws CustomerNotFoundException when Customer is not found
      */
     Customer getBySub(String sub) throws CustomerNotFoundException;
-
-    /**
-     * Get a customer by CH username or Email.
-     *
-     * @param username of type String
-     *
-     * @return Customer
-     */
-    Customer getByUsername(String username) throws CustomerNotFoundException;
 
     /**
      * Get a customer by Email.
@@ -58,6 +56,8 @@ public interface CustomerService {
      * @param email of type String
      *
      * @return Customer
+     *
+     * @throws CustomerNotFoundException when Customer is not found
      */
     Customer getByEmail(String email) throws CustomerNotFoundException;
 
@@ -67,6 +67,8 @@ public interface CustomerService {
      * @param query of type String
      *
      * @return Customer
+     *
+     * @throws CustomerNotFoundException when Customer is not found
      */
     Customer getByRfidToken(String query) throws CustomerNotFoundException;
 
@@ -74,6 +76,8 @@ public interface CustomerService {
      * Add a new customer.
      *
      * @param customer customer model
+     *
+     * @throws CustomerInvalidException when Customer is invalid
      */
     void create(Customer customer) throws CustomerInvalidException;
 
@@ -81,6 +85,8 @@ public interface CustomerService {
      * Add a new customer by ChUserInfo.
      *
      * @param userInfo of type CHUserInfo
+     *
+     * @throws CustomerInvalidException when Customer is invalid
      */
     Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException;
 
@@ -88,6 +94,9 @@ public interface CustomerService {
      * Update a existing customer.
      *
      * @param customer customer model
+     *
+     * @throws CustomerInvalidException  when Customer is invalid
+     * @throws CustomerNotFoundException when Customer is not found
      */
     void update(Customer customer) throws CustomerInvalidException, CustomerNotFoundException;
 

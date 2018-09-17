@@ -93,20 +93,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Get a customer by CH username or Email.
-     *
-     * @param username of type String
-     *
-     * @return Customer
-     */
-    @Override
-    public Customer getByUsername(String username) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByChUsernameIgnoreCase(username);
-
-        return customer.orElseThrow(() -> new CustomerNotFoundException("username " + username));
-    }
-
-    /**
      * Get a customer by CH username.
      *
      * @param email of type String
