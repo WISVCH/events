@@ -5,11 +5,13 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.PaymentsService;
-import java.time.LocalDateTime;
+import datadog.trace.api.Trace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.ArrayUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * OrderTaskScheduler class.
@@ -56,6 +58,7 @@ public class OrderTaskScheduler {
     /**
      * Cancel all overdue reservation.
      */
+    @Trace
     @Scheduled(fixedRate = CANCEL_RESERVATION_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cancelReservationTask() {
         orderService.getAllReservations().forEach(order -> {
@@ -73,6 +76,7 @@ public class OrderTaskScheduler {
     /**
      * Clean up order.
      */
+    @Trace
     @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
@@ -90,6 +94,7 @@ public class OrderTaskScheduler {
     /**
      * Fetch the CH Payments order status.
      */
+    @Trace
     @Scheduled(fixedDelay = MILLISEC_UPDATE_ORDER_STATUS)
     public void updateOrderStatus() {
         orderService.getAllPending().forEach(this::fetchOrderStatus);
