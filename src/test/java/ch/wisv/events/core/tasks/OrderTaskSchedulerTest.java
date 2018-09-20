@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +34,7 @@ public class OrderTaskSchedulerTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        this.orderTaskScheduler = new OrderTaskScheduler(orderService, paymentsService);
+        this.orderTaskScheduler = new OrderTaskScheduler(orderService);
     }
 
     /**

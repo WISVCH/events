@@ -1,10 +1,8 @@
 package ch.wisv.events.core.tasks;
 
 import ch.wisv.events.core.exception.normal.EventsException;
-import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.webshop.service.PaymentsService;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,24 +31,16 @@ public class OrderTaskScheduler {
     /** Amount of milli seconds in a seconds. */
     private static final int MILLISEC_IN_SEC = 1000;
 
-    /** Amount of seconds between each OrderStatus update. */
-    private static final int MILLISEC_UPDATE_ORDER_STATUS = 100;
-
     /** OrderService. */
     private final OrderService orderService;
-
-    /** PaymentsService. */
-    private final PaymentsService paymentsService;
 
     /**
      * OrderTaskScheduler constructor.
      *
      * @param orderService    of type OrderService
-     * @param paymentsService of type PaymentsService
      */
-    public OrderTaskScheduler(OrderService orderService, PaymentsService paymentsService) {
+    public OrderTaskScheduler(OrderService orderService) {
         this.orderService = orderService;
-        this.paymentsService = paymentsService;
     }
 
     /**
@@ -64,7 +54,7 @@ public class OrderTaskScheduler {
                     orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
                     log.info("Order " + order.getPublicReference() + ": Has been EXPIRED!");
                 } catch (EventsException e) {
-                    log.warn(e.getMessage());
+                    log.error(e.getMessage());
                 }
             }
         });
@@ -85,38 +75,5 @@ public class OrderTaskScheduler {
                 }
             }
         });
-    }
-
-    /**
-     * Fetch the CH Payments order status.
-     */
-    @Scheduled(fixedDelay = MILLISEC_UPDATE_ORDER_STATUS)
-    public void updateOrderStatus() {
-        orderService.getAllPending().forEach(this::fetchOrderStatus);
-    }
-
-    /**
-     * Fetch order status.
-     *
-     * @param order of type Order
-     */
-    private void fetchOrderStatus(Order order) {
-        try {
-            if (order.getChPaymentsReference() != null) {
-                String paymentsStatus = paymentsService.getPaymentsOrderStatus(order.getChPaymentsReference());
-                OrderStatus status = paymentsService.mapStatusToOrderStatus(paymentsStatus);
-
-                if (status != OrderStatus.PENDING) {
-                    orderService.updateOrderStatus(order, status);
-                }
-            }
-        } catch (EventsException e) {
-            try {
-                orderService.updateOrderStatus(order, OrderStatus.ERROR);
-            } catch (EventsException ignored) {
-            }
-
-            log.error(e.getMessage());
-        }
     }
 }

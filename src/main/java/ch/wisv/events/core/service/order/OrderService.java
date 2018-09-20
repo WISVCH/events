@@ -107,6 +107,17 @@ public interface OrderService {
     Order getByReference(String reference) throws OrderNotFoundException;
 
     /**
+     * Get Order by ChPaymentsReference.
+     *
+     * @param chPaymentsReference of type String
+     *
+     * @return Order
+     *
+     * @throws OrderNotFoundException when Order is not found
+     */
+    Order getByChPaymentsReference(String chPaymentsReference) throws OrderNotFoundException;
+
+    /**
      * Check if order contains CH only Product.
      *
      * @param order of type Order
