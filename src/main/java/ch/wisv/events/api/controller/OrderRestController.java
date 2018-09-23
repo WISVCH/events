@@ -5,12 +5,13 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.PaymentsService;
+import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -41,14 +42,15 @@ public class OrderRestController {
     /**
      * This endpoint is for the CH Payments.
      *
-     * @param paymentsPublicReference of type String
+     * @param body of type LinkedHashMap
      *
      * @return ResponseEntity
      */
     @PostMapping("/status")
-    public ResponseEntity updateOrderStatus(@RequestParam(name = "publicReference") String paymentsPublicReference) {
+    public ResponseEntity updateOrderStatus(@RequestBody LinkedHashMap<String, Object> body) {
         try {
-            Order order = orderService.getByChPaymentsReference(paymentsPublicReference);
+            String publicReference = (String) body.getOrDefault("publicReference", "");
+            Order order = orderService.getByChPaymentsReference(publicReference);
             String paymentsStatus = paymentsService.getPaymentsOrderStatus(order.getChPaymentsReference());
 
             OrderStatus status = paymentsService.mapStatusToOrderStatus(paymentsStatus);
