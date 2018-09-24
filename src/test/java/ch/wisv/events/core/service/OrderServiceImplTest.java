@@ -24,7 +24,6 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -191,7 +190,7 @@ public class OrderServiceImplTest extends ServiceTest {
         when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION))
                 .thenReturn(ImmutableList.of(order));
 
-        assertEquals(ImmutableList.of(order), orderService.getReservationByCustomer(order.getOwner()));
+        assertEquals(ImmutableList.of(order), orderService.getReservationByOwner(order.getOwner()));
     }
 
     /**
@@ -201,7 +200,7 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testGetReservationByCustomerEmpty() {
         when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION)).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), orderService.getReservationByCustomer(order.getOwner()));
+        assertEquals(ImmutableList.of(), orderService.getReservationByOwner(order.getOwner()));
     }
 
     /**

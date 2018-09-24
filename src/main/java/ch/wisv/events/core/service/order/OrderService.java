@@ -72,7 +72,16 @@ public interface OrderService {
      *
      * @return List of Order
      */
-    List<Order> getReservationByCustomer(Customer customer);
+    List<Order> getReservationByOwner(Customer customer);
+
+    /**
+     * Get all order by a Customer.
+     *
+     * @param owner of type Customer
+     *
+     * @return List of Order
+     */
+    List<Order> getAllByOwner(Customer owner);
 
     /**
      * Method getAllOrders returns the allOrders of this OrderService object.

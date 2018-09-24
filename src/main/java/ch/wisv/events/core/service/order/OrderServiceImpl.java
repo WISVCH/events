@@ -206,8 +206,20 @@ public class OrderServiceImpl implements OrderService {
      * @return List of Order
      */
     @Override
-    public List<Order> getReservationByCustomer(Customer customer) {
+    public List<Order> getReservationByOwner(Customer customer) {
         return orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(customer, OrderStatus.RESERVATION);
+    }
+
+    /**
+     * Get all order by a Customer.
+     *
+     * @param owner of type Customer
+     *
+     * @return List of Order
+     */
+    @Override
+    public List<Order> getAllByOwner(Customer owner) {
+        return orderRepository.findAllByOwnerOrderByCreatedAt(owner);
     }
 
     /**
