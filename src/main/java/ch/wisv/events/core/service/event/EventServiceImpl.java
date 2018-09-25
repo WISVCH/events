@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcoming() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
+        return eventRepository.findByEndingAfterOrderByStartAsc(LocalDateTime.now()).stream()
                 .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toList());
     }
