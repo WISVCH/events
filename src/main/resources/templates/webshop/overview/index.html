@@ -60,7 +60,12 @@
                         <h6 class="card-header">Orders</h6>
                         <div class="card-body">
                             <div class="list-group mb-4" th:each="order : ${orders}">
-                                <h4 th:text="'Order #' +${order.getPublicReference().split('-')[0]}"></h4>
+                                <h4>
+                                    Order # [[${order.getPublicReference().split('-')[0]}]]
+
+                                    <small class="text-muted"
+                                           th:text="${#temporals.format(order.getCreatedAt(), 'dd-MM-yyyy')}"></small>
+                                </h4>
                                 <a th:each="orderProduct : ${order.getOrderProducts()}"
                                    th:data-target="'.' + ${order.getPublicReference()}" data-toggle="modal"
                                    class="list-group-item list-group-item-action flex-column align-items-start">
@@ -145,7 +150,8 @@
                                 <h4>
                                     Order #[[${reservation.getPublicReference().split('-')[0]}]]
 
-                                    <small th:text="${order.getCreatedAt().plusDays(3)}"></small>
+                                    <small class="text-muted"
+                                           th:text="'Deadline: ' + ${#temporals.format(reservation.getCreatedAt().plusDays(3), 'dd-MM-yyyy HH:mm')}"></small>
                                 </h4>
                                 <a th:each="orderProduct : ${reservation.getOrderProducts()}"
                                    class="list-group-item list-group-item-action flex-column align-items-start">
