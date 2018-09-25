@@ -231,7 +231,7 @@ body.menu-open .page-header {
 
 .page-title .column, .page-title .columns, .page-title .col {
     display: table;
-    height: 12rem
+    height: 8rem
 }
 
 .page-title .column h1, .page-title .columns h1, .page-title .col h1 {

@@ -88,7 +88,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEvents() {
         this.event.setPublished(EventStatus.PUBLISHED);
-        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
+        when(repository.findByEndingAfterOrderByStartAsc(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(this.event), service.getUpcoming());
     }
@@ -96,7 +96,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEventsEmpty() {
         this.event.setPublished(EventStatus.PUBLISHED);
-        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
+        when(repository.findByEndingAfterOrderByStartAsc(any(LocalDateTime.class))).thenReturn(ImmutableList.of());
 
         assertEquals(ImmutableList.of(), service.getUpcoming());
     }
@@ -104,7 +104,7 @@ public class EventServiceImplTest extends ServiceTest {
     @Test
     public void testGetUpcomingEventsNotPublished() {
         this.event.setPublished(EventStatus.NOT_PUBLISHED);
-        when(repository.findByEndingAfter(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
+        when(repository.findByEndingAfterOrderByStartAsc(any(LocalDateTime.class))).thenReturn(ImmutableList.of(this.event));
 
         assertEquals(ImmutableList.of(), service.getUpcoming());
     }
