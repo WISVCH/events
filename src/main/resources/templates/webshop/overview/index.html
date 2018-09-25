@@ -15,8 +15,7 @@
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-ticket.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-overview.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
@@ -58,29 +57,82 @@
                 <div class="tab-pane fade show active" id="v-pills-orders" role="tabpanel"
                      aria-labelledby="v-pills-orders-tab">
                     <div class="card">
-                        <h6 class="card-header">Order</h6>
+                        <h6 class="card-header">Orders</h6>
                         <div class="card-body">
-                            <table class="table table-sm">
-                                <thead class="thead-inverse bg-primary">
-                                <tr>
-                                    <th class="w-50">Number</th>
-                                    <th class="w-25">Amount</th>
-                                    <th class="w-25">Cost</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="reservation : ${reservations}">
-                                    <td th:text="${reservation.getPublicReference().split('-')[0]}">
-                                    </td>
-                                    <td th:text="${reservation.getCreatedAt().plusDays(3)}">
-                                    </td>
-                                    <td th:text="'€ ' + ${#numbers.formatDecimal(reservation.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
-                                </tr>
-                                <tr th:if="${reservations.size() == 0}">
-                                    <td colspan="4">You currently have not outstanding reservations.</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="list-group mb-4" th:each="order : ${orders}">
+                                <h4 th:text="'Order #' +${order.getPublicReference().split('-')[0]}"></h4>
+                                <a th:each="orderProduct : ${order.getOrderProducts()}"
+                                   th:data-target="'.' + ${order.getPublicReference()}" data-toggle="modal"
+                                   class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1" th:text="${orderProduct.getProduct().getTitle()}"></h5>
+                                        <small th:text="'Amount: ' + ${orderProduct.getAmount()}"></small>
+                                    </div>
+                                    <p class="mb-0" th:if="${orderProduct.getPrice() != 0}"
+                                       th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"></p>
+                                    <p class="mb-0" th:if="${orderProduct.getPrice() == 0}">FREE</p>
+                                </a>
+
+                                <div class="modal fade " tabindex="-1" th:classappend="${order.getPublicReference()}"
+                                     role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    th:text="'Order #' +${order.getPublicReference().split('-')[0]}">
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body my-2">
+                                                <div class="row mb-4">
+                                                    <div class="col">
+                                                        <p><b>Contact info</b></p>
+                                                        <p class="mb-1" th:text="${order.getOwner().getName()}"></p>
+                                                        <p class="mb-3" th:text="${order.getOwner().getEmail()}"></p>
+                                                    </div>
+                                                    <div class="col">
+                                                        <p><b>Payment details</b></p>
+                                                        <p th:text="${order.getPaymentMethod()}"></p>
+                                                        <p th:text="${order.getPaidAt()}"></p>
+                                                    </div>
+                                                </div>
+                                                <table class="table order-overview">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th>Amount</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr th:each="orderProduct : ${order.getOrderProducts()}">
+                                                        <td scope="row"
+                                                            th:text="${orderProduct.getProduct().getTitle()}"></td>
+                                                        <td th:text="${orderProduct.getAmount()}"></td>
+                                                        <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th colspan="2">Total</th>
+                                                        <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-block"
+                                                        data-dismiss="modal">Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,27 +141,23 @@
                     <div class="card">
                         <h6 class="card-header">Reservations</h6>
                         <div class="card-body">
-                            <table class="table table-sm">
-                                <thead class="thead-inverse bg-primary">
-                                <tr>
-                                    <th class="w-50">Order</th>
-                                    <th class="w-25">Deadline</th>
-                                    <th class="w-25">Cost</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="reservation : ${reservations}">
-                                    <td th:text="${reservation.getPublicReference().split('-')[0]}">
-                                    </td>
-                                    <td th:text="${reservation.getCreatedAt().plusDays(3)}">
-                                    </td>
-                                    <td th:text="'€ ' + ${#numbers.formatDecimal(reservation.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
-                                </tr>
-                                <tr th:if="${reservations.size() == 0}">
-                                    <td colspan="4">You currently have not outstanding reservations.</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="list-group mb-4" th:each="reservation : ${reservations}">
+                                <h4>
+                                    Order #[[${reservation.getPublicReference().split('-')[0]}]]
+
+                                    <small th:text="${order.getCreatedAt().plusDays(3)}"></small>
+                                </h4>
+                                <a th:each="orderProduct : ${reservation.getOrderProducts()}"
+                                   class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1" th:text="${orderProduct.getProduct().getTitle()}"></h5>
+                                        <small th:text="'Amount: ' + ${orderProduct.getAmount()}"></small>
+                                    </div>
+                                    <p class="mb-0" th:if="${orderProduct.getPrice() != 0}"
+                                       th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"></p>
+                                    <p class="mb-0" th:if="${orderProduct.getPrice() == 0}">FREE</p>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
