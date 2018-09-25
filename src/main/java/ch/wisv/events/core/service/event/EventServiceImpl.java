@@ -197,11 +197,11 @@ public class EventServiceImpl implements EventService {
             throw new EventInvalidException("Title is required, and therefore should be filled in!");
         }
 
-        if (event.getShortDescription() == null || event.getTitle().equals("")) {
+        if (event.getShortDescription() == null || event.getShortDescription().equals("")) {
             throw new EventInvalidException("Short description is required, and therefore should be filled in!");
         }
 
-        if (event.getDescription() == null || event.getTitle().equals("")) {
+        if (event.getDescription() == null || event.getDescription().equals("")) {
             throw new EventInvalidException("Description is required, and therefore should be filled in!");
         }
 
