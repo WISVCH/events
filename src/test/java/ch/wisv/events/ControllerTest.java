@@ -120,6 +120,9 @@ public abstract class ControllerTest {
         Event event = new Event();
         event.setTitle(RandomStringUtils.random(12));
         event.setKey(UUID.randomUUID().toString());
+        event.setStart(LocalDateTime.now().plusMonths(1));
+        event.setEnding(LocalDateTime.now().plusMonths(1).plusHours(1));
+        event.setTarget(100);
 
         eventRepository.saveAndFlush(event);
 

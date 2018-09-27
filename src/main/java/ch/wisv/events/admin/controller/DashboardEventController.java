@@ -4,12 +4,14 @@ import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.document.DocumentService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -131,7 +133,7 @@ public class DashboardEventController {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
             eventService.create(event);
-            redirect.addFlashAttribute("success", event.getTitle() + " successfully created!");
+            redirect.addFlashAttribute("success", "Event " + event.getTitle() + " has been created!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
@@ -139,8 +141,8 @@ public class DashboardEventController {
 
             return "redirect:/administrator/events/";
         } catch (EventInvalidException | IOException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
+            redirect.addFlashAttribute("error", e.getMessage());
 
             return "redirect:/administrator/events/create/";
         }
@@ -150,12 +152,13 @@ public class DashboardEventController {
      * Get request on "/admin/events/edit/{key}" will show the edit page to edit Event with requested key.
      *
      * @param model of type Model
+     * @param redirect of type RedirectAttributes
      * @param key   of type String
      *
      * @return path to Thymeleaf template
      */
     @GetMapping("/edit/{key}")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             if (!model.containsAttribute("event")) {
                 model.addAttribute("event", eventService.getByKey(key));
@@ -163,6 +166,8 @@ public class DashboardEventController {
 
             return "admin/events/event";
         } catch (EventNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
             return "redirect:/administrator/events/";
         }
     }
@@ -198,36 +203,39 @@ public class DashboardEventController {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
             }
 
-            return "redirect:/administrator/events/view/" + event.getKey() + "/";
+            return "redirect:/administrator/events/view/" + event.getKey();
         } catch (EventNotFoundException | EventInvalidException | IOException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("event", event);
+            redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/administrator/events/edit/" + event.getKey() + "/";
+            return "redirect:/administrator/events/edit/" + event.getKey();
         }
     }
 
     /**
      * Method overview ...
      *
-     * @param model of type Model
-     * @param key   of type String
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return String
      */
     @GetMapping("/overview/{key}")
-    public String overview(Model model, @PathVariable String key) {
+    public String overview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);
+            List<Ticket> tickets = event.getProducts().stream()
+                    .flatMap(product -> ticketService.getAllByProduct(product).stream())
+                    .collect(Collectors.toList());
 
             model.addAttribute("event", event);
-            model.addAttribute(
-                    "tickets",
-                    event.getProducts().stream().flatMap(product -> ticketService.getAllByProduct(product).stream()).collect(Collectors.toList())
-            );
+            model.addAttribute("tickets", tickets);
 
             return "admin/events/overview";
         } catch (EventNotFoundException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+
             return "redirect:/administrator/events/";
         }
     }
@@ -246,13 +254,11 @@ public class DashboardEventController {
             Event event = eventService.getByKey(key);
             eventService.delete(event);
             webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
-            redirect.addFlashAttribute("message", "Event " + event.getTitle() + " has been deleted!");
-
-            return "redirect:/administrator/events/";
+            redirect.addFlashAttribute("success", "Event " + event.getTitle() + " has been deleted!");
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("message", "Event has not been deleted, because it does not exists!");
-
-            return "redirect:/administrator/events/";
+            redirect.addFlashAttribute("error", "Event with key not-found not found!");
         }
+
+        return "redirect:/administrator/events/";
     }
 }
