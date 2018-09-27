@@ -90,11 +90,6 @@ public class Order {
     private PaymentMethod paymentMethod;
 
     /**
-     * Event is for CH member only.
-     */
-    private boolean isChOnly;
-
-    /**
      * Tickets have been created.
      */
     private boolean ticketCreated;

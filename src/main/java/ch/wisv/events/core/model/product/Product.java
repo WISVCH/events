@@ -104,11 +104,6 @@ public class Product {
     /**
      * Includes registration.
      */
-    private boolean includesRegistration;
-
-    /**
-     * Includes registration.
-     */
     private boolean chOnly;
 
     /**
@@ -137,7 +132,6 @@ public class Product {
         this.maxSold = productDto.getMaxSold();
         this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();
         this.chOnly = productDto.isChOnly();
-        this.includesRegistration = productDto.isIncludesRegistration();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         if (productDto.getSellStart() != null) {

@@ -278,18 +278,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Check if order contains registration Product.
-     *
-     * @param order of type Order
-     *
-     * @return boolean
-     */
-    @Override
-    public boolean containsRegistrationProduct(Order order) {
-        return order.getOrderProducts().stream().anyMatch(orderProduct -> orderProduct.getProduct().isIncludesRegistration());
-    }
-
-    /**
      * Delete an Order (use with caution!).
      *
      * @param order of type Order

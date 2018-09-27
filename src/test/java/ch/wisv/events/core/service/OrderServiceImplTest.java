@@ -480,40 +480,6 @@ public class OrderServiceImplTest extends ServiceTest {
     }
 
     /**
-     * Test containsRegistrationProduct when is true.
-     */
-    @Test
-    public void testContainsRegistrationProductTrue() {
-        Product product2 = new Product();
-        product2.setIncludesRegistration(true);
-        product2.setCost(1.d);
-
-        when(product.isIncludesRegistration()).thenReturn(false);
-        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
-        Order order = new Order();
-        order.addOrderProduct(orderProduct);
-
-        assertTrue(orderService.containsRegistrationProduct(order));
-    }
-
-    /**
-     * Test containsRegistrationProduct when is false.
-     */
-    @Test
-    public void testContainsRegistrationProductFalse() {
-        Product product2 = new Product();
-        product2.setIncludesRegistration(false);
-        product2.setCost(1.d);
-
-        when(product.isIncludesRegistration()).thenReturn(false);
-        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
-        Order order = new Order();
-        order.addOrderProduct(orderProduct);
-
-        assertFalse(orderService.containsRegistrationProduct(order));
-    }
-
-    /**
      * Test containsRegistrationProduct when is false.
      */
     @Test
