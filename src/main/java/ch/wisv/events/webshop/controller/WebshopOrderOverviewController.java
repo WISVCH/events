@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class WebshopOrderOverviewController extends WebshopController {
 
     /** Model attribute orders. */
-    private static final String MODEL_ATTR_ORDERS = "orders";
+    private static final String MODEL_ATTR_RESERVATIONS = "reservations";
 
     /** Model attribute tickets. */
     private static final String MODEL_ATTR_TICKETS = "tickets";
+
+    /** Model attribute orders. */
+    private static final String MODEL_ATTR_ORDERS = "orders";
 
     /** TicketService. */
     private final TicketService ticketService;
@@ -53,7 +56,8 @@ public class WebshopOrderOverviewController extends WebshopController {
         Customer customer = authenticationService.getCurrentCustomer();
 
         model.addAttribute(MODEL_ATTR_CUSTOMER, customer);
-        model.addAttribute(MODEL_ATTR_ORDERS, orderService.getReservationByCustomer(customer));
+        model.addAttribute(MODEL_ATTR_ORDERS, orderService.getAllByOwner(customer));
+        model.addAttribute(MODEL_ATTR_RESERVATIONS, orderService.getReservationByOwner(customer));
         model.addAttribute(MODEL_ATTR_TICKETS, ticketService.getAllByCustomer(customer));
 
         return "webshop/overview/index";

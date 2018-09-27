@@ -1,0 +1,53 @@
+.media-ticket {
+    box-shadow: 1px 1px 4px 0 rgba(195, 193, 188, 0.5);
+    cursor: pointer;
+}
+
+.media-ticket .media-icon i {
+    margin: 16px;
+    transform: rotate(-20deg);
+    color: #fff;
+}
+
+.legend-item .media-icon i {
+    margin: 8px;
+    transform: rotate(-20deg);
+    color: #fff;
+}
+
+.media-ticket .media-icon.open,
+.media-ticket .media-icon {
+    background-color: #8ac926;
+}
+
+.media-ticket .media-icon.scanned {
+    background-color: #40556a;
+}
+
+.media-ticket .media-icon.error {
+    background-color: #ef4545;
+}
+
+.order-overview thead {
+    color: #fff;
+    background: #40556a;
+}
+
+.order-overview th,
+.order-overview td {
+    text-align: center;
+}
+
+.order-overview th:first-child,
+.order-overview td:first-child {
+    text-align: left;
+}
+
+.order-overview th:last-child,
+.order-overview td:last-child {
+    text-align: right;
+}
+
+.order-overview tfoot tr {
+    border-top: 4px double #e7ebf1;
+}

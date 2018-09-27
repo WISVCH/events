@@ -20,7 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      *
      * @return list of Events
      */
-    List<Event> findByEndingAfter(LocalDateTime dateTime);
+    List<Event> findByEndingAfterOrderByStartAsc(LocalDateTime dateTime);
 
     /**
      * Method findAllByPublished ...
