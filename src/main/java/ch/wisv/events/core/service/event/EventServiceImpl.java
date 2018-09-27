@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<Event> getUpcoming() {
-        return eventRepository.findByEndingAfter(LocalDateTime.now()).stream()
+        return eventRepository.findByEndingAfterOrderByStartAsc(LocalDateTime.now()).stream()
                 .filter(x -> x.getPublished() == EventStatus.PUBLISHED)
                 .collect(Collectors.toList());
     }
@@ -153,7 +153,6 @@ public class EventServiceImpl implements EventService {
         update.setPublished(event.getPublished());
         update.setOrganizedBy(event.getOrganizedBy());
         update.setCategories(event.getCategories());
-        update.setChOnly(event.isChOnly());
 
         if (event.getImageUrl() != null) {
             update.setImageUrl(event.getImageUrl());
@@ -197,11 +196,11 @@ public class EventServiceImpl implements EventService {
             throw new EventInvalidException("Title is required, and therefore should be filled in!");
         }
 
-        if (event.getShortDescription() == null || event.getTitle().equals("")) {
+        if (event.getShortDescription() == null || event.getShortDescription().equals("")) {
             throw new EventInvalidException("Short description is required, and therefore should be filled in!");
         }
 
-        if (event.getDescription() == null || event.getTitle().equals("")) {
+        if (event.getDescription() == null || event.getDescription().equals("")) {
             throw new EventInvalidException("Description is required, and therefore should be filled in!");
         }
 

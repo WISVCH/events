@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * ProductServiceImpl class.
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -115,7 +118,11 @@ public class ProductServiceImpl implements ProductService {
         model.setSellEnd(product.getSellEnd());
         model.setProducts(product.getProducts());
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
-        model.setIncludesRegistration(product.isIncludesRegistration());
+        model.setChOnly(product.isChOnly());
+
+        if (product.getSold() != 0) {
+            model.setSold(product.getSold());
+        }
 
         this.assertIsValidProduct(product);
         this.updateLinkedProducts(product, model.getProducts(), true);
@@ -134,6 +141,32 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.delete(product);
+    }
+
+    /**
+     * Change Product sold count.
+     *
+     * @param product  of type Product
+     * @param increase of type int
+     */
+    @Override
+    public void changeSoldCount(Product product, int increase) {
+        product.increaseSold(increase);
+
+        productRepository.saveAndFlush(product);
+    }
+
+    /**
+     * Change Product reserved count.
+     *
+     * @param product  of type Product
+     * @param increase of type int
+     */
+    @Override
+    public void changeReservedCount(Product product, int increase) {
+        product.increaseReserved(increase);
+
+        productRepository.saveAndFlush(product);
     }
 
     /**

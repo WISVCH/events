@@ -190,7 +190,7 @@ public class OrderServiceImplTest extends ServiceTest {
         when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION))
                 .thenReturn(ImmutableList.of(order));
 
-        assertEquals(ImmutableList.of(order), orderService.getReservationByCustomer(order.getOwner()));
+        assertEquals(ImmutableList.of(order), orderService.getReservationByOwner(order.getOwner()));
     }
 
     /**
@@ -200,7 +200,7 @@ public class OrderServiceImplTest extends ServiceTest {
     public void testGetReservationByCustomerEmpty() {
         when(orderRepository.findAllByOwnerAndStatusOrderByCreatedAt(order.getOwner(), OrderStatus.RESERVATION)).thenReturn(ImmutableList.of());
 
-        assertEquals(ImmutableList.of(), orderService.getReservationByCustomer(order.getOwner()));
+        assertEquals(ImmutableList.of(), orderService.getReservationByOwner(order.getOwner()));
     }
 
     /**
@@ -400,9 +400,6 @@ public class OrderServiceImplTest extends ServiceTest {
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
         verify(ticketService, times(1)).deleteByOrder(order);
-        verify(orderRepository, times(2)).saveAndFlush(order);
-
-        assertEquals(1, product2.getSold());
     }
 
     @Test
@@ -419,8 +416,6 @@ public class OrderServiceImplTest extends ServiceTest {
 
         assertEquals(OrderStatus.REJECTED, order.getStatus());
         verify(orderRepository, times(2)).saveAndFlush(order);
-
-        assertEquals(1, product2.getReserved());
     }
 
     @Test
@@ -482,40 +477,6 @@ public class OrderServiceImplTest extends ServiceTest {
         order.addOrderProduct(orderProduct);
 
         assertFalse(orderService.containsChOnlyProduct(order));
-    }
-
-    /**
-     * Test containsRegistrationProduct when is true.
-     */
-    @Test
-    public void testContainsRegistrationProductTrue() {
-        Product product2 = new Product();
-        product2.setIncludesRegistration(true);
-        product2.setCost(1.d);
-
-        when(product.isIncludesRegistration()).thenReturn(false);
-        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
-        Order order = new Order();
-        order.addOrderProduct(orderProduct);
-
-        assertTrue(orderService.containsRegistrationProduct(order));
-    }
-
-    /**
-     * Test containsRegistrationProduct when is false.
-     */
-    @Test
-    public void testContainsRegistrationProductFalse() {
-        Product product2 = new Product();
-        product2.setIncludesRegistration(false);
-        product2.setCost(1.d);
-
-        when(product.isIncludesRegistration()).thenReturn(false);
-        OrderProduct orderProduct = new OrderProduct(product2, 1.d, 1L);
-        Order order = new Order();
-        order.addOrderProduct(orderProduct);
-
-        assertFalse(orderService.containsRegistrationProduct(order));
     }
 
     /**

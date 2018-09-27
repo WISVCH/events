@@ -133,7 +133,12 @@ public class OrderTestDataRunner extends TestDataRunner {
                         RandomStringUtils.randomNumeric(TICKET_UNIQUE_CODE_LENGTH)
                 );
                 ticket.setKey(UUID.randomUUID().toString());
-                ticket.setStatus(TicketStatus.OPEN);
+
+                if (df.getNumberBetween(0, 2) == 0) {
+                    ticket.setStatus(TicketStatus.OPEN);
+                } else {
+                    ticket.setStatus(TicketStatus.SCANNED);
+                }
 
                 this.ticketRepository.saveAndFlush(ticket);
             });

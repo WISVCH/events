@@ -5,11 +5,13 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.PaymentsService;
-import java.time.LocalDateTime;
+import datadog.trace.api.Trace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.ArrayUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * OrderTaskScheduler class.
@@ -23,6 +25,9 @@ public class OrderTaskScheduler {
 
     /** Clean up task interval in seconds (30 minutes). */
     private static final int CLEAN_UP_TASK_INTERVAL_SECONDS = 1800;
+
+    /** Clean up orders after when inactive (60 minutes). */
+    private static final int CLEAN_UP_INTERVAL = 60;
 
     /** Max number of days a reservation is valid. */
     private static final int MAX_RESERVATION_DAYS = 3;
@@ -53,12 +58,14 @@ public class OrderTaskScheduler {
     /**
      * Cancel all overdue reservation.
      */
+    @Trace
     @Scheduled(fixedRate = CANCEL_RESERVATION_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cancelReservationTask() {
         orderService.getAllReservations().forEach(order -> {
             if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(MAX_RESERVATION_DAYS))) {
                 try {
                     orderService.updateOrderStatus(order, OrderStatus.EXPIRED);
+                    log.info("Order " + order.getPublicReference() + ": Has been EXPIRED!");
                 } catch (EventsException e) {
                     log.warn(e.getMessage());
                 }
@@ -69,14 +76,17 @@ public class OrderTaskScheduler {
     /**
      * Clean up order.
      */
+    @Trace
     @Scheduled(fixedRate = CLEAN_UP_TASK_INTERVAL_SECONDS * MILLISEC_IN_SEC)
     public void cleanUpTask() {
         orderService.getAllOrders().forEach(order -> {
-            OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED, OrderStatus.PENDING};
+            if (order.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(CLEAN_UP_INTERVAL))) {
+                OrderStatus[] cleanUpStatus = new OrderStatus[]{OrderStatus.ANONYMOUS, OrderStatus.ASSIGNED};
 
-            if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
-                log.info("Order " + order.getPublicReference() + ": Removed with status " + order.getStatus());
-                orderService.delete(order);
+                if (ArrayUtils.contains(cleanUpStatus, order.getStatus())) {
+                    log.info("Order " + order.getPublicReference() + ": Order has been deleted!");
+                    orderService.delete(order);
+                }
             }
         });
     }
@@ -84,6 +94,7 @@ public class OrderTaskScheduler {
     /**
      * Fetch the CH Payments order status.
      */
+    @Trace
     @Scheduled(fixedDelay = MILLISEC_UPDATE_ORDER_STATUS)
     public void updateOrderStatus() {
         orderService.getAllPending().forEach(this::fetchOrderStatus);

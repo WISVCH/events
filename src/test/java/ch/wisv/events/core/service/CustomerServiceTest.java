@@ -52,17 +52,17 @@ public class CustomerServiceTest extends ServiceTest {
      *
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         customerService = new CustomerServiceImpl(repository, orderRepository);
 
-        this.customer = new Customer("", "Christiaan Huygens", "events@ch.tudelft.nl", "christiaanh", "12345678");
+        this.customer = new Customer("", "Christiaan Huygens", "events@ch.tudelft.nl", "12345678");
     }
 
     /**
      * Test get all customers
      */
     @Test
-    public void testGetAllCustomers() throws Exception {
+    public void testGetAllCustomers() {
         when(repository.findAll()).thenReturn(Collections.singletonList(this.customer));
 
         assertEquals(Collections.singletonList(this.customer), customerService.getAllCustomers());
@@ -72,7 +72,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get all customers with an empty list
      */
     @Test
-    public void testGetAllCustomersEmpty() throws Exception {
+    public void testGetAllCustomersEmpty() {
         when(repository.findAll()).thenReturn(Collections.emptyList());
 
         assertEquals(Collections.emptyList(), customerService.getAllCustomers());
@@ -82,7 +82,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get all customers with an empty list
      */
     @Test
-    public void testGetAllCustomersCreatedAfter() throws Exception {
+    public void testGetAllCustomersCreatedAfter() {
         LocalDateTime time = LocalDateTime.now();
         when(repository.findAllByCreatedAtAfter(time)).thenReturn(Collections.singletonList(this.customer));
 
@@ -137,28 +137,6 @@ public class CustomerServiceTest extends ServiceTest {
      * Test get by key method
      */
     @Test
-    public void testGetByChUserName() throws Exception {
-        when(repository.findByEmail(customer.getChUsername())).thenReturn(Optional.of(this.customer));
-
-        assertEquals(this.customer, customerService.getByEmail(this.customer.getChUsername()));
-    }
-
-    /**
-     * Test get by key not found
-     */
-    @Test
-    public void testGetByChUserNameNotFound() throws Exception {
-        thrown.expect(CustomerNotFoundException.class);
-        thrown.expectMessage("Customer with email testt not found!");
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-        customerService.getByEmail("testt");
-    }
-
-    /**
-     * Test get by key method
-     */
-    @Test
     public void testGetByRFIDToken() throws Exception {
         when(repository.findByRfidToken(this.customer.getRfidToken())).thenReturn(Optional.of(this.customer));
 
@@ -183,7 +161,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreate() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         customerService.create(this.customer);
         verify(repository, times(1)).saveAndFlush(any(Customer.class));
@@ -241,9 +219,9 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testCreateAlreadyUsedRFIDToken() throws Exception {
-        Customer duplicate = new Customer("", "Constantijn Huygens", "events@ch.tudelft.nl", "constantijnh", this.customer.getRfidToken());
+        Customer duplicate = new Customer("", "Constantijn Huygens", "events@ch.tudelft.nl", this.customer.getRfidToken());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.of(this.customer));
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         thrown.expect(CustomerInvalidException.class);
         thrown.expectMessage("RFID token is already used!");
@@ -256,8 +234,8 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testCreateAlreadyUsedEmail() throws Exception {
-        Customer duplicate = new Customer("", "Constantijn Huygens", this.customer.getEmail(), "constantijnh", this.customer.getRfidToken() + "0");
-        when(repository.findByEmail(anyString())).thenReturn(Optional.of(this.customer));
+        Customer duplicate = new Customer("", "Constantijn Huygens", this.customer.getEmail(), this.customer.getRfidToken() + "0");
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.of(this.customer));
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         thrown.expect(CustomerInvalidException.class);
@@ -274,13 +252,12 @@ public class CustomerServiceTest extends ServiceTest {
         Customer update = new Customer();
         update.setKey(this.customer.getKey());
         update.setRfidToken("123");
-        update.setChUsername("test");
         update.setEmail("test@test.com");
         update.setName("test test");
 
         Customer mock = new Customer();
         when(repository.findByKey(this.customer.getKey())).thenReturn(Optional.of(mock));
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
 
         customerService.update(update);
@@ -288,7 +265,6 @@ public class CustomerServiceTest extends ServiceTest {
 
         assertEquals(update.getName(), mock.getName());
         assertEquals(update.getEmail(), mock.getEmail());
-        assertEquals(update.getChUsername(), mock.getChUsername());
         assertEquals(update.getRfidToken(), mock.getRfidToken());
     }
 
@@ -298,7 +274,7 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreateByChUserInfo() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         CHUserInfo userInfo = new CHUserInfo();
         userInfo.setName("name");
@@ -309,7 +285,6 @@ public class CustomerServiceTest extends ServiceTest {
 
         assertEquals("name", customer.getName());
         assertEquals("email", customer.getEmail());
-        assertEquals("ldapUsername", customer.getChUsername());
     }
 
     /**
@@ -330,7 +305,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test delete method when customer did not place an order
      */
     @Test
-    public void testDelete() throws Exception {
+    public void testDelete() {
         when(orderRepository.findAllByOwnerOrderByCreatedAt(this.customer)).thenReturn(Collections.emptyList());
 
         customerService.delete(this.customer);
@@ -341,7 +316,7 @@ public class CustomerServiceTest extends ServiceTest {
      * Test delete when customer placed an order
      */
     @Test
-    public void testDeleteCustomerPlacedOrders() throws Exception {
+    public void testDeleteCustomerPlacedOrders() {
         when(orderRepository.findAllByOwnerOrderByCreatedAt(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
 
         thrown.expect(CustomerAlreadyPlacedOrdersException.class);

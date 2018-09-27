@@ -93,20 +93,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Get a customer by CH username or Email.
-     *
-     * @param username of type String
-     *
-     * @return Customer
-     */
-    @Override
-    public Customer getByUsername(String username) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByChUsername(username);
-
-        return customer.orElseThrow(() -> new CustomerNotFoundException("username " + username));
-    }
-
-    /**
      * Get a customer by CH username.
      *
      * @param email of type String
@@ -115,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer getByEmail(String email) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByEmail(email);
+        Optional<Customer> customer = customerRepository.findByEmailIgnoreCase(email);
 
         return customer.orElseThrow(() -> new CustomerNotFoundException("email " + email));
     }
@@ -142,9 +128,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void create(Customer customer) throws CustomerInvalidException {
         this.assertIsValidCustomer(customer);
-        if (customer.getChUsername() != null) {
-            customer.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
-        }
+        customer.setEmail(customer.getEmail().toLowerCase());
 
         customerRepository.saveAndFlush(customer);
     }
@@ -156,7 +140,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
-        Customer customer = new Customer(userInfo.getSub(), userInfo.getName(), userInfo.getEmail(), userInfo.getLdapUsername(), "");
+        Customer customer = new Customer(userInfo.getSub(), userInfo.getName(), userInfo.getEmail(), "");
         this.create(customer);
 
         return customer;
@@ -172,9 +156,6 @@ public class CustomerServiceImpl implements CustomerService {
         Customer model = this.getByKey(customer.getKey());
 
         model.setName(customer.getName());
-        if (customer.getChUsername() != null) {
-            model.setChUsername(customer.getChUsername().equals("") ? null : customer.getChUsername());
-        }
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
         model.setLdapGroups(customer.getLdapGroups());
@@ -245,7 +226,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return boolean
      */
     private boolean isNotUniqueEmail(Customer customer) {
-        Optional<Customer> optional = customerRepository.findByEmail(customer.getEmail());
+        Optional<Customer> optional = customerRepository.findByEmailIgnoreCase(customer.getEmail());
 
         if (optional.isPresent()) {
             Customer temp = optional.get();

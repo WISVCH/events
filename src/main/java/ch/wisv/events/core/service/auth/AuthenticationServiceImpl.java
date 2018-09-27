@@ -91,11 +91,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try {
-            return customerService.getByUsername(userInfo.getLdapUsername());
-        } catch (CustomerNotFoundException ignored) {
-        }
-
-        try {
             return customerService.getByEmail(userInfo.getEmail());
         } catch (CustomerNotFoundException ignored) {
         }
@@ -115,10 +110,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void updateCustomerInfo(Customer customer, CHUserInfo userInfo) throws CustomerInvalidException, CustomerNotFoundException {
         if (customer.getSub() == null || customer.getSub().equals("")) {
             customer.setSub(userInfo.getSub());
-        }
-
-        if (customer.getChUsername() == null || customer.getChUsername().equals("")) {
-            customer.setChUsername(userInfo.getLdapUsername());
         }
 
         if (customer.getEmail() == null || customer.getEmail().equals("")) {

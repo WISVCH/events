@@ -111,7 +111,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment/reservation"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/return/*/reservation"));
+                .andExpect(redirectedUrlPattern("/return/*"));
 
         Order optional = orderService.getByReference(order.getPublicReference());
         assertEquals(OrderStatus.RESERVATION, optional.getStatus());

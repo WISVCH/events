@@ -47,9 +47,9 @@
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
                                             <h5 class="d-inline mt-0">IDEAL</h5> - Online payment using your
-                                            Dutch bank. Easy, fast and secure! <br>
+                                            Dutch bank. Easy, fast and secure!<br>
 
-                                            <span class="text-danger">(+ &euro; 0,35 transaction cost)</span>
+                                            <span class="text-info">(+ &euro; 0,35 transaction cost)</span>
                                         </div>
 
                                         <div class="col-12 align-self-end">
@@ -69,21 +69,21 @@
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-creditcard.png}" alt="">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-sofort.png}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">CREDIT CARD</h5> - Pay using the most widely used
-                                            online payment method in the world. <br>
+                                            <h5 class="d-inline mt-0">SOFORT</h5> - Predominant online banking method in
+                                            countries across Europe.<br>
 
-                                            <span class="text-danger">(+ &euro; 0,30 + 3,4% transaction cost)</span>
+                                            <span class="text-info">(+ &euro; 0,30 + 1,1% transaction cost)</span>
                                         </div>
 
                                         <div class="col-12 align-self-end">
-                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/creditcard'}"
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/sofort'}"
                                                class="btn btn-block btn-primary">
-                                                Pay with Credit Card
+                                                Pay with SOFORT
                                             </a>
                                         </div>
                                     </div>
@@ -105,7 +105,7 @@
                                             <h5 class="d-inline mt-0">RESERVATION</h5> - Reserve your tickets now and
                                             pay it later at the board of W.I.S.V. 'Christiaan Huygens'.<br/>
 
-                                            <span class="text-info"><strong>Note:</strong> Your order will expire within 3 days, if not paid before.</span>
+                                            <span class="text-info">Your order will expire within 3 days, if not paid before.</span>
                                         </div>
                                         <div class="col-12 align-self-end">
                                             <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/reservation'}"

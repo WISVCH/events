@@ -61,16 +61,17 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
-     * Send payment order error.
+     * Method mails about a error.
      *
-     * @param order of type Order
+     * @param subject   of type String
+     * @param exception of type Exception
      */
     @Override
-    public void sendErrorPaymentOrder(Order order) {
+    public void sendError(String subject, Exception exception) {
         final Context ctx = new Context(new Locale("en"));
-        ctx.setVariable("order", order);
+        ctx.setVariable("exception", exception);
 
-        this.sendMailWithContent("w3cie@ch.tudelft.nl", "Order payment failed", this.templateEngine.process("mail/order-error", ctx));
+        this.sendMailWithContent("w3cie@ch.tudelft.nl", subject, this.templateEngine.process("mail/error", ctx));
     }
 
     /**

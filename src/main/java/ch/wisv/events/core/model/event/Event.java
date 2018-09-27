@@ -117,11 +117,6 @@ public class Event {
     private LdapGroup organizedBy;
 
     /**
-     * Events is for CH members only.
-     */
-    private boolean chOnly;
-
-    /**
      * List of all the possible catergories.
      */
     @NotNull

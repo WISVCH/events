@@ -104,7 +104,7 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             orderService.updateOrderStatus(order, OrderStatus.RESERVATION);
 
-            return "redirect:/return/" + order.getPublicReference() + "/reservation";
+            return "redirect:/return/" + order.getPublicReference();
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
@@ -126,16 +126,16 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Payment method using iDeal.
+     * Payment method using SOFORT.
      *
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String string
      */
-    @GetMapping("/creditcard")
-    public String paymentCreditCard(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.CREDIT_CARD);
+    @GetMapping("/sofort")
+    public String paymentSofort(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.SOFORT);
     }
 
     /**
