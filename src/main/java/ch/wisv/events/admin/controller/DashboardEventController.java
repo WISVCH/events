@@ -31,7 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(value = "/administrator/events")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardEventController {
+public class DashboardEventController extends DashboardController {
 
     /** EventService. */
     private final EventService eventService;
@@ -74,7 +74,7 @@ public class DashboardEventController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("events", eventService.getAll());
+        model.addAttribute(OBJ_EVENTS, eventService.getAll());
 
         return "admin/events/index";
     }
@@ -91,11 +91,11 @@ public class DashboardEventController {
     @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            model.addAttribute("event", eventService.getByKey(key));
+            model.addAttribute(OBJ_EVENT, eventService.getByKey(key));
 
             return "admin/events/view";
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/";
         }
@@ -110,8 +110,8 @@ public class DashboardEventController {
      */
     @GetMapping("/create")
     public String create(Model model) {
-        if (!model.containsAttribute("event")) {
-            model.addAttribute("event", new Event());
+        if (!model.containsAttribute(OBJ_EVENT)) {
+            model.addAttribute(OBJ_EVENT, new Event());
         }
 
         return "admin/events/event";
@@ -133,7 +133,7 @@ public class DashboardEventController {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
             eventService.create(event);
-            redirect.addFlashAttribute("success", "Event " + event.getTitle() + " has been created!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Event " + event.getTitle() + " has been created!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
@@ -141,8 +141,8 @@ public class DashboardEventController {
 
             return "redirect:/administrator/events/";
         } catch (EventInvalidException | IOException e) {
-            redirect.addFlashAttribute("event", event);
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(OBJ_EVENT, event);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/create/";
         }
@@ -160,13 +160,13 @@ public class DashboardEventController {
     @GetMapping("/edit/{key}")
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            if (!model.containsAttribute("event")) {
-                model.addAttribute("event", eventService.getByKey(key));
+            if (!model.containsAttribute(OBJ_EVENT)) {
+                model.addAttribute(OBJ_EVENT, eventService.getByKey(key));
             }
 
             return "admin/events/event";
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/";
         }
@@ -195,7 +195,7 @@ public class DashboardEventController {
             }
             event.setKey(key);
             eventService.update(event);
-            redirect.addFlashAttribute("success", "Event changes saved!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Event changes saved!");
 
             if (event.getPublished() == EventStatus.PUBLISHED) {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
@@ -205,8 +205,8 @@ public class DashboardEventController {
 
             return "redirect:/administrator/events/view/" + event.getKey();
         } catch (EventNotFoundException | EventInvalidException | IOException e) {
-            redirect.addFlashAttribute("event", event);
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(OBJ_EVENT, event);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/edit/" + event.getKey();
         }
@@ -229,12 +229,12 @@ public class DashboardEventController {
                     .flatMap(product -> ticketService.getAllByProduct(product).stream())
                     .collect(Collectors.toList());
 
-            model.addAttribute("event", event);
-            model.addAttribute("tickets", tickets);
+            model.addAttribute(OBJ_EVENT, event);
+            model.addAttribute(OBJ_TICKETS, tickets);
 
             return "admin/events/overview";
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/";
         }
@@ -254,9 +254,9 @@ public class DashboardEventController {
             Event event = eventService.getByKey(key);
             eventService.delete(event);
             webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
-            redirect.addFlashAttribute("success", "Event " + event.getTitle() + " has been deleted!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Event " + event.getTitle() + " has been deleted!");
         } catch (EventNotFoundException e) {
-            redirect.addFlashAttribute("error", "Event with key not-found not found!");
+            redirect.addFlashAttribute(FLASH_ERROR, "Event with key not-found not found!");
         }
 
         return "redirect:/administrator/events/";

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/administrator/webhooks")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardWebhookController {
+public class DashboardWebhookController extends DashboardController {
 
     /** WebhookService. */
     private final WebhookService webhookService;
@@ -45,7 +45,7 @@ public class DashboardWebhookController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("webhooks", webhookService.getAll());
+        model.addAttribute(OBJ_WEBHOOKS, webhookService.getAll());
 
         return "admin/webhooks/index";
     }
@@ -63,11 +63,11 @@ public class DashboardWebhookController {
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
-            model.addAttribute("webhook", webhook);
+            model.addAttribute(OBJ_WEBHOOK, webhook);
 
             return "admin/webhooks/view";
         } catch (WebhookNotFoundException e) {
-            redirect.addFlashAttribute("warning", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/webhooks/";
         }
@@ -82,8 +82,8 @@ public class DashboardWebhookController {
      */
     @GetMapping("/create")
     public String create(Model model) {
-        if (!model.containsAttribute("webhook")) {
-            model.addAttribute("webhook", new Webhook());
+        if (!model.containsAttribute(OBJ_WEBHOOK)) {
+            model.addAttribute(OBJ_WEBHOOK, new Webhook());
         }
 
         return "admin/webhooks/webhook";
@@ -101,12 +101,12 @@ public class DashboardWebhookController {
     public String create(RedirectAttributes redirect, @ModelAttribute Webhook webhook) {
         try {
             webhookService.create(webhook);
-            redirect.addFlashAttribute("success", "Webhook " + webhook.getPayloadUrl() + " has been added!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook " + webhook.getPayloadUrl() + " has been added!");
 
             return "redirect:/administrator/webhooks/";
         } catch (WebhookInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("webhook", webhook);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+            redirect.addFlashAttribute(OBJ_WEBHOOK, webhook);
 
             return "redirect:/administrator/webhooks/create/";
         }
@@ -125,11 +125,11 @@ public class DashboardWebhookController {
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Webhook webhook = webhookService.getByKey(key);
-            model.addAttribute("webhook", webhook);
+            model.addAttribute(OBJ_WEBHOOK, webhook);
 
             return "admin/webhooks/webhook";
         } catch (WebhookNotFoundException e) {
-            redirect.addFlashAttribute("warning", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/webhooks/";
         }
@@ -149,12 +149,12 @@ public class DashboardWebhookController {
         try {
             webhook.setKey(key);
             webhookService.update(webhook);
-            redirect.addFlashAttribute("success", "Webhook changes saves!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook changes saves!");
 
             return "redirect:/administrator/webhooks/view/" + webhook.getKey();
         } catch (WebhookInvalidException | WebhookNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("webhook", webhook);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+            redirect.addFlashAttribute(OBJ_WEBHOOK, webhook);
 
             return "redirect:/administrator/webhooks/edit/" + webhook.getKey();
         }
@@ -174,11 +174,11 @@ public class DashboardWebhookController {
             Webhook webhook = webhookService.getByKey(key);
             webhookService.delete(webhook);
 
-            redirect.addFlashAttribute("success", "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
 
             return "redirect:/administrator/webhooks/";
         } catch (WebhookNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/webhooks/";
         }

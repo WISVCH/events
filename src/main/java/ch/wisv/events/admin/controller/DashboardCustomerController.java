@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(value = "/administrator/customers")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardCustomerController {
+public class DashboardCustomerController extends DashboardController {
 
     /** CustomerService. */
     private final CustomerService customerService;
@@ -51,7 +51,7 @@ public class DashboardCustomerController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute(OBJ_CUSTOMERS, customerService.getAllCustomers());
 
         return "admin/customers/index";
     }
@@ -70,12 +70,12 @@ public class DashboardCustomerController {
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
-            model.addAttribute("customer", customer);
-            model.addAttribute("tickets", ticketService.getAllByCustomer(customer));
+            model.addAttribute(OBJ_CUSTOMER, customer);
+            model.addAttribute(OBJ_TICKETS, ticketService.getAllByCustomer(customer));
 
             return "admin/customers/view";
         } catch (CustomerNotFoundException e) {
-            redirect.addFlashAttribute("warning", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/customers/";
         }
@@ -90,8 +90,8 @@ public class DashboardCustomerController {
      */
     @GetMapping("/create")
     public String create(Model model) {
-        if (!model.containsAttribute("customer")) {
-            model.addAttribute("customer", new Customer());
+        if (!model.containsAttribute(OBJ_CUSTOMER)) {
+            model.addAttribute(OBJ_CUSTOMER, new Customer());
         }
 
         return "admin/customers/customer";
@@ -110,12 +110,12 @@ public class DashboardCustomerController {
     public String create(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
             customerService.create(model);
-            redirect.addFlashAttribute("success", "Customer with name " + model.getName() + "  has been created!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Customer with name " + model.getName() + "  has been created!");
 
             return "redirect:/administrator/customers/";
         } catch (CustomerInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("customer", model);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+            redirect.addFlashAttribute(OBJ_CUSTOMER, model);
 
             return "redirect:/administrator/customers/create/";
         }
@@ -136,14 +136,14 @@ public class DashboardCustomerController {
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
-            if (!model.containsAttribute("customer")) {
-                model.addAttribute("customer", customer);
+            if (!model.containsAttribute(OBJ_CUSTOMER)) {
+                model.addAttribute(OBJ_CUSTOMER, customer);
             }
             model.addAttribute("products", ticketService.getAllByCustomer(customer));
 
             return "admin/customers/customer";
         } catch (CustomerNotFoundException e) {
-            redirect.addFlashAttribute("warning", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/customers/";
         }
@@ -164,12 +164,12 @@ public class DashboardCustomerController {
         try {
             customer.setKey(key);
             customerService.update(customer);
-            redirect.addFlashAttribute("success", "Customer changes have been saved!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Customer changes have been saved!");
 
             return "redirect:/administrator/customers/view/" + customer.getKey();
         } catch (CustomerInvalidException | CustomerNotFoundException e) {
-            redirect.addFlashAttribute("customer", customer);
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(OBJ_CUSTOMER, customer);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/customers/edit/" + customer.getKey();
         }
@@ -191,11 +191,11 @@ public class DashboardCustomerController {
             Customer customer = customerService.getByKey(key);
             customerService.delete(customer);
 
-            redirect.addFlashAttribute("success", "Customer with name " + customer.getName() + " has been deleted!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Customer with name " + customer.getName() + " has been deleted!");
 
             return "redirect:/administrator/customers/";
         } catch (CustomerNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/customers/";
         }

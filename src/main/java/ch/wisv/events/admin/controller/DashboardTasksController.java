@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/administrator/tasks")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardTasksController {
+public class DashboardTasksController extends DashboardController {
 
     /** WebhookTaskService. */
     private final WebhookTaskService webhookTaskService;
@@ -35,7 +35,7 @@ public class DashboardTasksController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("tasks", webhookTaskService.getAll());
+        model.addAttribute(OBJ_TASKS, webhookTaskService.getAll());
 
         return "admin/tasks/index";
     }
