@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +34,7 @@ public class OrderTaskSchedulerTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        this.orderTaskScheduler = new OrderTaskScheduler(orderService, paymentsService);
+        this.orderTaskScheduler = new OrderTaskScheduler(orderService);
     }
 
     /**
@@ -91,41 +90,4 @@ public class OrderTaskSchedulerTest extends ServiceTest {
         verify(orderService, times(1)).delete(order1);
         verify(orderService, times(0)).delete(order2);
     }
-
-    /**
-     * Test updateOrderStatus task.g
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testUpdateOrderStatus() throws Exception {
-        Order order1 = new Order();
-        order1.setStatus(OrderStatus.PENDING);
-        order1.setChPaymentsReference("123-345-567");
-
-        Order order2 = new Order();
-        order2.setStatus(OrderStatus.PENDING);
-        order2.setChPaymentsReference("123-345-568");
-
-        Order order3 = new Order();
-        order2.setStatus(OrderStatus.PENDING);
-        order2.setChPaymentsReference("123-345-569");
-
-        when(orderService.getAllPending()).thenReturn(ImmutableList.of(order1, order2));
-        when(paymentsService.getPaymentsOrderStatus("123-345-567")).thenReturn("EXPIRED");
-        when(paymentsService.getPaymentsOrderStatus("123-345-568")).thenReturn("PAID");
-        when(paymentsService.getPaymentsOrderStatus("123-345-569")).thenReturn("WAITING");
-
-        when(paymentsService.mapStatusToOrderStatus("EXPIRED")).thenReturn(OrderStatus.EXPIRED);
-        when(paymentsService.mapStatusToOrderStatus("PAID")).thenReturn(OrderStatus.PAID);
-        when(paymentsService.mapStatusToOrderStatus("WAITING")).thenReturn(OrderStatus.PENDING);
-
-        doNothing().when(orderService).updateOrderStatus(order1, OrderStatus.EXPIRED);
-        doNothing().when(orderService).updateOrderStatus(order2, OrderStatus.PAID);
-        doNothing().when(orderService).updateOrderStatus(order3, OrderStatus.PENDING);
-
-        orderTaskScheduler.updateOrderStatus();
-        verify(orderService, times(0)).updateOrderStatus(order3, OrderStatus.PENDING);
-    }
-
 }

@@ -266,6 +266,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Get Order by ChPaymentsReference.
+     *
+     * @param chPaymentsReference of type String
+     *
+     * @return Order
+     *
+     * @throws OrderNotFoundException when Order is not found
+     */
+    @Override
+    public Order getByChPaymentsReference(String chPaymentsReference) throws OrderNotFoundException {
+        return orderRepository.findOneByChPaymentsReference(chPaymentsReference)
+                .orElseThrow(() -> new OrderNotFoundException("CH Payments reference " + chPaymentsReference));
+    }
+
+    /**
      * Check if order contains CH only Product.
      *
      * @param order of type Order

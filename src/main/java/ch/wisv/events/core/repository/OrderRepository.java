@@ -58,4 +58,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @return List of Orders.
      */
     List<Order> findAllByStatus(OrderStatus status);
+
+    /**
+     * Find one by CH Payments Reference.
+     *
+     * @param chPaymentsReference of type String
+     *
+     * @return Optional of Order
+     */
+    Optional<Order> findOneByChPaymentsReference(String chPaymentsReference);
 }

@@ -185,6 +185,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         object.put("email", order.getOwner().getEmail());
         object.put("method", order.getPaymentMethod().toString());
         object.put("returnUrl", clientUri + "/return/" + order.getPublicReference());
+        object.put("webhookUrl", clientUri + "/api/v1/orders/status");
         object.put("mailConfirmation", false);
 
         JSONArray jsonArray = new JSONArray();
