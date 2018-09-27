@@ -3,7 +3,6 @@ package ch.wisv.events.core.tasks;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.webshop.service.PaymentsService;
 import datadog.trace.api.Trace;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
