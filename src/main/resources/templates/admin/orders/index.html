@@ -36,7 +36,8 @@
                 <table id="orderTable" class="table table-striped">
                     <thead class="thead-inverse bg-primary">
                     <tr>
-                        <th>#</th>
+                        <th>Date</th>
+                        <th>Ref.</th>
                         <th>Customer</th>
                         <th>Product(s)</th>
                         <th>Amount</th>
@@ -48,6 +49,7 @@
                     <tbody>
                     <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
                     <tr th:each="order : ${orders}" th:attr="data-key=${order.getPublicReference()}">
+                        <td th:text="${#temporals.format(order.getCreatedAt(), 'yyyy-MM-dd')}"></td>
                         <td><samp th:text="${order.getPublicReference().split('-')[0]}"></samp></td>
                         <td>
                             <a th:href="@{'/administrator/customers/view/' + ${order.getOwner().getKey()} + '/'}"
@@ -89,11 +91,12 @@
             order: [
                 [0, "desc"]
             ],
+            pageLength: 50,
             columnDefs: [
-                {width: "40px", targets: 0},
-                {width: "160px", targets: 1},
-                {width: "80px", targets: [3, 4, 5]},
-                {width: "50px", targets: 6}
+                {width: "40px", targets: 1},
+                {width: "160px", targets: 2},
+                {width: "80px", targets: [4, 5, 6]},
+                {width: "50px", targets: 7}
             ]
         });
 

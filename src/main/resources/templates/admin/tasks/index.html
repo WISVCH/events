@@ -36,6 +36,7 @@
                 <table id="webhookTable" class="table table-striped">
                     <thead class="thead-inverse bg-primary">
                     <tr>
+                        <th style="padding: 3px 5px">Date</th>
                         <th style="padding: 3px 5px">Trigger</th>
                         <th style="padding: 3px 5px">Payload url</th>
                         <th style="padding: 3px 5px">Status</th>
@@ -44,6 +45,8 @@
                     <tbody>
                     <!--/*@thymesVar id="task" type="ch.wisv.events.core.model.webhook.WebhookTask"*/-->
                     <tr th:each="task : ${tasks}">
+                        <td style="padding: 3px 5px"
+                            th:text="${#temporals.format(task.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td style="padding: 3px 5px">
                             <b th:text="${task.getTrigger()}"></b>
                         </td>
@@ -72,8 +75,9 @@
 
         var table = $('#webhookTable');
         table.DataTable({
+            pageLength: 100,
             columnDefs: [
-                {width: "100px", targets: 2}
+                {width: "100px", targets: 3}
             ],
             ordering: false
         });
