@@ -35,7 +35,7 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
      */
     @Override
     public List<WebhookTask> getAll() {
-        return webhookTaskRepository.findAllByOrderByCreatedAtAsc();
+        return webhookTaskRepository.findAllByOrderByCreatedAtDesc();
     }
 
     /**

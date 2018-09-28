@@ -79,6 +79,7 @@
     $(document).ready(function () {
         var table = $('#webhookTable');
         table.DataTable({
+            pageLength: 50,
             columnDefs: [
                 {width: "100px", targets: 2}
             ]
