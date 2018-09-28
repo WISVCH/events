@@ -53,7 +53,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/customers/view/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/customers/"))
-                .andExpect(flash().attribute("warning", "Customer with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Customer with key not-found not found!"));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/customers/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/customers/"))
-                .andExpect(flash().attribute("warning", "Customer with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Customer with key not-found not found!"));
     }
 
     @Test

@@ -53,7 +53,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/webhooks/view/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/webhooks/"))
-                .andExpect(flash().attribute("warning", "Webhook with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Webhook with key not-found not found!"));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/webhooks/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/webhooks/"))
-                .andExpect(flash().attribute("warning", "Webhook with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Webhook with key not-found not found!"));
     }
 
     @Test

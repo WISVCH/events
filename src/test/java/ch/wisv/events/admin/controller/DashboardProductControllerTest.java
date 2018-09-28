@@ -55,7 +55,7 @@ public class DashboardProductControllerTest extends ControllerTest {
         mockMvc.perform(get("/administrator/products/view/not-found"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/"))
-                .andExpect(flash().attribute("warning", "Product with key not-found not found!"));
+                .andExpect(flash().attribute("error", "Product with key not-found not found!"));
     }
 
     @Test

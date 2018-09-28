@@ -72,60 +72,6 @@ public class AuthenticationServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void testGetCustomerByChUserInfoUsername() throws Exception {
-        Customer customer = new Customer();
-        customer.setChUsername("johnt");
-
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setLdapUsername("johnt");
-        userInfo.setLdapGroups(new HashSet<>());
-
-        Authentication auth = mock(OIDCAuthenticationToken.class);
-        when(((OIDCAuthenticationToken) auth).getUserInfo()).thenReturn(userInfo);
-        when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByUsername("johnt")).thenReturn(customer);
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        assertEquals(customer, authenticationService.getCurrentCustomer());
-    }
-
-    @Test
-    public void testGetCustomerByChUserInfoEmail() throws Exception {
-        Customer customer = new Customer();
-        customer.setEmail("john@travolta.com");
-
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setEmail("john@travolta.com");
-        userInfo.setLdapGroups(new HashSet<>());
-
-        Authentication auth = mock(OIDCAuthenticationToken.class);
-        when(((OIDCAuthenticationToken) auth).getUserInfo()).thenReturn(userInfo);
-        when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByUsername(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByEmail("john@travolta.com")).thenReturn(customer);
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        assertEquals(customer, authenticationService.getCurrentCustomer());
-    }
-
-    @Test
-    public void testGetCustomerByChUserNotFound() throws Exception {
-        Customer customer = new Customer();
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setLdapGroups(new HashSet<>());
-
-        Authentication auth = mock(OIDCAuthenticationToken.class);
-        when(((OIDCAuthenticationToken) auth).getUserInfo()).thenReturn(userInfo);
-        when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByUsername(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByEmail(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.createByChUserInfo(userInfo)).thenReturn(customer);
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        assertEquals(customer, authenticationService.getCurrentCustomer());
-    }
-
-    @Test
     public void testUpdateCustomerInfo() throws Exception {
         Customer customer = new Customer();
         CHUserInfo userInfo = new CHUserInfo();
@@ -139,7 +85,6 @@ public class AuthenticationServiceImplTest extends ServiceTest {
         Authentication auth = mock(OIDCAuthenticationToken.class);
         when(((OIDCAuthenticationToken) auth).getUserInfo()).thenReturn(userInfo);
         when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
-        when(customerService.getByUsername(null)).thenThrow(CustomerNotFoundException.class);
         when(customerService.getByEmail(null)).thenThrow(CustomerNotFoundException.class);
         when(customerService.createByChUserInfo(userInfo)).thenReturn(customer);
 
