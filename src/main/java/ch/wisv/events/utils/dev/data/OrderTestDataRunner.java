@@ -128,6 +128,7 @@ public class OrderTestDataRunner extends TestDataRunner {
         if (order.getStatus() == OrderStatus.PAID) {
             order.getOrderProducts().forEach(orderProduct -> {
                 Ticket ticket = new Ticket(
+                        order,
                         order.getOwner(),
                         orderProduct.getProduct(),
                         RandomStringUtils.randomNumeric(TICKET_UNIQUE_CODE_LENGTH)

@@ -183,13 +183,13 @@ public class OrderServiceImpl implements OrderService {
 
         switch (status) {
             case PAID:
-                this.handleUpdateOrderStatusPaid(order);
+                this.updateOrderStatusToPaid(order, prevStatus);
                 break;
             case RESERVATION:
-                this.handleUpdateOrderStatusReservation(order);
+                this.updateOrderStatusToReservation(order);
                 break;
             case REJECTED:
-                this.handleUpdateOrderStatusRejected(order, prevStatus);
+                this.updateOrderStatusToRejected(order, prevStatus);
                 break;
             default:
                 break;
@@ -331,20 +331,47 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Change the reservation count of the order products.
+     *
+     * @param order    of type Order
+     * @param decrease of type boolean
+     */
+    private void changeReservationCountOrderProducts(Order order, boolean decrease) {
+        order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
+                orderProduct.getProduct(),
+                orderProduct.getAmount().intValue() * (decrease ? -1 : 1)
+        ));
+    }
+
+    /**
+     * Change the sold count of the order products.
+     *
+     * @param order    of type Order
+     * @param decrease of type boolean
+     */
+    private void changeSoldCountOrderProducts(Order order, boolean decrease) {
+        order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
+                orderProduct.getProduct(),
+                orderProduct.getAmount().intValue() * (decrease ? -1 : 1)
+        ));
+    }
+
+    /**
      * Update order status to PAID.
      *
-     * @param order of type Order
+     * @param order      of type Order
+     * @param prevStatus of type OrderStatus
      */
-    private void handleUpdateOrderStatusPaid(Order order) {
+    private void updateOrderStatusToPaid(Order order, OrderStatus prevStatus) {
         List<Ticket> tickets = ticketService.createByOrder(order);
         mailService.sendOrderConfirmation(order, tickets);
 
         order.setTicketCreated(true);
         order.setPaidAt(LocalDateTime.now());
-        order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
-                orderProduct.getProduct(),
-                orderProduct.getAmount().intValue()
-        ));
+        this.changeSoldCountOrderProducts(order, false);
+        if (prevStatus == OrderStatus.RESERVATION) {
+            this.changeReservationCountOrderProducts(order, true);
+        }
 
         orderRepository.saveAndFlush(order);
         log.info("Order " + order.getPublicReference() + ": Status changed to PAID and tickets created!");
@@ -356,19 +383,13 @@ public class OrderServiceImpl implements OrderService {
      * @param order      of type Order
      * @param prevStatus of type OrderStatus
      */
-    private void handleUpdateOrderStatusRejected(Order order, OrderStatus prevStatus) {
+    private void updateOrderStatusToRejected(Order order, OrderStatus prevStatus) {
         switch (prevStatus) {
-            case RESERVATION:
-                order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
-                        orderProduct.getProduct(),
-                        orderProduct.getAmount().intValue() * -1
-                ));
-                break;
             case PAID:
-                order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
-                        orderProduct.getProduct(),
-                        orderProduct.getAmount().intValue() * -1
-                ));
+                this.changeSoldCountOrderProducts(order, true);
+                break;
+            case RESERVATION:
+                this.changeReservationCountOrderProducts(order, true);
                 ticketService.deleteByOrder(order);
                 break;
             default:
@@ -382,12 +403,9 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param order of type Order
      */
-    private void handleUpdateOrderStatusReservation(Order order) {
+    private void updateOrderStatusToReservation(Order order) {
         mailService.sendOrderReservation(order);
-        order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
-                orderProduct.getProduct(),
-                orderProduct.getAmount().intValue()
-        ));
+        this.changeReservationCountOrderProducts(order, false);
 
         log.info("Order " + order.getPublicReference() + ": Status changed to RESERVATION!");
         orderRepository.saveAndFlush(order);
