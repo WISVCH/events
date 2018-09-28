@@ -3,6 +3,7 @@ package ch.wisv.events.core.service.product;
 import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import java.util.List;
 
@@ -77,18 +78,9 @@ public interface ProductService {
 
     /**
      * Change Product sold count.
-     *
-     * @param product  of type Product
-     * @param increase of type int
-     */
-    void changeSoldCount(Product product, int increase);
-
-    /**
-     * Change Product reserved count.
-     *
-     * @param product  of type Product
-     * @param increase of type int
-     */
-    void changeReservedCount(Product product, int increase);
+     *  @param order            of type Order
+     * @param reservationCount of type boolean
+     * @param decrease*/
+    void increaseProductCount(Order order, boolean reservationCount, boolean decrease);
 
 }

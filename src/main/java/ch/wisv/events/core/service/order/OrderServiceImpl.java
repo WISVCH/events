@@ -331,32 +331,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Change the reservation count of the order products.
-     *
-     * @param order    of type Order
-     * @param decrease of type boolean
-     */
-    private void changeReservationCountOrderProducts(Order order, boolean decrease) {
-        order.getOrderProducts().forEach(orderProduct -> productService.changeReservedCount(
-                orderProduct.getProduct(),
-                orderProduct.getAmount().intValue() * (decrease ? -1 : 1)
-        ));
-    }
-
-    /**
-     * Change the sold count of the order products.
-     *
-     * @param order    of type Order
-     * @param decrease of type boolean
-     */
-    private void changeSoldCountOrderProducts(Order order, boolean decrease) {
-        order.getOrderProducts().forEach(orderProduct -> productService.changeSoldCount(
-                orderProduct.getProduct(),
-                orderProduct.getAmount().intValue() * (decrease ? -1 : 1)
-        ));
-    }
-
-    /**
      * Update order status to PAID.
      *
      * @param order      of type Order
@@ -368,9 +342,10 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTicketCreated(true);
         order.setPaidAt(LocalDateTime.now());
-        this.changeSoldCountOrderProducts(order, false);
+
+        productService.increaseProductCount(order, false, false);
         if (prevStatus == OrderStatus.RESERVATION) {
-            this.changeReservationCountOrderProducts(order, true);
+            productService.increaseProductCount(order, true, true);
         }
 
         orderRepository.saveAndFlush(order);
@@ -386,11 +361,11 @@ public class OrderServiceImpl implements OrderService {
     private void updateOrderStatusToRejected(Order order, OrderStatus prevStatus) {
         switch (prevStatus) {
             case PAID:
-                this.changeSoldCountOrderProducts(order, true);
+                productService.increaseProductCount(order, false, true);
+                ticketService.deleteByOrder(order);
                 break;
             case RESERVATION:
-                this.changeReservationCountOrderProducts(order, true);
-                ticketService.deleteByOrder(order);
+                productService.increaseProductCount(order, true, true);
                 break;
             default:
         }
@@ -405,7 +380,7 @@ public class OrderServiceImpl implements OrderService {
      */
     private void updateOrderStatusToReservation(Order order) {
         mailService.sendOrderReservation(order);
-        this.changeReservationCountOrderProducts(order, false);
+        productService.increaseProductCount(order, true, false);
 
         log.info("Order " + order.getPublicReference() + ": Status changed to RESERVATION!");
         orderRepository.saveAndFlush(order);

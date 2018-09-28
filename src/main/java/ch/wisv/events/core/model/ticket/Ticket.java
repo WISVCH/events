@@ -84,7 +84,7 @@ public class Ticket {
      * @param uniqueCode of type String
      */
     public Ticket(Order order, Customer owner, Product product, String uniqueCode) {
-        super();
+        this();
         this.order = order;
         this.owner = owner;
         this.product = product;
