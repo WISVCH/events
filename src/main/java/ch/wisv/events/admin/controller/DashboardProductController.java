@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/administrator/products")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardProductController {
+public class DashboardProductController extends DashboardController {
 
     /** ProductService. */
     private final ProductService productService;
@@ -58,9 +58,9 @@ public class DashboardProductController {
      *
      * @return thymeleaf template path
      */
-    @GetMapping()
+    @GetMapping
     public String index(Model model) {
-        model.addAttribute("products", this.productService.getAllProducts());
+        model.addAttribute(OBJ_PRODUCTS, this.productService.getAllProducts());
 
         return "admin/products/index";
     }
@@ -77,11 +77,11 @@ public class DashboardProductController {
     @GetMapping("/view/{key}")
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            model.addAttribute("product", productService.getByKey(key));
+            model.addAttribute(OBJ_PRODUCT, productService.getByKey(key));
 
             return "admin/products/view";
         } catch (ProductNotFoundException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/products/";
         }
@@ -96,8 +96,8 @@ public class DashboardProductController {
      */
     @GetMapping("/create")
     public String create(Model model) {
-        if (!model.containsAttribute("product")) {
-            model.addAttribute("product", new Product());
+        if (!model.containsAttribute(OBJ_PRODUCT)) {
+            model.addAttribute(OBJ_PRODUCT, new Product());
         }
 
         return "admin/products/product";
@@ -116,12 +116,12 @@ public class DashboardProductController {
         try {
             productService.create(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
-            redirect.addFlashAttribute("message", "Product " + product.getTitle() + " has been successfully created!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Product with title " + product.getTitle() + " has been created!");
 
-            return "redirect:/administrator/products/view/" + product.getKey() + "/";
+            return "redirect:/administrator/products/view/" + product.getKey();
         } catch (ProductInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("product", product);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+            redirect.addFlashAttribute(OBJ_PRODUCT, product);
 
             return "redirect:/administrator/products/create/";
         }
@@ -131,19 +131,23 @@ public class DashboardProductController {
      * Get request to edit a Product or if the key does not exists it will redirect to the
      * Product Overview page.
      *
-     * @param model SpringUI model
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return thymeleaf template path
      */
     @GetMapping("/edit/{key}")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
-            if (!model.containsAttribute("product")) {
-                model.addAttribute("product", productService.getByKey(key));
+            if (!model.containsAttribute(OBJ_PRODUCT)) {
+                model.addAttribute(OBJ_PRODUCT, productService.getByKey(key));
             }
 
             return "admin/products/product";
         } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+
             return "redirect:/administrator/products/";
         }
     }
@@ -153,6 +157,7 @@ public class DashboardProductController {
      *
      * @param redirect of type RedirectAttributes
      * @param product  of type Product
+     * @param key      of type String
      *
      * @return String
      */
@@ -162,35 +167,38 @@ public class DashboardProductController {
             product.setKey(key);
             productService.update(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
-            redirect.addFlashAttribute("success", "Changes have been saved!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Product changes have been saved!");
 
-            return "redirect:/administrator/products/view/" + product.getKey() + "/";
+            return "redirect:/administrator/products/view/" + product.getKey();
         } catch (ProductNotFoundException | ProductInvalidException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-            redirect.addFlashAttribute("product", product);
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+            redirect.addFlashAttribute(OBJ_PRODUCT, product);
 
-            return "redirect:/administrator/products/edit/" + product.getKey() + "/";
+            return "redirect:/administrator/products/edit/" + product.getKey();
         }
     }
 
     /**
      * Method overview will show a list of the users with this product.
      *
-     * @param model of type Model
-     * @param key   of type String
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return String
      */
     @GetMapping("/overview/{key}")
-    public String overview(Model model, @PathVariable String key) {
+    public String overview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);
 
-            model.addAttribute("tickets", ticketService.getAllByProduct(product));
-            model.addAttribute("product", product);
+            model.addAttribute(OBJ_TICKETS, ticketService.getAllByProduct(product));
+            model.addAttribute(OBJ_PRODUCT, product);
 
             return "admin/products/overview";
         } catch (ProductNotFoundException e) {
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+
             return "redirect:/administrator/products/";
         }
     }
@@ -210,9 +218,9 @@ public class DashboardProductController {
             productService.delete(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_DELETE, product);
 
-            redirectAttributes.addFlashAttribute("message", "Product " + product.getTitle() + " has been deleted!");
+            redirectAttributes.addFlashAttribute(FLASH_SUCCESS, "Product " + product.getTitle() + " has been deleted!");
         } catch (ProductNotFoundException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
         return "redirect:/administrator/products/";

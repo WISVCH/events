@@ -10,6 +10,6 @@ public class WebhookNotFoundException extends EventsException {
      * @param message of type String
      */
     public WebhookNotFoundException(String message) {
-        super(LogLevelEnum.WARN, "SoldProduct with " + message + " not found!");
+        super(LogLevelEnum.WARN, "Webhook with " + message + " not found!");
     }
 }

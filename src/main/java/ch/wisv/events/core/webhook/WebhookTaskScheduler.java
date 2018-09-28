@@ -75,7 +75,7 @@ public class WebhookTaskScheduler {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 webhookTask.setWebhookTaskStatus(WebhookTaskStatus.SUCCESS);
             } else {
-                log.error("ERROR Task #" + webhookTask.getId() + ": " + responseBody);
+                log.error("FLASH_ERROR Task #" + webhookTask.getId() + ": " + responseBody);
                 webhookTask.setWebhookTaskStatus(WebhookTaskStatus.ERROR);
                 webhookTask.setWebhookError(responseBody);
             }

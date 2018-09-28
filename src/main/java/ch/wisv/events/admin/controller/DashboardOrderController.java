@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(value = "/administrator/orders")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardOrderController {
+public class DashboardOrderController extends DashboardController {
 
     /** OrderService. */
     private final OrderService orderService;
@@ -40,7 +40,7 @@ public class DashboardOrderController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("orders", this.orderService.getAllOrders());
+        model.addAttribute(OBJ_ORDERS, this.orderService.getAllOrders());
 
         return "admin/orders/index";
     }
@@ -48,19 +48,22 @@ public class DashboardOrderController {
     /**
      * Get a view of an order.
      *
-     * @param model of type Model
-     * @param key   of type String
+     * @param model    of type Model
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
      *
      * @return String
      */
     @GetMapping("/view/{key}")
-    public String edit(Model model, @PathVariable String key) {
+    public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
-            model.addAttribute("order", order);
+            model.addAttribute(OBJ_ORDER, order);
 
             return "admin/orders/view";
         } catch (OrderNotFoundException e) {
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+
             return "redirect:/administrator/orders/";
         }
     }
@@ -79,9 +82,9 @@ public class DashboardOrderController {
             Order order = orderService.getByReference(key);
             orderService.updateOrderStatus(order, OrderStatus.REJECTED);
 
-            redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been rejected!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Order #" + order.getId() + " has been rejected!");
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
         return "redirect:/administrator/orders/";
@@ -103,9 +106,9 @@ public class DashboardOrderController {
             order.setPaymentMethod(payment);
             orderService.updateOrderStatus(order, OrderStatus.PAID);
 
-            redirect.addFlashAttribute("message", "Order #" + order.getId() + " has been approved!");
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Order #" + order.getId() + " has been approved!");
         } catch (EventsException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
         return "redirect:/administrator/orders/";

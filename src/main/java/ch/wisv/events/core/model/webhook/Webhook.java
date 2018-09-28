@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.webhook;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.ElementCollection;
@@ -55,5 +56,6 @@ public class Webhook {
      */
     public Webhook() {
         this.key = UUID.randomUUID().toString();
+        this.webhookTriggers = new ArrayList<>();
     }
 }

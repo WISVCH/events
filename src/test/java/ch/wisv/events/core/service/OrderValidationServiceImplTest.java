@@ -22,10 +22,8 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Matchers.any;
 import org.mockito.Mock;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -227,7 +225,6 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         Customer customer = mock(Customer.class);
         Order prevOrder = mock(Order.class);
         OrderProduct prevOrderProduct = mock(OrderProduct.class);
-
 
         when(prevOrderProduct.getAmount()).thenReturn(1L);
         when(prevOrderProduct.getProduct()).thenReturn(product);

@@ -125,7 +125,6 @@ public class Product {
      */
     public Product(ProductDto productDto) {
         this();
-
         this.title = productDto.getTitle();
         this.description = productDto.getDescription();
         this.cost = productDto.getCost();

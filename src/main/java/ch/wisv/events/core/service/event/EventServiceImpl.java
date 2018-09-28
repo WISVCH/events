@@ -143,6 +143,7 @@ public class EventServiceImpl implements EventService {
         this.updateLinkedProducts(event, update.getProducts(), false);
 
         update.setTitle(event.getTitle());
+        update.setShortDescription(event.getShortDescription());
         update.setDescription(event.getDescription());
         update.setLocation(event.getLocation());
         update.setStart(event.getStart());
@@ -151,7 +152,6 @@ public class EventServiceImpl implements EventService {
         update.setProducts(event.getProducts());
         update.setPublished(event.getPublished());
         update.setOrganizedBy(event.getOrganizedBy());
-        update.setShortDescription(event.getShortDescription());
         update.setCategories(event.getCategories());
 
         if (event.getImageUrl() != null) {

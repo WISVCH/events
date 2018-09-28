@@ -6,14 +6,24 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.webhook.Webhook;
+import ch.wisv.events.core.model.webhook.WebhookTask;
+import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
+import ch.wisv.events.core.repository.WebhookRepository;
+import ch.wisv.events.core.repository.WebhookTaskRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import ch.wisv.events.core.service.webhook.WebhookService;
+import ch.wisv.events.utils.LdapGroup;
+import com.google.common.collect.ImmutableList;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +56,12 @@ public abstract class ControllerTest {
     @Autowired
     protected OrderService orderService;
 
+    @Autowired
+    protected WebhookService webhookService;
+
+    @Autowired
+    protected TicketService ticketService;
+
     /**
      * Repositories.
      */
@@ -62,11 +78,17 @@ public abstract class ControllerTest {
     protected CustomerRepository customerRepository;
 
     @Autowired
-    protected TicketService ticketService;
-
-    @Autowired
     protected OrderProductRepository orderProductRepository;
 
+    @Autowired
+    protected WebhookRepository webhookRepository;
+
+    @Autowired
+    protected WebhookTaskRepository webhookTaskRepository;
+
+    /**
+     * Other.
+     */
     @Autowired
     protected WebApplicationContext wac;
 
@@ -90,12 +112,17 @@ public abstract class ControllerTest {
         productRepository.deleteAll();
         customerRepository.deleteAll();
         orderProductRepository.deleteAll();
+        webhookTaskRepository.deleteAll();
+        webhookRepository.deleteAll();
     }
 
     protected Event createEvent() {
         Event event = new Event();
         event.setTitle(RandomStringUtils.random(12));
         event.setKey(UUID.randomUUID().toString());
+        event.setStart(LocalDateTime.now().plusMonths(1));
+        event.setEnding(LocalDateTime.now().plusMonths(1).plusHours(1));
+        event.setTarget(100);
 
         eventRepository.saveAndFlush(event);
 
@@ -105,11 +132,9 @@ public abstract class ControllerTest {
     protected Customer createCustomer() {
         Customer customer = new Customer();
         customer.setSub("WISVCH.1234");
-        customer.setName("test");
-        customer.setEmail("test");
-        customer.setEmail("test");
-        customer.setLdapGroups(null);
-        customer.setRfidToken("");
+        customer.setName("Test user");
+        customer.setEmail("test@test.com");
+        customer.setRfidToken("RF123456");
 
         customerRepository.saveAndFlush(customer);
 
@@ -118,7 +143,11 @@ public abstract class ControllerTest {
 
     protected Product createProduct() {
         Product product = new Product();
+        product.setTitle("Product product");
         product.setCost(1.d);
+        product.setSellStart(LocalDateTime.now());
+        product.setProducts(new ArrayList<>());
+        product.setMaxSoldPerCustomer(1);
         productRepository.saveAndFlush(product);
 
         return product;
@@ -150,5 +179,25 @@ public abstract class ControllerTest {
         orderRepository.saveAndFlush(order);
 
         return order;
+    }
+
+    protected Webhook createWebhook() {
+        Webhook webhook = new Webhook();
+        webhook.setActive(true);
+        webhook.setLdapGroup(LdapGroup.BEHEER);
+        webhook.setPayloadUrl("https://test.frl/");
+        webhook.setSecret("secret");
+        webhook.setWebhookTriggers(ImmutableList.of(WebhookTrigger.EVENT_CREATE_UPDATE));
+
+        return webhook;
+    }
+
+    protected WebhookTask createWebhookTask() {
+        WebhookTask webhookTask = new WebhookTask();
+        webhookTask.setCreatedAt(LocalDateTime.now());
+        webhookTask.setWebhookTaskStatus(WebhookTaskStatus.PENDING);
+        webhookTask.setWebhook(this.createWebhook());
+
+        return webhookTask;
     }
 }
