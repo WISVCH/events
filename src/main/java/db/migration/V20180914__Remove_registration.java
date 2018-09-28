@@ -23,15 +23,15 @@ public class V20180914__Remove_registration implements SpringJdbcMigration {
             jdbcTemplate.execute("BEGIN;");
 
             // Remove constraints
-            String constraints = "ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey;\n"
-                    + "ALTER TABLE ONLY public.permissions DROP CONSTRAINT permissions_pkey;\n"
-                    + "ALTER TABLE ONLY public.profile DROP CONSTRAINT profile_pkey;\n"
-                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT registration_pkey;\n"
-                    + "ALTER TABLE ONLY public.study_details DROP CONSTRAINT study_details_pkey;\n"
+            String constraints = "ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey CASCADE;\n"
+                    + "ALTER TABLE ONLY public.permissions DROP CONSTRAINT permissions_pkey CASCADE;\n"
+                    + "ALTER TABLE ONLY public.profile DROP CONSTRAINT profile_pkey CASCADE;\n"
+                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT registration_pkey CASCADE;\n"
+                    + "ALTER TABLE ONLY public.study_details DROP CONSTRAINT study_details_pkey CASCADE;\n"
                     + "ALTER TABLE ONLY public.profile DROP CONSTRAINT fk2hsdsntwy25qr73fsvd7l3wu7;\n"
-                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fk6pbiwpljchpolob40s7di41y4;\n"
-                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkko3c91odb9f49kc3visnv21be;\n"
-                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkthagckur8igeragp1vx3qewlx;\n";
+                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fk6pbiwpljchpolob40s7di41y4 CASCADE;\n"
+                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkko3c91odb9f49kc3visnv21be CASCADE;\n"
+                    + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkthagckur8igeragp1vx3qewlx CASCADE;\n";
             jdbcTemplate.execute(constraints);
 
             // Remove tables
