@@ -4,6 +4,7 @@ import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import java.time.LocalDateTime;
@@ -146,27 +147,20 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Change Product sold count.
      *
-     * @param product  of type Product
-     * @param increase of type int
+     * @param order            of type Order
+     * @param reservationCount of type boolean
+     * @param decrease         of type boolean
      */
     @Override
-    public void changeSoldCount(Product product, int increase) {
-        product.increaseSold(increase);
-
-        productRepository.saveAndFlush(product);
-    }
-
-    /**
-     * Change Product reserved count.
-     *
-     * @param product  of type Product
-     * @param increase of type int
-     */
-    @Override
-    public void changeReservedCount(Product product, int increase) {
-        product.increaseReserved(increase);
-
-        productRepository.saveAndFlush(product);
+    public void increaseProductCount(Order order, boolean reservationCount, boolean decrease) {
+        order.getOrderProducts().forEach(orderProduct -> {
+            if (reservationCount) {
+                orderProduct.getProduct().increaseReserved(order.getAmount().intValue() * (decrease ? -1 : 1));
+            } else {
+                orderProduct.getProduct().increaseSold(order.getAmount().intValue() * (decrease ? -1 : 1));
+            }
+            productRepository.saveAndFlush(orderProduct.getProduct());
+        });
     }
 
     /**

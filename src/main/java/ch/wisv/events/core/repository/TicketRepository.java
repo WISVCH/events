@@ -1,6 +1,7 @@
 package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
@@ -39,6 +40,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
      * @return List
      */
     List<Ticket> findAllByOwner(Customer owner);
+
+    /**
+     * Find all Ticket by Order.
+     *
+     * @param order of type Order
+     *
+     * @return List
+     */
+    List<Ticket> findAllByOrder(Order order);
 
     /**
      * Check if there exists a Ticket with a Product and a Unique code.

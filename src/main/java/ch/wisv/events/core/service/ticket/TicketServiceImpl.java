@@ -110,11 +110,9 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public void deleteByOrder(Order order) {
-        order.getOrderProducts().forEach(orderProduct -> {
-            List<Ticket> tickets = ticketRepository.findAllByProductAndOwner(orderProduct.getProduct(), order.getOwner());
+        List<Ticket> tickets = ticketRepository.findAllByOrder(order);
 
-            ticketRepository.delete(tickets);
-        });
+        ticketRepository.delete(tickets);
     }
 
     /**
@@ -147,6 +145,7 @@ public class TicketServiceImpl implements TicketService {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             for (int i = 0; i < orderProduct.getAmount(); i++) {
                 Ticket ticket = new Ticket(
+                        order,
                         order.getOwner(),
                         orderProduct.getProduct(),
                         this.generateUniqueString(orderProduct.getProduct())

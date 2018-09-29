@@ -1,6 +1,7 @@
 package ch.wisv.events.core.model.ticket;
 
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import java.util.UUID;
 import javax.persistence.Entity;
@@ -29,6 +30,12 @@ public class Ticket {
      */
     @NotNull
     public String key;
+
+    /**
+     * Customer which owns the Ticket.
+     */
+    @ManyToOne
+    public Order order;
 
     /**
      * Customer which owns the Ticket.
@@ -71,17 +78,17 @@ public class Ticket {
     /**
      * Constructor of Ticket with Customer, Product and String.
      *
+     * @param order      of type Order
      * @param owner      of type Customer
      * @param product    of type Product
      * @param uniqueCode of type String
      */
-    public Ticket(Customer owner, Product product, String uniqueCode) {
+    public Ticket(Order order, Customer owner, Product product, String uniqueCode) {
+        this();
+        this.order = order;
         this.owner = owner;
         this.product = product;
         this.uniqueCode = uniqueCode;
         this.valid = true;
-        this.key = UUID.randomUUID().toString();
-        this.status = TicketStatus.OPEN;
     }
-
 }
