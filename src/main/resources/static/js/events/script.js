@@ -1,7 +1,54 @@
 /**
  * Created by svenp on 31/07/2017.
  */
+var TemplateSelector;
+
+(function ($) {
+
+    TemplateSelector = {
+        init: function () {
+            TemplateSelector.binds();
+        },
+
+        binds: function () {
+            $(".template-item a").on('click', TemplateSelector.__setTemplateValues)
+        },
+
+        __setTemplateValues: function (e) {
+            e.preventDefault();
+            var data = $(e.target).parent().data('template');
+
+            $.each(data, function (key, value) {
+                $("#" + key).val(value);
+            });
+
+            TemplateSelector.__setCategories(data);
+            TemplateSelector.__setTimes(data);
+        },
+
+        __setCategories: function (data) {
+            $("input[name='categories']").each(function () {
+                if ($.inArray($(this).val(), data.categories) >= 0) {
+                    $(this).attr("checked", "checked");
+                } else {
+                    $(this).removeAttr("checked");
+                }
+            });
+        },
+
+        __setTimes: function (data) {
+            document.querySelector("#start")._flatpickr.setDate(data.startingTime);
+            document.querySelector("#ending")._flatpickr.setDate(data.endingTime);
+        }
+    };
+})
+(jQuery);
+
+
 $(document).ready(function () {
+
+    TemplateSelector.init();
+
     var config = {
         enableTime: true,
         altInput: true,

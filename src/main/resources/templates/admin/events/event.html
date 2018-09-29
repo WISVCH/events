@@ -30,7 +30,23 @@
         <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Create/update event</h1>
+            <h1>Create/update event
+                <div class="dropdown float-right">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Templates
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <h4 class="dropdown-header">Select a template</h4>
+                        <!--/*@thymesVar id="template" type="ch.wisv.events.admin.utils.EventTemplate"*/-->
+                        <div class="dropdown-item template-item"
+                             th:each="template : ${T(ch.wisv.events.admin.utils.EventTemplate).values()}"
+                             th:attr="data-template=${template.toJson()}">
+                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
+                        </div>
+                    </div>
+                </div>
+            </h1>
 
             <div th:replace="fragments/messages :: messages"></div>
 
@@ -149,6 +165,7 @@
                                         <label>Organized by
                                             <select name="" id="organizedBy" class="form-control"
                                                     th:field="*{organizedBy}" required>
+                                                <!--/*@thymesVar id="group" type="ch.wisv.events.utils.LdapGroup"*/-->
                                                 <option th:each="group : ${T(ch.wisv.events.utils.LdapGroup).values()}"
                                                         th:value="${group}"
                                                         th:text="${group.getName()}">
@@ -158,6 +175,7 @@
                                     </div>
                                     <div class="form-group col-12">
                                         <label class="mb-2">Categories</label>
+                                        <!--/*@thymesVar id="category" type="ch.wisv.events.core.model.event.EventCategory"*/-->
                                         <div class="form-check"
                                              th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
                                             <label class="form-check-label custom-control custom-checkbox">
