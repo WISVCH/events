@@ -78,9 +78,11 @@ public interface ProductService {
 
     /**
      * Change Product sold count.
-     *  @param order            of type Order
+     *
+     * @param order            of type Order
      * @param reservationCount of type boolean
-     * @param decrease*/
+     * @param decrease         of type boolean
+     */
     void increaseProductCount(Order order, boolean reservationCount, boolean decrease);
 
 }
