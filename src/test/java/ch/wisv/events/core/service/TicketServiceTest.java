@@ -195,13 +195,13 @@ public class TicketServiceTest extends ServiceTest {
         int random = (new Random()).nextInt(500);
         this.fillOrderWithAmountOfProducts(order, random);
 
-        when(ticketRepository.findAllByProductAndOwner(product, customer)).thenReturn(ImmutableList.of(ticket3));
+        when(ticketRepository.findAllByOrder(order)).thenReturn(ImmutableList.of(ticket3));
         doNothing().when(ticketRepository).delete(ImmutableList.of(ticket3));
 
         ticketService.deleteByOrder(order);
 
-        verify(ticketRepository, times(random)).findAllByProductAndOwner(product, customer);
-        verify(ticketRepository, times(random)).delete(ImmutableList.of(ticket3));
+        verify(ticketRepository, times(1)).findAllByOrder(order);
+        verify(ticketRepository, times(1)).delete(ImmutableList.of(ticket3));
     }
 
     @Test
