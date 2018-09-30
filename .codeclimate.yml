@@ -1,6 +1,5 @@
 version: "2"
 
-
 exclude_patterns:
 - "src/test/"
 - "src/main/java/db/migration/"
@@ -11,8 +10,11 @@ plugins:
   checkstyle:
       enabled: true
       config:
-        file: ".codeclimate/checkstyle.xml"
+          file: ".codeclimate/checkstyle.xml"
+      checks:
+          com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck:
+              enabled: false
   sonar-java:
       enabled: true
       config:
-        minimum_severity: critical
+          minimum_severity: critical

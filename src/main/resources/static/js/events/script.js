@@ -1,7 +1,74 @@
 /**
  * Created by svenp on 31/07/2017.
  */
+var TemplateSelector;
+
+(function ($) {
+
+    TemplateSelector = {
+        init: function () {
+            TemplateSelector.binds();
+        },
+
+        binds: function () {
+            $(".event-template-item a").on('click', TemplateSelector.__setEventTemplateValues);
+            $(".product-template-item a").on('click', TemplateSelector.__setProductTemplateValues);
+        },
+
+        __setEventTemplateValues: function (e) {
+            e.preventDefault();
+            var data = $(e.target).parent().data('template');
+
+            $.each(data, function (key, value) {
+                $("#" + key).val(value);
+            });
+
+            TemplateSelector.__setCategories(data);
+            TemplateSelector.__setTimes(data);
+        },
+
+        __setProductTemplateValues: function (e) {
+            e.preventDefault();
+            var data = $(e.target).parent().data('template');
+
+            $.each(data, function (key, value) {
+                var Key = key.replace(/\b\w/g, function (l) {
+                    return l.toUpperCase()
+                });
+                var inputBox = $("#product" + Key);
+                inputBox.val(value);
+
+                if (key === "chOnly" && value === true) {
+                    inputBox.attr("checked", "checked");
+                } else {
+                    inputBox.removeAttr("checked");
+                }
+            });
+        },
+
+        __setCategories: function (data) {
+            $("input[name='categories']").each(function () {
+                if ($.inArray($(this).val(), data.categories) >= 0) {
+                    $(this).attr("checked", "checked");
+                } else {
+                    $(this).removeAttr("checked");
+                }
+            });
+        },
+
+        __setTimes: function (data) {
+            document.querySelector("#start")._flatpickr.setDate(data.startingTime);
+            document.querySelector("#ending")._flatpickr.setDate(data.endingTime);
+        }
+    };
+})
+(jQuery);
+
+
 $(document).ready(function () {
+
+    TemplateSelector.init();
+
     var config = {
         enableTime: true,
         altInput: true,
@@ -59,11 +126,10 @@ $(document).ready(function () {
                 description: $("#productDescription").val(),
                 cost: $("#productCost").val(),
                 maxSold: $("#maxSold").val(),
-                maxSoldPerCustomer: $("#maxSoldPerCustomer").val(),
+                maxSoldPerCustomer: $("#productMaxSoldPerCustomer").val(),
                 sellStart: $("#productSellStart").val() === '' ? null : $("#productSellStart").val(),
                 sellEnd: $("#productSellEnd").val() === '' ? null : $("#productSellEnd").val(),
-                chOnly: $("#productIsChOnly").val() === "on",
-                includesRegistration: $("#productIsIncludingRegistration").val() === "on"
+                chOnly: $("#productChOnly").val() === "on"
             };
 
             $.ajax({
