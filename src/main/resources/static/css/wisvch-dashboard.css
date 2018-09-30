@@ -371,3 +371,26 @@ h1 .badge-info, .btn-info {
     max-width: 1200px;
     text-align: left;
 }
+
+/**
+ * Dropdown
+ */
+.dropdown-menu {
+    border: 3px solid #e7ebf1;
+    border-bottom-width: 0;
+    padding: 0;
+}
+
+.dropdown-menu .dropdown-header {
+    font-size: 1rem;
+}
+
+.dropdown-menu .dropdown-item {
+    border-bottom: 3px solid #e7ebf1;
+    padding: 1rem 1.75rem;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:active {
+    background-color: #ffffff;
+}

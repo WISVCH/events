@@ -30,7 +30,23 @@
         <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Create/update product</h1>
+            <h1>Create/update product
+                <div class="dropdown float-right">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Templates
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <h4 class="dropdown-header">Select a template</h4>
+                        <!--/*@thymesVar id="template" type="ch.wisv.events.admin.utils.ProductTemplate"*/-->
+                        <div class="dropdown-item product-template-item"
+                             th:each="template : ${T(ch.wisv.events.admin.utils.ProductTemplate).values()}"
+                             th:attr="data-template=${template.toJson()}">
+                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
+                        </div>
+                    </div>
+                </div>
+            </h1>
 
             <div th:replace="fragments/messages :: messages"></div>
 
@@ -194,48 +210,6 @@
                         </span>
                 </div>
                 <small class="form-text text-muted">Start typing to look for a product.</small>
-
-                <h2 class="text-center display-4 border-bottom-0">or</h2>
-
-                <h4>Create product</h4>
-                <div class="form-group">
-                    <label>Title*</label>
-                    <input type="text" id="productTitle" class="form-control required" placeholder="Product title">
-                </div>
-                <div class="form-group">
-                    <label for="productDescription">Description</label>
-                    <textarea name="product" id="productDescription" placeholder="Description" rows="2"
-                              class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Price*</label>
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fas fa-fw fa-euro-sign"></i>
-                        </div>
-                        <input type="number" id="productCost" step="0.01" class="form-control required"
-                               placeholder="Price of the product">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Available</label>
-                            <input type="number" id="maxSold" step="0.01" class="form-control"
-                                   placeholder="Amount of tickets that are available">
-                            <small class="form-text text-muted">Leave blank for an infinite amount of tickets!</small>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Max sold per customer*</label>
-                            <input type="number" step="1" class="form-control required" min="1" max="25"
-                                   id="maxSoldPerCustomer" placeholder="Amount of ticket that one customer can buy">
-                        </div>
-                    </div>
-                </div>
-
-                <a class="btn btn-block btn-danger text-white" id="createNewProductButton">Create and add product</a>
             </div>
         </div>
     </div>
