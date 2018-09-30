@@ -1,7 +1,45 @@
 /**
  * Created by svenp on 31/07/2017.
  */
+var TemplateSelector;
+
+(function ($) {
+
+    TemplateSelector = {
+        init: function () {
+            TemplateSelector.binds();
+        },
+
+        binds: function () {
+            $(".product-template-item a").on('click', TemplateSelector.__setProductTemplateValues);
+        },
+
+        __setProductTemplateValues: function (e) {
+            e.preventDefault();
+            var data = $(e.target).parent().data('template');
+
+            $.each(data, function (key, value) {
+                if (key === "chOnly") {
+                    key = key + "1";
+                }
+                var inputBox = $("#" + key);
+                inputBox.val(value);
+
+                if (key === "chOnly1" && value === true) {
+                    inputBox.attr("checked", "checked");
+                } else {
+                    inputBox.removeAttr("checked");
+                }
+            });
+        }
+    };
+})
+(jQuery);
+
 $(document).ready(function () {
+
+    TemplateSelector.init();
+
     var config = {
         enableTime: true,
         altInput: true,
@@ -43,61 +81,6 @@ $(document).ready(function () {
             followingProduct.attr('name', 'products[' + (i - 1) + ']');
         }
     });
-
-    $("#createNewProductButton").on('click', function (e) {
-        e.preventDefault();
-
-        var fail = assertRequiredFields();
-        if (fail) {
-
-        } else {
-            var data = {
-                title: $("#productTitle").val(),
-                description: $("#productDescription").val(),
-                cost: $("#productCost").val(),
-                maxSold: $("#maxSold").val(),
-                maxSoldPerCustomer: $("#maxSoldPerCustomer").val()
-            };
-
-            $.ajax({
-                url: '/events/api/v1/products',
-                type: 'POST',
-                headers: {
-                    "X-CSRF-TOKEN": $('input[name="_csrf"]').val(),
-                    'Content-Type': "application/json"
-                },
-                dataType: 'json',
-                cache: false,
-                data: JSON.stringify(data),
-                success: function (data) {
-                    addProductToEvent(data.object.product_id, data.object.product_title);
-
-                    $('#addProduct').modal('hide');
-                },
-                error: function (data) {
-
-                }
-            })
-        }
-    });
-
-    function assertRequiredFields() {
-        var fail = false;
-
-        $('#addProductForm').find('select, textarea, input').each(function () {
-            if (!$(this).hasClass('required')) {
-
-            } else {
-                if (!$(this).val()) {
-                    $(this).addClass('is-invalid');
-                    fail = true;
-                } else {
-                    $(this).removeClass('is-invalid');
-                }
-            }
-        });
-        return fail;
-    }
 
     function addProductToEvent(product_id, product_title) {
         const productInput = '<input type="hidden" id="products{0}" name="products[{1}]" value="{2}">';
