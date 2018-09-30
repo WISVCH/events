@@ -9,10 +9,11 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 /**
- * EventsTemplate enum.
+ * EventTemplate enum.
  */
 public enum EventTemplate {
 
+    /** Template for a tuesday lecture. */
     TUESDAY_LECTURE(
             "T.U.E.S.Day Lecture",
             "T.U.E.S.Day Lecture: ",
@@ -26,6 +27,7 @@ public enum EventTemplate {
             ImmutableList.of(EventCategory.EDUCATIONAL)
     ),
 
+    /** Template for a tuesday lecture with drinks. */
     TUESDAY_LECTURE_WITH_DRINKS(
             "T.U.E.S.Day Lecture with Drinks",
             "T.U.E.S.Day Lecture with Drinks: ",
@@ -94,7 +96,8 @@ public enum EventTemplate {
      * @param categories       of type EventCategory
      */
     EventTemplate(
-            String templateName, String title,
+            String templateName,
+            String title,
             String shortDescription,
             String description,
             LocalDateTime startingTime,
@@ -137,6 +140,6 @@ public enum EventTemplate {
         categories.addAll(this.getCategories());
         object.put("categories", categories);
 
-        return object.toString();
+        return object.toJSONString();
     }
 }
