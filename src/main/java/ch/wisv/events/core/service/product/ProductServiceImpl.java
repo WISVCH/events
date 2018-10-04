@@ -155,9 +155,9 @@ public class ProductServiceImpl implements ProductService {
     public void increaseProductCount(Order order, boolean reservationCount, boolean decrease) {
         order.getOrderProducts().forEach(orderProduct -> {
             if (reservationCount) {
-                orderProduct.getProduct().increaseReserved(order.getAmount().intValue() * (decrease ? -1 : 1));
+                orderProduct.getProduct().increaseReserved(orderProduct.getAmount().intValue() * (decrease ? -1 : 1));
             } else {
-                orderProduct.getProduct().increaseSold(order.getAmount().intValue() * (decrease ? -1 : 1));
+                orderProduct.getProduct().increaseSold(orderProduct.getAmount().intValue() * (decrease ? -1 : 1));
             }
             productRepository.saveAndFlush(orderProduct.getProduct());
         });
