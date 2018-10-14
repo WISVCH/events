@@ -31,7 +31,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckoutShoppingBasket() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
@@ -80,10 +80,10 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckoutShoppingBasketExceedProductLimitEnforcingRightLimit() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 2, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("test", "test ticket", 1.33d, 2, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
-        Product product2 = new Product("test", "test ticket", 1.33d, 10, LocalDateTime.now(), LocalDateTime.now());
+        Product product2 = new Product("test", "test ticket", 1.33d, 10, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product2);
 
         mockMvc.perform(
