@@ -14,6 +14,8 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         this.assertDefaultOrderChecks(order);
         this.assertOrderNotExceedEventLimit(order);
         this.assertOrderNotExceedProductLimit(order);
+        this.assertProductsInSellInterval(order);
     }
 
     /**
@@ -180,6 +183,25 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
             if (ticketSold + orderProduct.getAmount() > product.getMaxSold()) {
                 throw new OrderExceedProductLimitException(product.getMaxSold() - ticketSold);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param order of type Order
+     * @throws OrderInvalidException when Product is ....
+     */
+    private void assertProductsInSellInterval(Order order) throws OrderInvalidException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Product product = orderProduct.getProduct();
+
+            if (product.getSellStart() != null && !LocalDateTime.now().isAfter(product.getSellStart())) {
+                throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
+            }
+
+            if (product.getSellEnd() != null && !LocalDateTime.now().isBefore(product.getSellEnd())) {
+                throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
             }
         }
     }
