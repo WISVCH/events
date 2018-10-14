@@ -24,7 +24,8 @@ public class WebshopServiceImpl implements WebshopService {
     @Override
     public Event filterEventProductNotSalable(Event event) {
         List<Product> salableProducts = event.getProducts().stream()
-                .filter(this.filterProductBySellInterval())
+                .filter(this.isAfterSellStart())
+                .filter(this.isBeforeSellEnd())
                 .filter(this.filterProductSoldOut())
                 .collect(Collectors.toList());
         event.setProducts(salableProducts);
@@ -47,20 +48,41 @@ public class WebshopServiceImpl implements WebshopService {
     }
 
     /**
-     * Check if Product is in sell interval.
-     *
-     * @return Predicate
-     */
-    private Predicate<Product> filterProductBySellInterval() {
-        return product -> LocalDateTime.now().isAfter(product.getSellStart()) && LocalDateTime.now().isBefore(product.getSellEnd());
-    }
-
-    /**
      * Check if Product is not sold out.
      *
      * @return Predicate
      */
     private Predicate<Product> filterProductSoldOut() {
         return product -> product.getMaxSold() == null || product.getSold() != product.getMaxSold();
+    }
+
+    /**
+     * Check if Product is after sell start.
+     *
+     * @return Predicate
+     */
+    private Predicate<Product> isAfterSellStart() {
+        return product -> {
+            if (product.getSellStart() == null) {
+                return true;
+            } else {
+                return LocalDateTime.now().isAfter(product.getSellStart());
+            }
+        };
+    }
+
+    /**
+     * Check if Product is in sell interval.
+     *
+     * @return Predicate
+     */
+    private Predicate<Product> isBeforeSellEnd() {
+        return product -> {
+            if (product.getSellEnd() == null) {
+                return true;
+            } else {
+                return LocalDateTime.now().isBefore(product.getSellEnd());
+            }
+        };
     }
 }

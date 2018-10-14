@@ -14,6 +14,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         this.assertDefaultOrderChecks(order);
         this.assertOrderNotExceedEventLimit(order);
         this.assertOrderNotExceedProductLimit(order);
+        this.assertProductsInSellInterval(order);
     }
 
     /**
@@ -180,6 +182,29 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
             if (ticketSold + orderProduct.getAmount() > product.getMaxSold()) {
                 throw new OrderExceedProductLimitException(product.getMaxSold() - ticketSold);
+            }
+        }
+    }
+
+    /**
+     * Assert is products in Order in the sell interval of each product.
+     *
+     * @param order of type Order
+     *
+     * @throws OrderInvalidException when a product is no longer for sale
+     */
+    private void assertProductsInSellInterval(Order order) throws OrderInvalidException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Product product = orderProduct.getProduct();
+
+            System.out.println("product.getSellStart() = " + product.getSellStart());
+            if (product.getSellStart() != null && product.getSellStart().isAfter(LocalDateTime.now())) {
+                throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
+            }
+
+            System.out.println("product.getSellEnd() = " + product.getSellEnd());
+            if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
+                throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
             }
         }
     }

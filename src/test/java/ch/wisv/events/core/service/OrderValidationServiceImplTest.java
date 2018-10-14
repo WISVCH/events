@@ -20,6 +20,7 @@ import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.core.service.order.OrderValidationServiceImpl;
 import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import org.junit.After;
 import org.junit.Before;
@@ -179,7 +180,16 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         thrown.expectMessage("Product limit exceeded (max 0 tickets allowed).");
 
         orderValidationService.assertOrderIsValid(order);
+    }
 
+    @Test
+    public void assertProductInSellIntervalBefore() throws Exception {
+        this.assertProductInSellInterval(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
+    }
+
+    @Test
+    public void assertProductInSellIntervalAfter() throws Exception {
+        this.assertProductInSellInterval(LocalDateTime.now().minusMinutes(2), LocalDateTime.now().minusMinutes(1));
     }
 
     @Test
@@ -255,5 +265,26 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         order.setStatus(OrderStatus.ERROR);
 
         orderValidationService.assertOrderIsValidForPayment(order);
+    }
+
+    private void assertProductInSellInterval(LocalDateTime localDateTime, LocalDateTime localDateTime2) throws Exception {
+        thrown.expect(OrderInvalidException.class);
+        thrown.expectMessage("Test product is no longer for sale");
+
+        Event event = new Event();
+        event.setMaxSold(15);
+        event.addProduct(product);
+
+        when(eventService.getByProduct(product)).thenReturn(event);
+        when(product.getSellStart()).thenReturn(localDateTime);
+        when(product.getSellEnd()).thenReturn(localDateTime2);
+        when(product.getTitle()).thenReturn("Test product");
+        when(product.getSold()).thenReturn(0);
+        when(product.getReserved()).thenReturn(0);
+        when(product.getMaxSold()).thenReturn(10);
+
+        order.setAmount(1.d);
+
+        orderValidationService.assertOrderIsValid(order);
     }
 }
