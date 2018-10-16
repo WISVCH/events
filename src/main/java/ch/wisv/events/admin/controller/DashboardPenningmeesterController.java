@@ -1,10 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.ticket.TicketService;
-import ch.wisv.events.utils.LdapGroup;
 import java.time.LocalDate;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardPenningmeesterController extends DashboardController {
 
-    /** AuthenticationService. */
-    private final AuthenticationService authenticationService;
-
     /** TicketService. */
     private final TicketService ticketService;
 
     /**
      * DashboardWebhookController constructor.
      *
-     * @param authenticationService of type AuthenticationService
      * @param ticketService         of type TicketService
      */
     @Autowired
-    public DashboardPenningmeesterController(
-            AuthenticationService authenticationService,
-            TicketService ticketService
-    ) {
-        this.authenticationService = authenticationService;
+    public DashboardPenningmeesterController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 
@@ -52,11 +41,6 @@ public class DashboardPenningmeesterController extends DashboardController {
      */
     @GetMapping
     public String index(Model model) {
-        Customer customer = authenticationService.getCurrentCustomer();
-        if (!customer.getLdapGroups().contains(LdapGroup.PENNINGMEESTER) && !customer.getLdapGroups().contains(LdapGroup.CHBEHEER)) {
-            return "redirect:/administrator/";
-        }
-
         model.addAttribute("productMap", this.generateProductMap());
 
         return "admin/penningmeester/index";
