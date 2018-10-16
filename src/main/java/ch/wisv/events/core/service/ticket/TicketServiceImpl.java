@@ -128,6 +128,16 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
+     * Get all Ticket.
+     *
+     * @return List of Ticket
+     */
+    @Override
+    public List<Ticket> getAll() {
+        return ticketRepository.findAll();
+    }
+
+    /**
      * Create a Ticket by an OrderProduct.
      *
      * @param order of type Order

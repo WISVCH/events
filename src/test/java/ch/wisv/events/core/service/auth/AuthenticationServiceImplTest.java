@@ -77,7 +77,7 @@ public class AuthenticationServiceImplTest extends ServiceTest {
         CHUserInfo userInfo = new CHUserInfo();
 
         HashSet<String> ldapGroups = new HashSet<>();
-        ldapGroups.add("BEHEER");
+        ldapGroups.add("CHBEHEER");
         ldapGroups.add("TEST");
 
         userInfo.setLdapGroups(ldapGroups);

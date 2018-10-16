@@ -1,5 +1,6 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -153,10 +154,6 @@ public abstract class ControllerTest {
         return product;
     }
 
-    protected Order createNewOrder() {
-        return this.createOrder(null, new ArrayList<>(), OrderStatus.ANONYMOUS, null);
-    }
-
     protected Order createPaymentOrder(OrderStatus orderStatus, String createdBy) {
         List<Product> products = new ArrayList<>();
         products.add(createProduct());
@@ -184,7 +181,7 @@ public abstract class ControllerTest {
     protected Webhook createWebhook() {
         Webhook webhook = new Webhook();
         webhook.setActive(true);
-        webhook.setLdapGroup(LdapGroup.BEHEER);
+        webhook.setLdapGroup(LdapGroup.CHBEHEER);
         webhook.setPayloadUrl("https://test.frl/");
         webhook.setSecret("secret");
         webhook.setWebhookTriggers(ImmutableList.of(WebhookTrigger.EVENT_CREATE_UPDATE));

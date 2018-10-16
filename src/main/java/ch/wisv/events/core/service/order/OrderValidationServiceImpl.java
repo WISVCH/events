@@ -197,12 +197,10 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             Product product = orderProduct.getProduct();
 
-            System.out.println("product.getSellStart() = " + product.getSellStart());
             if (product.getSellStart() != null && product.getSellStart().isAfter(LocalDateTime.now())) {
                 throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
             }
 
-            System.out.println("product.getSellEnd() = " + product.getSellEnd());
             if (product.getSellEnd() != null && product.getSellEnd().isBefore(LocalDateTime.now())) {
                 throw new OrderInvalidException(product.getTitle() + " is no longer for sale");
             }

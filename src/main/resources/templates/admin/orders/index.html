@@ -17,7 +17,7 @@
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
 <body>
@@ -42,7 +42,6 @@
                         <th>Product(s)</th>
                         <th>Amount</th>
                         <th>Status</th>
-                        <th>Payment</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -61,7 +60,6 @@
                         </td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
                         <td th:text="${order.getStatus()}"></td>
-                        <td th:text="${order.getPaymentMethod()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a th:href="'delete/' + ${order.getPublicReference()} + '/'"
@@ -93,10 +91,10 @@
             ],
             pageLength: 50,
             columnDefs: [
-                {width: "40px", targets: 1},
+                {width: "80px", targets: [0, 1]},
                 {width: "160px", targets: 2},
-                {width: "80px", targets: [4, 5, 6]},
-                {width: "50px", targets: 7}
+                {width: "80px", targets: [4, 5]},
+                {width: "50px", targets: 6}
             ]
         });
 
