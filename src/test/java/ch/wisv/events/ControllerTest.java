@@ -1,5 +1,6 @@
 package ch.wisv.events;
 
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -151,10 +152,6 @@ public abstract class ControllerTest {
         productRepository.saveAndFlush(product);
 
         return product;
-    }
-
-    protected Order createNewOrder() {
-        return this.createOrder(null, new ArrayList<>(), OrderStatus.ANONYMOUS, null);
     }
 
     protected Order createPaymentOrder(OrderStatus orderStatus, String createdBy) {

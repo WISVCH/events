@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class DashboardPenningmeesterController extends DashboardController {
     /**
      * DashboardWebhookController constructor.
      *
-     * @param ticketService         of type TicketService
+     * @param ticketService of type TicketService
      */
     @Autowired
     public DashboardPenningmeesterController(TicketService ticketService) {
@@ -51,25 +52,14 @@ public class DashboardPenningmeesterController extends DashboardController {
      *
      * @return HashMap
      */
-    private HashMap<LocalDate, HashMap<Product, Integer>> generateProductMap() {
-        HashMap<LocalDate, HashMap<Product, Integer>> tickets = new HashMap<>();
+    private Map<LocalDate, Map<Product, Integer>> generateProductMap() {
+        Map<LocalDate, Map<Product, Integer>> tickets = new HashMap<>();
         ticketService.getAll().forEach(ticket -> {
             LocalDate date = ticket.getOrder().getPaidAt().toLocalDate();
             date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
-            HashMap<Product, Integer> list = tickets.get(date);
-            if (list == null) {
-                list = new HashMap<>();
-                list.put(ticket.getProduct(), 1);
-            } else {
-                list.compute(ticket.getProduct(), (k, v) -> {
-                    if (v == null) {
-                        return 1;
-                    } else {
-                        return v + 1;
-                    }
-                });
-            }
+            Map<Product, Integer> list = tickets.getOrDefault(date, new HashMap<Product, Integer>() {{ put(ticket.getProduct(), 0); }});
+            list.computeIfPresent(ticket.getProduct(), (k, v) -> v + 1);
             tickets.put(date, list);
         });
 

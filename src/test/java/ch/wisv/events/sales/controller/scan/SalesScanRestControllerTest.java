@@ -93,7 +93,6 @@ public class SalesScanRestControllerTest extends ControllerTest {
 
         Order order = this.createOrder(createCustomer(), ImmutableList.of(product), OrderStatus.PAID, "sales-scan-test");
         Ticket ticket = ticketService.createByOrder(order).get(0);
-        System.out.println("ticket = " + ticket.getStatus());
 
         mockMvc.perform(
                 post("/api/v1/sales/scan/event/" + event.getKey() + "/code")
