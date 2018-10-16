@@ -6,6 +6,7 @@ import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
@@ -166,6 +167,7 @@ public abstract class ControllerTest {
         order.setOwner(customer);
         order.setStatus(status);
         order.setCreatedBy(createdBy);
+        order.setPaymentMethod(PaymentMethod.IDEAL);
 
         products.forEach(product -> {
             OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
