@@ -98,11 +98,11 @@ public interface OrderService {
     List<Order> getAllReservations();
 
     /**
-     * Get all the pending Order.
+     * Get all the paid Order.
      *
      * @return List of Orders
      */
-    List<Order> getAllPending();
+    List<Order> getAllPaid();
 
     /**
      * Method getByReference returns Order with the given Reference.
@@ -141,4 +141,5 @@ public interface OrderService {
      * @param order of type Order
      */
     void delete(Order order);
+
 }

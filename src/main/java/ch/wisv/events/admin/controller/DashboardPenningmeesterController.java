@@ -1,7 +1,9 @@
 package ch.wisv.events.admin.controller;
 
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.service.ticket.TicketService;
+import ch.wisv.events.core.service.order.OrderService;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,17 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardPenningmeesterController extends DashboardController {
 
-    /** TicketService. */
-    private final TicketService ticketService;
+    /** OrderService. */
+    private final OrderService orderService;
 
     /**
      * DashboardWebhookController constructor.
      *
-     * @param ticketService of type TicketService
+     * @param orderService of type OrderService
      */
     @Autowired
-    public DashboardPenningmeesterController(TicketService ticketService) {
-        this.ticketService = ticketService;
+    public DashboardPenningmeesterController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     /**
@@ -53,16 +55,28 @@ public class DashboardPenningmeesterController extends DashboardController {
      * @return HashMap
      */
     private Map<LocalDate, Map<Product, Integer>> generateProductMap() {
-        Map<LocalDate, Map<Product, Integer>> tickets = new HashMap<>();
-        ticketService.getAll().forEach(ticket -> {
-            LocalDate date = ticket.getOrder().getPaidAt().toLocalDate();
-            date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
+        Map<LocalDate, Map<Product, Integer>> map = new HashMap<>();
 
-            Map<Product, Integer> list = tickets.getOrDefault(date, new HashMap<Product, Integer>() {{ put(ticket.getProduct(), 0); }});
-            list.computeIfPresent(ticket.getProduct(), (k, v) -> v + 1);
-            tickets.put(date, list);
-        });
+        for (Order order : orderService.getAllPaid()) {
+            if (order.getPaymentMethod() == PaymentMethod.IDEAL || order.getPaymentMethod() == PaymentMethod.SOFORT) {
+                LocalDate date = order.getPaidAt().toLocalDate();
+                date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
-        return tickets;
+                Map<Product, Integer> list = map.getOrDefault(date, new HashMap<>());
+                order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getPrice() > 0).forEach(orderProduct -> {
+                    Product product = orderProduct.getProduct();
+                    int value = orderProduct.getAmount().intValue();
+                    if (!list.containsKey(product)) {
+                        list.put(product, value);
+                    } else {
+                        list.put(product, list.get(product) + value);
+                    }
+                });
+
+                map.put(date, list);
+            }
+        }
+
+        return map;
     }
 }

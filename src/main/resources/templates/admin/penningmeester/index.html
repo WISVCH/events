@@ -28,7 +28,7 @@
         <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Penningmeester Overview</h1>
+            <h1>Mollie Overview</h1>
 
             <div th:replace="fragments/messages :: messages"></div>
 
@@ -95,7 +95,7 @@
             ],
             pageLength: 12,
             columnDefs: [
-                {width: "140px", targets: 0}
+                {type: 'date-range', width: "140px", targets: 0}
             ]
         });
 
@@ -113,14 +113,17 @@
             var table = $(value).DataTable({
                 searching: false,
                 paging: false,
-                "bInfo": false
+                "bInfo": false,
+                columnDefs: [
+                    {width: "100px", targets: [1, 2, 3]}
+                ]
             });
 
             table.columns().every(function () {
                 var sum = this
                     .data()
                     .reduce(function (a, b) {
-                        b = b.replace('€ ', '');
+                        b = b.replace('€ ', '').replace('.', '').replace(',', '.');
 
                         var x = parseFloat(a) || 0;
                         var y = parseFloat(b) || 0;
@@ -130,6 +133,7 @@
                 let footer = $(this.footer());
                 if (footer.hasClass("sum")) {
                     if (footer.hasClass("currency")) {
+                        console.log(sum);
                         sum = '€ ' + sum.toFixed(2).replace('.', ',');
                     }
 
@@ -137,8 +141,15 @@
                 }
             });
         });
-    })
-    ;
+    });
+
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "date-range-pre": function (a) {
+            var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            return monthArr.indexOf(a);
+        }
+    });
 </script>
 </body>
 </html>

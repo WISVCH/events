@@ -243,13 +243,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Get all the pending Order.
+     * Get all the paid Order.
      *
      * @return List of Orders
      */
     @Override
-    public List<Order> getAllPending() {
-        return orderRepository.findAllByStatus(OrderStatus.PENDING);
+    public List<Order> getAllPaid() {
+        return orderRepository.findAllByStatus(OrderStatus.PAID);
     }
 
     /**
