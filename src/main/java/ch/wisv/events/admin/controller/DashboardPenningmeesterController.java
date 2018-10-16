@@ -1,7 +1,6 @@
 package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.order.OrderService;
@@ -64,18 +63,15 @@ public class DashboardPenningmeesterController extends DashboardController {
                 date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
                 Map<Product, Integer> list = map.getOrDefault(date, new HashMap<>());
-                for (OrderProduct orderProduct : order.getOrderProducts()) {
-                    if (orderProduct.getPrice() > 0) {
-                        Product product = orderProduct.getProduct();
-                        int value = orderProduct.getAmount().intValue();
-
-                        if (!list.containsKey(product)) {
-                            list.put(product, value);
-                        } else {
-                            list.put(product, list.get(product) + value);
-                        }
+                order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getPrice() > 0).forEach(orderProduct -> {
+                    Product product = orderProduct.getProduct();
+                    int value = orderProduct.getAmount().intValue();
+                    if (!list.containsKey(product)) {
+                        list.put(product, value);
+                    } else {
+                        list.put(product, list.get(product) + value);
                     }
-                }
+                });
 
                 map.put(date, list);
             }

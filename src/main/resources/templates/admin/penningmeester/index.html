@@ -113,7 +113,10 @@
             var table = $(value).DataTable({
                 searching: false,
                 paging: false,
-                "bInfo": false
+                "bInfo": false,
+                columnDefs: [
+                    {width: "100px", targets: [1, 2, 3]}
+                ]
             });
 
             table.columns().every(function () {
