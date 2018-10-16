@@ -184,7 +184,7 @@ public abstract class ControllerTest {
     protected Webhook createWebhook() {
         Webhook webhook = new Webhook();
         webhook.setActive(true);
-        webhook.setLdapGroup(LdapGroup.BEHEER);
+        webhook.setLdapGroup(LdapGroup.CHBEHEER);
         webhook.setPayloadUrl("https://test.frl/");
         webhook.setSecret("secret");
         webhook.setWebhookTriggers(ImmutableList.of(WebhookTrigger.EVENT_CREATE_UPDATE));

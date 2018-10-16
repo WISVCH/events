@@ -87,4 +87,12 @@ public interface TicketService {
      * @param status of type TicketStatus
      */
     void updateStatus(Ticket ticket, TicketStatus status);
+
+    /**
+     * Get all Ticket.
+     *
+     * @return List of Ticket
+     */
+    List<Ticket> getAll();
+
 }

@@ -51,7 +51,7 @@ public class EventsApplicationTest {
     public AuthenticationService authenticationService() {
         AuthenticationService service = Mockito.mock(AuthenticationService.class);
         Customer customer = new Customer();
-        customer.setLdapGroups(ImmutableList.of(LdapGroup.BEHEER));
+        customer.setLdapGroups(ImmutableList.of(LdapGroup.CHBEHEER));
         Mockito.when(service.getCurrentCustomer()).thenReturn(customer);
 
         return service;

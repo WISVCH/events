@@ -74,7 +74,7 @@ public class WebhookPublisher {
      * @return boolean
      */
     private boolean isWebhookAuthenticated(Webhook webhook, Object content) {
-        if (webhook.getLdapGroup() == ch.wisv.events.utils.LdapGroup.BEHEER) {
+        if (webhook.getLdapGroup() == ch.wisv.events.utils.LdapGroup.CHBEHEER) {
             return true;
         } else {
             if (content instanceof Event) {

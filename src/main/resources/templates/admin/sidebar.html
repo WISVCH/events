@@ -52,6 +52,14 @@
             </a>
         </li>
     </ul>
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a th:href="@{/administrator/penningmeester/}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/penningmeester/') ? 'active':''}">
+                <i class="far fa-money-bill-wave fa-fw" aria-hidden="true"></i> Penningmeester
+            </a>
+        </li>
+    </ul>
 </nav>
 </body>
 </html>

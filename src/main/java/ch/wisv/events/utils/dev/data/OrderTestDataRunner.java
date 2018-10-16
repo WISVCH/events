@@ -12,6 +12,7 @@ import ch.wisv.events.core.repository.OrderProductRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.repository.TicketRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -104,6 +105,11 @@ public class OrderTestDataRunner extends TestDataRunner {
                 this.productRepository.saveAndFlush(x.getProduct());
             });
             order.setStatus(OrderStatus.valueOf((String) jsonObject.get("orderStatus")));
+
+            if (order.getStatus() == OrderStatus.PAID) {
+                order.setPaidAt(LocalDateTime.now());
+            }
+
             order.setPaymentMethod(PaymentMethod.valueOf((String) jsonObject.get("paymentMethod")));
             order.setTicketCreated(true);
             order.setAmount(order.getOrderProducts().stream().mapToDouble(x -> x.getAmount() * x.getPrice()).sum());
