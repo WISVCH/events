@@ -105,4 +105,26 @@ public class DashboardOrderControllerTest extends ControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    @Test
+    public void testResendConfirmationMail() throws Exception {
+        Order order = this.createOrder(this.createCustomer(), ImmutableList.of(this.createProduct()), OrderStatus.RESERVATION, "tests");
+
+        mockMvc.perform(get("/administrator/orders/resend-confirmation-mail/" + order.getPublicReference()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/orders/view/" + order.getPublicReference()))
+                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attribute("success", "Order confirmation mail send!"));
+    }
+
+    @Test
+    public void testResendConfirmationMailNotFound() throws Exception {
+        Order order = this.createOrder(this.createCustomer(), ImmutableList.of(this.createProduct()), OrderStatus.RESERVATION, "tests");
+
+        mockMvc.perform(get("/administrator/orders/resend-confirmation-mail/not-found"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/orders/view/not-found"))
+                .andExpect(flash().attributeExists("error"))
+                .andExpect(flash().attribute("error", "Order with reference not-found not found!"));
+    }
+
 }

@@ -9,7 +9,7 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import java.util.List;
 
 /**
- * TicketService.
+ * TicketService interface.
  */
 public interface TicketService {
 
@@ -63,6 +63,15 @@ public interface TicketService {
      * @return List of Tickets
      */
     List<Ticket> getAllByCustomer(Customer customer);
+
+    /**
+     * Get all Tickets by a Order.
+     *
+     * @param order of type Order
+     *
+     * @return List of Tickets
+     */
+    List<Ticket> getAllByOrder(Order order);
 
     /**
      * Create tickets by an Order.

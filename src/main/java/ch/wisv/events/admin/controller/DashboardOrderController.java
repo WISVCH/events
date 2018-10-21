@@ -5,7 +5,9 @@ import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * DashboardOrderController class.
+ */
 @Controller
 @RequestMapping(value = "/administrator/orders")
 @PreAuthorize("hasRole('ADMIN')")
@@ -22,13 +27,27 @@ public class DashboardOrderController extends DashboardController {
     /** OrderService. */
     private final OrderService orderService;
 
+    /** MailService. */
+    private final MailService mailService;
+
+    /** TicketService. */
+    private final TicketService ticketService;
+
     /**
      * DashboardOrderController constructor.
      *
-     * @param orderService OrderService
+     * @param orderService  of type OrderService
+     * @param mailService   of type MailService
+     * @param ticketService of type TicketService
      */
-    public DashboardOrderController(OrderService orderService) {
+    public DashboardOrderController(
+            OrderService orderService,
+            MailService mailService,
+            TicketService ticketService
+    ) {
         this.orderService = orderService;
+        this.mailService = mailService;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -88,6 +107,28 @@ public class DashboardOrderController extends DashboardController {
         }
 
         return "redirect:/administrator/orders/";
+    }
+
+    /**
+     * Resend confirmation mail.
+     *
+     * @param redirect of type RedirectAttributes
+     * @param key      of type String
+     *
+     * @return String
+     */
+    @GetMapping("/resend-confirmation-mail/{key}")
+    public String resendConfirmationMail(RedirectAttributes redirect, @PathVariable String key) {
+        try {
+            Order order = orderService.getByReference(key);
+            mailService.sendOrderConfirmation(order, ticketService.getAllByOrder(order));
+
+            redirect.addFlashAttribute(FLASH_SUCCESS, "Order confirmation mail send!");
+        } catch (EventsException e) {
+            redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
+        }
+
+        return "redirect:/administrator/orders/view/" + key;
     }
 
     /**
