@@ -1,6 +1,5 @@
 package ch.wisv.events;
 
-import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -40,6 +39,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * ControllerTest class.
+ */
 @Transactional
 public abstract class ControllerTest {
 
