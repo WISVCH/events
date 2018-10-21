@@ -115,7 +115,7 @@
                     <div class="card">
                         <h6 class="card-header">Customer</h6>
                         <div class="card-body">
-                            <div class="row form">
+                            <div class="row form mb-4">
                                 <div class="form-group col-sm-12">
                                     <label>Name
                                         <input type="text" class="form-control"
@@ -129,6 +129,14 @@
                                                th:value="${order.getOwner().getEmail()}"
                                                readonly>
                                     </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a th:href="@{'/administrator/orders/resend-confirmation-mail/' + ${order.getPublicReference()}}"
+                                       class="btn btn-block btn-info">
+                                        <i class="fas fa-redo"></i> Send confirmation mail
+                                    </a>
                                 </div>
                             </div>
                         </div>

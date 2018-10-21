@@ -104,6 +104,18 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
+     * Get all Tickets by a Order.
+     *
+     * @param order of type Order
+     *
+     * @return List of Tickets
+     */
+    @Override
+    public List<Ticket> getAllByOrder(Order order) {
+        return ticketRepository.findAllByOrder(order);
+    }
+
+    /**
      * Delete tickets by Order.
      *
      * @param order of type Order
