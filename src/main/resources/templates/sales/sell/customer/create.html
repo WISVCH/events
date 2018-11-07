@@ -25,7 +25,7 @@
         <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
-            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.domain.model.customer.Customer"*/-->
             <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}" th:object="${customer}"
                   method="POST" class="w-100">
                 <div class="row">

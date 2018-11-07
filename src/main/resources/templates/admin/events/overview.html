@@ -1,94 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events - Dashboard > Events</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Event overview</title>
 </head>
-
 <body>
-<nav th:replace="fragments/header :: header"></nav>
-
-<!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-<div class="container-fluid">
-    <div class="row">
-        <nav th:replace="admin/sidebar :: sidebar"></nav>
-
-        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Ticket [[${event.getTitle()}]]</h1>
-
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <div class="table-responsive">
-                <table id="soldProductTable" class="table table-hover">
-                    <thead class="thead-inverse bg-primary">
-                    <tr>
-                        <th>Customer</th>
-                        <th>Email</th>
-                        <th>Product</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!--/*@thymesVar id="soldProduct" type="ch.wisv.events.core.model.order.SoldProduct"*/-->
-                    <tr th:each="ticket : ${tickets}">
-                        <td>
-                            <a th:href="@{'/administrator/customers/view/' + ${ticket.getOwner().getKey()} + '/'}"
-                               th:text="${ticket.getOwner().getName()}"></a>
-                        </td>
-                        <td th:text="${ticket.getOwner().getEmail()}"></td>
-                        <td>
-                            <a th:href="@{'/administrator/products/overview/' + ${ticket.getProduct().getKey()} + '/'}"
-                               th:text="${ticket.getProduct().getTitle()}"></a>
-                        </td>
-                        <td th:text="${ticket.getStatus().toString()}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+<div layout:fragment="content">
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <p th:text="${message}">success message</p>
     </div>
+
+    <table class="table table-striped" id="archiveTables">
+        <thead class="thead-inverse bg-primary">
+        <tr>
+            <th>Posted On</th>
+            <th>Subject</th>
+            <th>Course code</th>
+            <th>Type</th>
+            <th>Handled</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr th:each="post : ${posts}" th:attr="data-key=${post.getKey()}">-->
+        <!--<td th:text="${#calendars.format(post.postedOn,'dd/MM/yyyy HH:mm:ss')}">posted on</td>-->
+        <!--<td th:text="${post.subject}">subject</td>-->
+        <!--<td>-->
+        <!--<span th:if="${post instanceof T(ch.wisv.domain.feedback.EducationFeedback)}"-->
+        <!--th:text="${post.courseCode}">-->
+        <!--</span>-->
+        <!--</td>-->
+        <!--<td>-->
+        <!--<i th:if="${post.feedbackType == T(ch.wisv.domain.feedback.FeedbackType).Positive}"-->
+        <!--class="fas fa-smile fa-fw text-success"></i>-->
+        <!--<i th:if="${post.feedbackType == T(ch.wisv.domain.feedback.FeedbackType).Negative}"-->
+        <!--class="fas fa-frown fa-fw text-danger"></i>-->
+        <!--<i th:if="${post.feedbackType == T(ch.wisv.domain.feedback.FeedbackType).Suggestion}"-->
+        <!--class="fas fa-meh fa-fw text-warning"></i>-->
+        <!--<span th:text="${post.feedbackType}"></span>-->
+        <!--</td>-->
+        <!--<td class="text-right">-->
+        <!--<a class="btn btn-sm btn-danger" th:href="@{'/admin/handle/' + ${post.key}}">-->
+        <!--<i class="fas fa-archive"></i> Unarchive-->
+        <!--</a>-->
+        <!--</td>-->
+        <!--</tr>-->
+        </tbody>
+    </table>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script th:inline="javascript">
-    $(document).ready(function () {
-        var table = $('#soldProductTable');
-        table.DataTable({
-            pageLength: 100,
-            order: [
-                [0, "desc"]
-            ]
-        });
-
-        var dataTablesFilter = $('.dataTables_filter');
-        dataTablesFilter.empty(); // clears the content generated
-        dataTablesFilter.append('<label>' +
-            '<input type="search" id="dataTableFilter" class="form-control" placeholder="Search..." ' +
-            'aria-controls="soldProductTable"></label>');
-
-        $("#dataTableFilter").on('keyup', function () {
-            table.DataTable().search($(this).val()).draw();
-        });
-    });
+<script layout:fragment="script" th:inline="javascript">
+    // $(document).ready(function () {
+    //     var inboxTables = $("#archiveTables");
+    //     inboxTables.DataTable({
+    //         pageLength: 100,
+    //         ordering: false,
+    //         columns: [
+    //             {"width": "15%"},
+    //             {"width": "50%"},
+    //             null,
+    //             null,
+    //             {"width": "80px"}
+    //         ]
+    //     });
+    //     inboxTables.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+    //         /*[+ var link = [[@{/admin/view/}]] + $(this).parent().data('key'); +]*/
+    //         document.location = link;
+    //     });
+    // });
 </script>
 </body>
+</html>

@@ -23,7 +23,7 @@
 <body>
 <nav th:replace="fragments/header :: header"></nav>
 
-<!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+<!--/*@thymesVar id="webhook" type="ch.wisv.events.domain.model.webhook.Webhook"*/-->
 <div class="container-fluid">
     <div class="row">
         <nav th:replace="admin/sidebar :: sidebar"></nav>
@@ -149,7 +149,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                                <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
                                 <tr th:each="event : ${upcoming}">
                                     <td th:text="${event.getTitle()}"></td>
                                     <td>

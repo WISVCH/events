@@ -1,369 +1,232 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events - Dashboard > Events</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link th:href="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.css}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Events</title>
 </head>
-
 <body>
-<nav th:replace="fragments/header :: header"></nav>
+<!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
+<div layout:fragment="content">
+    <h1>Create/update event
+        <div class="dropdown float-right">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Templates
+            </button>
+        </div>
+    </h1>
 
-<!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
-<div class="container-fluid">
-    <div class="row">
-        <nav th:replace="admin/sidebar :: sidebar"></nav>
+    <div th:replace="fragments/messages :: messages"></div>
 
-        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Create/update event
-                <div class="dropdown float-right">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Templates
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <h4 class="dropdown-header">Select a template</h4>
-                        <!--/*@thymesVar id="template" type="ch.wisv.events.admin.utils.EventTemplate"*/-->
-                        <div class="dropdown-item event-template-item"
-                             th:each="template : ${T(ch.wisv.events.admin.utils.EventTemplate).values()}"
-                             th:attr="data-template=${template.toJson()}">
-                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
-                        </div>
-                    </div>
-                </div>
-            </h1>
-
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <form th:action="@{./}" th:object="${event}" method="POST" enctype="multipart/form-data">
-                <input type="hidden" th:field="*{key}" th:value="*{key}">
-
-                <div class="row">
-                    <div class="col">
-                        <div class="card mb-4">
-                            <h6 class="card-header">Information</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="form-group col-12">
-                                        <label>Title*
-                                            <input type="text" class="form-control" required
-                                                   th:field="*{title}"
-                                                   th:value="${event.getTitle()}">
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Short description*
-                                            <input type="text" class="form-control" required
-                                                   th:field="*{shortDescription}"
-                                                   th:value="${event.getShortDescription()}">
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Description*
-                                            <textarea type="text" class="form-control" rows="5" style="height: 150px"
-                                                      th:field="*{description}"
-                                                      th:text="${event.getDescription()}" required></textarea>
-                                        </label>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label>Starting time*
-                                                    <input type="datetime-local" class="form-control" required
-                                                           placeholder="Click to select a date..."
-                                                           th:field="*{start}"
-                                                           th:value="${event.getStart()}">
-                                                </label>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label>Ending time*
-                                                    <input type="datetime-local" class="form-control"
-                                                           placeholder="Click to select a date..."
-                                                           th:field="*{ending}"
-                                                           th:value="${event.getEnding()}">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Location
-                                            <input type="text" class="form-control"
-                                                   th:field="*{location}"
-                                                   th:value="${event.getLocation()}">
-                                        </label>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label>Target*
-                                                    <input type="text" class="form-control" required
-                                                           th:field="*{target}"
-                                                           th:value="${event.getTarget()}">
-                                                </label>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label>Limit</label>
-                                                <input type="text" class="form-control"
-                                                       th:field="*{maxSold}"
-                                                       th:value="${event.getMaxSold()}">
-                                                <small class="form-text text-muted">Leave blank for no limit.</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card mb-4">
-                            <h6 class="card-header">Image</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="custom-file w-100">
-                                                <input type="file" id="file" name="file" class="custom-file-input">
-                                                <span class="custom-file-control"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <h6 class="card-header">Options</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="form-group col-12">
-                                        <label>Status
-                                            <select name="" id="eventStatus" class="form-control"
-                                                    th:field="*{published}" required>
-                                                <option th:each="state : ${T(ch.wisv.events.core.model.event.EventStatus).values()}"
-                                                        th:selected="${event.published.getId() == state.getId()}"
-                                                        th:value="${state}"
-                                                        th:text="${state.getDisplayName()}">
-                                                </option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Organized by
-                                            <select name="" id="organizedBy" class="form-control"
-                                                    th:field="*{organizedBy}" required>
-                                                <!--/*@thymesVar id="group" type="ch.wisv.events.utils.LdapGroup"*/-->
-                                                <option th:each="group : ${T(ch.wisv.events.utils.LdapGroup).values()}"
-                                                        th:value="${group}"
-                                                        th:text="${group.getName()}">
-                                                </option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label class="mb-2">Categories</label>
-                                        <!--/*@thymesVar id="category" type="ch.wisv.events.core.model.event.EventCategory"*/-->
-                                        <div class="form-check"
-                                             th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
-                                            <label class="form-check-label custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input"
-                                                       th:field="*{categories}"
-                                                       th:value="${category}"
-                                                       th:checked="${event.getCategories().contains(category)}">
-                                                <span class="custom-control-indicator"></span>
-                                                <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h6 class="card-header">Products</h6>
-                            <div class="card-body">
-                                <a href="#" class="btn btn-danger btn-block mb-4" data-toggle="modal"
-                                   data-target="#addProduct">
-                                    Add product
-                                </a>
-
-                                <div id="products">
-                                    <input type="hidden" th:field="*{products[__${stat.index}__]}"
-                                           th:value="${product.id}"
-                                           th:each="product, stat : ${event.products}">
-                                </div>
-
-                                <table class="table">
-                                    <thead class="thead-inverse thead-small bg-primary">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="productsTable">
-                                    <tr th:if="${event.products.isEmpty()}" id="noProducts">
-                                        <td colspan="2">No products added to this event.</td>
-                                    </tr>
-                                    <tr th:each="product : ${event.products}">
-                                        <td th:text="${product.getTitle()}"></td>
-                                        <td style='width: 40px;'>
-                                            <a class='btn btn-xs btn-danger remove-product text-white'
-                                               th:data-product-id="${product.getId()}">
-                                                <i class="far fa-fw fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mt-3">
+    <form th:action="${#httpServletRequest.requestURI}" th:object="${event}" method="POST"
+          enctype="multipart/form-data">
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <h6 class="card-header">Information</h6>
                     <div class="card-body">
-                        <div class="form-group mb-0">
-                            <input type="submit" class="btn btn-danger" value="Save event">
+                        <div class="form-group">
+                            <label class="control-label">Title <span class="required">*</span>
+                                <input type="text" class="form-control" th:field="*{title}"
+                                       th:classappend="${errors.containsKey('title')} ? 'is-invalid'"/>
+                                <span class="invalid-feedback" th:text="${errors.get('title')}"></span>
+                            </label>
                         </div>
-                    </div>
-                </div>
-            </form>
-        </main>
-    </div>
-</div>
 
-<div class="modal fade" id="addProduct" tabindex="-1" role="dialog"
-     aria-labelledby="addProductLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductLabel">Add product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="addProductForm">
-                <h4>Search product</h4>
-                <div class="input-group" style="width: 100%">
-                    <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
-                           placeholder="Search for a product">
-                    <span class="input-group-addon">
-                        <i class="fa fa-fw fa-search"></i>
-                    </span>
-                </div>
-                <small class="form-text text-muted">Start typing to look for a product.</small>
+                        <div class="form-group">
+                            <label class="control-label">Short description <span class="required">*</span>
+                                <input type="text" class="form-control" th:field="*{shortDescription}"
+                                       th:classappend="${errors.containsKey('shortDescription')} ? 'is-invalid'"/>
+                                <span class="invalid-feedback" th:text="${errors.get('shortDescription')}"></span>
+                            </label>
+                        </div>
 
-                <h2 class="text-center display-4 border-bottom-0">or</h2>
+                        <div class="form-group">
+                            <label class="control-label">Description <span class="required">*</span>
+                                <textarea type="text" class="form-control" rows="5" th:field="*{description}"
+                                          th:classappend="${errors.containsKey('description')} ? 'is-invalid'"></textarea>
+                                <span class="invalid-feedback" th:text="${errors.get('description')}"></span>
+                            </label>
+                        </div>
 
-                <h4>Create product
-                    <div class="dropdown float-right">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Templates
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <h4 class="dropdown-header">Select a template</h4>
-                            <!--/*@thymesVar id="template" type="ch.wisv.events.admin.utils.EventTemplate"*/-->
-                            <div class="dropdown-item product-template-item"
-                                 th:each="template : ${T(ch.wisv.events.admin.utils.ProductTemplate).values()}"
-                                 th:attr="data-template=${template.toJson()}">
-                                <a class="btn btn-block btn-light text-left"
-                                   th:text="${template.getTemplateName()}"></a>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Starting <span class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{starting}"
+                                               th:classappend="${errors.containsKey('starting')} ? 'is-invalid'"
+                                               placeholder="Click to select a date..."/>
+                                        <span class="invalid-feedback" th:text="${errors.get('starting')}"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Ending <span class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{ending}"
+                                               th:classappend="${errors.containsKey('ending')} ? 'is-invalid'"
+                                               placeholder="Click to select a date..."/>
+                                        <span class="invalid-feedback" th:text="${errors.get('ending')}"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Location <span class="required">*</span>
+                                <input type="text" class="form-control" th:field="*{location}"
+                                       th:classappend="${errors.containsKey('location')} ? 'is-invalid'"/>
+                                <span class="invalid-feedback" th:text="${errors.get('location')}"></span>
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Ticket target <span class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{ticketTarget}"
+                                               th:classappend="${errors.containsKey('ticketTarget')} ? 'is-invalid'"/>
+                                        <span class="invalid-feedback" th:text="${errors.get('ticketTarget')}"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Ticket limit <span class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{ticketLimit}"
+                                               th:classappend="${errors.containsKey('ticketLimit')} ? 'is-invalid'"/>
+                                        <span class="invalid-feedback" th:text="${errors.get('ticketLimit')}"></span>
+                                    </label>
+                                    <small class="form-text text-muted">Fill in zero for no limit.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </h4>
-                <div class="form-group">
-                    <label>Title*
-                        <input type="text" id="productTitle" class="form-control required" placeholder="Product title">
-                    </label>
                 </div>
-                <div class="form-group">
-                    <label>Description
-                        <textarea name="product" id="productDescription" placeholder="Description" rows="2"
-                                  class="form-control"></textarea>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Price*</label>
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fas fa-fw fa-euro-sign"></i>
+            </div>
+            <div class="col-4">
+                <div class="card mb-4">
+                    <h6 class="card-header">Image</h6>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <label for="file" class="btn btn-primary custom-file-upload input-group-prepend">
+                                <i class="fas fa-upload"></i> Upload
+                            </label>
+                            <input type="text" class="form-control border-left-0" id="fileDisplay"
+                                   placeholder="Choose a file..." readonly>
                         </div>
-                        <input type="number" id="productCost" step="0.01" class="form-control required"
-                               placeholder="Price of the product">
+                        <input id="file" name="file" type="file" class="d-none"/>
+                        <small class="form-text text-muted">Max size is 4Mb and only png, jpg are allowed.</small>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-6">
-                        <label>Starting time
-                            <input type="text" class="form-control" placeholder="Click to select a date..."
-                                   id="productSellStart">
-                            <small class="form-text text-muted">
-                                If left empty, it will be set to the current timestamp.
-                            </small>
-                        </label>
-                    </div>
-                    <div class="form-group col-6">
-                        <label>Ending time
-                            <input type="text" class="form-control" placeholder="Click to select a date..."
-                                   id="productSellEnd">
-                            <small class="form-text text-muted">
-                                If left empty, the ticket sales will stop right after the event.
-                            </small>
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
+                <div class="card">
+                    <h6 class="card-header">Options</h6>
+                    <div class="card-body">
                         <div class="form-group">
-                            <label>Available</label>
-                            <input type="number" id="maxSold" step="0.01" class="form-control"
-                                   placeholder="Amount of tickets that are available">
-                            <small class="form-text text-muted">Leave blank for no limit!</small>
+                            <label>Status <span class="required">*</span>
+                                <select class="form-control" th:field="*{status}"
+                                        th:classappend="${errors.containsKey('status')} ? 'is-invalid'">
+                                    <!--/*@thymesVar id="status" type="ch.wisv.events.domain.model.event.EventStatus"*/-->
+                                    <option th:each="status : ${T(ch.wisv.events.domain.model.event.EventStatus).values()}"
+                                            th:value="${status}"
+                                            th:text="${status.getDisplayName()}">
+                                    </option>
+                                </select>
+                                <span class="invalid-feedback" th:text="${errors.get('status')}"></span>
+                            </label>
                         </div>
-                    </div>
-                    <div class="col-6">
                         <div class="form-group">
-                            <label>Max sold per customer*</label>
-                            <input type="number" step="1" class="form-control required" min="1" max="25"
-                                   id="productMaxSoldPerCustomer" placeholder="Amount of ticket that one customer can buy">
-                            <small class="form-text text-muted">Between 1 and 25!</small>
+                            <label>Organized by <span class="required">*</span>
+                                <select class="form-control" th:field="*{organizedBy}"
+                                        th:classappend="${errors.containsKey('organizedBy')} ? 'is-invalid'">
+                                    <option value="">-- Select committee --</option>
+                                    <!--/*@thymesVar id="group" type="ch.wisv.events.domain.model.customer.LdapGroup"*/-->
+                                    <option th:each="group : ${T(ch.wisv.events.domain.model.customer.LdapGroup).values()}"
+                                            th:value="${group}"
+                                            th:text="${group.getName()}">
+                                    </option>
+                                </select>
+                                <span class="invalid-feedback" th:text="${errors.get('organizedBy')}"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-2">Categories <span class="required">*</span>
+                                <!--/*@thymesVar id="category" type="ch.wisv.events.domain.model.event.EventCategory"*/-->
+                                <div class="form-check pl-0"
+                                     th:each="category : ${T(ch.wisv.events.domain.model.event.EventCategory).values()}">
+                                    <label class="form-check-label custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                               th:field="*{categories}"
+                                               th:value="${category}"
+                                               th:checked="${event.getCategories().contains(category)}">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
+                                    </label>
+                                </div>
+                                <span class="invalid-feedback d-block" th:text="${errors.get('categories')}"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-4">
-                    <div class="form-check col-6">
-                        <label class="form-check-label custom-control custom-checkbox">
-                            CH members only
-                            <input type="checkbox" class="custom-control-input" id="productChOnly">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <a class="btn btn-block btn-danger text-white" id="createNewProductButton">Create and add product</a>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            <input type="submit" class="btn btn-danger" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.3/jquery.autocomplete.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script th:src="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.js}"></script>
-<script th:src="@{/js/events/script.min.js}"></script>
+<script layout:fragment="script" th:inline="javascript">
+    var CustomImageInput;
+
+    (function ($) {
+
+        CustomImageInput = {
+            init: function () {
+                CustomImageInput.binds();
+            },
+
+            binds: function () {
+                $("#file").on("change", CustomImageInput.__fileChange)
+            },
+
+            __fileChange: function (e) {
+                e.preventDefault();
+
+                if (this.files[0].size > 4 * 1024 * 1024) {
+                    alert("File size exceeds 4Mb limit");
+                    return false;
+                } else {
+                    $("#fileDisplay").val(this.files[0].name);
+                    return true;
+                }
+            }
+        };
+    })
+    (jQuery);
+
+    $(document).ready(function () {
+        var config = {
+            enableTime: true,
+            altInput: true,
+            altFormat: 'F j, Y H:i',
+            dateFormat: "Z",
+            time_24hr: true
+        };
+        $('#starting').flatpickr(config);
+        $('#ending').flatpickr(config);
+
+        CustomImageInput.init();
+    });
+</script>
 </body>
+</html>

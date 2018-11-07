@@ -40,7 +40,7 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row justify-content-left">
-                <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
+                <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
                 <div class="col-12">
                     <div class="card-deck card-columns-tickets" th:if="${events.size() > 0}">
                         <div class="card mb-4" th:each="event: ${events}">
@@ -51,7 +51,7 @@
                                             <h5 class="col-12 card-title mb-1" th:text="${event.getTitle()}"></h5>
 
                                             <div class="col-12 mb-4">
-                                                <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
+                                                <!--/*@thymesVar id="cat" type="ch.wisv.events.domain.model.event.EventCategory"*/-->
                                                 <div class="badge badge-secondary"
                                                      th:each="cat : ${event.getCategories()}"
                                                      th:text="${cat.getDisplayName()}"></div>

@@ -46,7 +46,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="webhook" type="ch.wisv.events.core.model.webhook.Webhook"*/-->
+                    <!--/*@thymesVar id="webhook" type="ch.wisv.events.domain.model.webhook.Webhook"*/-->
                     <tr th:each="webhook : ${webhooks}" th:attr="data-key=${webhook.getKey()}">
                         <td th:text="${webhook.getPayloadUrl()}"></td>
                         <td th:text="${webhook.getLdapGroup()}"></td>

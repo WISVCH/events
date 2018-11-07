@@ -28,8 +28,8 @@
         <main class="col-12" role="main">
             <div th:replace="fragments/messages :: messages"></div>
 
-            <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
-            <!--/*@thymesVar id="order" type="ch.wisv.events.core.model.order.Order"*/-->
+            <!--/*@thymesVar id="customer" type="ch.wisv.events.domain.model.customer.Customer"*/-->
+            <!--/*@thymesVar id="order" type="ch.wisv.events.domain.model.order.Order"*/-->
             <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}"
                   th:object="${customer}" method="POST" id="formScan">
                 <input type="hidden" th:field="*{rfidToken}" id="rfidToken">

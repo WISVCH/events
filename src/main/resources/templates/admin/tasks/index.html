@@ -43,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="task" type="ch.wisv.events.core.model.webhook.WebhookTask"*/-->
+                    <!--/*@thymesVar id="task" type="ch.wisv.events.domain.model.webhook.WebhookTask"*/-->
                     <tr th:each="task : ${tasks}">
                         <td style="padding: 3px 5px"
                             th:text="${#temporals.format(task.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')}"></td>
