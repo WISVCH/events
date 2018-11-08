@@ -1,11 +1,13 @@
 package ch.wisv.events.domain.model.event;
 
+import ch.wisv.events.domain.converter.ZonedDateTimeConverter;
 import ch.wisv.events.domain.model.AbstractModel;
 import ch.wisv.events.domain.model.customer.LdapGroup;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.validation.constraints.Min;
@@ -58,15 +60,17 @@ public class Event extends AbstractModel {
     /**
      * Starting DateTime of the Event.
      */
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = ZonedDateTimeConverter.class)
     @NotNull(message = "Starting date time can not be null")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime starting;
 
     /**
      * Ending DateTime of the Event.
      */
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = ZonedDateTimeConverter.class)
     @NotNull(message = "Ending date time can not be null")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime ending;
 
     /**

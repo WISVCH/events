@@ -7,15 +7,9 @@
 </head>
 <body>
 <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
+<!--/*@thymesVar id="errors" type="java.util.Map"*/-->
 <div layout:fragment="content">
-    <h1>Create/update event
-        <div class="dropdown float-right">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Templates
-            </button>
-        </div>
-    </h1>
+    <h1>Create/update event</h1>
 
     <div th:replace="fragments/messages :: messages"></div>
 
@@ -54,7 +48,9 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label class="control-label">Starting <span class="required">*</span>
-                                        <input type="text" class="form-control" th:field="*{starting}"
+                                        <input type="text" class="form-control"
+                                               th:field="*{starting}"
+                                               th:value="${event.starting}"
                                                th:classappend="${errors.containsKey('starting')} ? 'is-invalid'"
                                                placeholder="Click to select a date..."/>
                                         <span class="invalid-feedback" th:text="${errors.get('starting')}"></span>
@@ -219,7 +215,7 @@
             enableTime: true,
             altInput: true,
             altFormat: 'F j, Y H:i',
-            dateFormat: "Z",
+            dateFormat: 'Z',
             time_24hr: true
         };
         $('#starting').flatpickr(config);

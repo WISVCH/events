@@ -1,12 +1,12 @@
 package ch.wisv.events.domain.converter;
 
-import java.util.Base64;
+import java.time.ZonedDateTime;
 import javax.persistence.AttributeConverter;
 
 /**
- * ByteArrayConverter.
+ * ZonedDateTimeConverter.
  */
-public class ByteArrayConverter implements AttributeConverter<byte[], String> {
+public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime, String> {
 
     /**
      * Converts the value stored in the entity attribute into the
@@ -17,8 +17,8 @@ public class ByteArrayConverter implements AttributeConverter<byte[], String> {
      * @return the converted data to be stored in the database column
      */
     @Override
-    public String convertToDatabaseColumn(byte[] attribute) {
-        return Base64.getEncoder().encodeToString(attribute);
+    public String convertToDatabaseColumn(ZonedDateTime attribute) {
+        return attribute.toString();
     }
 
     /**
@@ -34,7 +34,7 @@ public class ByteArrayConverter implements AttributeConverter<byte[], String> {
      * @return the converted value to be stored in the entity attribute
      */
     @Override
-    public byte[] convertToEntityAttribute(String dbData) {
-        return Base64.getDecoder().decode(dbData);
+    public ZonedDateTime convertToEntityAttribute(String dbData) {
+        return ZonedDateTime.parse(dbData);
     }
 }

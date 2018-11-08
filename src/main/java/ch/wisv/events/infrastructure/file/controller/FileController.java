@@ -40,7 +40,7 @@ public class FileController {
      * @return Resource
      */
     @ResponseBody
-    @GetMapping(value = "*", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "*", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public Resource getImagePng(HttpServletRequest request) {
         String path = request.getRequestURI();
         String name = path.substring(path.lastIndexOf('/') + 1);

@@ -1,8 +1,10 @@
 package ch.wisv.events.domain.model;
 
+import ch.wisv.events.domain.converter.ZonedDateTimeConverter;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,12 +36,14 @@ public abstract class AbstractModel {
     /**
      * Timestamp at which the model has been created.
      */
+    @Convert(converter = ZonedDateTimeConverter.class)
     @NotNull
     public ZonedDateTime createdAt;
 
     /**
      * Timestamp at which the model has been updated.
      */
+    @Convert(converter = ZonedDateTimeConverter.class)
     @NotNull
     public ZonedDateTime updatedAt;
 
@@ -51,19 +55,5 @@ public abstract class AbstractModel {
         this.createdAt = ZonedDateTime.now();
         this.updatedAt = ZonedDateTime.now();
     }
-
-    /**
-     * Clone the AbstractModel.
-     *
-     * @return AbstractModel
-     */
-    public AbstractModel clone() {
-        try {
-            return (AbstractModel) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return this;
-        }
-    }
-
 }
 
