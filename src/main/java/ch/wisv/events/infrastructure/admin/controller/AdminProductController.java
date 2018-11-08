@@ -24,10 +24,7 @@ public class AdminProductController extends AbstractAdminController<Product> {
      */
     @Autowired
     public AdminProductController(ProductService productService) {
-        super(productService, new Product());
-
-        OBJECT_PLURAL = "products";
-        OBJECT_SIGNULAR = "product";
+        super(productService, new Product(), "products", "product");
     }
 
     /**

@@ -43,32 +43,36 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
     /**
      * Object name in plural.
      */
-    static String OBJECT_PLURAL;
+    private final String OBJECT_PLURAL;
 
     /**
      * Object name in singular.
      */
-    static String OBJECT_SIGNULAR;
+    private final String OBJECT_SIGNULAR;
 
     /**
      * AbstractService.
      */
-    private AbstractService<T> service;
+    private final AbstractService<T> service;
 
     /**
      * AbstractModel.
      */
-    private T emptyModel;
+    private final T emptyModel;
 
     /**
      * AbstractAdminController constructor.
      *
-     * @param service    of type AbstractService
-     * @param emptyModel of type AbstractModel
+     * @param service         of type AbstractService
+     * @param emptyModel      of type AbstractModel
+     * @param object_plural   of type String
+     * @param object_signular of type String
      */
-    AbstractAdminController(AbstractService<T> service, T emptyModel) {
+    AbstractAdminController(AbstractService<T> service, T emptyModel, String object_plural, String object_signular) {
         this.service = service;
         this.emptyModel = emptyModel;
+        OBJECT_PLURAL = object_plural;
+        OBJECT_SIGNULAR = object_signular;
     }
 
     /**

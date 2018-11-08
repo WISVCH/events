@@ -1,224 +1,201 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events - Dashboard > Products</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link th:href="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.css}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Administrator > Create/edit product</title>
 </head>
-
 <body>
-<nav th:replace="fragments/header :: header"></nav>
+<!--/*@thymesVar id="product" type="ch.wisv.products.domain.model.product.Product"*/-->
+<!--/*@thymesVar id="errors" type="java.util.Map"*/-->
+<div layout:fragment="content">
+    <h1>Create/update product</h1>
 
-<!--/*@thymesVar id="product" type="ch.wisv.events.domain.model.product.Product"*/-->
-<div class="container-fluid">
-    <div class="row">
-        <nav th:replace="admin/sidebar :: sidebar"></nav>
+    <div th:replace="fragments/messages :: messages"></div>
 
-        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Create/update product
-                <div class="dropdown float-right">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Templates
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <h4 class="dropdown-header">Select a template</h4>
-                        <!--/*@thymesVar id="template" type="ch.wisv.events.admin.utils.ProductTemplate"*/-->
-                        <div class="dropdown-item product-template-item"
-                             th:each="template : ${T(ch.wisv.events.admin.utils.ProductTemplate).values()}"
-                             th:attr="data-template=${template.toJson()}">
-                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
+    <form th:action="${#httpServletRequest.requestURI}" th:object="${product}" method="POST"
+          enctype="multipart/form-data">
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <h6 class="card-header">Information</h6>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="control-label">Title <span class="required">*</span>
+                                <input type="text" class="form-control" th:field="*{title}"
+                                       th:classappend="${errors.containsKey('title')} ? 'is-invalid'"/>
+                                <span class="invalid-feedback" th:text="${errors.get('title')}"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Description <span class="required">*</span>
+                                <textarea type="text" class="form-control" rows="3" th:field="*{description}"
+                                          th:classappend="${errors.containsKey('description')} ? 'is-invalid'"></textarea>
+                                <span class="invalid-feedback" th:text="${errors.get('description')}"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Price <span class="required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fas fa-fw fa-euro-sign"></i>
+                                </div>
+                                <input type="number" step="0.01" class="form-control" th:field="*{price}"
+                                       th:classappend="${errors.containsKey('price')} ? 'is-invalid'"/>
+                            </div>
+                            <span class="invalid-feedback font-weight-bold d-block"
+                                  th:text="${errors.get('price')}"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Ticket limit <span class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{ticketLimit}"
+                                               th:classappend="${errors.containsKey('ticketLimit')} ? 'is-invalid'"/>
+                                        <span class="invalid-feedback" th:text="${errors.get('ticketLimit')}"></span>
+                                    </label>
+                                    <small class="form-text text-muted">Fill in zero for no limit.</small>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="control-label">Ticket limit per customer <span
+                                            class="required">*</span>
+                                        <input type="text" class="form-control" th:field="*{maxNumberOfTicketPerUser}"
+                                               th:classappend="${errors.containsKey('maxNumberOfTicketPerUser')} ? 'is-invalid'"/>
+                                        <span class="invalid-feedback"
+                                              th:text="${errors.get('maxNumberOfTicketPerUser')}"></span>
+                                    </label>
+                                    <small class="form-text text-muted">Fill in zero for no limit.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-check-label custom-control custom-checkbox">
+                                    CH members only
+                                    <input type="checkbox" class="custom-control-input"
+                                           th:field="*{chOnly}"
+                                           th:checked="${product.isChOnly()}">
+                                    <span class="custom-control-indicator"></span>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-check-label custom-control custom-checkbox">
+                                        Mandatory additional option
+                                        <input type="checkbox" class="custom-control-input"
+                                               th:field="*{mandatoryProductOption}"
+                                               th:checked="${product.isMandatoryProductOption()}">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </h1>
-
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <form th:action="@{./}" th:object="${product}" method="POST">
-                <input type="hidden" th:field="*{key}" th:value="*{key}">
-
-                <div class="row">
-                    <div class="col">
-                        <div class="card mb-4">
-                            <h6 class="card-header">Information</h6>
-                            <div class="card-body">
-                                <div class="row form">
-                                    <div class="form-group col-12">
-                                        <label>Title*
-                                            <input type="text" class="form-control" th:field="*{title}"
-                                                   th:value="${product.getTitle()}" required>
-                                        </label>
+            </div>
+            <div class="col-5">
+                <div class="card">
+                    <h6 class="card-header">Additional options</h6>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <label class="control-label">Title <span class="required">*</span></label>
+                            </div>
+                            <div class="col">
+                                <label class="control-label">Additional cost <span class="required">*</span></label>
+                            </div>
+                        </div>
+                        <div class="option-container">
+                            <div class="row" th:if="${#lists.size(product.getProductOptions()) > 0}"
+                                 th:each="index, stat : ${product.getProductOptions()}">
+                                <input type="hidden" th:field="*{productOptions[__${stat.index}__].publicReference}">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" title="Title"
+                                               placeholder="Additional option"
+                                               th:field="*{productOptions[__${stat.index}__].title}"/>
                                     </div>
-                                    <div class="form-group col-12">
-                                        <label>Description
-                                            <textarea type="text" class="form-control" rows="5" style="height: 50px"
-                                                      th:field="*{description}"
-                                                      th:text="${product.getDescription()}"></textarea>
-                                        </label>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label>Starting time
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Click to select a date..."
-                                                           th:field="*{sellStart}"
-                                                           th:value="${product.getSellStart()}">
-                                                </label>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label>Ending time
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Click to select a date..."
-                                                           th:field="*{sellEnd}"
-                                                           th:value="${product.getSellEnd()}">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-12">
-                                        <label>Price*</label>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon">
                                                 <i class="fas fa-fw fa-euro-sign"></i>
                                             </div>
                                             <input type="number" step="0.01" class="form-control"
-                                                   th:field="*{cost}" th:value="${product.getCost()}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label>Available
-                                                    <input type="text" class="form-control" th:field="*{maxSold}"
-                                                           th:value="${product.getMaxSold()}">
-                                                </label>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label>Max sold per customer*
-                                                    <input type="text" class="form-control" step="1" min="1" max="25"
-                                                           th:field="*{maxSoldPerCustomer}"
-                                                           th:value="${product.getMaxSoldPerCustomer()}"
-                                                           required>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="form-check col-6">
-                                                <label class="form-check-label custom-control custom-checkbox">
-                                                    CH members only
-                                                    <input type="checkbox" class="custom-control-input"
-                                                           th:field="*{chOnly}"
-                                                           th:checked="${product.isChOnly()}">
-                                                    <span class="custom-control-indicator"></span>
-                                                </label>
-                                            </div>
+                                                   title="Additional price"
+                                                   placeholder="Extra cost additional option"
+                                                   th:field="*{productOptions[__${stat.index}__].additionalPrice}"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card mb-4">
-                            <h6 class="card-header">Products</h6>
-                            <div class="card-body">
-                                <a href="#" class="btn btn-danger btn-block mb-4" data-toggle="modal"
-                                   data-target="#addProduct">
-                                    Add product
-                                </a>
-
-                                <div id="products">
-                                    <input type="hidden" th:field="*{products[__${stat.index}__]}"
-                                           th:value="${product.id}"
-                                           th:each="product, stat : ${product.products}">
-                                </div>
-
-                                <table class="table">
-                                    <thead class="thead-inverse thead-small bg-primary">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="productsTable">
-                                    <tr th:if="${product.products.isEmpty()}" id="noProducts">
-                                        <td colspan="2">No products added to this event.</td>
-                                    </tr>
-                                    <tr th:each="product : ${product.products}">
-                                        <td th:text="${product.title}"></td>
-                                        <td style="width: 40px;">
-                                            <a class="btn btn-xs btn-danger remove-product"
-                                               th:data-product-id="${product.id}">
-                                                <i class="far fa-fw fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <a href="#" id="addProductOption" class="btn btn-info btn-block">
+                            <i></i> Add option
+                        </a>
                     </div>
                 </div>
-
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <div class="form-group mb-0">
-                            <input type="submit" class="btn btn-danger" value="Save product">
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </main>
-    </div>
-</div>
-
-<div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductLabel">Add product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="addProductForm">
-                <h4>Search product</h4>
-                <div class="input-group" style="width: 100%">
-                    <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
-                           placeholder="Search for a product">
-                    <span class="input-group-addon">
-                            <i class="fa fa-fw fa-search"></i>
-                        </span>
-                </div>
-                <small class="form-text text-muted">Start typing to look for a product.</small>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            <input type="submit" class="btn btn-danger" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.3/jquery.autocomplete.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script th:src="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.js}"></script>
-<script th:src="@{/js/products/script.min.js}"></script>
+<script layout:fragment="script" th:inline="javascript">
+    var ProductOption;
+
+    (function ($) {
+
+        ProductOption = {
+            count: 0,
+
+            blueprint: "<div class='row'><div class='col-8'><div class='form-group'><input type='text' class='form-control' title='Title' id='%s' name='%s' placeholder='Additional option'/></div></div><div class='col'><div class='form-group'><div class='input-group'><div class='input-group-addon'> <i class='fas fa-fw fa-euro-sign'></i></div><input type='number' step='0.01' class='form-control' id='%s' name='%s' title='Additional price' placeholder='Extra cost additional option' /></div></div></div></div>",
+
+            init: function () {
+                ProductOption.binds();
+                /*[+ var link = [[${product.getProductOptions().size()}]]; +]*/
+                ProductOption.count = link;
+            },
+
+            binds: function () {
+                $("#addProductOption").on("click", ProductOption.__addProductOption)
+            },
+
+            __addProductOption: function (e) {
+                e.preventDefault();
+
+                $(".option-container").append(vsprintf(ProductOption.blueprint, [
+                    'productOptions' + ProductOption.count + '.title',
+                    'productOptions[' + ProductOption.count + '].title',
+                    'productOptions' + ProductOption.count + '.additionalPrice',
+                    'productOptions[' + ProductOption.count + '].additionalPrice'
+                ]));
+                ProductOption.count++;
+            }
+        };
+    })
+    (jQuery);
+
+    $(document).ready(function () {
+        ProductOption.init();
+    });
+</script>
 </body>
+</html>

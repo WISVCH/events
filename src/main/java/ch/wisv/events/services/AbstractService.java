@@ -18,7 +18,7 @@ public abstract class AbstractService<T extends AbstractModel> {
     /**
      * AbstractRepository.
      */
-    private final AbstractRepository<T> repository;
+    protected final AbstractRepository<T> repository;
 
     /**
      * AbstractRepository constructor.
@@ -70,7 +70,7 @@ public abstract class AbstractService<T extends AbstractModel> {
             model = this.create(model);
         }
 
-        repository.save(model);
+        repository.saveAndFlush(model);
     }
 
     /**

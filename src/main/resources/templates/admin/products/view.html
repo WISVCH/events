@@ -1,147 +1,133 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events - Dashboard > Products</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Administrator > View product</title>
 </head>
-
 <body>
-<nav th:replace="fragments/header :: header"></nav>
-
 <!--/*@thymesVar id="product" type="ch.wisv.events.domain.model.product.Product"*/-->
-<div class="container-fluid">
+<div layout:fragment="content">
+
+    <div class="row mb-4">
+        <div class="col">
+            <a th:href="@{'/administrator/products'}" class="btn btn-sm btn-primary">
+                <i class="fas fa-arrow-left"></i> Go back to the overview
+            </a>
+        </div>
+    </div>
+
+    <h1 class="mb-4 border-bottom-0 font-weight-light" th:text="${product.getTitle()}"></h1>
+
+    <div th:replace="fragments/messages :: messages"></div>
+
     <div class="row">
-        <nav th:replace="admin/sidebar :: sidebar"></nav>
+        <div class="col">
+            <div class="card">
+                <h6 class="card-header">Information</h6>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Title
+                            <input type="text" class="form-control" th:value="${product.getTitle()}"
+                                   readonly>
+                        </label>
+                    </div>
 
-        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>[[${product.getTitle()}]]
-                <a class="badge badge-info" th:href="@{'/administrator/products/edit/' + ${product.getKey()} +'/'}">
-                    <i class="fa fa-edit" aria-hidden="true"></i> Edit
-                </a>
-            </h1>
+                    <div class="form-group">
+                        <label class="control-label">Description
+                            <textarea type="text" class="form-control" rows="3" readonly
+                                      th:text="${product.getDescription()}"></textarea>
+                        </label>
+                    </div>
 
-            <div th:replace="fragments/messages :: messages"></div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fas fa-fw fa-euro-sign"></i>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" th:value="${product.getPrice()}"
+                                   readonly/>
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="card mb-4">
-                        <h6 class="card-header">Information</h6>
-                        <div class="card-body">
-                            <div class="row form">
-                                <div class="form-group col-12">
-                                    <label>Description
-                                        <textarea type="text" class="form-control" rows="5" style="height: 50px"
-                                                  th:text="${product.getDescription()}"
-                                                  readonly></textarea>
-                                    </label>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="form-group col-6">
-                                            <label>Starting time
-                                                <input type="text" class="form-control"
-                                                       th:value="${product.getSellStart()}"
-                                                       readonly>
-                                            </label>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label>Ending time
-                                                <input type="text" class="form-control"
-                                                       th:value="${product.getSellEnd()}"
-                                                       readonly>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-12">
-                                    <label>Price</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fas fa-fw fa-euro-sign"></i>
-                                        </div>
-                                        <input type="number" step="0.01" class="form-control"
-                                               th:value="${product.getCost()}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="form-group col-6">
-                                            <label>Available
-                                                <input type="text" class="form-control"
-                                                       th:value="${product.getMaxSold()}"
-                                                       readonly>
-                                            </label>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label>Max sold per customer
-                                                <input type="text" class="form-control"
-                                                       th:value="${product.getMaxSoldPerCustomer()}"
-                                                       readonly>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="form-check col-6">
-                                            <label class="form-check-label custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input"
-                                                       th:checked="${product.isChOnly()}">
-                                                <span class="custom-control-indicator"></span>
-                                                <span class="custom-control-description text-dark font-weight-normal">CH members only</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="control-label">Ticket limit
+                                    <input type="text" class="form-control" th:value="${product.getTicketLimit()}"
+                                           readonly/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="control-label">Ticket limit per customer
+                                    <input type="text" class="form-control" readonly
+                                           th:value="${product.getMaxNumberOfTicketPerUser()}"/>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-check-label custom-control custom-checkbox">
+                                CH members only
+                                <input type="checkbox" class="custom-control-input" readonly
+                                       th:checked="${product.isChOnly()}">
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-check-label custom-control custom-checkbox">
+                                    Mandatory additional option
+                                    <input type="checkbox" class="custom-control-input" readonly
+                                           th:checked="${product.isMandatoryProductOption()}">
+                                    <span class="custom-control-indicator"></span>
+                                </label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card mb-4">
-                        <h6 class="card-header">Products</h6>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead class="thead-inverse thead-small bg-primary">
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Sold</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:if="${product.getProducts().isEmpty()}" id="noProducts">
-                                    <td colspan="2">No products added to this product.</td>
-                                </tr>
-                                <tr th:each="product : ${product.getProducts()}">
-                                    <td>
-                                        <a th:href="@{'/administrator/products/view/' + ${product.getKey()} + '/'}">
-                                            [[${product.getTitle()}]]
-                                        </a>
-                                    </td>
-                                    <td style="width: 120px;" th:text="${product.getSold()}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <a th:href="@{'/administrator/products/edit/' + ${product.getPublicReference()}}"
+                               class="btn btn-block btn-info">
+                                <i class="fa fa-edit" aria-hidden="true"></i> Edit
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a th:href="@{'/administrator/products/delete/' + ${product.getPublicReference()}}"
+                               class="btn btn-block btn-danger">
+                                <i class="far fa-trash-alt"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+            <div class="card">
+                <h6 class="card-header">Additional options</h6>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            th:each="option : ${product.getProductOptions()}">
+                            <span th:text="${option.getTitle()}"></span>
+                            <span class="btn btn-sm btn-primary"
+                                  th:text="'+ € ' + ${#numbers.formatDecimal(option.getAdditionalPrice(), 1, 'POINT', 2, 'COMMA')}">
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
+</html>

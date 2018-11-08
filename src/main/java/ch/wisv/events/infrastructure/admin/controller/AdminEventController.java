@@ -30,11 +30,8 @@ public class AdminEventController extends AbstractAdminController<Event> {
      */
     @Autowired
     public AdminEventController(EventService eventService, DocumentService documentService) {
-        super(eventService, new Event());
+        super(eventService, new Event(), "events", "event");
         this.documentService = documentService;
-
-        OBJECT_PLURAL = "events";
-        OBJECT_SIGNULAR = "event";
     }
 
     /**
