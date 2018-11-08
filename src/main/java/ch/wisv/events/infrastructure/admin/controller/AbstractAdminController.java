@@ -167,6 +167,24 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
     }
 
     /**
+     * Delete a object.
+     *
+     * @param redirect        of type RedirectAttributes
+     * @param publicReference of type String
+     *
+     * @return String
+     */
+    @GetMapping("/delete/{publicReference}")
+    public String delete(RedirectAttributes redirect, @PathVariable String publicReference) {
+        T model = service.getByPublicReference(publicReference);
+        service.delete(model);
+
+        redirect.addFlashAttribute("success", OBJECT_SIGNULAR + " has been deleted");
+
+        return "redirect:/administrator/" + OBJECT_PLURAL;
+    }
+
+    /**
      * Save a file.
      *
      * @param model of type AbstractModel

@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>CH Events | Events</title>
+    <title>CH Events | Administrator > Events</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -23,7 +23,7 @@
             <th>Date</th>
             <th>Title</th>
             <th>Status</th>
-            <th>Published by</th>
+            <th>Organized by</th>
             <th>Progress target</th>
             <th>Actions</th>
         </tr>
@@ -31,16 +31,26 @@
         <tbody>
         <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
         <tr th:each="event : ${events}" th:attr="data-key=${event.getPublicReference()}">
+            <td th:text="${event.getStarting().toLocalDate()}">posted on</td>
             <td th:text="${event.getTitle()}">posted on</td>
-            <td th:text="${event.getTitle()}">posted on</td>
-            <td th:text="${event.getTitle()}">posted on</td>
-            <td th:text="${event.getTitle()}">posted on</td>
-            <td th:text="${event.getTitle()}">posted on</td>
+            <td th:text="${event.getStatus().getDisplayName()}">posted on</td>
+            <td th:text="${event.getOrganizedBy().getName()}">posted on</td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" th:style="'width: 10%;'"></div>
+                </div>
+            </td>
             <td class="text-right">
-                <a class="btn btn-sm btn-danger"
-                   th:href="@{'/administrator/events/edit/' + ${event.getPublicReference()}}">
-                    <i class="fas fa-archive"></i> Unarchive
-                </a>
+                <div class="btn-group" role="group">
+                    <a class="btn btn-sm btn-info"
+                       th:href="@{'/administrator/events/edit/' + ${event.getPublicReference()}}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{'/administrator/events/delete/' + ${event.getPublicReference()}}">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
             </td>
         </tr>
         </tbody>
@@ -55,10 +65,10 @@
             ordering: false,
             columns: [
                 {"width": "15%"},
-                {"width": "50%"},
+                {"width": "40%"},
                 null,
                 null,
-                null,
+                {"width": "15%"},
                 {"width": "80px"}
             ]
         });

@@ -3,13 +3,21 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>CH Events | Events</title>
+    <title>CH Events | Administrator > View event</title>
 </head>
 <body>
 <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
 <div layout:fragment="content">
 
-    <h1 class="display-4 mb-0 border-bottom-0" th:text="${event.getTitle()}"></h1>
+    <div class="row mb-4">
+        <div class="col">
+            <a th:href="@{'/administrator/events'}" class="btn btn-sm btn-primary">
+                <i class="fas fa-arrow-left"></i> Go back to the overview
+            </a>
+        </div>
+    </div>
+
+    <h1 class="mb-4 border-bottom-0 font-weight-light" th:text="${event.getTitle()}"></h1>
 
     <div th:replace="fragments/messages :: messages"></div>
 
@@ -84,8 +92,7 @@
                             </a>
                         </div>
                         <div class="col">
-                            <a th:href="'delete/' + ${event.getPublicReference()} + '/'"
-                               th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.getTitle()} + '?\');'"
+                            <a th:href="@{'/administrator/events/delete/' + ${event.getPublicReference()}}"
                                class="btn btn-block btn-danger">
                                 <i class="far fa-trash-alt"></i> Delete
                             </a>

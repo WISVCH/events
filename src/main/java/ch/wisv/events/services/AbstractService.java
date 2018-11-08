@@ -74,6 +74,23 @@ public abstract class AbstractService<T extends AbstractModel> {
     }
 
     /**
+     * Delete an AbstractModel.
+     *
+     * @param model of type T
+     */
+    public void delete(T model) {
+        this.assertIfDeletable(model);
+        repository.delete(model);
+    }
+
+    /**
+     * Assert if a model is detetable.
+     *
+     * @param model of type T
+     */
+    abstract void assertIfDeletable(T model);
+
+    /**
      * Create of an AbstractModel.
      *
      * @param model of type AbstractModel

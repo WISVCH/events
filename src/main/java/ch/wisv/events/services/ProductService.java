@@ -1,26 +1,26 @@
 package ch.wisv.events.services;
 
-import ch.wisv.events.domain.model.user.User;
-import ch.wisv.events.domain.repository.UserRepository;
+import ch.wisv.events.domain.model.product.Product;
+import ch.wisv.events.domain.repository.ProductRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * UserService class.
+ * ProductService class.
  */
 @Service
 @Transactional
-public class UserService extends AbstractService<User> {
+public class ProductService extends AbstractService<Product> {
 
     /**
-     * UserRepository constructor.
+     * ProductRepository constructor.
      *
-     * @param userRepository of type UserRepository
+     * @param productRepository of type ProductRepository
      */
     @Autowired
-    public UserService(UserRepository userRepository) {
-        super(userRepository);
+    public ProductService(ProductRepository productRepository) {
+        super(productRepository);
     }
 
     /**
@@ -29,7 +29,7 @@ public class UserService extends AbstractService<User> {
      * @param model of type T
      */
     @Override
-    void assertIfDeletable(User model) {
+    void assertIfDeletable(Product model) {
     }
 
     /**
@@ -40,7 +40,7 @@ public class UserService extends AbstractService<User> {
      * @return AbstractModel
      */
     @Override
-    protected User create(User model) {
+    protected Product create(Product model) {
         return model;
     }
 
@@ -53,7 +53,7 @@ public class UserService extends AbstractService<User> {
      * @return AbstractModel
      */
     @Override
-    protected User update(User model, User existingModel) {
+    protected Product update(Product model, Product existingModel) {
         return model;
     }
 }

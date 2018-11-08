@@ -25,6 +25,15 @@ public class EventService extends AbstractService<Event> {
     }
 
     /**
+     * Assert if a model is detetable.
+     *
+     * @param model of type T
+     */
+    @Override
+    void assertIfDeletable(Event model) {
+    }
+
+    /**
      * Create of an AbstractModel.
      *
      * @param model of type AbstractModel
