@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Administrator > View user</title>
+</head>
+<body>
+<!--/*@thymesVar id="user" type="ch.wisv.events.domain.model.user.User"*/-->
+<!--/*@thymesVar id="errors" type="java.util.Map"*/-->
+<div layout:fragment="content">
+    <div class="row mb-4">
+        <div class="col">
+            <a th:href="@{'/administrator/users'}" class="btn btn-sm btn-primary">
+                <i class="fas fa-arrow-left"></i> Go back to the overview
+            </a>
+        </div>
+    </div>
+
+    <h1 class="mb-4 border-bottom-0 font-weight-light" th:text="${user.getName()}"></h1>
+
+    <div th:replace="fragments/messages :: messages"></div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <h6 class="card-header">Details</h6>
+                <div class="card-body">
+                    <div class="form">
+                        <div class="form-group">
+                            <label>WISVCH Sub
+                                <input type="text" class="form-control" th:value="${user.getSub()}" readonly/>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail <span class="required">*</span>
+                                <input type="text" class="form-control" th:value="${user.getEmail()}" readonly/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <a th:href="@{'/administrator/users/edit/' + ${user.getPublicReference()}}"
+                               class="btn btn-block btn-info">
+                                <i class="fa fa-edit" aria-hidden="true"></i> Edit
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a th:href="@{'/administrator/users/delete/' + ${user.getPublicReference()}}"
+                               class="btn btn-block btn-danger">
+                                <i class="far fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

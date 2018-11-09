@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Administrator > Users</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Users
+        <a class="badge badge-danger" th:href="@{'/administrator/users/create'}">
+            <i class="fa fa-plus" aria-hidden="true"></i> New
+        </a>
+    </h1>
+
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <p th:text="${message}">success message</p>
+    </div>
+
+    <table id="userTable" class="table table-striped">
+        <thead class="thead-inverse bg-primary">
+        <tr>
+            <th>Name</th>
+            <th>E-mail</th>
+            <th>WISVCH Sub</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="user" type="ch.wisv.events.domain.model.user.User"*/-->
+        <tr th:each="user : ${users}" th:attr="data-key=${user.getPublicReference()}">
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td>
+                <span th:text="${user.getSub()}"></span>
+                <span class="text-warning">
+                                <i class="fa fa-question-circle-o fa-fw" data-toggle="tooltip"
+                                   title="Not verified by dienst2 yet"
+                                   aria-hidden="true"></i>
+                            </span>
+            </td>
+            <td class="text-right">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-sm btn-info"
+                       th:href="@{'/administrator/users/edit/' + ${user.getPublicReference()}}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{'/administrator/users/delete/' + ${user.getPublicReference()}}">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    $(document).ready(function () {
+        var inboxTables = $("#userTable");
+        inboxTables.DataTable({
+            pageLength: 100,
+            ordering: false,
+            columns: [
+                {"width": "40%"},
+                {"width": "20%"},
+                {"width": "15%"},
+                {"width": "80px"}
+            ]
+        });
+        inboxTables.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/administrator/users/view/}]] + $(this).parent().data('key'); +]*/
+            document.location = link;
+        });
+    });
+</script>
+</body>
+</html>

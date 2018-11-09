@@ -84,7 +84,7 @@ public abstract class AbstractService<T extends AbstractModel> {
     }
 
     /**
-     * Assert if a model is detetable.
+     * Assert if a model is deletable.
      *
      * @param model of type T
      */

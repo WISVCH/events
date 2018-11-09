@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Administrator > Create/edit user</title>
+</head>
+<body>
+<!--/*@thymesVar id="user" type="ch.wisv.events.domain.model.user.User"*/-->
+<!--/*@thymesVar id="errors" type="java.util.Map"*/-->
+<div layout:fragment="content">
+    <h1 class="mb-4 border-bottom-0 font-weight-light">Create/update user</h1>
+
+    <div th:replace="fragments/messages :: messages"></div>
+
+    <form th:action="${#httpServletRequest.requestURI}" th:object="${user}" method="POST">
+        <div class="card">
+            <h6 class="card-header">Details</h6>
+            <div class="card-body">
+                <div class="form">
+                    <div class="form-group">
+                        <label>WISVCH Sub
+                            <input type="text" class="form-control" th:field="*{sub}"
+                                   th:classappend="${errors.containsKey('sub')} ? 'is-invalid'"/>
+                            <span class="invalid-feedback" th:text="${errors.get('sub')}"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Name <span class="required">*</span>
+                            <input type="text" class="form-control" th:field="*{name}"
+                                   th:classappend="${errors.containsKey('name')} ? 'is-invalid'"/>
+                            <span class="invalid-feedback" th:text="${errors.get('name')}"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail <span class="required">*</span>
+                            <input type="text" class="form-control" th:field="*{email}"
+                                   th:classappend="${errors.containsKey('email')} ? 'is-invalid'"/>
+                            <span class="invalid-feedback" th:text="${errors.get('email')}"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="form-group mb-0">
+                    <input type="submit" class="btn btn-danger" value="Save customer">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

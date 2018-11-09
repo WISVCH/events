@@ -53,7 +53,7 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
     /**
      * AbstractService.
      */
-    private final AbstractService<T> service;
+    protected final AbstractService<T> service;
 
     /**
      * AbstractModel.

@@ -16,18 +16,23 @@ import org.hibernate.validator.constraints.NotEmpty;
 @EqualsAndHashCode(callSuper = true)
 public class User extends AbstractModel {
 
+    /**
+     * WISVCH sub.
+     */
     @Column(unique = true)
     private String sub;
 
-    @NotEmpty
+    /**
+     * Name of the User.
+     */
+    @NotEmpty(message = "Name cannot be empty")
     private String name;
 
+    /**
+     * Email of the User.
+     */
     @Column(unique = true)
-    @Email
-    @NotEmpty
+    @Email(message = "Not a well-formed email address")
+    @NotEmpty(message = "Email cannot be empty")
     private String email;
-
-    public User() {
-        super();
-    }
 }
