@@ -1,11 +1,13 @@
 package ch.wisv.events.domain.model.product;
 
 import ch.wisv.events.domain.model.AbstractModel;
+import ch.wisv.events.domain.model.event.Event;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -45,6 +47,12 @@ public class Product extends AbstractModel {
     @NotNull(message = "Price cannot be null")
     @Min(value = 0, message = "Price should be 0 or higher")
     private double price;
+
+    /**
+     * Event this product is linked to.
+     */
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Event.class)
+    private Event event;
 
     /**
      * Ticket limit of the product.

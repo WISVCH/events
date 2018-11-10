@@ -7,6 +7,7 @@ import ch.wisv.events.domain.repository.AbstractRepository;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.context.ApplicationEventPublisher;
 
 /**
  * AbstractService class.
@@ -16,16 +17,23 @@ import java.util.Optional;
 public abstract class AbstractService<T extends AbstractModel> {
 
     /**
+     * ApplicationEventPublisher.
+     */
+    final ApplicationEventPublisher publisher;
+
+    /**
      * AbstractRepository.
      */
-    protected final AbstractRepository<T> repository;
+    private final AbstractRepository<T> repository;
 
     /**
      * AbstractRepository constructor.
      *
+     * @param publisher of type ApplicationEventPublisher
      * @param repository of type AbstractRepository
      */
-    AbstractService(AbstractRepository<T> repository) {
+    AbstractService(ApplicationEventPublisher publisher, AbstractRepository<T> repository) {
+        this.publisher = publisher;
         this.repository = repository;
     }
 
@@ -71,7 +79,15 @@ public abstract class AbstractService<T extends AbstractModel> {
         }
 
         repository.saveAndFlush(model);
+        this.afterSave(model);
     }
+
+    /**
+     * Something to do after the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    abstract void afterSave(T model);
 
     /**
      * Delete an AbstractModel.
@@ -89,6 +105,13 @@ public abstract class AbstractService<T extends AbstractModel> {
      * @param model of type T
      */
     abstract void assertIfDeletable(T model);
+
+    /**
+     * Something to do after the object has been deleted.
+     *
+     * @param model of type AbstractModel
+     */
+    abstract void afterDelete(T model);
 
     /**
      * Create of an AbstractModel.

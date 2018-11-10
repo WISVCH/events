@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * AbstractModel entity.
+ */
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -50,7 +53,7 @@ public abstract class AbstractModel {
     /**
      * AbstractModel constructor.
      */
-    public AbstractModel() {
+    protected AbstractModel() {
         this.publicReference = UUID.randomUUID().toString();
         this.createdAt = ZonedDateTime.now();
         this.updatedAt = ZonedDateTime.now();

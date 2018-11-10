@@ -4,12 +4,14 @@ import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.product.ProductOption;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
 import ch.wisv.events.domain.repository.ProductRepository;
+import ch.wisv.events.webhook.event.CreateUpdate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,17 +29,18 @@ public class ProductService extends AbstractService<Product> {
     /**
      * ProductRepository constructor.
      *
-     * @param productRepository of type ProductRepository
+     * @param publisher               of type ApplicationEventPublisher
+     * @param productRepository       of type ProductRepository
      * @param productOptionRepository of type ProductOptionRepository
      */
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductOptionRepository productOptionRepository) {
-        super(productRepository);
+    public ProductService(ApplicationEventPublisher publisher, ProductRepository productRepository, ProductOptionRepository productOptionRepository) {
+        super(publisher, productRepository);
         this.productOptionRepository = productOptionRepository;
     }
 
     /**
-     * Save the ProductOptions
+     * Save the ProductOptions.
      *
      * @param model of type Product
      *
@@ -62,12 +65,32 @@ public class ProductService extends AbstractService<Product> {
     }
 
     /**
+     * Something to do after the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterSave(Product model) {
+        publisher.publishEvent(new CreateUpdate(model));
+    }
+
+    /**
      * Assert if a model is deletable.
      *
      * @param model of type T
      */
     @Override
     void assertIfDeletable(Product model) {
+    }
+
+    /**
+     * Something to do after the object has been deleted.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterDelete(Product model) {
+        publisher.publishEvent(new CreateUpdate(model));
     }
 
     /**

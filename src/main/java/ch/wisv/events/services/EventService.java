@@ -2,9 +2,12 @@ package ch.wisv.events.services;
 
 import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.repository.EventRepository;
+import ch.wisv.events.webhook.event.CreateUpdate;
+import ch.wisv.events.webhook.event.Delete;
 import static java.util.Objects.isNull;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,20 +20,41 @@ public class EventService extends AbstractService<Event> {
     /**
      * EventRepository constructor.
      *
+     * @param publisher of type ApplicationEventPublisher
      * @param eventRepository of type EventRepository
      */
     @Autowired
-    public EventService(EventRepository eventRepository) {
-        super(eventRepository);
+    public EventService(ApplicationEventPublisher publisher, EventRepository eventRepository) {
+        super(publisher, eventRepository);
     }
 
     /**
-     * Assert if a model is detetable.
+     * Something to do after the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterSave(Event model) {
+        publisher.publishEvent(new CreateUpdate(model));
+    }
+
+    /**
+     * Assert if a model is deletable.
      *
      * @param model of type T
      */
     @Override
     void assertIfDeletable(Event model) {
+    }
+
+    /**
+     * Something to do after the object has been deleted.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterDelete(Event model) {
+        publisher.publishEvent(new Delete(model));
     }
 
     /**

@@ -30,7 +30,7 @@ public class EventsApplication {
     }
 
     /**
-     * Enables Time formating in thymeleaf.
+     * Enables Time formatting in thymeleaf.
      *
      * @return Java8TimeDialect
      */

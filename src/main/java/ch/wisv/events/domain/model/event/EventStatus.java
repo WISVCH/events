@@ -18,7 +18,7 @@ public enum EventStatus {
     NOT_PUBLISHED("Not published");
 
     /**
-     * Display name of the status
+     * Display name of the status.
      */
     @Getter
     private final String displayName;

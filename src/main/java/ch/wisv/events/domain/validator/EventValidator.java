@@ -4,7 +4,7 @@ import ch.wisv.events.domain.model.event.Event;
 import static java.util.Objects.nonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
+
 import org.springframework.validation.Validator;
 
 /**
@@ -43,7 +43,7 @@ public class EventValidator implements Validator {
      * @param target the object that is to be validated (can be {@code null})
      * @param errors contextual state about the validation process (never {@code null})
      *
-     * @see ValidationUtils
+     * @see org.springframework.validation.ValidationUtils
      */
     @Override
     public void validate(Object target, Errors errors) {

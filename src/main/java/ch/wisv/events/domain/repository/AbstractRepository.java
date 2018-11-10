@@ -7,6 +7,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  * EventRepository.
+ *
+ * @param <T> of type AbstractModel
  */
 @NoRepositoryBean
 public interface AbstractRepository<T extends AbstractModel> extends JpaRepository<T, Integer> {

@@ -26,10 +26,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public class DocumentService {
 
+    /**
+     * Base URL to the uploaded image.
+     */
     @NotNull
     @Value("${wisvch.events.upload.image.cdn}")
     private String imageCDN;
 
+    /**
+     * Path the upload file is save to.
+     */
     @NotNull
     @Value("${wisvch.events.upload.path}")
     private String uploadPath;
@@ -45,6 +51,8 @@ public class DocumentService {
      * Save a MultipartFile into a Document.
      *
      * @param multipartFile of type MultipartFile
+     *
+     * @return String
      */
     public String saveFile(MultipartFile multipartFile) {
         Path rootLocation = Paths.get(uploadPath);

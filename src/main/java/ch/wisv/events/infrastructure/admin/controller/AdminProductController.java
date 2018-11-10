@@ -5,8 +5,6 @@ import ch.wisv.events.services.ProductService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,16 +23,6 @@ public class AdminProductController extends AbstractAdminController<Product> {
     @Autowired
     public AdminProductController(ProductService productService) {
         super(productService, new Product(), "products", "product");
-    }
-
-    /**
-     * Add the specific ProductValidator
-     *
-     * @param binder of type WebDataBinder
-     */
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-
     }
 
     /**

@@ -3,13 +3,18 @@ package ch.wisv.events.domain.model.event;
 import ch.wisv.events.domain.converter.ZonedDateTimeConverter;
 import ch.wisv.events.domain.model.AbstractModel;
 import ch.wisv.events.domain.model.customer.LdapGroup;
+import ch.wisv.events.domain.model.product.Product;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -102,7 +107,7 @@ public class Event extends AbstractModel {
      */
     @ElementCollection
     @NotEmpty(message = "Select at least one category")
-    private List<EventCategory> categories;
+    private List<EventCategory> categories = new ArrayList<>();
 
     /**
      * Feature image of the Event.
@@ -110,11 +115,18 @@ public class Event extends AbstractModel {
     private String image;
 
     /**
+     * Products of the Event.
+     */
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Product.class)
+    @OrderBy(value = "price ASC")
+    private List<Product> products = new ArrayList<>();
+
+    /**
      * Event constructor.
      */
     public Event() {
         super();
         this.status = EventStatus.NOT_PUBLISHED;
-        this.categories = new ArrayList<>();
     }
 }

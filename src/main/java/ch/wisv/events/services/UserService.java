@@ -6,6 +6,7 @@ import ch.wisv.events.domain.repository.UserRepository;
 import javax.transaction.Transactional;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,11 +24,12 @@ public class UserService extends AbstractService<User> {
     /**
      * UserRepository constructor.
      *
+     * @param publisher      of type ApplicationEventPublisher
      * @param userRepository of type UserRepository
      */
     @Autowired
-    public UserService(UserRepository userRepository) {
-        super(userRepository);
+    public UserService(ApplicationEventPublisher publisher, UserRepository userRepository) {
+        super(publisher, userRepository);
         this.userRepository = userRepository;
     }
 
@@ -63,6 +65,17 @@ public class UserService extends AbstractService<User> {
     }
 
     /**
+     * Set sub to null if it is left empty.
+     *
+     * @param model of type User
+     */
+    private void setSubToNullIfEmpty(User model) {
+        if (isEmpty(model.getSub())) {
+            model.setSub(null);
+        }
+    }
+
+    /**
      * Create of an AbstractModel.
      *
      * @param model of type AbstractModel
@@ -71,9 +84,7 @@ public class UserService extends AbstractService<User> {
      */
     @Override
     protected User create(User model) {
-        if (isEmpty(model.getSub())) {
-            model.setSub(null);
-        }
+        this.setSubToNullIfEmpty(model);
 
         return model;
     }
@@ -88,9 +99,7 @@ public class UserService extends AbstractService<User> {
      */
     @Override
     protected User update(User model, User existingModel) {
-        if (isEmpty(model.getSub())) {
-            model.setSub(null);
-        }
+        this.setSubToNullIfEmpty(model);
 
         return model;
     }

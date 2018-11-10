@@ -5,7 +5,6 @@ import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.services.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
@@ -15,7 +14,7 @@ import org.springframework.validation.Validator;
 public class UserValidator implements Validator {
 
     /**
-     * UserRepository
+     * UserService.
      */
     private final UserService userService;
 
@@ -58,7 +57,7 @@ public class UserValidator implements Validator {
      * @param target the object that is to be validated (can be {@code null})
      * @param errors contextual state about the validation process (never {@code null})
      *
-     * @see ValidationUtils
+     * @see org.springframework.validation.ValidationUtils
      */
     @Override
     public void validate(Object target, Errors errors) {

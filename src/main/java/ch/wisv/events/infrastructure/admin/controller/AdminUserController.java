@@ -29,7 +29,7 @@ public class AdminUserController extends AbstractAdminController<User> {
     }
 
     /**
-     * Add the specific UserValidator
+     * Add the specific UserValidator.
      *
      * @param binder of type WebDataBinder
      */

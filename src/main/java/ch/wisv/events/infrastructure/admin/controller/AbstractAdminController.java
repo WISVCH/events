@@ -41,19 +41,19 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
     private static final String DEFAULT_PATH_CREATE_EDIT_VIEW = "admin/%s/%s";
 
     /**
+     * AbstractService.
+     */
+    final AbstractService<T> service;
+
+    /**
      * Object name in plural.
      */
-    private final String OBJECT_PLURAL;
+    private final String objectPlural;
 
     /**
      * Object name in singular.
      */
-    private final String OBJECT_SIGNULAR;
-
-    /**
-     * AbstractService.
-     */
-    protected final AbstractService<T> service;
+    private final String objectSingular;
 
     /**
      * AbstractModel.
@@ -65,14 +65,14 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
      *
      * @param service         of type AbstractService
      * @param emptyModel      of type AbstractModel
-     * @param object_plural   of type String
-     * @param object_signular of type String
+     * @param objectPlural   of type String
+     * @param objectSingular of type String
      */
-    AbstractAdminController(AbstractService<T> service, T emptyModel, String object_plural, String object_signular) {
+    AbstractAdminController(AbstractService<T> service, T emptyModel, String objectPlural, String objectSingular) {
         this.service = service;
         this.emptyModel = emptyModel;
-        OBJECT_PLURAL = object_plural;
-        OBJECT_SIGNULAR = object_signular;
+        this.objectPlural = objectPlural;
+        this.objectSingular = objectSingular;
     }
 
     /**
@@ -84,10 +84,10 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
      */
     @GetMapping
     public String index(Model model) {
-        model.addAttribute(OBJECT_PLURAL, service.getAll());
+        model.addAttribute(objectPlural, service.getAll());
         model.addAllAttributes(this.beforeIndex());
 
-        return format(DEFAULT_PATH_INDEX_VIEW, OBJECT_PLURAL);
+        return format(DEFAULT_PATH_INDEX_VIEW, objectPlural);
     }
 
     /**
@@ -100,16 +100,17 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
      */
     @GetMapping("/view/{publicReference}")
     public String view(Model model, @PathVariable String publicReference) {
-        model.addAttribute(OBJECT_SIGNULAR, service.getByPublicReference(publicReference));
+        model.addAttribute(objectSingular, service.getByPublicReference(publicReference));
         model.addAllAttributes(this.beforeView());
 
-        return format(DEFAULT_PATH_VIEW_VIEW, OBJECT_PLURAL);
+        return format(DEFAULT_PATH_VIEW_VIEW, objectPlural);
     }
 
     /**
      * Edit a specific Object.
      *
      * @param model of type Model
+     * @param publicReference of type String
      *
      * @return String
      */
@@ -118,16 +119,16 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
         if (!model.containsAttribute("errors")) {
             model.addAttribute("errors", new HashMap<String, String>());
         }
-        if (!model.containsAttribute(OBJECT_SIGNULAR)) {
+        if (!model.containsAttribute(objectSingular)) {
             if (isNotEmpty(publicReference)) {
-                model.addAttribute(OBJECT_SIGNULAR, service.getByPublicReference(publicReference));
+                model.addAttribute(objectSingular, service.getByPublicReference(publicReference));
             } else {
-                model.addAttribute(OBJECT_SIGNULAR, emptyModel);
+                model.addAttribute(objectSingular, emptyModel);
             }
         }
         model.addAllAttributes(this.beforeCreateEdit());
 
-        return format(DEFAULT_PATH_CREATE_EDIT_VIEW, OBJECT_PLURAL, OBJECT_SIGNULAR);
+        return format(DEFAULT_PATH_CREATE_EDIT_VIEW, objectPlural, objectSingular);
     }
 
     /**
@@ -156,18 +157,18 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
             }
 
             redirect.addFlashAttribute("errors", errorMessages);
-            redirect.addFlashAttribute(OBJECT_SIGNULAR, model);
+            redirect.addFlashAttribute(objectSingular, model);
 
             if (isNotEmpty(publicReference)) {
-                return format("redirect:/administrator/%s/edit/%s", OBJECT_PLURAL, model.getPublicReference());
+                return format("redirect:/administrator/%s/edit/%s", objectPlural, model.getPublicReference());
             }
-            return format("redirect:/administrator/%s/create", OBJECT_PLURAL);
+            return format("redirect:/administrator/%s/create", objectPlural);
         }
 
         model = this.saveFile(model, file);
         service.save(model);
 
-        return format("redirect:/administrator/%s/view/%s", OBJECT_PLURAL, model.getPublicReference());
+        return format("redirect:/administrator/%s/view/%s", objectPlural, model.getPublicReference());
     }
 
     /**
@@ -183,9 +184,9 @@ public abstract class AbstractAdminController<T extends AbstractModel> {
         T model = service.getByPublicReference(publicReference);
         service.delete(model);
 
-        redirect.addFlashAttribute("success", OBJECT_SIGNULAR + " has been deleted");
+        redirect.addFlashAttribute("success", objectSingular + " has been deleted");
 
-        return "redirect:/administrator/" + OBJECT_PLURAL;
+        return "redirect:/administrator/" + objectPlural;
     }
 
     /**

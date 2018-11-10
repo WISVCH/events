@@ -5,6 +5,7 @@ import lombok.Getter;
 /**
  * LdapGroup enum containing a list of all active committees of CH.
  */
+@SuppressWarnings("CheckStyle")
 public enum LdapGroup {
 
     AKCIE("AkCie"),

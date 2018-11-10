@@ -35,7 +35,7 @@ public class AdminEventController extends AbstractAdminController<Event> {
     }
 
     /**
-     * Add the specific EventValidator
+     * Add the specific EventValidator.
      *
      * @param binder of type WebDataBinder
      */

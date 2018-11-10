@@ -81,7 +81,7 @@ public class ChConnectConfiguration {
     }
 
     /**
-     * Get the Registerd Client.
+     * Get the Registered Client.
      *
      * @return RegisteredClient
      */
