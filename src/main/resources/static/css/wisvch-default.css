@@ -291,18 +291,8 @@ h1 .badge-danger, .btn-danger {
     border-color: #ef4545 !important;
 }
 
-h1 .badge-info, .btn-info {
-    border-color: #058cce;
-    background-color: #058cce;
-}
-
-.badge-info:hover, .btn-info:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
-    color: #058cce !important;
-    border-color: #058cce !important;
-}
-
-.btn-success {
+.btn-success, .badge-success {
+    color: #fff;
     border-color: #8ac926;
     background-color: #8ac926;
 }
@@ -311,6 +301,11 @@ h1 .badge-info, .btn-info {
     background: rgba(255, 255, 255, 0.75) !important;
     color: #8ac926 !important;
     border-color: #8ac926 !important;
+}
+
+.btn-primary:active, .btn-primary:focus {
+    color: #40556a !important;
+    border-color: #40556a !important;
 }
 
 /**
@@ -416,4 +411,12 @@ h1 .badge-info, .btn-info {
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:active {
     background-color: #ffffff;
+}
+
+/**
+ * Pills
+ */
+.badge-pill {
+    border-radius: 0;
+    padding: .5rem 1rem;
 }

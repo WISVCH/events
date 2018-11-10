@@ -11,8 +11,8 @@
 
     <div class="row mb-4">
         <div class="col">
-            <a th:href="@{'/administrator/products'}" class="btn btn-sm btn-primary">
-                <i class="fas fa-arrow-left"></i> Go back to the overview
+            <a th:href="${#httpServletRequest.getHeader('Referer')}" class="btn btn-sm btn-primary">
+                <i class="fas fa-arrow-left"></i> Go back
             </a>
         </div>
     </div>

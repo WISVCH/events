@@ -6,8 +6,9 @@
     <title>CH Events | Administrator > Products</title>
 </head>
 <body>
+<!--/*@thymesVar id="product" type="ch.wisv.products.domain.model.product.Product"*/-->
 <div layout:fragment="content">
-    <h1>Products
+    <h1 class="mb-4 border-bottom-0 font-weight-light">Products
         <a class="badge badge-danger" th:href="@{'/administrator/products/create'}">
             <i class="fa fa-plus" aria-hidden="true"></i> New
         </a>
@@ -20,25 +21,20 @@
     <table class="table table-striped" id="productsTable">
         <thead class="thead-inverse bg-primary">
         <tr>
-            <th>Date</th>
             <th>Title</th>
-            <th>Status</th>
-            <th>Organized by</th>
+            <th>Price</th>
             <th>Progress target</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <!--/*@thymesVar id="product" type="ch.wisv.products.domain.model.product.Product"*/-->
         <tr th:each="product : ${products}" th:attr="data-key=${product.getPublicReference()}">
-            <td>posted on</td>
-            <td th:text="${product.getTitle()}">posted on</td>
-            <td>posted on</td>
-            <td>posted on</td>
+            <td th:text="${product.getTitle()}"></td>
+            <td th:text="'€ ' + ${#numbers.formatDecimal(product.getPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
             <td>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" th:style="'width: 10%;'"></div>
-                </div>
+                <span class="badge badge-pill badge-success" th:text="'Limit ' + ${product.getTicketLimit()}"></span>
+                <span class="badge badge-pill badge-info" th:text="'Reserved 0'"></span>
+                <span class="badge badge-pill badge-primary" th:text="'Sold 0'"></span>
             </td>
             <td class="text-right">
                 <div class="btn-group" role="group">
@@ -64,12 +60,10 @@
             pageLength: 100,
             ordering: false,
             columns: [
-                {"width": "15%"},
-                {"width": "40%"},
-                null,
-                null,
-                {"width": "15%"},
-                {"width": "80px"}
+                {"width": "50%"},
+                {"width": "10%"},
+                {"width": "30%"},
+                {"width": "10%"}
             ]
         });
         inboxTables.find('tbody').on('click', 'tr td:not(:last-child)', function () {

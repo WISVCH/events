@@ -71,26 +71,26 @@
                     <div class="card">
                         <h6 class="card-header">Triggers</h6>
                         <div class="card-body">
-                            <!--/*@thymesVar id="webhookTrigger" type="ch.wisv.events.domain.model.webhook.WebhookTrigger"*/-->
+                            <!--/*@thymesVar id="webhookEvent" type="ch.wisv.events.domain.model.webhook.WebhookEvent"*/-->
                             <div class="row">
                                 <div class="col-sm-6"
-                                     th:each="webhookTrigger : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
+                                     th:each="webhookEvent : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
                                     <div class="row">
                                         <div class="col">
                                             <span class="text-success"
-                                                  th:if="${webhook.getWebhookTriggers().contains(webhookTrigger)}">
+                                                  th:if="${webhook.getWebhookTriggers().contains(webhookEvent)}">
                                                 <i class="fas fa-check"></i>
                                             </span>
 
                                             <span class="text-danger"
-                                                  th:if="${!webhook.getWebhookTriggers().contains(webhookTrigger)}">
+                                                  th:if="${!webhook.getWebhookTriggers().contains(webhookEvent)}">
                                                 <i class="fas fa-times"></i>
                                             </span>
                                         </div>
                                         <div class="col-10">
-                                            <h6 style="letter-spacing: 0" th:text="${webhookTrigger.getName()}"></h6>
+                                            <h6 style="letter-spacing: 0" th:text="${webhookEvent.getName()}"></h6>
                                             <p class="text-sm text-gray"
-                                               th:text="${webhookTrigger.getDescription()}"></p>
+                                               th:text="${webhookEvent.getDescription()}"></p>
                                         </div>
                                     </div>
                                 </div>

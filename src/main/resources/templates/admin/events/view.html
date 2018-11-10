@@ -23,7 +23,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="card">
+            <div class="card mb-4">
                 <h6 class="card-header">Information</h6>
                 <div class="card-body">
                     <div class="form-group">
@@ -78,6 +78,27 @@
                             </label>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h6 class="card-header">Products</h6>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            th:each="product : ${event.getProducts()}">
+                            <a th:href="@{'/administrator/products/view/' + ${product.getPublicReference()}}"
+                               th:text="${product.getTitle()}"></a>
+                            <div>
+                                <span class="badge badge-pill badge-info"
+                                      th:text="'Reserved 0'">
+                                </span>
+                                <span class="badge badge-pill badge-primary"
+                                      th:text="'Sold 0'">
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

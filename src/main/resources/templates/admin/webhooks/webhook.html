@@ -81,20 +81,20 @@
                         <div class="card">
                             <h6 class="card-header">Triggers</h6>
                             <div class="card-body">
-                                <!--/*@thymesVar id="webhookTrigger" type="ch.wisv.events.domain.model.webhook.WebhookTrigger"*/-->
+                                <!--/*@thymesVar id="webhookEvent" type="ch.wisv.events.domain.model.webhook.WebhookEvent"*/-->
                                 <div class="row">
                                     <div class="col-sm-6"
-                                         th:each="webhookTrigger : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
+                                         th:each="webhookEvent : ${T(ch.wisv.events.core.model.webhook.WebhookTrigger).values()}">
                                         <div class="row">
                                             <div class="col">
                                                 <input type="checkbox" th:field="*{webhookTriggers}"
-                                                       th:value="${webhookTrigger}">
+                                                       th:value="${webhookEvent}">
                                             </div>
                                             <div class="col-10">
                                                 <h6 style="letter-spacing: 0"
-                                                    th:text="${webhookTrigger.getName()}"></h6>
+                                                    th:text="${webhookEvent.getName()}"></h6>
                                                 <p class="text-sm text-gray"
-                                                   th:text="${webhookTrigger.getDescription()}"></p>
+                                                   th:text="${webhookEvent.getDescription()}"></p>
                                             </div>
                                         </div>
                                     </div>
