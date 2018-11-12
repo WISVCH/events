@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 @Service
 @Transactional
-public class DocumentService {
+public class ImageService {
 
     /**
      * Base URL to the uploaded image.
@@ -44,7 +44,7 @@ public class DocumentService {
      * DocumentRepository constructor.
      */
     @Autowired
-    public DocumentService() {
+    public ImageService() {
     }
 
     /**

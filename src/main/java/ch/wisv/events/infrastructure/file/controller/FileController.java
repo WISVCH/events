@@ -1,6 +1,6 @@
 package ch.wisv.events.infrastructure.file.controller;
 
-import ch.wisv.events.services.DocumentService;
+import ch.wisv.events.services.ImageService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -21,15 +21,15 @@ public class FileController {
     /**
      * DocumentService.
      */
-    private final DocumentService documentService;
+    private final ImageService imageService;
 
     /**
      * FileController constructor.
      *
-     * @param documentService of type DocumentService
+     * @param imageService of type DocumentService
      */
-    public FileController(DocumentService documentService) {
-        this.documentService = documentService;
+    public FileController(ImageService imageService) {
+        this.imageService = imageService;
     }
 
     /**
@@ -45,6 +45,6 @@ public class FileController {
         String path = request.getRequestURI();
         String name = path.substring(path.lastIndexOf('/') + 1);
 
-        return documentService.loadFile(name);
+        return imageService.loadFile(name);
     }
 }

@@ -53,6 +53,12 @@
                 <i class="fa fa-globe fa-fw" aria-hidden="true"></i> Webhooks
             </a>
         </li>
+        <li class="nav-item">
+            <a th:href="@{/administrator/logs}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/logs') ? 'active':''}">
+                <i class="fa fa-terminal fa-fw" aria-hidden="true"></i> Logs
+            </a>
+        </li>
     </ul>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">

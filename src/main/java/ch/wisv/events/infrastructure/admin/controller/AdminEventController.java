@@ -2,7 +2,7 @@ package ch.wisv.events.infrastructure.admin.controller;
 
 import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.validator.EventValidator;
-import ch.wisv.events.services.DocumentService;
+import ch.wisv.events.services.ImageService;
 import ch.wisv.events.services.EventService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +20,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminEventController extends AbstractAdminController<Event> {
 
     /** DocumentService. */
-    private final DocumentService documentService;
+    private final ImageService imageService;
 
     /**
      * AdminEventController constructor.
      *
      * @param eventService    of type EventService
-     * @param documentService of type DocumentService
+     * @param imageService of type DocumentService
      */
     @Autowired
-    public AdminEventController(EventService eventService, DocumentService documentService) {
+    public AdminEventController(EventService eventService, ImageService imageService) {
         super(eventService, new Event(), "events", "event");
-        this.documentService = documentService;
+        this.imageService = imageService;
     }
 
     /**
@@ -55,7 +55,7 @@ public class AdminEventController extends AbstractAdminController<Event> {
     @Override
     Event saveFile(Event model, MultipartFile file) {
         if (!file.isEmpty()) {
-            String imageLocation = documentService.saveFile(file);
+            String imageLocation = imageService.saveFile(file);
             model.setImage(imageLocation);
         }
 
