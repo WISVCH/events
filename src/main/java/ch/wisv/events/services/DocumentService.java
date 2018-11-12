@@ -96,7 +96,7 @@ public class DocumentService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new DocumentStorageException("Document " + filename + " not not existed");
+                throw new DocumentStorageException("Document " + filename + " does not existed");
             }
         } catch (MalformedURLException e) {
             throw new DocumentStorageException("Invalid URL");

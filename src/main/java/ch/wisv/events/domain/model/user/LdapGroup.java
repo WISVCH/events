@@ -1,4 +1,4 @@
-package ch.wisv.events.domain.model.customer;
+package ch.wisv.events.domain.model.user;
 
 import lombok.Getter;
 

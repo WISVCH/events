@@ -56,12 +56,30 @@ public class UserService extends AbstractService<User> {
     }
 
     /**
+     * Something to do after the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterSave(User model) {
+    }
+
+    /**
      * Assert if a model is deletable.
      *
      * @param model of type T
      */
     @Override
     void assertIfDeletable(User model) {
+    }
+
+    /**
+     * Something to do after the object has been deleted.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void afterDelete(User model) {
     }
 
     /**

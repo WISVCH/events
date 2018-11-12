@@ -1,12 +1,13 @@
 package ch.wisv.events.domain.model.webhook;
 
 import ch.wisv.events.domain.model.AbstractModel;
-import ch.wisv.events.domain.model.customer.LdapGroup;
+import ch.wisv.events.domain.model.user.LdapGroup;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -38,6 +39,7 @@ public class Webhook extends AbstractModel {
      */
     @ElementCollection
     @NotNull(message = "Events cannot be null")
+    @Size(min = 1, message = "At least one event should be selected")
     public List<WebhookEvent> events = new ArrayList<>();
 
     /**

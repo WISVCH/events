@@ -1,102 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events - Dashboard > Webhooks</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Administrator > Webhook</title>
 </head>
-
 <body>
-<nav th:replace="fragments/header :: header"></nav>
+<div layout:fragment="content">
+    <h1>Webhooks
+        <a class="badge badge-danger" th:href="@{'/administrator/webhooks/create'}">
+            <i class="fa fa-plus" aria-hidden="true"></i> New
+        </a>
+    </h1>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav th:replace="admin/sidebar :: sidebar"></nav>
-
-        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
-            <h1>Webhooks
-                <a class="badge badge-danger" th:href="@{create/}">
-                    <i class="fa fa-plus" aria-hidden="true"></i> New
-                </a>
-            </h1>
-
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <div class="table-responsive">
-                <table id="webhookTable" class="table table-striped">
-                    <thead class="thead-inverse bg-primary">
-                    <tr>
-                        <th>Payload URL</th>
-                        <th>LDAP group</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!--/*@thymesVar id="webhook" type="ch.wisv.events.domain.model.webhook.Webhook"*/-->
-                    <tr th:each="webhook : ${webhooks}" th:attr="data-key=${webhook.getKey()}">
-                        <td th:text="${webhook.getPayloadUrl()}"></td>
-                        <td th:text="${webhook.getLdapGroup()}"></td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${webhook.getKey()} + '/'" class="btn btn-sm btn-info">
-                                    <i class="fas fa-fw fa-edit"></i>
-                                </a>
-                                <a th:href="'delete/' + ${webhook.getKey()} + '/'"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${webhook.getPayloadUrl()} + '?\');'"
-                                   class="btn btn-sm btn-danger">
-                                    <i class="far fa-fw fa-trash-alt"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <p th:text="${message}">success message</p>
     </div>
+
+    <table id="webhookTable" class="table table-striped">
+        <thead class="thead-inverse bg-primary">
+        <tr>
+            <th>Payload URL</th>
+            <th>LDAP Group</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="webhook" type="ch.wisv.events.domain.model.webhook.Webhook"*/-->
+        <tr th:each="webhook : ${webhooks}" th:attr="data-key=${webhook.getPublicReference()}">
+            <td th:text="${webhook.getPayloadUrl()}"></td>
+            <td th:text="${webhook.getAuthLdapGroup()}"></td>
+            <td class="text-right">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-sm btn-info"
+                       th:href="@{'/administrator/webhooks/edit/' + ${webhook.getPublicReference()}}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{'/administrator/webhooks/delete/' + ${webhook.getPublicReference()}}">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script th:inline="javascript">
+<script layout:fragment="script" th:inline="javascript">
     $(document).ready(function () {
-        var table = $('#webhookTable');
-        table.DataTable({
-            pageLength: 50,
-            columnDefs: [
-                {width: "100px", targets: 2}
+        var inboxTables = $("#webhookTable");
+        inboxTables.DataTable({
+            pageLength: 100,
+            ordering: false,
+            columns: [
+                null,
+                {"width": "25%"},
+                {"width": "80px"}
             ]
         });
-
-        var dataTablesFilter = $('.dataTables_filter');
-        dataTablesFilter.empty(); // clears the content generated
-        dataTablesFilter.append('<label>' +
-            '<input type="search" id="dataTableFilter" class="form-control" placeholder="Search..." ' +
-            'aria-controls="webhookTable"></label>');
-
-        $("#dataTableFilter").on('keyup', function () {
-            table.DataTable().search($(this).val()).draw();
-        });
-
-        table.find('tbody').on('click', 'tr td:not(:last-child)', function () {
-            /*[+ var link = [[@{/administrator/webhooks/view/}]] + $(this).parent().data('key') + "/"; +]*/
+        inboxTables.find('tbody').on('click', 'tr td:not(:last-child)', function () {
+            /*[+ var link = [[@{/administrator/webhooks/view/}]] + $(this).parent().data('key'); +]*/
             document.location = link;
         });
     });

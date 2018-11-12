@@ -1,11 +1,14 @@
 package ch.wisv.events.domain.model.webhook;
 
+import ch.wisv.events.domain.converter.JSONObjectConverter;
 import ch.wisv.events.domain.model.AbstractModel;
 import java.net.URL;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.json.simple.JSONObject;
 
 /**
@@ -14,6 +17,7 @@ import org.json.simple.JSONObject;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 public class WebhookTask extends AbstractModel {
 
     /**
@@ -25,6 +29,7 @@ public class WebhookTask extends AbstractModel {
      * Body of the Webhook request.
      */
     @NotNull(message = "Body cannot be null")
+    @Convert(converter = JSONObjectConverter.class)
     public JSONObject body;
 
     /**

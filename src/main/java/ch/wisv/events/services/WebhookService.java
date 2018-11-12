@@ -80,7 +80,7 @@ public class WebhookService extends AbstractService<Webhook> {
      */
     @Override
     protected Webhook create(Webhook model) {
-        return null;
+        return model;
     }
 
     /**
@@ -93,6 +93,6 @@ public class WebhookService extends AbstractService<Webhook> {
      */
     @Override
     protected Webhook update(Webhook model, Webhook existingModel) {
-        return null;
+        return model;
     }
 }

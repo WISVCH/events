@@ -6,8 +6,10 @@ import org.json.simple.JSONObject;
 
 /**
  * AbstractWebhookRequestFactory.
+ *
+ * @param <T> of type AbstractModel
  */
-public abstract class AbstractWebhookRequestFactory {
+public abstract class AbstractWebhookRequestFactory<T extends AbstractModel> {
 
     /**
      * Generate request body.
@@ -17,5 +19,5 @@ public abstract class AbstractWebhookRequestFactory {
      *
      * @return JSONObject
      */
-    public abstract JSONObject generateRequestBody(WebhookEvent event, AbstractModel model);
+    public abstract JSONObject generateRequestBody(WebhookEvent event, T model);
 }

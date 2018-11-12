@@ -2,8 +2,8 @@ package ch.wisv.events.domain.model.event;
 
 import ch.wisv.events.domain.converter.ZonedDateTimeConverter;
 import ch.wisv.events.domain.model.AbstractModel;
-import ch.wisv.events.domain.model.customer.LdapGroup;
 import ch.wisv.events.domain.model.product.Product;
+import ch.wisv.events.domain.model.user.LdapGroup;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.Min;
@@ -118,7 +120,7 @@ public class Event extends AbstractModel {
      * Products of the Event.
      */
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Product.class)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     @OrderBy(value = "price ASC")
     private List<Product> products = new ArrayList<>();
 

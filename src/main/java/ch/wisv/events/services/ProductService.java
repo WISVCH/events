@@ -5,7 +5,9 @@ import ch.wisv.events.domain.model.product.ProductOption;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
 import ch.wisv.events.domain.repository.ProductRepository;
 import ch.wisv.events.webhook.event.CreateUpdate;
+import ch.wisv.events.webhook.event.Delete;
 import java.util.List;
+import static java.util.Objects.isNull;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -90,7 +92,7 @@ public class ProductService extends AbstractService<Product> {
      */
     @Override
     void afterDelete(Product model) {
-        publisher.publishEvent(new CreateUpdate(model));
+        publisher.publishEvent(new Delete(model));
     }
 
     /**
@@ -118,6 +120,9 @@ public class ProductService extends AbstractService<Product> {
     @Override
     protected Product update(Product model, Product existingModel) {
         model = this.saveProductOptions(model);
+        if (isNull(model.getEvent())) {
+            model.setEvent(existingModel.getEvent());
+        }
 
         return model;
     }

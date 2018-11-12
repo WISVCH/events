@@ -34,6 +34,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a th:href="@{/administrator/tickets}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/tickets') ? 'active':''}">
+                <i class="fas fa-ticket-alt fa-fw" aria-hidden="true"></i> Tickets
+            </a>
+        </li>
+        <li class="nav-item">
             <a th:href="@{/administrator/users}" class="nav-link"
                th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/users') ?  'active':''}">
                 <i class="fa fa-users fa-fw" aria-hidden="true"></i> Users

@@ -7,6 +7,7 @@ import ch.wisv.events.domain.repository.AbstractRepository;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.java.Log;
 import org.springframework.context.ApplicationEventPublisher;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
  *
  * @param <T> of type AbstractModel
  */
+@Log
 public abstract class AbstractService<T extends AbstractModel> {
 
     /**
@@ -79,6 +81,7 @@ public abstract class AbstractService<T extends AbstractModel> {
         }
 
         repository.saveAndFlush(model);
+        log.info(String.format("%s %s has been saved!", model.getClass().getSimpleName(), model.getPublicReference()));
         this.afterSave(model);
     }
 
@@ -97,6 +100,8 @@ public abstract class AbstractService<T extends AbstractModel> {
     public void delete(T model) {
         this.assertIfDeletable(model);
         repository.delete(model);
+        log.info(String.format("%s %s has been deleted!", model.getClass().getName(), model.getPublicReference()));
+        this.afterDelete(model);
     }
 
     /**

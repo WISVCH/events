@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -22,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(exclude = {"event"})
 public class Product extends AbstractModel {
 
     /**
@@ -51,7 +54,8 @@ public class Product extends AbstractModel {
     /**
      * Event this product is linked to.
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Event.class)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_item_id")
     private Event event;
 
     /**

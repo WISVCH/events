@@ -9,10 +9,9 @@ import lombok.Getter;
 public enum WebhookEvent {
 
     EVENT_CREATE_EDIT("EVENT_CREATE_UPDATE", "Event create or update", "Creation or update of an Event."),
-    EVENT_DELETE("EVENT_DELETE", "", ""),
-    PRODUCT_CREATE_EDIT("PRODUCT_CREATE_EDIT", "", ""),
-    PRODUCT_DELETE("PRODUCT_DELETE", "", ""),
-    ORDER_PAID("ORDER_PAID", "", "");
+    EVENT_DELETE("EVENT_DELETE", "Event deleted", "Deletion of an Event"),
+    PRODUCT_CREATE_EDIT("PRODUCT_CREATE_EDIT", "Product create or update", "Creation or update of an Product."),
+    PRODUCT_DELETE("PRODUCT_DELETE", "Product deleted", "Deletion of an Product");
 
     /**
      * Tag of the WebhookEvent.

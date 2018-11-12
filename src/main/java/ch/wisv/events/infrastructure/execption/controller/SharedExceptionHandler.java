@@ -1,5 +1,6 @@
 package ch.wisv.events.infrastructure.execption.controller;
 
+import ch.wisv.events.domain.exception.DocumentStorageException;
 import ch.wisv.events.domain.exception.ModelNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,8 @@ public class SharedExceptionHandler {
      * @return String
      */
     @ExceptionHandler({
-            ModelNotFoundException.class
+            ModelNotFoundException.class,
+            DocumentStorageException.class
     })
     public String handleNotFoundExceptions(HttpServletRequest request) {
         return this.getPageNotFound(request);

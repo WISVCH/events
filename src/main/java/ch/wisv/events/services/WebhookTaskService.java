@@ -61,7 +61,7 @@ public class WebhookTaskService extends AbstractService<WebhookTask> {
      */
     @Override
     protected WebhookTask create(WebhookTask model) {
-        return null;
+        return model;
     }
 
     /**
@@ -74,6 +74,6 @@ public class WebhookTaskService extends AbstractService<WebhookTask> {
      */
     @Override
     protected WebhookTask update(WebhookTask model, WebhookTask existingModel) {
-        return null;
+        return model;
     }
 }

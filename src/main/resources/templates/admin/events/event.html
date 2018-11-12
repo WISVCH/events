@@ -137,8 +137,8 @@
                                 <select class="form-control" th:field="*{organizedBy}"
                                         th:classappend="${errors.containsKey('organizedBy')} ? 'is-invalid'">
                                     <option value="">-- Select committee --</option>
-                                    <!--/*@thymesVar id="group" type="ch.wisv.events.domain.model.customer.LdapGroup"*/-->
-                                    <option th:each="group : ${T(ch.wisv.events.domain.model.customer.LdapGroup).values()}"
+                                    <!--/*@thymesVar id="group" type="ch.wisv.events.domain.model.user.LdapGroup"*/-->
+                                    <option th:each="group : ${T(ch.wisv.events.domain.model.user.LdapGroup).values()}"
                                             th:value="${group}"
                                             th:text="${group.getName()}">
                                     </option>

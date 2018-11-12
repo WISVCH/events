@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Error</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row mb-4 align-items-center justify-content-center">
+        <div class="col-8 text-center">
+            <h2 class="text-dark border-bottom-0">
+                Sorry, this page is not available
+            </h2>
+            <h5 class="text-muted font-weight-light">The link you followed may be broken, or the page does noet
+                exists.</h5>
+
+            <p class="text-danger my-5">
+                <i class="far fa-fw fa-10x fa-sad-cry"></i>
+            </p>
+
+            <div class="row">
+                <div class="col-6">
+                    <a th:href="@{'/administator/'}" class="btn btn-block btn-primary">
+                        Go to the dashboard
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a th:href="${#httpServletRequest.getHeader('Referer')}" class="btn btn-block btn-primary">
+                        Go to the previous website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
