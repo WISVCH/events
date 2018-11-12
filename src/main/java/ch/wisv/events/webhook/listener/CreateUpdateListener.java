@@ -5,7 +5,6 @@ import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.webhook.WebhookEvent;
 import ch.wisv.events.services.WebhookService;
-import ch.wisv.events.services.WebhookTaskService;
 import ch.wisv.events.webhook.event.CreateUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,11 +19,10 @@ public class CreateUpdateListener extends AbstractListener<CreateUpdate> {
      * CreateUpdateListener constructor.
      *
      * @param webhookService     of type WebhookService
-     * @param webhookTaskService of type WebhookTaskService
      */
     @Autowired
-    public CreateUpdateListener(WebhookService webhookService, WebhookTaskService webhookTaskService) {
-        super(webhookService, webhookTaskService);
+    public CreateUpdateListener(WebhookService webhookService) {
+        super(webhookService);
     }
 
     /**

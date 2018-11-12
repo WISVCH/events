@@ -28,7 +28,7 @@ INSERT INTO public."user" (item_id, created_at, public_reference, updated_at, em
 
 -- Webhooks.
 INSERT INTO public.webhook (item_id, created_at, public_reference, updated_at, active, auth_ldap_group, payload_url, secret) VALUES
- (7, '2018-11-11T17:21:02.729+01:00[Europe/Amsterdam]', '62709b76-b0ee-4f4c-9d0b-a48645b60f0a', '2018-11-11T17:21:02.729+01:00[Europe/Amsterdam]', true, 3, 'https://ch.tudelft.nl/payments/api/chevents/sync/product/', 'secret');
+ (7, '2018-11-11T17:21:02.729+01:00[Europe/Amsterdam]', '62709b76-b0ee-4f4c-9d0b-a48645b60f0a', '2018-11-11T17:21:02.729+01:00[Europe/Amsterdam]', true, 3, 'http://localhost:9000/payments/api/chevents/sync/product/', 'secret');
 
 INSERT INTO public.webhook_events (webhook_item_id, events) VALUES
  (7, 0),
