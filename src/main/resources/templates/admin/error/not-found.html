@@ -8,7 +8,7 @@
 <body>
 <div layout:fragment="content">
     <div class="row mb-4 align-items-center justify-content-center">
-        <div class="col-8 text-center">
+        <div class="col-6 text-center">
             <h2 class="text-dark border-bottom-0">
                 Sorry, this page is not available
             </h2>
@@ -21,13 +21,13 @@
 
             <div class="row">
                 <div class="col-6">
-                    <a th:href="@{'/administator/'}" class="btn btn-block btn-primary">
-                        Go to the dashboard
+                    <a th:href="@{'/administrator'}" class="btn btn-block btn-primary">
+                        Dashboard
                     </a>
                 </div>
                 <div class="col-6">
                     <a th:href="${#httpServletRequest.getHeader('Referer')}" class="btn btn-block btn-primary">
-                        Go to the previous website
+                        Previous webpage
                     </a>
                 </div>
             </div>

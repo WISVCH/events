@@ -26,11 +26,16 @@ var ShoppingBasket;
         },
 
         __beforeShoppingBasketSubmit: function () {
-            const orderProduct = '<input type="hidden" name="products[%s]" value="%s">';
+            const orderProductKey = '<input type="hidden" id="products%s.productKey" name="products[%s].productKey" value="%s">';
+            const orderProductOptionKey = '<input type="hidden" id="products%s.productOptionKey" name="products[%s].productOptionKey" value="%s">';
+            const orderAmount = '<input type="text" id="products%s.amount" name="products[%s].amount" value="%s">';
 
             var count = 0;
             $.each(ShoppingBasket.shoppingBasket, function (index, ticket) {
-                $("#products").append(vsprintf(orderProduct, [ticket.key, ticket.amount]));
+                var products = $("#products");
+                products.append(vsprintf(orderProductKey, [count, count, ticket.key]));
+                products.append(vsprintf(orderProductOptionKey, [count, count, ticket.additionalKey]));
+                products.append(vsprintf(orderAmount, [count, count, ticket.amount]));
 
                 count++;
             });
@@ -44,22 +49,39 @@ var ShoppingBasket;
 
         __addProductToShoppingBasket: function (e) {
             e.preventDefault();
-            var indexProduct = ShoppingBasket.__indexProductContains(
-                $(e.target).data('product-key'), ShoppingBasket.shoppingBasket);
+            var product = $(e.target).parent().parent();
+            var productKey = product.data('public-reference');
+            var productAmount = parseInt(product.find('.product-amount').val());
+
+            var productOption = product.find('.product-option');
+            var productOptionKey = productOption.val();
+            var productOptionTitle = productOption.find('option:selected').text();
+            var productOptionPrice = productOption.find('option:selected').data('product-option-price');
+
+            if (productOption.length > 0 && (productOptionKey === "" || productOptionKey === undefined)) {
+                ShoppingBasket.__shakeShoppingBasket("Please select an product option!");
+                return false;
+            }
+
+            var indexProduct = ShoppingBasket.__indexProductContains(productKey, productOptionKey, ShoppingBasket.shoppingBasket);
 
             if (indexProduct >= 0) {
-                if (ShoppingBasket.shoppingBasket[indexProduct].amount < $(e.target).data('customer-limit')) {
-                    ShoppingBasket.shoppingBasket[indexProduct].amount++;
+                if (ShoppingBasket.shoppingBasket[indexProduct].amount + productAmount < product.data('product-user-limit')) {
+                    ShoppingBasket.shoppingBasket[indexProduct].amount += productAmount;
                 } else {
-                    ShoppingBasket.__shakeShoppingBasket();
+                    ShoppingBasket.__shakeShoppingBasket("You reached the maximum sold per customer.");
                     return false;
                 }
             } else {
                 ShoppingBasket.shoppingBasket.push({
-                    "key": $(e.target).data('product-key'),
-                    "title": $(e.target).data('product-title'),
-                    "cost": $(e.target).data('product-cost'),
-                    "amount": 1
+                    "id": Math.floor(Math.random() * 1000) + 1,
+                    "key": productKey,
+                    "additionalKey": productOptionKey,
+                    "additionalTitle": productOptionTitle,
+                    "additionalPrice": productOptionPrice,
+                    "title": product.data('product-title'),
+                    "price": product.data('product-price'),
+                    "amount": productAmount
                 });
             }
 
@@ -77,19 +99,22 @@ var ShoppingBasket;
                 var countItems = 0;
 
                 $.each(ShoppingBasket.shoppingBasket, function (index, product) {
-                    var rowBlueprint = "<tr><td>%s</td><td><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span class='px-4'>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></td><td>&euro; %s</td></tr>";
+                    var rowBlueprint = "<tr><td>%s %s</td><td><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span class='px-4'>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></td><td>&euro; %s</td></tr>";
 
+                    var additionalPrice = product.additionalPrice === undefined ? 0.0 : parseFloat(product.additionalPrice);
+                    var price = parseFloat(product.price) + additionalPrice;
                     shoppingBasketTable += vsprintf(rowBlueprint, [
                         product.title,
-                        product.key,
+                        product.additionalTitle === '' ? '' : 'with ' + product.additionalTitle,
+                        product.id,
                         product.amount,
-                        product.key,
-                        parseFloat(Math.round(product.amount * product.cost * 100) / 100).toFixed(2).replace(".", ",")
+                        product.id,
+                        parseFloat(Math.round(product.amount * price * 100) / 100).toFixed(2).replace(".", ",")
                     ]);
 
                     countItems += product.amount;
 
-                    shoppingBasketTotal += product.amount * product.cost;
+                    shoppingBasketTotal += product.amount * price;
                 });
 
                 $("#shoppingBasketTable").html(shoppingBasketTable);
@@ -103,19 +128,18 @@ var ShoppingBasket;
 
         __increaseProductAmount: function (e) {
             e.preventDefault();
-            var indexProduct = ShoppingBasket.__indexProductContains(
+            var indexProduct = ShoppingBasket.__indexIdContains(
                 $(e.currentTarget).data('productKey'), ShoppingBasket.shoppingBasket);
 
             ShoppingBasket.shoppingBasket[indexProduct].amount++;
 
-            // Update ShoppingBasket
             Storages.localStorage.set(ShoppingBasket.LOCAL_STORAGE_SHOPPING_BASKET, ShoppingBasket.shoppingBasket);
             ShoppingBasket.__createShoppingBasketTable();
         },
 
         __decreaseProductAmount: function (e) {
             e.preventDefault();
-            var indexProduct = ShoppingBasket.__indexProductContains(
+            var indexProduct = ShoppingBasket.__indexIdContains(
                 $(e.currentTarget).data('productKey'), ShoppingBasket.shoppingBasket);
 
 
@@ -125,7 +149,6 @@ var ShoppingBasket;
                 ShoppingBasket.shoppingBasket.splice(indexProduct, 1);
             }
 
-            // Update ShoppingBasket
             Storages.localStorage.set(ShoppingBasket.LOCAL_STORAGE_SHOPPING_BASKET, ShoppingBasket.shoppingBasket);
             ShoppingBasket.__createShoppingBasketTable();
         },
@@ -136,9 +159,19 @@ var ShoppingBasket;
             $("#shoppingBasketTotal").html("");
         },
 
-        __indexProductContains: function (key, list) {
+        __indexProductContains: function (key, additionalOptionKey, list) {
             for (var i = 0; i < list.length; i++) {
-                if (list[i].key === key) {
+                if (list[i].key === key && list[i].additionalKey === additionalOptionKey) {
+                    return i;
+                }
+            }
+
+            return -1;
+        },
+
+        __indexIdContains: function (id, list) {
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].id === id) {
                     return i;
                 }
             }
@@ -156,14 +189,14 @@ var ShoppingBasket;
             ShoppingBasket.__toast("Product added to your shopping basket.")
         },
 
-        __shakeShoppingBasket: function () {
+        __shakeShoppingBasket: function (message) {
             var shoppingBasketButton = $("#shoppingBasketButton");
 
             shoppingBasketButton.addClass('animated shake').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                 $(this).removeClass('animated shake');
             });
 
-            ShoppingBasket.__toast("You reached the maximum sold per customer.")
+            ShoppingBasket.__toast(message)
         },
 
         __toast: function (text) {
@@ -176,7 +209,6 @@ var ShoppingBasket;
                 x.className = x.className.replace("show", "");
             }, 3000);
         }
-
     };
 })
 (jQuery);

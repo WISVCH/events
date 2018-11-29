@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Webshop</title>
+</head>
+<body>
+<div class="modal fade" id="shoppingBasket" tabindex="-1" role="dialog" aria-labelledby="shoppingBasketTitle"
+     aria-hidden="true" th:fragment="shopping-basket">
+    <div class="modal-dialog" role="document" style="width: calc(100vw - 20px); max-width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shoppingBasketTitle">
+                    <i class="fa fa-fw fa-shopping-basket"></i>
+                    Shopping basket
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table ticket-overview">
+                    <thead class="thead-inverse bg-primary">
+                    <tr>
+                        <th style="width: 50%;">Article</th>
+                        <th style="width: 25%;">Amount</th>
+                        <th style="width: 25%;">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody id="shoppingBasketTable">
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="2">Total</th>
+                        <th id="shoppingBasketTotal"></th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <button type="button" class="btn btn-block btn-info" id="emptyShoppingBasket">
+                    <i class="far fa-fw fa-trash-alt"></i>
+                    Empty
+                </button>
+            </div>
+            <div class="modal-footer">
+                <!--/*@thymesVar id="orderDto" type="ch.wisv.events.infrastructure.webshop.dto.OrderDto"*/-->
+                <form id="orderForm" method="POST" th:action="@{'/checkout'}" th:object="${orderDto}">
+                    <div id="products">
+                        <input type="hidden" th:field="${orderDto.products[0].productKey}"/>
+                        <input type="hidden" th:field="${orderDto.products[0].productionOptionKey}"/>
+                        <input type="hidden" th:field="${orderDto.products[0].amount}"/>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" id="checkoutShoppingBasket">
+                        Checkout <i class="fa fa-fw fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

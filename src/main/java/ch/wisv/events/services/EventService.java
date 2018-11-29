@@ -1,10 +1,14 @@
 package ch.wisv.events.services;
 
 import ch.wisv.events.domain.model.event.Event;
+import ch.wisv.events.domain.model.event.EventStatus;
 import ch.wisv.events.domain.repository.EventRepository;
 import ch.wisv.events.webhook.event.CreateUpdate;
 import ch.wisv.events.webhook.event.Delete;
+import java.time.ZonedDateTime;
+import java.util.List;
 import static java.util.Objects.isNull;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,6 +22,11 @@ import org.springframework.stereotype.Service;
 public class EventService extends AbstractService<Event> {
 
     /**
+     * EventRepository.
+     */
+    private final EventRepository eventRepository;
+
+    /**
      * EventRepository constructor.
      *
      * @param publisher of type ApplicationEventPublisher
@@ -26,6 +35,18 @@ public class EventService extends AbstractService<Event> {
     @Autowired
     public EventService(ApplicationEventPublisher publisher, EventRepository eventRepository) {
         super(publisher, eventRepository);
+        this.eventRepository = eventRepository;
+    }
+
+    /**
+     * Get all upcoming events.
+     *
+     * @return List<Event>
+     */
+    public List<Event> getAllUpcoming() {
+        return eventRepository.findByStartingAfterOrderByStartingAsc(ZonedDateTime.now()).stream()
+                .filter(x -> x.getStatus() == EventStatus.PUBLISHED)
+                .collect(Collectors.toList());
     }
 
     /**

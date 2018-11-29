@@ -1,5 +1,6 @@
 package ch.wisv.events.services;
 
+import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.UserRepository;
@@ -53,6 +54,20 @@ public class UserService extends AbstractService<User> {
      */
     public User getBySub(String sub) {
         return userRepository.getBySub(sub).orElseThrow(() -> new ModelNotFoundException(User.class, sub));
+    }
+
+    /**
+     * Create a User by CHUserInfo
+     *
+     * @param userInfo of type CHUserInfo
+     *
+     * @return User
+     */
+    public User createByChUserInfo(CHUserInfo userInfo) {
+        User user = new User(userInfo.getSub(), userInfo.getName(), userInfo.getEmail());
+        this.save(user);
+
+        return user;
     }
 
     /**

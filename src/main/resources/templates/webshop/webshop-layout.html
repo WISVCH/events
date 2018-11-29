@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/images/favicon.png}">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.4.1/css/all.min.css}"/>
+
+    <link th:href="@{/css/wisvch-default.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
+</head>
+
+<body>
+<header class="page-header">
+    <!-- Top Bar -->
+    <div class="wisv-header header-left">
+        <nav class="navbar navbar-expand-lg navbar-light wisv-header-bg">
+            <a class="logo" href="https://ch.tudelft.nl/">
+                <img src="https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/ch-logo.png"
+                     alt="W.I.S.V. 'Christiaan Huygens'" style="position: absolute; top: 10px;">
+            </a>
+
+            <button class="navbar-toggler btn btn-secondary" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item m-2">
+                        <a th:href="@{/overview/}" class="btn btn-block btn-secondary">
+                            login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Page title -->
+    <div layout:fragment="title"></div>
+</header>
+
+<main class="container-fluid" layout:fragment="content"></main>
+
+<script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/sprintf-js/1.1.1/dist/sprintf.min.js}"></script>
+<script th:src="@{/js/js.storage.min.js}"></script>
+<script th:src="@{/js/webshop/webshop.min.js}"></script>
+<script type="text/javascript" layout:fragment="script"></script>
+</body>
