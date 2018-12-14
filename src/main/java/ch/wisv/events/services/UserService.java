@@ -71,6 +71,16 @@ public class UserService extends AbstractService<User> {
     }
 
     /**
+     * Something to do before the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void beforeSave(User model) {
+
+    }
+
+    /**
      * Something to do after the object has been saved.
      *
      * @param model of type AbstractModel

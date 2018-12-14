@@ -70,6 +70,7 @@ public abstract class AbstractService<T extends AbstractModel> {
      * @param model of type AbstractModel
      */
     public void save(T model) {
+        this.beforeSave(model);
         Optional<T> optional = repository.findByPublicReference(model.getPublicReference());
         if (optional.isPresent()) {
             model.setItemId(optional.get().getItemId());
@@ -84,6 +85,13 @@ public abstract class AbstractService<T extends AbstractModel> {
         log.info(String.format("%s %s has been saved!", model.getClass().getSimpleName(), model.getPublicReference()));
         this.afterSave(model);
     }
+
+    /**
+     * Something to do before the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    abstract void beforeSave(T model);
 
     /**
      * Something to do after the object has been saved.

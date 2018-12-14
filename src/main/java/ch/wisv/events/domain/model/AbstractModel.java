@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public abstract class AbstractModel {
 
     /**
-     * Item id of the model.
+     * OrderItem id of the model.
      */
     @Id
     @GeneratedValue

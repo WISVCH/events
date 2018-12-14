@@ -50,6 +50,16 @@ public class EventService extends AbstractService<Event> {
     }
 
     /**
+     * Something to do before the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void beforeSave(Event model) {
+
+    }
+
+    /**
      * Something to do after the object has been saved.
      *
      * @param model of type AbstractModel

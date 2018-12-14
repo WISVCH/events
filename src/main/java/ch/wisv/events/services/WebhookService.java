@@ -45,6 +45,15 @@ public class WebhookService extends AbstractService<Webhook> {
     }
 
     /**
+     * Something to do before the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void beforeSave(Webhook model) {
+    }
+
+    /**
      * Something to do after the object has been saved.
      *
      * @param model of type AbstractModel

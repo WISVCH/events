@@ -5,7 +5,8 @@
     <title>CH Events | Webshop</title>
 </head>
 <body>
-<div class="modal fade" id="shoppingBasket" tabindex="-1" role="dialog" aria-labelledby="shoppingBasketTitle"
+<!--/*@thymesVar id="errors" type="java.util.HashMap"*/-->
+<div class="modal" id="shoppingBasket" tabindex="-1" role="dialog" aria-labelledby="shoppingBasketTitle"
      aria-hidden="true" th:fragment="shopping-basket">
     <div class="modal-dialog" role="document" style="width: calc(100vw - 20px); max-width: 800px">
         <div class="modal-content">
@@ -19,6 +20,10 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-danger" th:if="${errors.containsKey('products')}"
+                     th:text="${errors.get('products')}"></div>
+                <div class="alert alert-danger" th:if="${errors.containsKey('invalid')}"
+                     th:text="${errors.get('invalid')}"></div>
                 <table class="table ticket-overview">
                     <thead class="thead-inverse bg-primary">
                     <tr>
@@ -43,12 +48,8 @@
             </div>
             <div class="modal-footer">
                 <!--/*@thymesVar id="orderDto" type="ch.wisv.events.infrastructure.webshop.dto.OrderDto"*/-->
-                <form id="orderForm" method="POST" th:action="@{'/checkout'}" th:object="${orderDto}">
-                    <div id="products">
-                        <input type="hidden" th:field="${orderDto.products[0].productKey}"/>
-                        <input type="hidden" th:field="${orderDto.products[0].productionOptionKey}"/>
-                        <input type="hidden" th:field="${orderDto.products[0].amount}"/>
-                    </div>
+                <form id="orderForm" method="POST" th:action="@{'/webshop/checkout'}" th:object="${orderDto}">
+                    <div id="products"></div>
                     <button type="submit" class="btn btn-secondary" id="checkoutShoppingBasket">
                         Checkout <i class="fa fa-fw fa-arrow-right"></i>
                     </button>

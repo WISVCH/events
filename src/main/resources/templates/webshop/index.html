@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="card-body collapse" id="filterCard">
-                    <form th:action="@{'/'}" th:object="${filterDto}" method="GET">
+                    <form th:action="@{'/webshop'}" th:object="${filterDto}" method="GET">
                         <div class="form-group">
                             <label>Search
                                 <input type="text" class="form-control" th:field="*{search}" placeholder="Search...">
@@ -73,7 +73,7 @@
                                     </h1>
                                 </div>
                                 <div class="col-12 align-self-end">
-                                    <a th:href="@{${event.getPublicReference()}}"
+                                    <a th:href="@{'/webshop/' + ${event.getPublicReference()}}"
                                        class="btn btn-block btn-info align-self-end">
                                         <i class="fas fa-fw fa-coins"></i> buy tickets
                                     </a>

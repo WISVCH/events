@@ -60,6 +60,10 @@ public class SharedExceptionHandler {
             return "admin/error/not-found";
         }
 
+        if (StringUtils.contains(requestURL, "webshop")) {
+            return "webshop/error/not-found";
+        }
+
         return "error/not-found";
     }
 }

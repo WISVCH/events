@@ -28,11 +28,12 @@ var ShoppingBasket;
         __beforeShoppingBasketSubmit: function () {
             const orderProductKey = '<input type="hidden" id="products%s.productKey" name="products[%s].productKey" value="%s">';
             const orderProductOptionKey = '<input type="hidden" id="products%s.productOptionKey" name="products[%s].productOptionKey" value="%s">';
-            const orderAmount = '<input type="text" id="products%s.amount" name="products[%s].amount" value="%s">';
+            const orderAmount = '<input type="hidden" id="products%s.amount" name="products[%s].amount" value="%s">';
 
             var count = 0;
             $.each(ShoppingBasket.shoppingBasket, function (index, ticket) {
                 var products = $("#products");
+                console.log(ticket);
                 products.append(vsprintf(orderProductKey, [count, count, ticket.key]));
                 products.append(vsprintf(orderProductOptionKey, [count, count, ticket.additionalKey]));
                 products.append(vsprintf(orderAmount, [count, count, ticket.amount]));

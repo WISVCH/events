@@ -1,6 +1,9 @@
 package ch.wisv.events.infrastructure.webshop.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * OrderProduct Data Transfer Object.
@@ -11,15 +14,18 @@ public class OrderProductDto {
     /**
      * Product key.
      */
+    @NotEmpty(message = "Product cannot be empty")
     private String productKey;
 
     /**
      * ProductOption key.
      */
-    private String productionOptionKey;
+    private String productOptionKey;
 
     /**
      * Amount.
      */
+    @NotNull(message = "Amount cannout be null")
+    @Min(value = 1, message = "Amount should be at least 1")
     private Long amount;
 }

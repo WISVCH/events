@@ -1,82 +1,110 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Checkout</title>
 </head>
-
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
-
-<div class="container">
+<div class="page-title" layout:fragment="title" style="background-image:url('/events/images/events_header.jpg')">
     <div class="row">
-        <main class="col py-3" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <div class="row">
-                <div class="col my-4">
-                    <h4 class="display-4">Order overview</h4>
+        <div class="col">
+            <h1>Checkout</h1>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content">
+    <div class="row my-4">
+        <div class="col-12">
+            <h1 class="display-4 fa-2x">Shopping cart</h1>
+        </div>
+        <div class="col-12 my-4">
+            <div class="row justify-content-between">
+                <div class="col-6 col-md-3">
+                    <a th:href="@{'/webshop/'}" class="btn btn-block btn-info">
+                        <i class="fa fa-fw fa-arrow-left"></i>
+                        Go back
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="" class="btn btn-block btn-secondary">
+                        Checkout <i class="fa fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-7 col-lg-8 order-first order-md-last">
+            <div class="card mb-4" th:each="orderItem : ${order.getItems()}">
+                <div class="card-body">
+                    <div class="row mx-0 justify-content-between">
+                        <strong th:text="${orderItem.getProduct().getTitle()}"></strong>
+                        <strong th:text="'€ ' + ${#numbers.formatDecimal(orderItem.getProduct().getPrice(), 1, 'POINT', 2, 'COMMA')}"></strong>
+                    </div>
 
-            <div class="row">
-                <div class="col mb-5">
-                    <table class="table ticket-overview">
-                        <thead class="thead-inverse bg-primary">
-                        <tr>
-                            <th>Article</th>
-                            <th style="width: 15%;">Amount</th>
-                            <th style="width: 20%;">Price</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="orderProduct : ${order.getOrderProducts()}">
-                            <td th:text="${orderProduct.getProduct().getTitle()}"></td>
-                            <td th:text="${orderProduct.getAmount()}"></td>
-                            <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice() * orderProduct.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr style="border-top: 4px double #e7ebf1 !important;">
-                            <th colspan="2">Total</th>
-                            <th th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"></th>
-                        </tr>
-                        </tfoot>
-                    </table>
+                    <div class="row" th:if="${orderItem.getProductOption() != null}">
+                        <p class="col-12 text-muted mt-3 mb-0">Additional option</p>
+                        <ul class="text-muted">
+                            <li>
+                                <span th:text="${orderItem.getProductOption().getTitle()}"></span>
+                                +(<span
+                                    th:text="'€ ' + ${#numbers.formatDecimal(orderItem.getProductOption().getAdditionalPrice(), 1, 'POINT', 2, 'COMMA')}"></span>)
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col">
-                    <div class="button-group float-right">
-                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/cancel'}" class="btn btn-light">
-                            Cancel
-                        </a>
-                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer'}"
-                           class="btn btn-secondary">
-                            Next
-                            <i class="fa fa-fw fa-arrow-right"></i>
-                        </a>
+                <div class="card-footer">
+                    <div class="row justify-content-between">
+                        <div class="col">
+                            <div class="form form-horizontal">
+                                <div class="form-group row align-items-center">
+                                    <span class="col">Amount</span>
+                                    <div class="col">
+                                        <input class="form-control" disabled th:value="${orderItem.getAmount()}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col text-right font-weight-bold align-self-center">
+                            <span class="pr-3">Total:</span>
+                            <span th:text="'€ ' + ${#numbers.formatDecimal(orderItem.getPrice() * orderItem.getAmount(), 1, 'POINT', 2, 'COMMA')}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <div class="col-12 col-md-5 col-lg-4 order-last order-md-first">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row py-2">
+                        <div class="col">
+                            Total article
+                            <small>(10)</small>
+                        </div>
+                        <div class="col text-right font-weight-bold"
+                             th:text="'€ ' + ${#numbers.formatDecimal(order.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"></div>
+                    </div>
+
+                    <div class="row border-top py-2">
+                        <div class="col font-weight-bold">
+                            Total
+                        </div>
+                        <div class="col text-right font-weight-bold"
+                             th:text="'€ ' + ${#numbers.formatDecimal(order.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"></div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col">
+                            <a href="" class="btn btn-block btn-secondary">
+                                Checkout <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
+</html>

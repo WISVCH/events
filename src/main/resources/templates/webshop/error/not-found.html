@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="admin/admin-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <title>CH Events | Error</title>
 </head>
 <body>
+<div class="page-title" layout:fragment="title" style="background-image:url('/events/images/events_header.jpg')">
+    <div class="row">
+        <div class="col">
+            <h1>Page not found</h1>
+        </div>
+    </div>
+</div>
 <div layout:fragment="content">
-    <div class="row mb-4 align-items-center justify-content-center">
-        <div class="col-8 text-center">
+    <div class="row my-4 align-items-center justify-content-center">
+        <div class="col-12 col-md-9 text-center" style="max-width: 900px;">
             <h2 class="text-dark border-bottom-0">
                 Sorry, this page is not available
             </h2>
@@ -19,13 +26,13 @@
                 <i class="far fa-fw fa-10x fa-sad-cry"></i>
             </p>
 
-            <div class="row">
-                <div class="col-6">
-                    <a th:href="@{'/administator/'}" class="btn btn-block btn-primary">
-                        Go to the dashboard
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-6 mb-2">
+                    <a th:href="@{'/webshop/'}" class="btn btn-block btn-primary">
+                        Go to home
                     </a>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6">
                     <a th:href="${#httpServletRequest.getHeader('Referer')}" class="btn btn-block btn-primary">
                         Go to the previous website
                     </a>

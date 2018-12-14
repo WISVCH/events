@@ -4,6 +4,7 @@ import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.infrastructure.webshop.dto.FilterDto;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
 import ch.wisv.events.services.EventService;
+import java.util.HashMap;
 import java.util.List;
 import static java.util.Objects.isNull;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/webshop")
 public class WebshopIndexController extends AbstractWebshopController {
 
     /** Model attr events. */
@@ -56,6 +57,10 @@ public class WebshopIndexController extends AbstractWebshopController {
      */
     @GetMapping
     public String index(Model model, @ModelAttribute FilterDto filterDto) {
+        if (!model.containsAttribute("errors")) {
+            model.addAttribute("errors", new HashMap<String, String>());
+        }
+
         if (isNull(filterDto)) {
             model.addAttribute(MODEL_ATTR_FILTER, new FilterDto());
         }
@@ -80,7 +85,11 @@ public class WebshopIndexController extends AbstractWebshopController {
      * @return String
      */
     @GetMapping("/{publicReference}")
-    public String index(Model model, @PathVariable String publicReference) {
+    public String viewEvent(Model model, @PathVariable String publicReference) {
+        if (!model.containsAttribute("errors")) {
+            model.addAttribute("errors", new HashMap<String, String>());
+        }
+
         model.addAttribute(MODEL_ATTR_EVENT, eventService.getByPublicReference(publicReference));
         model.addAttribute(MODEL_ATTR_ORDER_DTO, new OrderDto());
 

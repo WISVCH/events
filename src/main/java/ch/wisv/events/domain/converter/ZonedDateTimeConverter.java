@@ -1,7 +1,9 @@
 package ch.wisv.events.domain.converter;
 
 import java.time.ZonedDateTime;
+import static java.util.Objects.isNull;
 import javax.persistence.AttributeConverter;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * ZonedDateTimeConverter.
@@ -18,6 +20,10 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
      */
     @Override
     public String convertToDatabaseColumn(ZonedDateTime attribute) {
+        if (isNull(attribute)) {
+            return null;
+        }
+
         return attribute.toString();
     }
 
@@ -35,6 +41,10 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
      */
     @Override
     public ZonedDateTime convertToEntityAttribute(String dbData) {
+        if (isEmpty(dbData)) {
+            return null;
+        }
+
         return ZonedDateTime.parse(dbData);
     }
 }

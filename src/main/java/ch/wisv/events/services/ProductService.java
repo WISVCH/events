@@ -1,5 +1,7 @@
 package ch.wisv.events.services;
 
+import ch.wisv.events.domain.exception.ModelNotFoundException;
+import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.product.ProductOption;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
@@ -49,7 +51,7 @@ public class ProductService extends AbstractService<Product> {
      * @return Product
      */
     private Product saveProductOptions(Product model) {
-        // Remove items without a title
+        // Remove orderItems without a title
         List<ProductOption> optionList = model.getProductOptions().stream()
                 .filter(productOption -> isNotEmpty(productOption.getTitle()))
                 .collect(Collectors.toList());
@@ -64,6 +66,25 @@ public class ProductService extends AbstractService<Product> {
         model.setProductOptions(optionList);
 
         return model;
+    }
+
+    public ProductOption getProductOptionByPublicReference(String publicReference) {
+        Optional<ProductOption> model = productOptionRepository.findByPublicReference(publicReference);
+        if (model.isPresent()) {
+            return model.get();
+        }
+
+        throw new ModelNotFoundException(Event.class, publicReference);
+    }
+
+    /**
+     * Something to do before the object has been saved.
+     *
+     * @param model of type AbstractModel
+     */
+    @Override
+    void beforeSave(Product model) {
+
     }
 
     /**
