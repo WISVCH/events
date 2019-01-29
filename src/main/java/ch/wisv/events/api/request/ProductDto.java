@@ -55,6 +55,12 @@ public class ProductDto {
     private boolean chOnly;
 
     /**
+     * This product can be reserved instead of paid directly at checkout
+     */
+    @NotNull
+    private boolean reservable;
+
+    /**
      * If the product is including association registration.
      */
     @NotNull

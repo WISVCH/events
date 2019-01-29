@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -107,6 +108,12 @@ public class Product {
     private boolean chOnly;
 
     /**
+     * This product can be reserved instead of paid directly at checkout.
+     * Defaults to true.
+     */
+    private boolean reservable = true;
+
+    /**
      * Product constructor.
      */
     public Product() {
@@ -131,6 +138,7 @@ public class Product {
         this.maxSold = productDto.getMaxSold();
         this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();
         this.chOnly = productDto.isChOnly();
+        this.reservable = productDto.isReservable();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         if (productDto.getSellStart() != null) {

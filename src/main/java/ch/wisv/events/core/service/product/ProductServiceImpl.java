@@ -120,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
         model.setProducts(product.getProducts());
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
         model.setChOnly(product.isChOnly());
+        model.setReservable(product.isReservable());
 
         if (product.getSold() != 0) {
             model.setSold(product.getSold());

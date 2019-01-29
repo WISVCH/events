@@ -67,6 +67,7 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute("containsOnlyReservable", orderService.containsOnlyReservable(order));
 
             if (order.getAmount() == 0.d) {
                 order.setPaymentMethod(PaymentMethod.OTHER);

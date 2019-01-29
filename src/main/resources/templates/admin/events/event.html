@@ -348,12 +348,19 @@
                     <div class="form-check col-6">
                         <label class="form-check-label custom-control custom-checkbox">
                             CH members only
-                            <input type="checkbox" class="custom-control-input" id="productChOnly">
+                            <input type="checkbox" class="custom-control-input" id="productChOnly"/>
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                    <div class="form-check col-6">
+                        <label class="form-check-label custom-control custom-checkbox">
+                            Product can be reserved
+                            <input type="checkbox" class="custom-control-input" id="productReservable" checked/>
                             <span class="custom-control-indicator"></span>
                         </label>
                     </div>
                 </div>
-
+                <div class="alert alert-warning" id="newProductModalError" style="display: none;">Please fill in all the required fields!</div>
                 <a class="btn btn-block btn-danger text-white" id="createNewProductButton">Create and add product</a>
             </div>
         </div>

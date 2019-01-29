@@ -131,6 +131,15 @@
                                                     <span class="custom-control-indicator"></span>
                                                 </label>
                                             </div>
+                                            <div class="form-check col-6">
+                                                <label class="form-check-label custom-control custom-checkbox">
+                                                    Product can be reserved
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           th:field="*{reservable}"
+                                                           th:checked="${product.isReservable()}">
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
