@@ -4,9 +4,11 @@ import ch.wisv.events.domain.exception.InvalidDeletableException;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.domain.model.order.OrderItem;
 import ch.wisv.events.domain.model.product.ProductOption;
+import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.OrderItemRepository;
 import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import org.springframework.context.ApplicationEventPublisher;
@@ -72,6 +74,14 @@ public class OrderService extends AbstractService<Order> {
         return order;
     }
 
+    public void addCustomerToOrder(Order order, User customer) {
+        if (isNull(order.getCustomer())) {
+            order.setCustomer(customer);
+
+
+        }
+    }
+
     /**
      * Something to do before the object has been saved.
      *
@@ -83,9 +93,9 @@ public class OrderService extends AbstractService<Order> {
 
         // Set total price.
         model.setTotalPrice(model.getItems().stream().mapToDouble(item -> {
-            Double price = item.getProduct().getPrice();
+            Double price = item.getAmount() * item.getProduct().getPrice();
             if (nonNull(item.getProductOption())) {
-                price += item.getProductOption().getAdditionalPrice();
+                price += item.getAmount() * item.getProductOption().getAdditionalPrice();
             }
             return price;
         }).sum());

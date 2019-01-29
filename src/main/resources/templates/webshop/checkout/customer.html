@@ -1,85 +1,157 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
-
-    <title>CH Events</title>
-
-    <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
-    <link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <title>CH Events | Checkout</title>
 </head>
-
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>
-
-<div class="container">
+<div class="page-title" layout:fragment="title" style="background-image:url('/events/images/events_header.jpg')">
     <div class="row">
-        <main class="col py-5" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
+        <div class="col">
+            <h1>Checkout</h1>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content">
+    <div class="row my-4">
+        <div class="col-12 col-md-5">
+            <h4 class="display-5 mb-5">CH Connect</h4>
 
-            <div class="row">
-                <div class="col-12 col-md-5">
-                    <h4 class="display-5 mb-5">CH Connect</h4>
+            <p class="mb-2">
+                Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V.
+                'Christiaan Huygens'
+                and are in possession of a CH account or have your NetID be linked to your membership.
+            </p>
 
-                    <p class="mb-2">
-                        Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V.
-                        'Christiaan Huygens'
-                        and are in possession of a CH account or have your NetID be linked to your membership.
-                    </p>
+            <a th:href="@{'/webshop/customer/' + ${order.getPublicReference()} + '/connect'}"
+               class="btn btn-block btn-info my-4">
+                Checkout using CH Connect
+            </a>
 
-                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chconnect'}"
-                       class="btn btn-block btn-info my-4">
-                        Checkout using CH Connect
-                    </a>
+            <p class="text-muted">
+                Are you a CH member, but can not make use of CH Connect? Please send an email to <a href="#">board@ch.tudelft.nl</a>
+            </p>
+        </div>
 
-                    <p class="text-muted">
-                        Are you a CH member, but can not make use of CH Connect? Please send an email to <a href="#">board@ch.tudelft.nl</a>
-                    </p>
+        <div class="col-12 col-md-2">
+            <div class="d-flex flex-column align-self-stretch align-items-center h-100">
+                <div class="d-flex align-self-stretch h-100 justify-content-center">
+                    <div class="vertical-line"></div>
                 </div>
-                <div class="col-12 col-md-2">
-                    <div class="d-flex flex-column align-self-stretch align-items-center h-100">
-                        <div class="d-flex align-self-stretch h-100 justify-content-center">
-                            <div class="vertical-line"></div>
-                        </div>
-                        <h4 class="my-3">or</h4>
-                        <div class="d-flex align-self-stretch h-100 justify-content-center">
-                            <div class="vertical-line"></div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-12 col-md-5">
-                    <h4 class="display-5 mb-5">Guest</h4>
-
-                    <p class="mb-2">
-                        Not a CH member or does CH Connect not work for you? No problem, proceed the checkout as a
-                        guest.
-                    </p>
-
-                    <p class="mb-2 text-danger" th:if="${chOnly}">
-                        There is a CH only product in the order, so it is only possible to
-                        checkout with a verified email address.
-                    </p>
-
-                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/guest'}"
-                       class="btn btn-block btn-info my-4">
-                        Checkout as guest
-                    </a>
+                <h4 class="my-3">or</h4>
+                <div class="d-flex align-self-stretch h-100 justify-content-center">
+                    <div class="vertical-line"></div>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <h4 class="display-5 mb-5">Guest</h4>
+
+            <p class="mb-2">
+                Not a CH member or does CH Connect not work for you? No problem, proceed the checkout as a
+                guest.
+            </p>
+
+            <p class="mb-2 text-danger" th:if="${isChOnly}">
+                There is a CH only product in the order, so it is only possible to
+                checkout with a verified email address.
+            </p>
+
+            <a th:href="@{'/webshop/customer/' + ${order.getPublicReference()} + '/guest'}"
+               class="btn btn-block btn-info my-4">
+                Checkout as guest
+            </a>
+        </div>
     </div>
 </div>
 </body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--<meta charset="utf-8">-->
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--&lt;!&ndash; The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags &ndash;&gt;-->
+<!--<meta name="description" content="">-->
+<!--<meta name="author" content="">-->
+
+<!--<link rel="icon" th:href="@{/images/favicon.png}">-->
+<!--<title>CH Events</title>-->
+
+<!--&lt;!&ndash;Bootstrap core CSS &ndash;&gt;-->
+<!--<link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">-->
+<!--<link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">-->
+<!--<link th:href="@{/css/wisvch-header.css}" rel="stylesheet">-->
+<!--<link th:href="@{/css/wisvch-tickets.css}" rel="stylesheet">-->
+
+<!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">-->
+<!--<link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<nav th:replace="webshop/fragments/header :: header ('Checkout', 'events_header.jpg')"></nav>-->
+
+<!--<div class="container">-->
+<!--<div class="row">-->
+<!--<main class="col py-5" role="main">-->
+<!--<div th:replace="fragments/messages :: messages"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-12 col-md-5">-->
+<!--<h4 class="display-5 mb-5">CH Connect</h4>-->
+
+<!--<p class="mb-2">-->
+<!--Proceed checkout by using CH Connect. For this you will need to be a member of W.I.S.V.-->
+<!--'Christiaan Huygens'-->
+<!--and are in possession of a CH account or have your NetID be linked to your membership.-->
+<!--</p>-->
+
+<!--<a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chconnect'}"-->
+<!--class="btn btn-block btn-info my-4">-->
+<!--Checkout using CH Connect-->
+<!--</a>-->
+
+<!--<p class="text-muted">-->
+<!--Are you a CH member, but can not make use of CH Connect? Please send an email to <a href="#">board@ch.tudelft.nl</a>-->
+<!--</p>-->
+<!--</div>-->
+<!--<div class="col-12 col-md-2">-->
+<!--<div class="d-flex flex-column align-self-stretch align-items-center h-100">-->
+<!--<div class="d-flex align-self-stretch h-100 justify-content-center">-->
+<!--<div class="vertical-line"></div>-->
+<!--</div>-->
+<!--<h4 class="my-3">or</h4>-->
+<!--<div class="d-flex align-self-stretch h-100 justify-content-center">-->
+<!--<div class="vertical-line"></div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--<div class="col-12 col-md-5">-->
+<!--<h4 class="display-5 mb-5">Guest</h4>-->
+
+<!--<p class="mb-2">-->
+<!--Not a CH member or does CH Connect not work for you? No problem, proceed the checkout as a-->
+<!--guest.-->
+<!--</p>-->
+
+<!--<p class="mb-2 text-danger" th:if="${chOnly}">-->
+<!--There is a CH only product in the order, so it is only possible to-->
+<!--checkout with a verified email address.-->
+<!--</p>-->
+
+<!--<a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/guest'}"-->
+<!--class="btn btn-block btn-info my-4">-->
+<!--Checkout as guest-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</main>-->
+<!--</div>-->
+<!--</div>-->
+<!--</body>-->
