@@ -9,13 +9,13 @@ import net.minidev.json.JSONObject;
 public enum ProductTemplate {
 
     /** Template for a tuesday lecture. */
-    TUESDAY_LECTURE("T.U.E.S.Day lecture", "T.U.E.S.Day lecture: ", 0, 1, false),
+    TUESDAY_LECTURE("T.U.E.S.Day lecture", "T.U.E.S.Day lecture: ", 0, 1, false, false),
 
     /** Template for a members lunch. */
-    MEMBERS_LUNCH("Members lunch", "Members lunch ticket", 1, 5, true),
+    MEMBERS_LUNCH("Members lunch", "Members lunch ticket", 1, 5, true, true),
 
     /** Template for a pizza. */
-    PIZZA("Pizza", "Pizza", 5.0, 25, false);
+    PIZZA("Pizza", "Pizza", 5.0, 25, false, true);
 
     /** Name of the template. */
     @Getter
@@ -37,6 +37,10 @@ public enum ProductTemplate {
     @Getter
     private final boolean chOnly;
 
+    /** Product reservable. */
+    @Getter
+    private final boolean reservable;
+
     /**
      * Products template.
      *
@@ -45,18 +49,21 @@ public enum ProductTemplate {
      * @param cost              of type double
      * @param maxSolPerCustomer of type int
      * @param chOnly            of type boolean
+     * @param reservable        of type boolean
      */
     ProductTemplate(
             String templateName, String title,
             double cost,
             int maxSolPerCustomer,
-            boolean chOnly
+            boolean chOnly,
+            boolean reservable
     ) {
         this.templateName = templateName;
         this.title = title;
         this.cost = cost;
         this.maxSolPerCustomer = maxSolPerCustomer;
         this.chOnly = chOnly;
+        this.reservable = reservable;
     }
 
     /**
@@ -71,6 +78,7 @@ public enum ProductTemplate {
         object.put("cost", this.getCost());
         object.put("maxSoldPerCustomer", this.getMaxSolPerCustomer());
         object.put("chOnly", this.isChOnly());
+        object.put("reservable", this.isReservable());
 
         return object.toString();
     }

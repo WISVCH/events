@@ -136,6 +136,15 @@ public interface OrderService {
     boolean containsChOnlyProduct(Order order);
 
     /**
+     * Check if order contains only reservable products.
+     *
+     * @param order of type Order
+     *
+     * @return boolean
+     */
+    boolean containsOnlyReservable(Order order);
+
+    /**
      * Delete an Order (use with caution!).
      *
      * @param order of type Order

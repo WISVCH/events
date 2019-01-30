@@ -43,6 +43,12 @@ var TemplateSelector;
                 } else {
                     inputBox.removeAttr("checked");
                 }
+
+                if (key === "reservable" && value === true) {
+                    inputBox.attr("checked", "checked");
+                } else {
+                    inputBox.removeAttr("checked");
+                }
             });
         },
 
@@ -119,7 +125,7 @@ $(document).ready(function () {
 
         var fail = assertRequiredFields();
         if (fail) {
-
+            $('#newProductModalError').show();
         } else {
             var data = {
                 title: $("#productTitle").val(),
@@ -129,7 +135,8 @@ $(document).ready(function () {
                 maxSoldPerCustomer: $("#productMaxSoldPerCustomer").val(),
                 sellStart: $("#productSellStart").val() === '' ? null : $("#productSellStart").val(),
                 sellEnd: $("#productSellEnd").val() === '' ? null : $("#productSellEnd").val(),
-                chOnly: $("#productChOnly").val() === "on"
+                chOnly: $("#productChOnly").prop('checked'),
+                reservable: $("#productReservable").prop('checked')
             };
 
             $.ajax({
@@ -155,6 +162,8 @@ $(document).ready(function () {
 
     function assertRequiredFields() {
         var fail = false;
+
+        $('#newProductModalError').hide();
 
         $('#addProductForm').find('select, textarea, input').each(function () {
             if (!$(this).hasClass('required')) {

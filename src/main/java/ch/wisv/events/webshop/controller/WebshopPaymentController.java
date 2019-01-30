@@ -27,6 +27,9 @@ public class WebshopPaymentController extends WebshopController {
     /** Error message order not suitable for checkout. */
     private static final String ERROR_ORDER_NOT_SUITABLE_CHECKOUT = "Order is not suitable for checkout!";
 
+    /** Attribute to indicate if the order only contains reservable products. */
+    private static final String MODEL_ATTR_RESERVABLE = "containsOnlyReservable";
+
     /** OrderValidationService. */
     private final OrderValidationService orderValidationService;
 
@@ -67,6 +70,7 @@ public class WebshopPaymentController extends WebshopController {
             Order order = this.getOrderAndCheck(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            model.addAttribute(MODEL_ATTR_RESERVABLE, orderService.containsOnlyReservable(order));
 
             if (order.getAmount() == 0.d) {
                 order.setPaymentMethod(PaymentMethod.OTHER);

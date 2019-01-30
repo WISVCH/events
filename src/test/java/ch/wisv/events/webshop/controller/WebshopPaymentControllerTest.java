@@ -2,27 +2,22 @@ package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
-import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
-import java.util.ArrayList;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import org.springframework.web.util.NestedServletException;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,6 +37,17 @@ public class WebshopPaymentControllerTest extends ControllerTest {
                 .andExpect(model().attribute("order", order))
                 .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/ideal\"")))
                 .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
+    }
+
+    @Test
+    public void testNonReservableOrder() throws Exception {
+        Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
+        order.getOrderProducts().get(0).getProduct().setReservable(false);
+
+        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("webshop/payment/index"))
+                .andExpect(content().string(not(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/reservation\""))));
     }
 
     @Test

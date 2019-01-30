@@ -293,6 +293,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Returns whether an order contains non-reservable products.
+     */
+    @Override
+    public boolean containsOnlyReservable(Order order) {
+        return order.getOrderProducts().stream().allMatch(orderProduct ->
+                orderProduct.getProduct().isReservable()
+        );
+    }
+
+    /**
      * Delete an Order (use with caution!).
      *
      * @param order of type Order
