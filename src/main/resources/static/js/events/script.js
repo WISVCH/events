@@ -46,7 +46,6 @@ var TemplateSelector;
 
                 if (key === "reservable" && value === true) {
                     inputBox.attr("checked", "checked");
-                    console.log('here');
                 } else {
                     inputBox.removeAttr("checked");
                 }

@@ -55,7 +55,7 @@ public class ProductDto {
     private boolean chOnly;
 
     /**
-     * This product can be reserved instead of paid directly at checkout
+     * This product can be reserved instead of paid directly at checkout.
      */
     @NotNull
     private boolean reservable;

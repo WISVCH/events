@@ -293,7 +293,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Returns whether an order contains non-reservable products
+     * Returns whether an order contains non-reservable products.
      */
     @Override
     public boolean containsOnlyReservable(Order order) {

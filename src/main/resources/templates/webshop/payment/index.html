@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4" th:if="${containsOnlyReservable}">
                     <div class="card h-100">
                         <div class="card-body h-100">
                             <div class="row h-100">
@@ -100,7 +100,7 @@
                                     <img class="img-thumbnail" th:src="@{/images/icon-pay-later.jpg}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
-                                    <div class="row" th:if="${containsOnlyReservable}">
+                                    <div class="row">
                                         <div class="col-12 align-self-start mb-4">
                                             <h5 class="d-inline mt-0">RESERVATION</h5> - Reserve your tickets now and
                                             pay it later at the board of W.I.S.V. 'Christiaan Huygens'.<br/>
@@ -112,13 +112,6 @@
                                                class="btn btn-block btn-primary">
                                                 Reserve tickets
                                             </a>
-                                        </div>
-                                    </div>
-                                    <div class="row" th:if="${!containsOnlyReservable}">
-                                        <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">RESERVATION</h5>
-                                            - Unfortunately this order contains products that cannot be reserved. Please
-                                            use a different payment method.
                                         </div>
                                     </div>
                                 </div>
