@@ -5,24 +5,16 @@
     <title>CH Events | Checkout</title>
 </head>
 <body>
-<h1 layout:fragment="title">CH Events | Shopping cart</h1>
+<h1 layout:fragment="title">CH Events | Checkout</h1>
 
 <div layout:fragment="content">
     <div class="row">
         <div class="col-md-12">
-            <ul class="list-group list-group-horizontal-xl">
-                <li class="list-group-item">
-                    1. Order
-                </li>
-                <li class="list-group-item">
-                    2. Login
-                </li>
-                <li class="list-group-item">
-                    3. Payment
-                </li>
-                <li class="list-group-item">
-                    4. Confirmation
-                </li>
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item active">1. Order</li>
+                <li class="nav-item">2. Login</li>
+                <li class="nav-item">3. Payment</li>
+                <li class="nav-item">4. Confirmation</li>
             </ul>
         </div>
     </div>
@@ -44,6 +36,14 @@
                                     th:text="'€ ' + ${#numbers.formatDecimal(orderItem.getProductOption().getAdditionalPrice(), 1, 'POINT', 2, 'COMMA')}"></span>)
                             </li>
                         </ul>
+                    </div>
+
+                    <div class="row" th:if="${order.hasChOnlyProduct()}">
+                        <div class="col-12">
+                            <div class="alert alert-light" role="alert">
+                                A simple light alert—check it out!
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">

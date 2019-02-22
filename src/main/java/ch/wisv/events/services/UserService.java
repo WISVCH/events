@@ -30,7 +30,7 @@ public class UserService extends AbstractService<User> {
      */
     @Autowired
     public UserService(ApplicationEventPublisher publisher, UserRepository userRepository) {
-        super(publisher, userRepository);
+        super(User.class, publisher, userRepository);
         this.userRepository = userRepository;
     }
 

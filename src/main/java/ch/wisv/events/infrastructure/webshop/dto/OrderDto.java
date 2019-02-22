@@ -15,8 +15,8 @@ public class OrderDto {
     /**
      * List of OrderProductDto.
      */
-    @NotNull(message = "Order should contain products")
-    @Size(min = 1, message = "Order should contain products")
+    @NotNull(message = "No products in this order")
+    @Size(min = 1, message = "No products in this order")
     List<OrderProductDto> products;
 
     /**

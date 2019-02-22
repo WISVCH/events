@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
@@ -24,6 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "orders")
 public class Order extends AbstractModel {
 
     /**
@@ -91,5 +93,23 @@ public class Order extends AbstractModel {
         } else {
             this.items.add(item);
         }
+    }
+
+    /**
+     * Get the total number of items in the Order.
+     *
+     * @return long
+     */
+    public long getTotalItems() {
+        return this.getItems().stream().mapToLong(OrderItem::getAmount).sum();
+    }
+
+    /**
+     * Checks if the Order contains a CH only product.
+     *
+     * @return boolean
+     */
+    public boolean hasChOnlyProduct() {
+        return this.getItems().stream().anyMatch(item -> item.getProduct().isChOnly());
     }
 }

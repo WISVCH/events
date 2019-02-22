@@ -73,7 +73,7 @@ public class WebshopIndexController extends AbstractWebshopController {
         model.addAttribute(MODEL_ATTR_EVENTS, allUpcoming);
         model.addAttribute(MODEL_ATTR_ORDER_DTO, new OrderDto());
 
-        return "webshop/index";
+        return "webshop/webshop-index";
     }
 
     /**
@@ -93,6 +93,6 @@ public class WebshopIndexController extends AbstractWebshopController {
         model.addAttribute(MODEL_ATTR_EVENT, eventService.getByPublicReference(publicReference));
         model.addAttribute(MODEL_ATTR_ORDER_DTO, new OrderDto());
 
-        return "webshop/event";
+        return "webshop/webshop-single-event";
     }
 }

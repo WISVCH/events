@@ -71,6 +71,11 @@ public class Product extends AbstractModel {
     private int maxNumberOfTicketPerUser;
 
     /**
+     * Product sold count.
+     */
+    private int sold;
+
+    /**
      * Flag if product is for CH members only.
      */
     private boolean chOnly;

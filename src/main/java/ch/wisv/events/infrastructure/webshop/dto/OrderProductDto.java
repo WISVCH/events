@@ -25,7 +25,6 @@ public class OrderProductDto {
     /**
      * Amount.
      */
-    @NotNull(message = "Amount cannout be null")
     @Min(value = 1, message = "Amount should be at least 1")
-    private Long amount;
+    private int amount;
 }

@@ -34,7 +34,7 @@ public class EventService extends AbstractService<Event> {
      */
     @Autowired
     public EventService(ApplicationEventPublisher publisher, EventRepository eventRepository) {
-        super(publisher, eventRepository);
+        super(Event.class, publisher, eventRepository);
         this.eventRepository = eventRepository;
     }
 

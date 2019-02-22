@@ -10,10 +10,10 @@ INSERT INTO public.event_categories (event_item_id, categories) VALUES
 
 
 -- Products.
-INSERT INTO public.product (item_id, created_at, public_reference, updated_at, ch_only, description, mandatory_product_option, max_number_of_ticket_per_user, price, ticket_limit, title, event_item_id) VALUES
- (5, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d45c4b8-1dc5-4822-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'Ticket student', true, 10, 0, 0, 'Ticket student', 1),
- (8, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d4534b8-1dc5-4822-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'Ticket alumni', true, 10, 0, 0, 'Ticket alumni', 1),
- (13, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d4534b8-1dc5-4c92-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'WiFi Party pre-sale ticket', true, 10, 3, 0, 'WiFi Party pre-sale ticket', 12);
+INSERT INTO public.product (item_id, created_at, public_reference, updated_at, ch_only, description, mandatory_product_option, max_number_of_ticket_per_user, price, ticket_limit, title, event_item_id, sold) VALUES
+ (5, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d45c4b8-1dc5-4822-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'Ticket student', true, 10, 0, 0, 'Ticket student', 1, 0),
+ (8, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d4534b8-1dc5-4822-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'Ticket alumni', true, 10, 0, 0, 'Ticket alumni', 1, 0),
+ (13, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '3d4534b8-1dc5-4c92-8741-65a9b7a83059', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', false, 'WiFi Party pre-sale ticket', true, 10, 3, 0, 'WiFi Party pre-sale ticket', 12, 0);
 
 INSERT INTO public.product_option (item_id, created_at, public_reference, updated_at, additional_price, title) VALUES
  (2, '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', '14bb7762-ef5b-400c-8e4b-d4ad3ebd0ba5', '2018-11-08T21:21:22.539+01:00[Europe/Amsterdam]', 0, 'Without food'),

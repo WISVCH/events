@@ -29,7 +29,7 @@ public class WebhookService extends AbstractService<Webhook> {
      */
     @Autowired
     public WebhookService(ApplicationEventPublisher publisher, WebhookRepository repository) {
-        super(publisher, repository);
+        super(Webhook.class, publisher, repository);
         webhookRepository = repository;
     }
 

@@ -1,7 +1,6 @@
 package ch.wisv.events.services;
 
 import ch.wisv.events.domain.exception.ModelNotFoundException;
-import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.product.ProductOption;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
@@ -39,7 +38,7 @@ public class ProductService extends AbstractService<Product> {
      */
     @Autowired
     public ProductService(ApplicationEventPublisher publisher, ProductRepository productRepository, ProductOptionRepository productOptionRepository) {
-        super(publisher, productRepository);
+        super(Product.class, publisher, productRepository);
         this.productOptionRepository = productOptionRepository;
     }
 
@@ -68,13 +67,20 @@ public class ProductService extends AbstractService<Product> {
         return model;
     }
 
+    /**
+     * Get a ProductOption by public reference.
+     *
+     * @param publicReference of type String
+     *
+     * @return ProductOption
+     */
     public ProductOption getProductOptionByPublicReference(String publicReference) {
         Optional<ProductOption> model = productOptionRepository.findByPublicReference(publicReference);
         if (model.isPresent()) {
             return model.get();
         }
 
-        throw new ModelNotFoundException(Event.class, publicReference);
+        throw new ModelNotFoundException(ProductOption.class, publicReference);
     }
 
     /**

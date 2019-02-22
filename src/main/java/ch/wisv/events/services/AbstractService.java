@@ -2,7 +2,6 @@ package ch.wisv.events.services;
 
 import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.model.AbstractModel;
-import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.repository.AbstractRepository;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -19,6 +18,11 @@ import org.springframework.context.ApplicationEventPublisher;
 public abstract class AbstractService<T extends AbstractModel> {
 
     /**
+     * Class name.
+     */
+    Class<T> className;
+
+    /**
      * ApplicationEventPublisher.
      */
     final ApplicationEventPublisher publisher;
@@ -31,10 +35,12 @@ public abstract class AbstractService<T extends AbstractModel> {
     /**
      * AbstractRepository constructor.
      *
+     * @param className of type Class<T>
      * @param publisher of type ApplicationEventPublisher
      * @param repository of type AbstractRepository
      */
-    AbstractService(ApplicationEventPublisher publisher, AbstractRepository<T> repository) {
+    AbstractService(Class<T> className, ApplicationEventPublisher publisher, AbstractRepository<T> repository) {
+        this.className = className;
         this.publisher = publisher;
         this.repository = repository;
     }
@@ -61,7 +67,7 @@ public abstract class AbstractService<T extends AbstractModel> {
             return abstractModel.get();
         }
 
-        throw new ModelNotFoundException(Event.class, publicReference);
+        throw new ModelNotFoundException(className, publicReference);
     }
 
     /**

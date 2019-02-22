@@ -8,6 +8,12 @@ import lombok.extern.java.Log;
 @Log
 public class ModelNotFoundException extends RuntimeException {
 
+    /** Error message template. */
+    private static final String MESSAGE = "%s: Model not found by query = '%s'";
+
+    /** Errors simple message template. */
+    private static final String SIMPLE_MESSAGE = "One or more %ss does not exists";
+
     /**
      * ModelNotFoundException constructor.
      *
@@ -15,6 +21,8 @@ public class ModelNotFoundException extends RuntimeException {
      * @param query of type Object
      */
     public ModelNotFoundException(Class model, Object query) {
-        log.info(model.getName() + ": Model not found by query = '" + query + "'");
+        super(String.format(SIMPLE_MESSAGE, model.getSimpleName()));
+
+        log.info(String.format(MESSAGE, model.getName(), query));
     }
 }

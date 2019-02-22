@@ -140,3 +140,20 @@
     color: #40556a;
 }
 
+.nav-pills .nav-item {
+    border-right: none;
+    border-left: none;
+    padding: .6rem 0;
+    text-transform: uppercase;
+    color: #40556a;
+    background: #e7ebf1;
+    font-weight: 500;
+    font-size: 12px;
+    position: relative;
+}
+
+.nav-pills .nav-item.active {
+    background-color: #40556a;
+    border-color: #40556a;
+    color: #fff;
+}

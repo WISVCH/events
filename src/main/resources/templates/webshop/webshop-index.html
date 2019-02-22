@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
+      lang="en" layout:decorate="webshop/webshop-layout">
 <head>
     <title>CH Events | Webshop</title>
 </head>
@@ -10,14 +10,6 @@
 <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
 <!--/*@thymesVar id="cat" type="ch.wisv.events.domain.model.event.EventCategory"*/-->
 <div layout:fragment="content">
-    <div class="row">
-        <div class="ml-auto col-lg-4 col-md-5 col-12 my-4">
-            <a href="#" class="btn btn-block btn-secondary" data-toggle="modal" data-target="#shoppingBasket"
-               id="shoppingBasketButton">
-                <i class="fa fa-fw fa-shopping-basket"></i> Shopping basket (<span id="shoppingBasketCount"></span>)
-            </a>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12 col-md-4 mb-4">
             <div class="card">
@@ -93,8 +85,6 @@
 
 <script layout:fragment="script" th:inline="javascript">
     jQuery(document).ready(function ($) {
-        ShoppingBasket.init();
-
         if ($(document).width() > 768) {
             $("#filterCard").addClass('show');
         }

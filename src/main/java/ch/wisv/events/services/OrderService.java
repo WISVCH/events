@@ -8,12 +8,14 @@ import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.OrderItemRepository;
 import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
+import java.util.HashMap;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.MapBindingResult;
 
 /**
  * OrderService.
@@ -42,7 +44,7 @@ public class OrderService extends AbstractService<Order> {
             OrderItemRepository orderItemRepository,
             ProductService productService
     ) {
-        super(publisher, repository);
+        super(Order.class, publisher, repository);
         this.orderItemRepository = orderItemRepository;
         this.productService = productService;
     }

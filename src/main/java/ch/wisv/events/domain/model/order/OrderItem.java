@@ -7,7 +7,6 @@ import static java.util.Objects.nonNull;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,14 +29,12 @@ public class OrderItem extends AbstractModel {
     private ProductOption productOption;
 
     /** Price of a single Product. */
-    @NotNull(message = "Price cannot be null")
     @Min(value = 0, message = "Price cannot be negative")
-    private Double price;
+    private double price;
 
     /** Number of items of the same Product. */
-    @NotNull(message = "Amount cannot be null")
     @Min(value = 0, message = "Amount cannot be negative")
-    private Long amount;
+    private int amount;
 
     /**
      * Instantiates a new Order item.
@@ -46,7 +43,7 @@ public class OrderItem extends AbstractModel {
      * @param option  the option
      * @param amount  the amount
      */
-    public OrderItem(Product product, ProductOption option, Long amount) {
+    public OrderItem(Product product, ProductOption option, int amount) {
         this.product = product;
         this.productOption = option;
         this.amount = amount;
@@ -62,7 +59,7 @@ public class OrderItem extends AbstractModel {
      *
      * @param amount the amount
      */
-    public void increaseAmount(Long amount) {
+    void increaseAmount(int amount) {
         this.amount += amount;
     }
 }

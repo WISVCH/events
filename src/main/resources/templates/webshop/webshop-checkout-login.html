@@ -9,9 +9,19 @@
 <h1 layout:fragment="title">CH Events | Checkout</h1>
 
 <div layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">1. Order</li>
+                <li class="nav-item active">2. Login</li>
+                <li class="nav-item">3. Payment</li>
+                <li class="nav-item">4. Confirmation</li>
+            </ul>
+        </div>
+    </div>
     <div class="row my-5">
-        <div class="col-12 col-md-5">
-            <h4 class="display-5 mb-5">CH Connect</h4>
+        <div class="col-12 col-md-5" th:classappend="${order.hasChOnlyProduct() ? 'col-md-6 offset-md-3' : ''}">
+            <h4 class="display-5 mb-5">CH Member</h4>
 
             <p class="mb-2">
                 Proceed checking out by logging in through CH Connect. You will need to be a member of W.I.S.V.
@@ -29,7 +39,7 @@
             </p>
         </div>
 
-        <div class="col-12 col-md-2">
+        <div class="col-12 col-md-2" th:if="${!order.hasChOnlyProduct()}">
             <div class="d-flex flex-column align-self-stretch align-items-center h-100">
                 <div class="d-flex align-self-stretch h-100 justify-content-center">
                     <div class="vertical-line"></div>
@@ -41,8 +51,8 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-5">
-            <h4 class="display-5 mb-5">Guest</h4>
+        <div class="col-12 col-md-5" th:if="${!order.hasChOnlyProduct()}">
+            <h4 class="display-5 mb-5">Continue as Guest</h4>
 
             <p class="mb-2">
                 Not a CH member or unable to use CH Connect? No problem, proceed checking out without logging in.

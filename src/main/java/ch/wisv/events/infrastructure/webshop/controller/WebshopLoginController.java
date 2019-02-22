@@ -17,15 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/webshop/customer")
-public class WebshopCustomerController extends AbstractWebshopController {
+@RequestMapping("/webshop/login")
+public class WebshopLoginController extends AbstractWebshopController {
 
     /** Model attribute order. */
     private static final String MODEL_ATTR_ORDER = "order";
 
-    /** Redirect to payment page */
+    /** Redirect to payment page. */
     private static final String REDIRECT_PAYMENT_PAGE = "redirect:/webshop/payment/%s";
-    
+
+    /** Redirect to login page. */
+    private static final String REDIRECT_LOGIN_PAGE = "redirect:/webshop/login/%s";
+
     /** OrderService. */
     private final OrderService orderService;
 
@@ -38,7 +41,7 @@ public class WebshopCustomerController extends AbstractWebshopController {
      * @param orderService          of type OrderService
      * @param authenticationService of type
      */
-    protected WebshopCustomerController(OrderService orderService, AuthenticationService authenticationService) {
+    protected WebshopLoginController(OrderService orderService, AuthenticationService authenticationService) {
         this.orderService = orderService;
         this.authenticationService = authenticationService;
     }
@@ -74,6 +77,31 @@ public class WebshopCustomerController extends AbstractWebshopController {
     @PreAuthorize("hasRole('USER')")
     public String loginChConnect(@PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
+        if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
+            return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
+        }
+
+        User customer = authenticationService.getLoggedInUser();
+        orderService.addCustomerToOrder(order, customer);
+
+        return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
+    }
+
+    /**
+     * Login the user through CH Connect.
+     *
+     * @param publicReference of type String
+     *
+     * @return String
+     */
+    @GetMapping("/{publicReference}/guest")
+    @PreAuthorize("hasRole('USER')")
+    public String create(@PathVariable String publicReference) {
+        Order order = orderService.getByPublicReference(publicReference);
+        if (order.hasChOnlyProduct()) {
+            return String.format(REDIRECT_LOGIN_PAGE, order.getPublicReference());
+        }
+
         if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
             return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
         }

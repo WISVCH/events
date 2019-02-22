@@ -1,20 +1,17 @@
 package ch.wisv.events.infrastructure.webshop.controller;
 
 import ch.wisv.events.domain.exception.ModelNotFoundException;
+import ch.wisv.events.domain.exception.OrderInvalidException;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
 import ch.wisv.events.services.OrderService;
+import ch.wisv.events.services.OrderValidationService;
+import ch.wisv.events.util.BindingResultBuilder;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,19 +23,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/webshop/checkout")
 public class WebshopCheckoutController extends AbstractWebshopController {
 
-    /** Model attribute order. */
-    private static final String MODEL_ATTR_ORDER = "order";
+    /** Redirect to home page. */
+    private static final String REDIRECT_HOME_PAGE = "redirect:/webshop/";
+
+    /** Redirect to order page. */
+    private static final String REDIRECT_ORDER_PAGE = "redirect:/webshop/order/%s";
 
     /** OrderService. */
     private final OrderService orderService;
+
+    /** OrderValidationService. */
+    private final OrderValidationService orderValidationService;
 
     /**
      * WebshopController constructor.
      *
      * @param orderService of type OrderService
+     * @param orderValidationService
      */
-    protected WebshopCheckoutController(OrderService orderService) {
+    protected WebshopCheckoutController(OrderService orderService, OrderValidationService orderValidationService) {
         this.orderService = orderService;
+        this.orderValidationService = orderValidationService;
     }
 
     /**
@@ -54,39 +59,20 @@ public class WebshopCheckoutController extends AbstractWebshopController {
     public String createOrder(RedirectAttributes redirect, @Valid @ModelAttribute OrderDto orderDto, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
-                Map<String, String> errorMessages = new HashMap<>();
-                for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                    errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
-                }
+                redirect.addFlashAttribute(MODEL_ATTR_ERRORS, BindingResultBuilder.createErrorMap(bindingResult));
 
-                redirect.addFlashAttribute("errors", errorMessages);
-
-                return "redirect:/webshop/";
+                return REDIRECT_HOME_PAGE;
             }
 
             Order order = orderService.createByOrderDto(orderDto);
-            order.setCreatedBy("");
+            orderValidationService.assertIsValidForCheckout(order);
+            order.setCreatedBy("events-webshop");
 
-            return "redirect:/webshop/checkout/" + order.getPublicReference();
-        } catch (ModelNotFoundException e) {
-            redirect.addFlashAttribute("errors", ImmutableMap.of("invalid", "Shopping cart contains invalid product"));
+            return String.format(REDIRECT_ORDER_PAGE, order.getPublicReference());
+        } catch (ModelNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", e.getMessage()));
 
-            return "redirect:/webshop/";
+            return REDIRECT_HOME_PAGE;
         }
-    }
-
-    /**
-     * View order string.
-     *
-     * @param model           of type Model
-     * @param publicReference the public reference
-     *
-     * @return string
-     */
-    @GetMapping("/{publicReference}")
-    public String viewOrder(Model model, @PathVariable String publicReference) {
-        model.addAttribute(MODEL_ATTR_ORDER, orderService.getByPublicReference(publicReference));
-
-        return "webshop/checkout/index";
     }
 }

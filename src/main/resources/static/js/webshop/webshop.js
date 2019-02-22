@@ -33,7 +33,6 @@ var ShoppingBasket;
             var count = 0;
             $.each(ShoppingBasket.shoppingBasket, function (index, ticket) {
                 var products = $("#products");
-                console.log(ticket);
                 products.append(vsprintf(orderProductKey, [count, count, ticket.key]));
                 products.append(vsprintf(orderProductOptionKey, [count, count, ticket.additionalKey]));
                 products.append(vsprintf(orderAmount, [count, count, ticket.amount]));

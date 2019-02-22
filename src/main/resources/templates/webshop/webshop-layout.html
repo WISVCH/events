@@ -40,7 +40,17 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav menu ml-auto">
+                    <li class="nav-item m-2">
+                        <a th:href="@{'/webshop/'}" class="btn">home</a>
+                    </li>
+                    <li class="nav-item m-2">
+                        <a href="#" class="btn btn-block btn-info" data-toggle="modal"
+                           data-target="#shoppingBasket" id="shoppingBasketButton">
+                            <i class="fa fa-fw fa-shopping-basket"></i>
+                            (<span id="shoppingBasketCount"></span>)
+                        </a>
+                    </li>
                     <li class="nav-item m-2">
                         <a th:href="@{/overview/}" class="btn btn-block btn-secondary">
                             login
@@ -52,15 +62,26 @@
     </div>
 
     <!-- Page title -->
-    <div layout:fragment="title"></div>
+    <div class="page-title" style="background-image:url('/events/images/webshop-header.jpg')">
+        <div class="row">
+            <div class="col">
+                <h1 layout:fragment="title"></h1>
+            </div>
+        </div>
+    </div>
 </header>
 
-<main class="container-fluid" layout:fragment="content"></main>
+<main class="container my-5" layout:fragment="content"></main>
 
 <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/sprintf-js/1.1.1/dist/sprintf.min.js}"></script>
 <script th:src="@{/js/js.storage.min.js}"></script>
 <script th:src="@{/js/webshop/webshop.min.js}"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        ShoppingBasket.init();
+    });
+</script>
 <script type="text/javascript" layout:fragment="script"></script>
 </body>
