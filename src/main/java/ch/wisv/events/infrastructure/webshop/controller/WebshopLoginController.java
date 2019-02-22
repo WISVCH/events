@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * WebshopIndexController class.
@@ -24,8 +23,9 @@ public class WebshopCustomerController extends AbstractWebshopController {
     /** Model attribute order. */
     private static final String MODEL_ATTR_ORDER = "order";
 
-    private static final String REDIRECT_TO_SELECT_PAYMENT_OPTION = "";
-
+    /** Redirect to payment page */
+    private static final String REDIRECT_PAYMENT_PAGE = "redirect:/webshop/payment/%s";
+    
     /** OrderService. */
     private final OrderService orderService;
 
@@ -55,26 +55,32 @@ public class WebshopCustomerController extends AbstractWebshopController {
     public String customerIndex(Model model, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
-            return REDIRECT_TO_SELECT_PAYMENT_OPTION;
+            return REDIRECT_PAYMENT_PAGE;
         }
 
         model.addAttribute(MODEL_ATTR_ORDER, order);
-        model.addAttribute("isChOnly", order.getItems().stream().anyMatch(item -> item.getProduct().isChOnly()));
 
-        return "webshop/checkout/customer";
+        return "webshop/webshop-checkout-login";
     }
 
+    /**
+     * Login the user through CH Connect.
+     *
+     * @param publicReference of type String
+     *
+     * @return String
+     */
     @GetMapping("/{publicReference}/connect")
     @PreAuthorize("hasRole('USER')")
-    public String loginChConnect(RedirectAttributes redirect, @PathVariable String publicReference) {
+    public String loginChConnect(@PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
-            return REDIRECT_TO_SELECT_PAYMENT_OPTION;
+            return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
         }
 
         User customer = authenticationService.getLoggedInUser();
         orderService.addCustomerToOrder(order, customer);
 
-        return "redirect:/webshop/checkout/" + order.getPublicReference();
+        return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
     }
 }

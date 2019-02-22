@@ -5,13 +5,8 @@
     <title>CH Events | Webshop</title>
 </head>
 <body>
-<div class="page-title" layout:fragment="title" style="background-image:url('/events/images/events_header.jpg')">
-    <div class="row">
-        <div class="col">
-            <h1>CH Events | Webshop</h1>
-        </div>
-    </div>
-</div>
+<h1 layout:fragment="title">CH Events | Webshop</h1>
+
 <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
 <!--/*@thymesVar id="cat" type="ch.wisv.events.domain.model.event.EventCategory"*/-->
 <div layout:fragment="content">
@@ -24,7 +19,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12 col-md-4 col-lg-4 col-xl-3 mb-4">
+        <div class="col-12 col-md-4 mb-4">
             <div class="card">
                 <div class="card-header" data-toggle="collapse" data-target="#filterCard">
                     <h6 class="mb-0">Filters</h6>
@@ -59,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-8 col-lg-8 col-xl-9">
+        <div class="col-12 col-md-8">
             <div class="card mb-4" th:each="event: ${events}" th:if="${events.size() > 0}">
                 <div class="card-body">
                     <div class="row">
