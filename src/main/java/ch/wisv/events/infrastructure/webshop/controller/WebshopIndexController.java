@@ -1,11 +1,9 @@
 package ch.wisv.events.infrastructure.webshop.controller;
 
-import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.infrastructure.webshop.dto.FilterDto;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
 import ch.wisv.events.services.EventService;
 import java.util.HashMap;
-import java.util.List;
 import static java.util.Objects.isNull;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
@@ -24,16 +22,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class WebshopIndexController extends AbstractWebshopController {
 
     /** Model attr events. */
-    private static final String MODEL_ATTR_EVENTS = "events";
+    static final String MODEL_ATTR_EVENTS = "events";
 
     /** Model attr event. */
-    private static final String MODEL_ATTR_EVENT = "event";
-
-    /** Model attr filter. */
-    private static final String MODEL_ATTR_FILTER = "filterDto";
+    static final String MODEL_ATTR_EVENT = "event";
 
     /** Model attr orderDto. */
-    private static final String MODEL_ATTR_ORDER_DTO = "orderDto";
+    static final String MODEL_ATTR_ORDER_DTO = "orderDto";
+
+    /** View webshop index page. */
+    static final String VIEW_WEBSHOP_INDEX = "webshop/webshop-index";
+
+    /** View webshop single event page. */
+    static final String VIEW_WEBSHOP_SINGLE_EVENT = "webshop/webshop-single-event";
 
     /** EventService. */
     private final EventService eventService;
@@ -61,19 +62,13 @@ public class WebshopIndexController extends AbstractWebshopController {
             model.addAttribute(MODEL_ATTR_ERRORS, new HashMap<String, String>());
         }
 
-        if (isNull(filterDto)) {
-            model.addAttribute(MODEL_ATTR_FILTER, new FilterDto());
-        }
-
-        List<Event> allUpcoming = eventService.getAllUpcoming();
-        allUpcoming = allUpcoming.stream()
+        model.addAttribute(MODEL_ATTR_EVENTS, eventService.getAllUpcoming().stream()
                 .filter(event -> isEmpty(filterDto.getCategories()) || event.getCategories().stream().anyMatch(filterDto.getCategories()::contains))
                 .filter(event -> isNull(filterDto.getSearch()) || event.getTitle().toLowerCase().contains(filterDto.getSearch().toLowerCase()))
-                .collect(Collectors.toList());
-        model.addAttribute(MODEL_ATTR_EVENTS, allUpcoming);
+                .collect(Collectors.toList()));
         model.addAttribute(MODEL_ATTR_ORDER_DTO, new OrderDto());
 
-        return "webshop/webshop-index";
+        return VIEW_WEBSHOP_INDEX;
     }
 
     /**
@@ -93,6 +88,6 @@ public class WebshopIndexController extends AbstractWebshopController {
         model.addAttribute(MODEL_ATTR_EVENT, eventService.getByPublicReference(publicReference));
         model.addAttribute(MODEL_ATTR_ORDER_DTO, new OrderDto());
 
-        return "webshop/webshop-single-event";
+        return VIEW_WEBSHOP_SINGLE_EVENT;
     }
 }
