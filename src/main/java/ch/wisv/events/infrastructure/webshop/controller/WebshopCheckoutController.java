@@ -39,7 +39,7 @@ public class WebshopCheckoutController extends AbstractWebshopController {
      * WebshopController constructor.
      *
      * @param orderService of type OrderService
-     * @param orderValidationService
+     * @param orderValidationService of type OrderValidationService
      */
     protected WebshopCheckoutController(OrderService orderService, OrderValidationService orderValidationService) {
         this.orderService = orderService;

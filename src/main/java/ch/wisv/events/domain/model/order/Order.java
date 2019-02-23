@@ -65,7 +65,7 @@ public class Order extends AbstractModel {
      * Status of the Order.
      */
     @NotNull(message = "Order status cannot be null")
-    private OrderStatus status = OrderStatus.OPEN;
+    private OrderStatus status = OrderStatus.ANONYMOUS;
 
     /**
      * Payment method: CASH, CARD or MOLLIE.

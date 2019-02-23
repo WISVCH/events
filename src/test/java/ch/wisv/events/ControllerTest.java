@@ -4,6 +4,7 @@ import ch.wisv.events.domain.repository.EventRepository;
 import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
 import ch.wisv.events.domain.repository.ProductRepository;
+import ch.wisv.events.domain.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -38,6 +39,10 @@ public abstract class ControllerTest {
     /** OrderRepository. */
     @Autowired
     protected OrderRepository orderRepository;
+
+    /** UserRepository. */
+    @Autowired
+    protected UserRepository userRepository;
 
     /** WebApplicationContext. */
     @Autowired

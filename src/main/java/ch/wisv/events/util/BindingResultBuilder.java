@@ -8,12 +8,19 @@ import org.springframework.validation.FieldError;
 /**
  * BindingResultBuilder.
  */
-public class BindingResultBuilder {
+public final class BindingResultBuilder {
 
     /**
+     * Private constructor.
+     */
+    private BindingResultBuilder() {
+    }
+
+    /**
+     * Convert BindingResults into ErrorMap.
      *
-     * @param bindingResult
-     * @return
+     * @param bindingResult of type BindingResult
+     * @return Map
      */
     public static Map<String, String> createErrorMap(BindingResult bindingResult) {
         Map<String, String> errorMessages = new HashMap<>();

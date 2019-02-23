@@ -5,7 +5,12 @@ package ch.wisv.events.domain.model.order;
  */
 public enum OrderStatus {
     /**
-     * Open order status.
+     * Initial creating status.
      */
-    OPEN;
+    ANONYMOUS,
+
+    /**
+     * Has a Customer assigned.
+     */
+    ASSIGNED;
 }

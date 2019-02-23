@@ -8,14 +8,12 @@ import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.OrderItemRepository;
 import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
-import java.util.HashMap;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.MapBindingResult;
 
 /**
  * OrderService.
@@ -76,11 +74,16 @@ public class OrderService extends AbstractService<Order> {
         return order;
     }
 
+    /**
+     * Add a customer to the Order.
+     *
+     * @param order    of type Order
+     * @param customer of type User
+     */
     public void addCustomerToOrder(Order order, User customer) {
         if (isNull(order.getCustomer())) {
             order.setCustomer(customer);
-
-
+            repository.saveAndFlush(order);
         }
     }
 

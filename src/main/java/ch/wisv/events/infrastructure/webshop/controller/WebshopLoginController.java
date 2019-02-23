@@ -5,6 +5,7 @@ import ch.wisv.events.domain.model.order.OrderStatus;
 import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.services.AuthenticationService;
 import ch.wisv.events.services.OrderService;
+import com.google.common.collect.ImmutableMap;
 import static java.util.Objects.nonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * WebshopIndexController class.
@@ -28,6 +30,9 @@ public class WebshopLoginController extends AbstractWebshopController {
 
     /** Redirect to login page. */
     private static final String REDIRECT_LOGIN_PAGE = "redirect:/webshop/login/%s";
+
+    /** Redirect to customer create page. */
+    private static final String REDIRECT_CUSTOMER_PAGE = "redirect:/webshop/customer/%s";
 
     /** OrderService. */
     private final OrderService orderService;
@@ -47,7 +52,7 @@ public class WebshopLoginController extends AbstractWebshopController {
     }
 
     /**
-     * View order string.
+     * Show login index, with the login options.
      *
      * @param model           of type Model
      * @param publicReference the public reference
@@ -55,10 +60,10 @@ public class WebshopLoginController extends AbstractWebshopController {
      * @return string
      */
     @GetMapping("/{publicReference}")
-    public String customerIndex(Model model, @PathVariable String publicReference) {
+    public String loginIndex(Model model, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
-        if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
-            return REDIRECT_PAYMENT_PAGE;
+        if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
+            return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
         }
 
         model.addAttribute(MODEL_ATTR_ORDER, order);
@@ -77,7 +82,7 @@ public class WebshopLoginController extends AbstractWebshopController {
     @PreAuthorize("hasRole('USER')")
     public String loginChConnect(@PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
-        if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
+        if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
             return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
         }
 
@@ -90,25 +95,25 @@ public class WebshopLoginController extends AbstractWebshopController {
     /**
      * Login the user through CH Connect.
      *
+     * @param redirect        of type RedirectAttributes
      * @param publicReference of type String
      *
      * @return String
      */
     @GetMapping("/{publicReference}/guest")
     @PreAuthorize("hasRole('USER')")
-    public String create(@PathVariable String publicReference) {
+    public String create(RedirectAttributes redirect, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
-        if (order.hasChOnlyProduct()) {
-            return String.format(REDIRECT_LOGIN_PAGE, order.getPublicReference());
-        }
-
-        if (order.getStatus() != OrderStatus.OPEN && nonNull(order.getCustomer())) {
+        if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
             return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
         }
 
-        User customer = authenticationService.getLoggedInUser();
-        orderService.addCustomerToOrder(order, customer);
+        if (order.hasChOnlyProduct()) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "Checkout as guest is not allowed for this order"));
 
-        return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
+            return String.format(REDIRECT_LOGIN_PAGE, order.getPublicReference());
+        }
+
+        return String.format(REDIRECT_CUSTOMER_PAGE, order.getPublicReference());
     }
 }

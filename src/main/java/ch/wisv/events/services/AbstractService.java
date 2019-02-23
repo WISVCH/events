@@ -20,7 +20,7 @@ public abstract class AbstractService<T extends AbstractModel> {
     /**
      * Class name.
      */
-    Class<T> className;
+    private Class<T> className;
 
     /**
      * ApplicationEventPublisher.
@@ -30,7 +30,7 @@ public abstract class AbstractService<T extends AbstractModel> {
     /**
      * AbstractRepository.
      */
-    private final AbstractRepository<T> repository;
+    protected final AbstractRepository<T> repository;
 
     /**
      * AbstractRepository constructor.
