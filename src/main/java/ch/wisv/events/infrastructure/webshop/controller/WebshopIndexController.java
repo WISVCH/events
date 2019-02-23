@@ -57,8 +57,8 @@ public class WebshopIndexController extends AbstractWebshopController {
      */
     @GetMapping
     public String index(Model model, @ModelAttribute FilterDto filterDto) {
-        if (!model.containsAttribute("errors")) {
-            model.addAttribute("errors", new HashMap<String, String>());
+        if (!model.containsAttribute(MODEL_ATTR_ERRORS)) {
+            model.addAttribute(MODEL_ATTR_ERRORS, new HashMap<String, String>());
         }
 
         if (isNull(filterDto)) {
@@ -86,8 +86,8 @@ public class WebshopIndexController extends AbstractWebshopController {
      */
     @GetMapping("/{publicReference}")
     public String viewEvent(Model model, @PathVariable String publicReference) {
-        if (!model.containsAttribute("errors")) {
-            model.addAttribute("errors", new HashMap<String, String>());
+        if (!model.containsAttribute(MODEL_ATTR_ERRORS)) {
+            model.addAttribute(MODEL_ATTR_ERRORS, new HashMap<String, String>());
         }
 
         model.addAttribute(MODEL_ATTR_EVENT, eventService.getByPublicReference(publicReference));

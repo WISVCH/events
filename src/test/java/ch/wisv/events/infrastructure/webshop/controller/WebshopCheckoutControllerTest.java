@@ -9,7 +9,6 @@ import ch.wisv.events.infrastructure.webshop.dto.OrderProductDto;
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
 import static junit.framework.TestCase.fail;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

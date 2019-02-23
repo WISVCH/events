@@ -1,6 +1,7 @@
 package ch.wisv.events;
 
 import ch.wisv.events.domain.repository.EventRepository;
+import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
 import ch.wisv.events.domain.repository.ProductRepository;
 import org.junit.Before;
@@ -33,6 +34,10 @@ public abstract class ControllerTest {
     /** ProductOptionRepository. */
     @Autowired
     protected ProductOptionRepository productOptionRepository;
+
+    /** OrderRepository. */
+    @Autowired
+    protected OrderRepository orderRepository;
 
     /** WebApplicationContext. */
     @Autowired
