@@ -4,6 +4,11 @@ import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.exception.OrderInvalidException;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_INVALID;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_HOME_PAGE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_ORDER_PAGE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_CHECKOUT;
 import ch.wisv.events.services.OrderService;
 import ch.wisv.events.services.OrderValidationService;
 import ch.wisv.events.util.BindingResultBuilder;
@@ -20,14 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/webshop/checkout")
+@RequestMapping(ROUTE_WEBSHOP_CHECKOUT)
 public class WebshopCheckoutController extends AbstractWebshopController {
-
-    /** Redirect to home page. */
-    private static final String REDIRECT_HOME_PAGE = "redirect:/webshop/";
-
-    /** Redirect to order page. */
-    private static final String REDIRECT_ORDER_PAGE = "redirect:/webshop/order/%s";
 
     /** OrderService. */
     private final OrderService orderService;
@@ -70,7 +69,7 @@ public class WebshopCheckoutController extends AbstractWebshopController {
 
             return String.format(REDIRECT_ORDER_PAGE, order.getPublicReference());
         } catch (ModelNotFoundException | OrderInvalidException e) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", e.getMessage()));
+            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of(ERROR_INVALID, e.getMessage()));
 
             return REDIRECT_HOME_PAGE;
         }

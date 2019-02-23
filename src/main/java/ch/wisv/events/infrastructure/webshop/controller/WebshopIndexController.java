@@ -2,6 +2,14 @@ package ch.wisv.events.infrastructure.webshop.controller;
 
 import ch.wisv.events.infrastructure.webshop.dto.FilterDto;
 import ch.wisv.events.infrastructure.webshop.dto.OrderDto;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_EVENT;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_EVENTS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER_DTO;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_INDEX;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_SINGLE_EVENT;
 import ch.wisv.events.services.EventService;
 import java.util.HashMap;
 import static java.util.Objects.isNull;
@@ -18,23 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/webshop")
+@RequestMapping(ROUTE_WEBSHOP)
 public class WebshopIndexController extends AbstractWebshopController {
-
-    /** Model attr events. */
-    static final String MODEL_ATTR_EVENTS = "events";
-
-    /** Model attr event. */
-    static final String MODEL_ATTR_EVENT = "event";
-
-    /** Model attr orderDto. */
-    static final String MODEL_ATTR_ORDER_DTO = "orderDto";
-
-    /** View webshop index page. */
-    static final String VIEW_WEBSHOP_INDEX = "webshop/webshop-index";
-
-    /** View webshop single event page. */
-    static final String VIEW_WEBSHOP_SINGLE_EVENT = "webshop/webshop-single-event";
 
     /** EventService. */
     private final EventService eventService;
@@ -79,7 +72,7 @@ public class WebshopIndexController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping("/{publicReference}")
+    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
     public String viewEvent(Model model, @PathVariable String publicReference) {
         if (!model.containsAttribute(MODEL_ATTR_ERRORS)) {
             model.addAttribute(MODEL_ATTR_ERRORS, new HashMap<String, String>());

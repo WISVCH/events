@@ -3,6 +3,17 @@ package ch.wisv.events.infrastructure.webshop.controller;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.domain.model.order.OrderStatus;
 import ch.wisv.events.domain.model.user.User;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_INVALID;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_MESSAGE_GUEST_CHECKOUT_NOT_ALLOWED;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_CUSTOMER_PAGE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_LOGIN_PAGE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_PAYMENT_PAGE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_GUEST;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import ch.wisv.events.services.AuthenticationService;
 import ch.wisv.events.services.OrderService;
 import com.google.common.collect.ImmutableMap;
@@ -19,20 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/webshop/login")
+@RequestMapping(ROUTE_WEBSHOP_LOGIN)
 public class WebshopLoginController extends AbstractWebshopController {
-
-    /** Model attribute order. */
-    private static final String MODEL_ATTR_ORDER = "order";
-
-    /** Redirect to payment page. */
-    private static final String REDIRECT_PAYMENT_PAGE = "redirect:/webshop/payment/%s";
-
-    /** Redirect to login page. */
-    private static final String REDIRECT_LOGIN_PAGE = "redirect:/webshop/login/%s";
-
-    /** Redirect to customer create page. */
-    private static final String REDIRECT_CUSTOMER_PAGE = "redirect:/webshop/customer/%s";
 
     /** OrderService. */
     private final OrderService orderService;
@@ -59,7 +58,7 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return string
      */
-    @GetMapping("/{publicReference}")
+    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
     public String loginIndex(Model model, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
@@ -78,7 +77,7 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping("/{publicReference}/connect")
+    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE + ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT)
     @PreAuthorize("hasRole('USER')")
     public String loginChConnect(@PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
@@ -100,7 +99,7 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping("/{publicReference}/guest")
+    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE + ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)
     @PreAuthorize("hasRole('USER')")
     public String create(RedirectAttributes redirect, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
@@ -109,7 +108,7 @@ public class WebshopLoginController extends AbstractWebshopController {
         }
 
         if (order.hasChOnlyProduct()) {
-            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "Checkout as guest is not allowed for this order"));
+            redirect.addFlashAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of(ERROR_INVALID, ERROR_MESSAGE_GUEST_CHECKOUT_NOT_ALLOWED));
 
             return String.format(REDIRECT_LOGIN_PAGE, order.getPublicReference());
         }

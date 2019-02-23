@@ -1,5 +1,9 @@
 package ch.wisv.events.infrastructure.webshop.controller;
 
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_ORDER;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_CHECKOUT_ORDER;
 import ch.wisv.events.services.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * WebshopIndexController class.
  */
 @Controller
-@RequestMapping("/webshop/order")
+@RequestMapping(ROUTE_WEBSHOP_ORDER)
 public class WebshopOrderController extends AbstractWebshopController {
-
-    /** Model attribute order. */
-    private static final String MODEL_ATTR_ORDER = "order";
 
     /** OrderService. */
     private final OrderService orderService;
@@ -37,10 +38,10 @@ public class WebshopOrderController extends AbstractWebshopController {
      *
      * @return string
      */
-    @GetMapping("/{publicReference}")
+    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
     public String viewOrder(Model model, @PathVariable String publicReference) {
         model.addAttribute(MODEL_ATTR_ORDER, orderService.getByPublicReference(publicReference));
 
-        return "webshop/webshop-checkout-order";
+        return VIEW_WEBSHOP_CHECKOUT_ORDER;
     }
 }
