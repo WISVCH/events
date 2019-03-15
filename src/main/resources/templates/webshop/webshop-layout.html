@@ -42,13 +42,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav menu ml-auto">
                     <li class="nav-item m-2">
-                        <a th:href="@{'/webshop/'}" class="btn">home</a>
+                        <a th:href="@{'/webshop/'}" class="btn btn-light">home</a>
                     </li>
                     <li class="nav-item m-2">
                         <a href="#" class="btn btn-block btn-info" data-toggle="modal"
                            data-target="#shoppingBasket" id="shoppingBasketButton">
                             <i class="fa fa-fw fa-shopping-basket"></i>
-                            (<span id="shoppingBasketCount"></span>)
+                            (<span id="shoppingBasketCount">...</span>)
                         </a>
                     </li>
                     <li class="nav-item m-2">
@@ -71,7 +71,9 @@
     </div>
 </header>
 
-<main class="container my-5" layout:fragment="content"></main>
+<main class="container-fluid my-5" layout:fragment="content"></main>
+
+<div th:replace="webshop/fragment/shopping-basket :: shopping-basket"></div>
 
 <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>

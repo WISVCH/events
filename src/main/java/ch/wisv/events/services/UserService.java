@@ -4,6 +4,7 @@ import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.UserRepository;
+import ch.wisv.events.infrastructure.webshop.dto.UserDto;
 import javax.transaction.Transactional;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,20 @@ public class UserService extends AbstractService<User> {
      */
     public User createByChUserInfo(CHUserInfo userInfo) {
         User user = new User(userInfo.getSub(), userInfo.getName(), userInfo.getEmail());
+        this.save(user);
+
+        return user;
+    }
+
+    /**
+     * Create a new User by UserDto.
+     *
+     * @param userDto of type UserDto
+     *
+     * @return User
+     */
+    public User createByUserDto(UserDto userDto) {
+        User user = new User(null, userDto.getName(), userDto.getEmail());
         this.save(user);
 
         return user;

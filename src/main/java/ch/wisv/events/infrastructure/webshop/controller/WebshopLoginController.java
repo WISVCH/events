@@ -100,7 +100,6 @@ public class WebshopLoginController extends AbstractWebshopController {
      * @return String
      */
     @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE + ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)
-    @PreAuthorize("hasRole('USER')")
     public String create(RedirectAttributes redirect, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {

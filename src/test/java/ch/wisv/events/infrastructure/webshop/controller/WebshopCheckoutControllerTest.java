@@ -6,6 +6,10 @@ import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.product.ProductOption;
 import ch.wisv.events.infrastructure.webshop.dto.OrderProductDto;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER_DTO;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_CHECKOUT;
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
 import static junit.framework.TestCase.fail;
@@ -23,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * WebshopCheckoutControllerTest
+ * WebshopCheckoutControllerTest class.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -62,12 +66,12 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/webshop/order/*"));
     }
@@ -83,12 +87,12 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", "")
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/webshop/order/*"));
     }
@@ -104,12 +108,12 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/webshop/order/*"));
     }
@@ -125,15 +129,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", "")
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more invalid products in this order")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more invalid products in this order")));
     }
 
     /**
@@ -144,12 +148,12 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
     @Test
     public void testCheckoutEmptyShoppingBasket() throws Exception {
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("products", "No products in this order")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("products", "No products in this order")));
     }
 
     /**
@@ -164,15 +168,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "2")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more products in out of stock")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more products in out of stock")));
     }
 
     /**
@@ -188,15 +192,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         eventRepository.saveAndFlush(event);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more products are no longer be sold")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more products are no longer be sold")));
     }
 
     /**
@@ -209,15 +213,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         fail("TODO: Implement Product sell interval");
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more products are no longer be sold")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more products are no longer be sold")));
     }
 
     /**
@@ -228,15 +232,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
     @Test
     public void testCheckoutProductDoesNotExists() throws Exception {
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", "asdflk")
                         .param("products[0].productOptionKey", productOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more Products does not exists")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more Products does not exists")));
     }
 
     /**
@@ -247,15 +251,15 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
     @Test
     public void testCheckoutProductOptionDoesNotExists() throws Exception {
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", "asdfasdf")
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "One or more ProductOptions does not exists")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "One or more ProductOptions does not exists")));
     }
 
     /**
@@ -269,14 +273,14 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         productOptionRepository.saveAndFlush(secondOption);
 
         mockMvc.perform(
-                post("/webshop/checkout")
+                post(ROUTE_WEBSHOP_CHECKOUT)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products[0].productKey", product.getPublicReference())
                         .param("products[0].productOptionKey", secondOption.getPublicReference())
                         .param("products[0].amount", "1")
-                        .sessionAttr("orderProduct", new OrderProductDto()))
+                        .sessionAttr(MODEL_ATTR_ORDER_DTO, new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/webshop/"))
-                .andExpect(flash().attribute("errors", ImmutableMap.of("invalid", "Invalid combination of product and additional option")));
+                .andExpect(redirectedUrl(ROUTE_WEBSHOP))
+                .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of("invalid", "Invalid combination of product and additional option")));
     }
 }

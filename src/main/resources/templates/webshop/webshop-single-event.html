@@ -6,58 +6,59 @@
 </head>
 <body>
 <!-- Page title -->
-<div class="page-title" layout:fragment="title"
-     th:style="'background-image:url(\'' + ${event.getImage()} + '\'); text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);'">
-    <div class="row">
-        <div class="col-12" style="padding: calc(6rem - 34px) 0;">
-            <h1 class="mb-3" th:text="${event.getTitle()}"></h1>
-            <div class="row justify-content-center text-white mx-auto text-center"
-                 style="max-width: calc(80vw);">
-                <div class="mx-3 mb-1">
-                    <i class="far fa-fw fa-calendar-alt"></i>
-                    <span th:text="${event.getStarting().toLocalDate()} + ' @ ' + ${event.getStarting().toLocalTime()}"></span>
-                </div>
-                <div class="mx-3 mb-1" th:if="${event.getLocation() != ''}">
-                    <i class="fas fa-map-marker fa-fw"></i>
-                    <span th:text="${event.getLocation()}"></span>
-                </div>
-                <div class="mx-3 mb-1">
-                    <i class="fas fa-info fa-fw"></i>
-                    <span th:text="${event.getShortDescription()}"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<h1 layout:fragment="title" th:text="${event.getTitle()}"></h1>
 
 <!--/*@thymesVar id="event" type="ch.wisv.events.domain.model.event.Event"*/-->
 <!--/*@thymesVar id="cat" type="ch.wisv.events.domain.model.event.EventCategory"*/-->
 <div layout:fragment="content">
     <div class="row my-4">
         <div class="col-lg-4 col-md-5 col-12 my-2">
-            <a th:href="${#httpServletRequest.getHeader('Referer')}" class="btn btn-block btn-info">
+            <a th:href="@{'/webshop/'}" class="btn btn-block btn-info">
                 <i class="fa fa-fw fa-arrow-left"></i> Go back
-            </a>
-        </div>
-        <div class="ml-auto col-lg-4 col-md-5 col-12 my-2">
-            <a href="#" class="btn btn-block btn-secondary" data-toggle="modal" data-target="#shoppingBasket"
-               id="shoppingBasketButton">
-                <i class="fa fa-fw fa-shopping-basket"></i> Shopping basket (<span id="shoppingBasketCount"></span>)
             </a>
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            <h1>Tickets</h1>
+        <div class="col-12 col-xl-4">
+            <div class="card mb-4">
+                <h6 class="card-header bg-primary text-white">Details</h6>
+                <div class="card-body">
+                    <ul class="list-unstyled m-0">
+                        <li class="py-2">
+                            <i class="fas fa-info text-info fa-fw mr-3"></i>
+                            <span th:text="${event.getShortDescription()}"></span>
+                        </li>
+
+                        <li class="py-2">
+                            <i class="far fa-fw text-info mr-3 fa-calendar-alt"></i>
+                            <span th:text="${event.getStarting().toLocalDate()} + ' @ ' + ${event.getStarting().toLocalTime()}"></span>
+                        </li>
+
+                        <li class="py-2">
+                            <i class="fas fa-map-marker fa-fw text-info mr-3"></i>
+                            <span th:text="${event.getLocation()}"></span>
+                        </li>
+
+                        <li class="py-2">
+                            <i class="fas fa-tags fa-fw text-info mr-3"></i>
+                            <span class="badge badge-secondary"
+                                  th:each="cat : ${event.getCategories()}"
+                                  th:text="${cat.getDisplayName()}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="col-12">
+        <div class="col-12 col-xl-8">
+            <h1>Tickets</h1>
+
             <table class="table table-striped">
                 <thead class="thead-inverse bg-primary">
                 <tr>
-                    <th class="w-50">Description</th>
-                    <th style="width: 10%">Price</th>
-                    <th style="width: 20%">Additional option</th>
-                    <th style="width: 10%">Amount</th>
+                    <th class="w-25">Description</th>
+                    <th>Price</th>
+                    <th>Additional option</th>
+                    <th>Amount</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -96,7 +97,7 @@
                     </td>
                     <td>
                         <a href="#" class="btn btn-block btn-info btn-shopping-basket">
-                            <i class="fas fa-fw fa-plus"></i> Add to shopping basket
+                            <i class="fas fa-fw fa-plus"></i> <i class="fas fa-fw fa-shopping-basket"></i>
                         </a>
                     </td>
                 </tr>
@@ -104,14 +105,6 @@
             </table>
         </div>
     </div>
-
-    <div th:replace="webshop/fragment/shopping-basket :: shopping-basket"></div>
 </div>
-
-<script layout:fragment="script" th:inline="javascript">
-    jQuery(document).ready(function ($) {
-        ShoppingBasket.init();
-    });
-</script>
 </body>
 </html>

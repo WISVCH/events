@@ -9,8 +9,8 @@
 <h1 layout:fragment="title">CH Events | Checkout</h1>
 
 <div layout:fragment="content">
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row justify-content-around">
+        <div class="col-md-12 col-lg-10">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">1. Order</li>
                 <li class="nav-item active">2. Login</li>
@@ -19,17 +19,18 @@
             </ul>
         </div>
     </div>
-    <div class="row my-5">
-        <div class="col-12 col-md-5" th:classappend="${order.hasChOnlyProduct() ? 'col-md-6 offset-md-3' : ''}">
-            <h4 class="display-5 mb-5">CH Member</h4>
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-6 col-lg-4 mb-5 mb-md-0"
+             th:classappend="${order.hasChOnlyProduct() ? 'col-md-6 offset-md-3' : ''}">
+            <h4 class="display-5 mb-3 mb-md-5">CH Member</h4>
 
             <p class="mb-2">
                 Proceed checking out by logging in through CH Connect. You will need to be a member of W.I.S.V.
                 'Christiaan Huygens' with a TU Delft NetID or a CH account.
             </p>
 
-            <a th:href="@{'/webshop/customer/' + ${order.getPublicReference()} + '/connect'}"
-               class="btn btn-block btn-info my-4">
+            <a th:href="@{'/webshop/login/' + ${order.getPublicReference()} + '/connect'}"
+               class="btn btn-block btn-info my-4 px-0">
                 Checkout through CH Connect
             </a>
 
@@ -38,21 +39,9 @@
                 including your full name, student number and NetID so that we can update your membership record.
             </p>
         </div>
-
-        <div class="col-12 col-md-2" th:if="${!order.hasChOnlyProduct()}">
-            <div class="d-flex flex-column align-self-stretch align-items-center h-100">
-                <div class="d-flex align-self-stretch h-100 justify-content-center">
-                    <div class="vertical-line"></div>
-                </div>
-                <h4 class="my-3">or</h4>
-                <div class="d-flex align-self-stretch h-100 justify-content-center">
-                    <div class="vertical-line"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-5" th:if="${!order.hasChOnlyProduct()}">
-            <h4 class="display-5 mb-5">Continue as Guest</h4>
+        <div class="col-12 col-md-6 col-lg-4" th:if="${!order.hasChOnlyProduct()}"
+             style="border-left: 3px solid #eeeeee">
+            <h4 class="display-5 mb-3 mb-md-5">Continue as Guest</h4>
 
             <p class="mb-2">
                 Not a CH member or unable to use CH Connect? No problem, proceed checking out without logging in.
@@ -63,7 +52,7 @@
                 checkout with a verified email address.
             </p>
 
-            <a th:href="@{'/webshop/customer/' + ${order.getPublicReference()} + '/guest'}"
+            <a th:href="@{'/webshop/login/' + ${order.getPublicReference()} + '/guest'}"
                class="btn btn-block btn-info my-4">
                 Checkout as guest
             </a>

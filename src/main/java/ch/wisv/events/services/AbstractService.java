@@ -139,7 +139,7 @@ public abstract class AbstractService<T extends AbstractModel> {
      *
      * @return AbstractModel
      */
-    protected abstract T create(T model);
+    abstract T create(T model);
 
     /**
      * Update of an AbstractModel.
@@ -149,6 +149,6 @@ public abstract class AbstractService<T extends AbstractModel> {
      *
      * @return AbstractModel
      */
-    protected abstract T update(T model, T existingModel);
+    abstract T update(T model, T existingModel);
 
 }

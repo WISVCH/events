@@ -4,12 +4,13 @@ import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.domain.model.event.Event;
 import ch.wisv.events.domain.model.event.EventCategory;
-import static ch.wisv.events.infrastructure.webshop.controller.AbstractWebshopController.MODEL_ATTR_ERRORS;
-import static ch.wisv.events.infrastructure.webshop.controller.WebshopIndexController.MODEL_ATTR_EVENT;
-import static ch.wisv.events.infrastructure.webshop.controller.WebshopIndexController.MODEL_ATTR_EVENTS;
-import static ch.wisv.events.infrastructure.webshop.controller.WebshopIndexController.MODEL_ATTR_ORDER_DTO;
-import static ch.wisv.events.infrastructure.webshop.controller.WebshopIndexController.VIEW_WEBSHOP_INDEX;
-import static ch.wisv.events.infrastructure.webshop.controller.WebshopIndexController.VIEW_WEBSHOP_SINGLE_EVENT;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_EVENT;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_EVENTS;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER_DTO;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_INDEX;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_SINGLE_EVENT;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,7 @@ public class WebshopIndexControllerTest extends ControllerTest {
      */
     @Test
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/webshop/"))
+        mockMvc.perform(get(ROUTE_WEBSHOP))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(VIEW_WEBSHOP_INDEX))
                 .andExpect(model().attributeExists(MODEL_ATTR_ORDER_DTO))
@@ -54,7 +55,7 @@ public class WebshopIndexControllerTest extends ControllerTest {
         Event event = eventRepository.findAll().get(0);
 
         mockMvc.perform(
-                get("/webshop/")
+                get(ROUTE_WEBSHOP)
                         .param("search", "Career College"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(VIEW_WEBSHOP_INDEX))
@@ -73,7 +74,7 @@ public class WebshopIndexControllerTest extends ControllerTest {
         Event event = eventRepository.findAll().get(1);
 
         mockMvc.perform(
-                get("/webshop/")
+                get(ROUTE_WEBSHOP)
                         .param("categories", EventCategory.SOCIAL.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(VIEW_WEBSHOP_INDEX))
@@ -89,7 +90,7 @@ public class WebshopIndexControllerTest extends ControllerTest {
     public void testViewSingleEvent() throws Exception {
         Event event = eventRepository.findAll().get(0);
 
-        mockMvc.perform(get("/webshop/" + event.getPublicReference()))
+        mockMvc.perform(get(ROUTE_WEBSHOP + "/" + event.getPublicReference()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(VIEW_WEBSHOP_SINGLE_EVENT))
                 .andExpect(model().attributeExists(MODEL_ATTR_ORDER_DTO))

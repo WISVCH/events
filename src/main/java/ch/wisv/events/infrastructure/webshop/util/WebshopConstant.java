@@ -35,6 +35,9 @@ public final class WebshopConstant {
     /** Model attr orderDto. */
     public static final String MODEL_ATTR_ORDER_DTO = "orderDto";
 
+    /** Model attr user. */
+    public static final String MODEL_ATTR_USER_DTO = "userDto";
+
     /*
      * Redirect constants.
      */
@@ -43,7 +46,7 @@ public final class WebshopConstant {
     public static final String REDIRECT_CUSTOMER_PAGE = "redirect:/webshop/customer/%s";
 
     /** Redirect to homepage. */
-    public static final String REDIRECT_HOME_PAGE = "redirect:/webshop/";
+    public static final String REDIRECT_HOME_PAGE = "redirect:/webshop";
 
     /** Redirect to login page. */
     public static final String REDIRECT_LOGIN_PAGE = "redirect:/webshop/login/%s";
@@ -70,6 +73,9 @@ public final class WebshopConstant {
     /** Route for the webshop login. */
     public static final String ROUTE_WEBSHOP_LOGIN = "/webshop/login";
 
+    /** Route for the webshop payment. */
+    public static final String ROUTE_WEBSHOP_PAYMENT = "/webshop/payment";
+
     /** Route for the webshop login option connect. */
     public static final String ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT = "/connect";
 
@@ -94,6 +100,9 @@ public final class WebshopConstant {
 
     /** View webshop single event page. */
     public static final String VIEW_WEBSHOP_SINGLE_EVENT = "webshop/webshop-single-event";
+
+    /** View webshop customer create page. */
+    public static final String VIEW_WEBSHOP_CUSTOMER = "webshop/webshop-customer-create";
 
     /**
      * Private constructor.

@@ -48,7 +48,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="row justify-content-between">
-                        <div class="col-4">
+                        <div class="col-12 col-md-6 mb-2 col-lg-4">
                             <div class="form form-horizontal">
                                 <div class="form-group row">
                                     <label class="col-4 col-form-label">Amount</label>
@@ -59,9 +59,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4 text-right font-weight-bold align-self-center">
-                            <span class="pr-3">Total:</span>
-                            <span th:text="'€ ' + ${#numbers.formatDecimal(orderItem.getPrice() * orderItem.getAmount(), 1, 'POINT', 2, 'COMMA')}"></span>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="form form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-4 col-form-label">Totaal</label>
+                                    <div class="col">
+                                        <input title="Amount of products" class="form-control text-right" disabled
+                                               th:value="'€ ' + ${#numbers.formatDecimal(orderItem.getPrice() * orderItem.getAmount(), 1, 'POINT', 2, 'COMMA')}"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

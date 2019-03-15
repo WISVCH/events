@@ -1,10 +1,14 @@
 package ch.wisv.events.infrastructure.webshop.controller;
 
+import ch.wisv.events.domain.model.order.Order;
+import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_ORDER;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_CHECKOUT_ORDER;
 import ch.wisv.events.services.OrderService;
+import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +44,9 @@ public class WebshopOrderController extends AbstractWebshopController {
      */
     @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
     public String viewOrder(Model model, @PathVariable String publicReference) {
-        model.addAttribute(MODEL_ATTR_ORDER, orderService.getByPublicReference(publicReference));
+        Order order = orderService.getByPublicReference(publicReference);
+        model.addAttribute(MODEL_ATTR_ORDER, order);
+        model.addAttribute(MODEL_ATTR_ERRORS, ImmutableMap.of());
 
         return VIEW_WEBSHOP_CHECKOUT_ORDER;
     }
