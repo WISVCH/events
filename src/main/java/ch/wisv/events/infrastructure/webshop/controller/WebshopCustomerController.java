@@ -1,5 +1,6 @@
 package ch.wisv.events.infrastructure.webshop.controller;
 
+import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.domain.model.order.OrderStatus;
 import ch.wisv.events.domain.model.user.User;
@@ -121,9 +122,24 @@ public class WebshopCustomerController extends AbstractWebshopController {
             return String.format(REDIRECT_CUSTOMER_PAGE, order.getPublicReference());
         }
 
-        User user = userService.createByUserDto(userDto);
+        User user = getOrCreateUser(userDto);
         orderService.addCustomerToOrder(order, user);
 
         return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
+    }
+
+    /**
+     * Get or create a User from the UserDto.
+     *
+     * @param userDto of type UserDto
+     *
+     * @return User
+     */
+    private User getOrCreateUser(@Valid UserDto userDto) {
+        try {
+            return userService.getByEmail(userDto.getEmail());
+        } catch (ModelNotFoundException exception) {
+            return userService.createByUserDto(userDto);
+        }
     }
 }

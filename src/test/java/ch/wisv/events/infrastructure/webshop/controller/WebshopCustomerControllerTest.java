@@ -5,6 +5,7 @@ import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.domain.model.order.OrderStatus;
 import ch.wisv.events.domain.model.product.Product;
+import ch.wisv.events.domain.model.user.User;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_INVALID;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_MESSAGE_GUEST_CHECKOUT_NOT_ALLOWED;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
@@ -190,6 +191,24 @@ public class WebshopCustomerControllerTest extends ControllerTest {
         order.setStatus(OrderStatus.ASSIGNED);
         order.setCustomer(userRepository.findAll().get(0));
         orderRepository.saveAndFlush(order);
+
+        mockMvc.perform(
+                post(String.format("%s/%s", ROUTE_WEBSHOP_CUSTOMER, order.getPublicReference()))
+                        .param("name", "Ali Baba")
+                        .param("email", "ali.baba@ch.tudelft.nl"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("%s/%s", ROUTE_WEBSHOP_PAYMENT, order.getPublicReference())));
+    }
+
+    /**
+     * POST request create customer, with email that is already in the database.
+     *
+     * @throws Exception on AssertionError
+     */
+    @Test
+    public void testPostCreateCustomerEmailAlreadyExists() throws Exception {
+        User user = new User("", "Ali Baba", "ali.baba@ch.tudelft.nl");
+        userRepository.saveAndFlush(user);
 
         mockMvc.perform(
                 post(String.format("%s/%s", ROUTE_WEBSHOP_CUSTOMER, order.getPublicReference()))

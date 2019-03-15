@@ -5,10 +5,12 @@ import ch.wisv.events.domain.exception.ModelNotFoundException;
 import ch.wisv.events.domain.model.user.User;
 import ch.wisv.events.domain.repository.UserRepository;
 import ch.wisv.events.infrastructure.webshop.dto.UserDto;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -86,13 +88,27 @@ public class UserService extends AbstractService<User> {
     }
 
     /**
+     * Assert that an email is not already exists in the database.
+     *
+     * @param model of type Model
+     */
+    private void assertEmailNotExists(User model) {
+        Optional<User> userOptional = userRepository.getByEmail(model.getEmail());
+        if (userOptional.isPresent()) {
+            if (!userOptional.get().getPublicReference().equals(model.getPublicReference())) {
+                throw new DuplicateKeyException("Email already exists! Please use a different email");
+            }
+        }
+    }
+
+    /**
      * Something to do before the object has been saved.
      *
      * @param model of type AbstractModel
      */
     @Override
     void beforeSave(User model) {
-
+        this.assertEmailNotExists(model);
     }
 
     /**
