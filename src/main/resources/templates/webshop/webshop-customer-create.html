@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="webshop/webshop-layout" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CH Events | Checkout</title>
+</head>
+<body>
+<h1 layout:fragment="title">CH Events | Checkout</h1>
+
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <form th:action="@{''}" th:object="${userDto}" method="POST">
+                <div class="card">
+                    <h6 class="card-header">Details</h6>
+                    <div class="card-body">
+                        <div class="form">
+                            <div class="form-group">
+                                <label>Name*
+                                    <input type="text" class="form-control" th:field="*{name}"
+                                           th:classappend="${errors.containsKey('name')} ? 'is-invalid'"/>
+                                    <span class="invalid-feedback" th:text="${errors.get('name')}"></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail*
+                                    <input type="text" class="form-control" th:field="*{email}"
+                                           th:classappend="${errors.containsKey('email')} ? 'is-invalid'"/>
+                                    <span class="invalid-feedback" th:text="${errors.get('email')}"></span>
+                                </label>
+                                <small class="form-text text-muted help-text">
+                                    You should have access to this email! You receive the tickets on this email address.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="form-group text-right mb-0">
+                            <button type="submit" class="btn btn-danger">
+                                Continue checkout
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
