@@ -41,6 +41,8 @@ public final class WebshopConstant {
     /*
      * Redirect constants.
      */
+    /** Redirect to complete page. */
+    public static final String REDIRECT_COMPLETE_PAGE  = "redirect:/webshop/complete/%s";
 
     /** Redirect to customer create page. */
     public static final String REDIRECT_CUSTOMER_PAGE = "redirect:/webshop/customer/%s";
@@ -67,6 +69,9 @@ public final class WebshopConstant {
     /** Route for the webshop login. */
     public static final String ROUTE_WEBSHOP_CHECKOUT = "/webshop/checkout";
 
+    /** Route for the webshop complete. */
+    public static final String ROUTE_WEBSHOP_COMPLETE = "/webshop/complete";
+
     /** Route for the webshop customer. */
     public static final String ROUTE_WEBSHOP_CUSTOMER = "/webshop/customer";
 
@@ -92,17 +97,23 @@ public final class WebshopConstant {
      * View constants.
      */
 
+    /** View webshop checkout login. */
+    public static final String VIEW_WEBSHOP_CHECKOUT_LOGIN = "webshop/webshop-checkout-login";
+
     /** View webshop checkout order. */
     public static final String VIEW_WEBSHOP_CHECKOUT_ORDER = "webshop/webshop-checkout-order";
+
+    /** View webshop checkout order. */
+    public static final String VIEW_WEBSHOP_CHECKOUT_PAYMENT = "webshop/webshop-checkout-payment";
+
+    /** View webshop customer create page. */
+    public static final String VIEW_WEBSHOP_CUSTOMER = "webshop/webshop-customer-create";
 
     /** View webshop index page. */
     public static final String VIEW_WEBSHOP_INDEX = "webshop/webshop-index";
 
     /** View webshop single event page. */
     public static final String VIEW_WEBSHOP_SINGLE_EVENT = "webshop/webshop-single-event";
-
-    /** View webshop customer create page. */
-    public static final String VIEW_WEBSHOP_CUSTOMER = "webshop/webshop-customer-create";
 
     /**
      * Private constructor.

@@ -86,6 +86,11 @@ public class Product extends AbstractModel {
     private boolean mandatoryProductOption;
 
     /**
+     * Flag if the project is reservable.
+     */
+    private boolean reservable;
+
+    /**
      * Product options.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ProductOption.class)

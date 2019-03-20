@@ -97,6 +97,17 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-check-label custom-control custom-checkbox">
+                                        Reservable
+                                        <input type="checkbox" class="custom-control-input"
+                                               th:field="*{reservable}"
+                                               th:checked="${product.isReservable()}">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

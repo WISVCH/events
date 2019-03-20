@@ -22,6 +22,7 @@
         <thead class="thead-inverse bg-primary">
         <tr>
             <th>Title</th>
+            <th>Event</th>
             <th>Price</th>
             <th>Progress target</th>
             <th>Actions</th>
@@ -30,6 +31,7 @@
         <tbody>
         <tr th:each="product : ${products}" th:attr="data-key=${product.getPublicReference()}">
             <td th:text="${product.getTitle()}"></td>
+            <td th:text="${(product.getEvent() != null) ? product.getEvent().getTitle() : ''}"></td>
             <td th:text="'€ ' + ${#numbers.formatDecimal(product.getPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
             <td>
                 <span class="badge badge-pill badge-success" th:text="'Limit ' + ${product.getTicketLimit()}"></span>

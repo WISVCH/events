@@ -39,9 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class WebshopLoginControllerTest extends ControllerTest {
 
-    protected static final String URL_CONCAT_WITH_OPTION = "%s/%s%s";
 
-    protected static final String URL_CONCAT = "%s/%s";
 
     /**
      * AuthenticationService mock.

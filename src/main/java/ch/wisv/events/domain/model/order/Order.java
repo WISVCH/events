@@ -112,4 +112,13 @@ public class Order extends AbstractModel {
     public boolean hasChOnlyProduct() {
         return this.getItems().stream().anyMatch(item -> item.getProduct().isChOnly());
     }
+
+    /**
+     * Check if the Order contains a non reservable product.
+     *
+     * @return boolean
+     */
+    public boolean hasNotReservableProduct() {
+        return this.getItems().stream().anyMatch(item -> !item.getProduct().isReservable());
+    }
 }

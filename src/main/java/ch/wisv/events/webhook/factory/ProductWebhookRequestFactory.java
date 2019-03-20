@@ -1,9 +1,7 @@
 package ch.wisv.events.webhook.factory;
 
-import ch.wisv.events.domain.model.event.EventCategory;
 import ch.wisv.events.domain.model.product.Product;
 import ch.wisv.events.domain.model.webhook.WebhookEvent;
-import java.util.stream.Collectors;
 import org.json.simple.JSONObject;
 
 /**

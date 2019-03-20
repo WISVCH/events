@@ -1,6 +1,7 @@
 package ch.wisv.events;
 
 import ch.wisv.events.domain.repository.EventRepository;
+import ch.wisv.events.domain.repository.OrderItemRepository;
 import ch.wisv.events.domain.repository.OrderRepository;
 import ch.wisv.events.domain.repository.ProductOptionRepository;
 import ch.wisv.events.domain.repository.ProductRepository;
@@ -19,6 +20,10 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @Transactional
 public abstract class ControllerTest {
+
+    protected static final String URL_CONCAT_WITH_OPTION = "%s/%s%s";
+
+    protected static final String URL_CONCAT = "%s/%s";
 
     /** ExpectedException. */
     @Rule
@@ -39,6 +44,10 @@ public abstract class ControllerTest {
     /** OrderRepository. */
     @Autowired
     protected OrderRepository orderRepository;
+
+    /** OrderItemRepository. */
+    @Autowired
+    protected OrderItemRepository orderItemRepository;
 
     /** UserRepository. */
     @Autowired

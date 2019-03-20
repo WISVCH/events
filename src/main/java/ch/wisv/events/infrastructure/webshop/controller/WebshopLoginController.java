@@ -3,6 +3,7 @@ package ch.wisv.events.infrastructure.webshop.controller;
 import ch.wisv.events.domain.model.order.Order;
 import ch.wisv.events.domain.model.order.OrderStatus;
 import ch.wisv.events.domain.model.user.User;
+import ch.wisv.events.infrastructure.webshop.util.WebshopConstant;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_INVALID;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_MESSAGE_GUEST_CHECKOUT_NOT_ALLOWED;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
@@ -67,7 +68,7 @@ public class WebshopLoginController extends AbstractWebshopController {
 
         model.addAttribute(MODEL_ATTR_ORDER, order);
 
-        return "webshop/webshop-checkout-login";
+        return WebshopConstant.VIEW_WEBSHOP_CHECKOUT_LOGIN;
     }
 
     /**

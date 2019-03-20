@@ -6,6 +6,8 @@ import ch.wisv.events.domain.exception.ThrowingFunction;
 import static ch.wisv.events.domain.exception.ThrowingFunction.unchecked;
 import ch.wisv.events.domain.model.user.LdapGroup;
 import ch.wisv.events.domain.model.user.User;
+import java.util.Objects;
+import static java.util.Objects.nonNull;
 import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
@@ -110,7 +112,8 @@ public class AuthenticationService {
 
         user.setVerified(true);
         user.setLdapGroup(userInfo.getLdapGroups().stream()
-                .map(unchecked(ldapString -> LdapGroup.valueOf(ldapString.toUpperCase())))
+                .map(ldapString -> LdapGroup.getByName(ldapString.toUpperCase()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
         userService.save(user);

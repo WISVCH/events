@@ -1,5 +1,6 @@
 package ch.wisv.events.domain.model.user;
 
+import java.util.Arrays;
 import lombok.Getter;
 
 /**
@@ -57,5 +58,19 @@ public enum LdapGroup {
      */
     LdapGroup(String name) {
         this.name = name;
+    }
+
+    /**
+     * Get an LdapGroup by name
+     *
+     * @param name of type String
+     *
+     * @return LdapGroup
+     */
+    public static LdapGroup getByName(String name) {
+        return Arrays.stream(LdapGroup.values())
+                .filter(ldapGroup -> ldapGroup.getDeclaringClass().toGenericString().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 }

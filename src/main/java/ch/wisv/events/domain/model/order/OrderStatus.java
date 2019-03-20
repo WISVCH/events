@@ -12,5 +12,10 @@ public enum OrderStatus {
     /**
      * Has a Customer assigned.
      */
-    ASSIGNED;
+    ASSIGNED,
+
+    /**
+     * Has been paid.
+     */
+    PAID;
 }
