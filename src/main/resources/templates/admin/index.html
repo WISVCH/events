@@ -151,7 +151,7 @@
                                 <tbody>
                                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
                                 <tr th:each="event : ${upcoming}">
-                                    <td><a th:href="'events/view/' + ${event.getKey()}" th:text="${event.getTitle()}"></a></td>
+                                    <td><a th:href="@{'/administrator/events/view/' + ${event.getKey()} + '/'}" th:text="${event.getTitle()}"></a></td>
                                     <td>
                                         <div class="progress" style="margin-bottom: 0;">
                                             <div class="progress-bar" role="progressbar"
