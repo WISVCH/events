@@ -5,7 +5,6 @@ import ch.wisv.events.domain.model.order.OrderStatus;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_COMPLETE_PAGE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_PAYMENT_PAGE;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_PAYMENT;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_CHECKOUT_PAYMENT;
 import ch.wisv.events.services.OrderService;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -36,12 +36,14 @@ public class WebshopPaymentController extends AbstractWebshopController {
     }
 
     /**
-     * Get ...
+     * View the payment options.
      *
      * @param model           of type Model
      * @param publicReference of type String
+     *
+     * @return String
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
+    @GetMapping("/{publicReference}")
     public String viewPaymentOptions(Model model, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
@@ -55,5 +57,28 @@ public class WebshopPaymentController extends AbstractWebshopController {
         model.addAttribute(MODEL_ATTR_ORDER, order);
 
         return VIEW_WEBSHOP_CHECKOUT_PAYMENT;
+    }
+
+    /**
+     * Checkout using the selected payment method.
+     *
+     * @param model           of type Model
+     * @param publicReference of type String
+     * @param method          of type String
+     *
+     * @return String
+     */
+    @PostMapping("/{publicReference}/{method}")
+    public String paymentMethod(Model model, @PathVariable String publicReference, @PathVariable String method) {
+        Order order = orderService.getByPublicReference(publicReference);
+        if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
+            return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
+        }
+
+        if (order.getStatus() == OrderStatus.PAID) {
+            return String.format(REDIRECT_COMPLETE_PAGE, order.getPublicReference());
+        }
+
+        return "";
     }
 }

@@ -11,8 +11,6 @@ import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ERROR_M
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ERRORS;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_CUSTOMER;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_GUEST;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_PAYMENT;
 import ch.wisv.events.services.AuthenticationService;
 import com.google.common.collect.ImmutableMap;
@@ -96,7 +94,7 @@ public class WebshopLoginControllerTest extends ControllerTest {
         User user = userRepository.findAll().get(0);
         when(authenticationService.getLoggedInUser()).thenReturn(user);
 
-        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT)))
+        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), "/connect")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format(URL_CONCAT, ROUTE_WEBSHOP_PAYMENT, order.getPublicReference())));
 
@@ -116,7 +114,7 @@ public class WebshopLoginControllerTest extends ControllerTest {
         order.setCustomer(userRepository.findAll().get(0));
         orderRepository.saveAndFlush(order);
 
-        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT)))
+        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), "/connect")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format(URL_CONCAT, ROUTE_WEBSHOP_PAYMENT, order.getPublicReference())));
     }
@@ -132,7 +130,7 @@ public class WebshopLoginControllerTest extends ControllerTest {
         product.setChOnly(false);
         productRepository.saveAndFlush(product);
 
-        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)))
+        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), "/guest")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format(URL_CONCAT, ROUTE_WEBSHOP_CUSTOMER, order.getPublicReference())));
     }
@@ -148,7 +146,7 @@ public class WebshopLoginControllerTest extends ControllerTest {
         product.setChOnly(true);
         productRepository.saveAndFlush(product);
 
-        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)))
+        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), "/connect")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format(URL_CONCAT, ROUTE_WEBSHOP_LOGIN, order.getPublicReference())))
                 .andExpect(flash().attribute(MODEL_ATTR_ERRORS, ImmutableMap.of(ERROR_INVALID, ERROR_MESSAGE_GUEST_CHECKOUT_NOT_ALLOWED)));
@@ -165,7 +163,7 @@ public class WebshopLoginControllerTest extends ControllerTest {
         order.setCustomer(userRepository.findAll().get(0));
         orderRepository.saveAndFlush(order);
 
-        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)))
+        mockMvc.perform(get(String.format(URL_CONCAT_WITH_OPTION, ROUTE_WEBSHOP_LOGIN, order.getPublicReference(), "/guest")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format(URL_CONCAT, ROUTE_WEBSHOP_PAYMENT, order.getPublicReference())));
     }

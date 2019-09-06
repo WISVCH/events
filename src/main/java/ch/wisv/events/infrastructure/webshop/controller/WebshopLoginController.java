@@ -12,9 +12,6 @@ import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIREC
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_LOGIN_PAGE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_PAYMENT_PAGE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_LOGIN_OPTION_GUEST;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import ch.wisv.events.services.AuthenticationService;
 import ch.wisv.events.services.OrderService;
 import com.google.common.collect.ImmutableMap;
@@ -59,7 +56,7 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return string
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
+    @GetMapping("/{publicReference}")
     public String loginIndex(Model model, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
@@ -78,9 +75,9 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE + ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT)
+    @GetMapping("/{publicReference}/connect")
     @PreAuthorize("hasRole('USER')")
-    public String loginChConnect(@PathVariable String publicReference) {
+    public String checkoutUsingConnect(@PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
             return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());
@@ -100,8 +97,8 @@ public class WebshopLoginController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE + ROUTE_WEBSHOP_LOGIN_OPTION_GUEST)
-    public String create(RedirectAttributes redirect, @PathVariable String publicReference) {
+    @GetMapping("/{publicReference}/guest")
+    public String checkoutAsGuest(RedirectAttributes redirect, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
             return String.format(REDIRECT_PAYMENT_PAGE, order.getPublicReference());

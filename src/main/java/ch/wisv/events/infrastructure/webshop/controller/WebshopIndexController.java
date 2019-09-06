@@ -7,7 +7,6 @@ import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_A
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_EVENTS;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.MODEL_ATTR_ORDER_DTO;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_INDEX;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_SINGLE_EVENT;
 import ch.wisv.events.services.EventService;
@@ -72,7 +71,7 @@ public class WebshopIndexController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
+    @GetMapping("/{publicReference}")
     public String viewEvent(Model model, @PathVariable String publicReference) {
         if (!model.containsAttribute(MODEL_ATTR_ERRORS)) {
             model.addAttribute(MODEL_ATTR_ERRORS, new HashMap<String, String>());

@@ -14,7 +14,6 @@ import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIREC
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_LOGIN_PAGE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.REDIRECT_PAYMENT_PAGE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_CUSTOMER;
-import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE;
 import static ch.wisv.events.infrastructure.webshop.util.WebshopConstant.VIEW_WEBSHOP_CUSTOMER;
 import ch.wisv.events.services.OrderService;
 import ch.wisv.events.services.UserService;
@@ -66,7 +65,7 @@ public class WebshopCustomerController extends AbstractWebshopController {
      *
      * @return String
      */
-    @GetMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
+    @GetMapping("/{publicReference}")
     public String createCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         Order order = orderService.getByPublicReference(publicReference);
         if (order.getStatus() != OrderStatus.ANONYMOUS && nonNull(order.getCustomer())) {
@@ -98,7 +97,7 @@ public class WebshopCustomerController extends AbstractWebshopController {
      *
      * @return String
      */
-    @PostMapping(ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE)
+    @PostMapping("/{publicReference}")
     public String createCustomer(
             RedirectAttributes redirect,
             @PathVariable String publicReference,

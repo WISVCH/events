@@ -84,7 +84,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
      * @throws Exception on AssertionError.
      */
     @Test
-    public void testGetViewPaymentOptionsAlreadyPaid() throws Exception {
+    public void upgradetestGetViewPaymentOptionsAlreadyPaid() throws Exception {
         Order order = new Order();
         order.setStatus(OrderStatus.PAID);
         orderRepository.saveAndFlush(order);

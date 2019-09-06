@@ -81,15 +81,6 @@ public final class WebshopConstant {
     /** Route for the webshop payment. */
     public static final String ROUTE_WEBSHOP_PAYMENT = "/webshop/payment";
 
-    /** Route for the webshop login option connect. */
-    public static final String ROUTE_WEBSHOP_LOGIN_OPTION_CONNECT = "/connect";
-
-    /** Route for the webshop login option guest. */
-    public static final String ROUTE_WEBSHOP_LOGIN_OPTION_GUEST = "/guest";
-
-    /** Route for the webshop option public reference. */
-    public static final String ROUTE_WEBSHOP_OPTION_PUBLIC_REFERENCE = "/{publicReference}";
-
     /** Route for the webshop order. */
     public static final String ROUTE_WEBSHOP_ORDER = "/webshop/order";
 
