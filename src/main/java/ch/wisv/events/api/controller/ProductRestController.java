@@ -3,8 +3,10 @@ package ch.wisv.events.api.controller;
 import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.util.Search;
+import ch.wisv.events.core.webhook.WebhookPublisher;
 import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
 import java.util.List;
 import org.json.simple.JSONObject;
@@ -31,13 +33,18 @@ public class ProductRestController {
      */
     private final ProductService productService;
 
+    /** WebhookPublisher. */
+    private final WebhookPublisher webhookPublisher;
+
     /**
      * Default constructor.
      *
      * @param productService ProductService
+     * @param webhookPublisher of type WebhookPublisher
      */
-    public ProductRestController(ProductService productService) {
+    public ProductRestController(ProductService productService, WebhookPublisher webhookPublisher) {
         this.productService = productService;
+        this.webhookPublisher = webhookPublisher;
     }
 
     /**
@@ -52,6 +59,7 @@ public class ProductRestController {
     public ResponseEntity createProduct(@Validated @RequestBody ProductDto product) {
         try {
             Product created = productService.create(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, created);
 
             JSONObject json = new JSONObject();
             json.put("product_id", created.getId());
