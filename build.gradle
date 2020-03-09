@@ -89,7 +89,7 @@ dependencies {
     compile 'org.webjars.npm:flatpickr:4.5.1'
 
     compile 'org.flywaydb:flyway-core:4.2.0'
-    compile 'org.projectlombok:lombok:1.16.10'
+    compile 'org.projectlombok:lombok:1.18.10'
 
     compile "com.googlecode.json-simple:json-simple:1.1.1"
     compile 'net.sf.biweekly:biweekly:0.6.0'

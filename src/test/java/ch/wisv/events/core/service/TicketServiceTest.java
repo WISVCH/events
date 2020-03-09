@@ -227,8 +227,8 @@ public class TicketServiceTest extends ServiceTest {
         List<Ticket> createdTickets = ticketService.createByOrder(order);
 
         assertEquals(random, createdTickets.size());
-        assertEquals(customer, createdTickets.get((new Random()).nextInt(random)).getOwner());
-        assertEquals(product, createdTickets.get((new Random()).nextInt(random)).getProduct());
+        assertEquals(customer, createdTickets.get(Math.abs((new Random()).nextInt(random))).getOwner());
+        assertEquals(product, createdTickets.get(Math.abs((new Random()).nextInt(random))).getProduct());
     }
 
     /**

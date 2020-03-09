@@ -6,6 +6,7 @@ import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.repository.ProductRepository;
+import ch.wisv.events.utils.LdapGroup;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -86,7 +87,7 @@ public class EventTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("shortDescription")
         );
         event.setPublished(EventStatus.PUBLISHED);
-        event.setOrganizedBy(ch.wisv.events.utils.LdapGroup.W3CIE);
+        event.setOrganizedBy(LdapGroup.FLITCIE);
         event.setCategories(ImmutableList.of(EventCategory.CAREER));
 
         return event;

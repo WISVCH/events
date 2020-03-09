@@ -6,6 +6,13 @@ exclude_patterns:
 - "**/*.js"
 - "**/*.css"
 
+
+checks:
+    similar-code:
+        enabled: false
+    identical-code:
+        enabled: false
+
 plugins:
   checkstyle:
       enabled: true

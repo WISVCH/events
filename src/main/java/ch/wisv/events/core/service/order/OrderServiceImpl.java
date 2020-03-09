@@ -30,6 +30,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -300,6 +302,17 @@ public class OrderServiceImpl implements OrderService {
         return order.getOrderProducts().stream().allMatch(orderProduct ->
                 orderProduct.getProduct().isReservable()
         );
+    }
+
+    /**
+     * Returns a list of orders based on product.
+     */
+    @Override
+    public List<Order> getAllByProduct(Product product) {
+        return orderProductRepository.findAllByProduct(product).stream()
+            .map(orderRepository::findAllByOrderProducts)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     /**

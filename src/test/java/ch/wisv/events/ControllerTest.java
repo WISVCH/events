@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.aspectj.weaver.ast.Or;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -180,6 +181,17 @@ public abstract class ControllerTest {
         orderRepository.saveAndFlush(order);
 
         return order;
+    }
+
+    protected OrderProduct createOrderProduct(Product product) {
+        OrderProduct orderProduct = new OrderProduct();
+        orderProduct.setProduct(product);
+        orderProduct.setPrice(10.0);
+        orderProduct.setAmount((long) 10);
+
+        orderProductRepository.saveAndFlush(orderProduct);
+
+        return orderProduct;
     }
 
     protected Webhook createWebhook() {

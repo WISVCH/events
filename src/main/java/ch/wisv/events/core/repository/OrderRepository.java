@@ -2,6 +2,7 @@ package ch.wisv.events.core.repository;
 
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 import java.util.Optional;
@@ -67,4 +68,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @return Optional of Order
      */
     Optional<Order> findOneByChPaymentsReference(String chPaymentsReference);
+
+    /**
+     * Find order associated to orderProduct.
+     *
+     * @param orderProduct of type OrderProduct
+     *
+     * @return List of Order
+     */
+    List<Order> findAllByOrderProducts(OrderProduct orderProduct);
 }
