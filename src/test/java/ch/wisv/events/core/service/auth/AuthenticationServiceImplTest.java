@@ -7,7 +7,8 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import java.util.HashSet;
 import org.junit.After;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
@@ -17,7 +18,6 @@ import static org.mockito.Mockito.when;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 
 public class AuthenticationServiceImplTest extends ServiceTest {
 

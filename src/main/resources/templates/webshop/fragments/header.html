@@ -3,7 +3,6 @@
 <head></head>
 <body>
 <header class="page-header" th:fragment="header (title, image)">
-
     <!-- Top Bar -->
     <div class="wisv-header header-left">
         <nav class="navbar navbar-expand-lg navbar-light wisv-header-bg">
@@ -20,6 +19,16 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
+                        <li class="nav-item m-2"  sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a th:href="@{/administrator/}" class="btn btn-block btn-primary">
+                                Admin panel
+                            </a>
+                        </li>
+                    <li class="nav-item m-2" sec:authorize="hasRole('ROLE_COMMITTEE')">
+                        <a th:href="@{/sales/}" class="btn btn-block btn-primary">
+                            Committee Sales
+                        </a>
+                    </li>
                     <li class="nav-item m-2" th:if="${customer != null}">
                         <a th:href="@{/overview/}" class="btn btn-block btn-primary">
                             My Events
