@@ -9,8 +9,12 @@ import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +40,7 @@ public class DashboardPenningmeesterControllerTest extends ControllerTest {
         Order order1 = this.createOrder(customer, ImmutableList.of(product), OrderStatus.PENDING, "test");
         orderService.updateOrderStatus(order1, OrderStatus.PAID);
 
-        Map<LocalDate, Map<Product, Integer>> map = new HashMap<>();
+        Map<LocalDate, Map<Product, Integer>> map = new TreeMap<>();
         LocalDate date = order.getPaidAt().toLocalDate();
         map.put(LocalDate.of(date.getYear(), date.getMonthValue(), 1), ImmutableMap.of(product, 2));
 

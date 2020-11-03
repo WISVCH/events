@@ -7,6 +7,8 @@ import ch.wisv.events.core.service.order.OrderService;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,7 +57,7 @@ public class DashboardPenningmeesterController extends DashboardController {
      * @return HashMap
      */
     private Map<LocalDate, Map<Product, Integer>> generateProductMap() {
-        Map<LocalDate, Map<Product, Integer>> map = new HashMap<>();
+        Map<LocalDate, Map<Product, Integer>> map = new TreeMap<>();
 
         for (Order order : orderService.getAllPaid()) {
             if (order.getPaymentMethod() == PaymentMethod.IDEAL || order.getPaymentMethod() == PaymentMethod.SOFORT) {
