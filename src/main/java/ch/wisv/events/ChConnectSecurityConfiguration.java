@@ -125,10 +125,10 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
      */
     @Bean
     public AuthenticationProvider oidcAuthenticationProvider() {
-        // TODO: fully configurable roles
-        SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
-        SimpleGrantedAuthority ROLE_COMMITTEE = new SimpleGrantedAuthority("ROLE_COMMITTEE");
-        SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
+        // TODO fully configurable roles
+        final SimpleGrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+        final SimpleGrantedAuthority roleCommittee = new SimpleGrantedAuthority("ROLE_COMMITTEE");
+        final SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
 
         OIDCAuthenticationProvider authenticationProvider = new OIDCAuthenticationProvider();
         authenticationProvider.setUserInfoFetcher(new CHUserInfoFetcher());
@@ -138,11 +138,11 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
                 CHUserInfo info = (CHUserInfo) userInfo;
 
                 if (properties.getAdminGroups().stream().anyMatch(info.getLdapGroups()::contains)) {
-                    return ImmutableSet.of(ROLE_ADMIN, ROLE_USER, ROLE_COMMITTEE);
+                    return ImmutableSet.of(roleAdmin, roleUser, roleCommittee);
                 } else if (info.getLdapGroups().stream().filter(group -> !group.equals("users")).count() > 0) {
-                    return ImmutableSet.of(ROLE_USER, ROLE_COMMITTEE);
+                    return ImmutableSet.of(roleUser, roleCommittee);
                 } else {
-                    return ImmutableSet.of(ROLE_USER);
+                    return ImmutableSet.of(roleUser);
                 }
             }
             throw new AccessDeniedException("Invalid user info!");
@@ -173,7 +173,7 @@ public class ChConnectSecurityConfiguration extends WebSecurityConfigurerAdapter
         issuer.setIssuer(properties.getIssuerUri());
         oidcFilter.setIssuerService(issuer);
 
-        // TODO: for production, sign or encrypt requests
+        // TODO for production, sign or encrypt requests
         oidcFilter.setAuthRequestUrlBuilder(new PlainAuthRequestUrlBuilder());
 
         return oidcFilter;
