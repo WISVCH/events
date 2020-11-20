@@ -26,7 +26,7 @@
 <!--/*@thymesVar id="ticketsSold" type="java.lang.Integer"*/-->
 <div class="container-fluid">
     <div class="row">
-        <nav th:replace="/sales/stats/sidebar :: sidebar"></nav>
+        <nav th:replace="sales/stats/sidebar :: sidebar"></nav>
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1 th:text="${event.getTitle()}"/>
             <div class="row">
