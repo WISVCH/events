@@ -8,6 +8,8 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.product.Product;
+
 import java.util.List;
 
 /**
@@ -20,7 +22,6 @@ public interface OrderService {
      *
      * @param order    of type Order
      * @param customer of type Customer
-     *
      * @throws EventsException when Customer can not be added
      */
     void addCustomerToOrder(Order order, Customer customer) throws EventsException;
@@ -29,7 +30,6 @@ public interface OrderService {
      * Method create creates and order.
      *
      * @param order of type Order
-     *
      * @throws EventsException when something is wrong with the Order
      */
     void create(Order order) throws EventsException;
@@ -38,9 +38,7 @@ public interface OrderService {
      * Create an Order form a OrderProductDto.
      *
      * @param orderProductDto of type OrderProductDto
-     *
      * @return Order order
-     *
      * @throws ProductNotFoundException when the a Product in the OrderProductDto is not found
      */
     Order createOrderByOrderProductDto(OrderProductDto orderProductDto) throws ProductNotFoundException;
@@ -49,7 +47,6 @@ public interface OrderService {
      * Update an existing order.
      *
      * @param order of type Order
-     *
      * @throws OrderNotFoundException when Order is not found
      * @throws OrderInvalidException  when the updates make the Order invalid
      */
@@ -60,7 +57,6 @@ public interface OrderService {
      *
      * @param order  of type Order
      * @param status of type OrderStatus
-     *
      * @throws EventsException when the status update will put the Order in an invalid state
      */
     void updateOrderStatus(Order order, OrderStatus status) throws EventsException;
@@ -69,7 +65,6 @@ public interface OrderService {
      * Get all order by a Customer.
      *
      * @param customer of type Customer
-     *
      * @return List of Order
      */
     List<Order> getReservationByOwner(Customer customer);
@@ -78,7 +73,6 @@ public interface OrderService {
      * Get all order by a Customer.
      *
      * @param owner of type Customer
-     *
      * @return List of Order
      */
     List<Order> getAllByOwner(Customer owner);
@@ -105,12 +99,18 @@ public interface OrderService {
     List<Order> getAllPaid();
 
     /**
+     * Get all Orders by product.
+     *
+     * @param product of type Product
+     * @return List of Orders
+     */
+    List<Order> getAllByProduct(Product product);
+
+    /**
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
-     *
      * @return Order by reference
-     *
      * @throws OrderNotFoundException when Order is not found
      */
     Order getByReference(String reference) throws OrderNotFoundException;
@@ -119,9 +119,7 @@ public interface OrderService {
      * Get Order by ChPaymentsReference.
      *
      * @param chPaymentsReference of type String
-     *
      * @return Order
-     *
      * @throws OrderNotFoundException when Order is not found
      */
     Order getByChPaymentsReference(String chPaymentsReference) throws OrderNotFoundException;
@@ -130,7 +128,6 @@ public interface OrderService {
      * Check if order contains CH only Product.
      *
      * @param order of type Order
-     *
      * @return boolean
      */
     boolean containsChOnlyProduct(Order order);
@@ -139,7 +136,6 @@ public interface OrderService {
      * Check if order contains only reservable products.
      *
      * @param order of type Order
-     *
      * @return boolean
      */
     boolean containsOnlyReservable(Order order);
