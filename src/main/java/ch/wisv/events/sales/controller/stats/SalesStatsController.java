@@ -87,6 +87,7 @@ public class SalesStatsController {
         Event event = eventService.getByKey(key);
 
         model.addAttribute("products", event.getProducts());
+        model.addAttribute("target", event.getTarget());
         model.addAttribute("key", key);
 
         return "sales/stats/products/index";
