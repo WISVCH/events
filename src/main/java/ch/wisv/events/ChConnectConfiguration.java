@@ -1,25 +1,29 @@
 package ch.wisv.events;
 
-import com.google.common.collect.ImmutableSet;
-import com.nimbusds.jose.JWSAlgorithm;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.mitre.oauth2.model.ClientDetailsEntity;
-import org.mitre.oauth2.model.RegisteredClient;
-import static org.mitre.openid.connect.client.OIDCAuthenticationFilter.FILTER_PROCESSES_URL;
-import org.mitre.openid.connect.client.service.ClientConfigurationService;
-import org.mitre.openid.connect.client.service.RegisteredClientService;
-import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
-import org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientService;
-import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 
 /**
  * CHConnectConfiguration class.
@@ -28,28 +32,11 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public class ChConnectConfiguration {
-
-    /**
-     * OIDC Issuer URI; see $issuerUri/.well-known/openid-configuration.
-     */
-    @NotNull
-    @Getter
-    @Setter
-    private String issuerUri;
-
-    /**
-     * URI of this application, without trailing slash.
-     */
-    @NotNull
-    @Getter
-    @Setter
-    private String clientUri;
+public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * Groups that are admin in the system.
      */
-    @NotNull
     @Getter
     @Setter
     private List<String> adminGroups;
@@ -57,74 +44,41 @@ public class ChConnectConfiguration {
     /**
      * List of all the users that are allowed in the beta.
      */
-    @NotNull
     @Getter
     @Setter
     private List<String> betaUsers;
 
-    /**
-     * Registered oauth2 client.
-     */
-    @Setter
-    private RegisteredClient registeredClient;
-
-    /**
-     * CHConnectConfiguration constructor.
-     */
-    public ChConnectConfiguration() {
-        registeredClient = new RegisteredClient();
-        registeredClient.setScope(ImmutableSet.of("openid", "email", "profile", "ldap"));
-        registeredClient.setTokenEndpointAuthMethod(ClientDetailsEntity.AuthMethod.SECRET_BASIC);
-        registeredClient.setGrantTypes(ImmutableSet.of("authorization_code"));
-        registeredClient.setResponseTypes(Collections.singleton("code"));
-        registeredClient.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .cors()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
     }
 
-    /**
-     * Get the Registerd Client.
-     *
-     * @return RegisteredClient
-     */
     @Bean
-    public RegisteredClient getRegisteredClient() {
-        if (clientUri != null && registeredClient.getRedirectUris().isEmpty()) {
-            registeredClient.getRedirectUris().add(clientUri + FILTER_PROCESSES_URL);
-        }
-        if (issuerUri != null && registeredClient.getJwksUri() == null) {
-            registeredClient.setJwksUri(issuerUri + "/jwk");
-        }
-        return registeredClient;
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 
-    /**
-     * Dynamic client configuration service: this application is dynamically registered as an OIDC client when
-     * authentication first occurs. This registration is persisted in a JSON file to avoid re-registration every time
-     * the application is restarted.
-     *
-     * @return ClientConfigurationService
-     */
-    @Bean
-    @Profile("!production")
-    public ClientConfigurationService clientConfigurationService() {
-        RegisteredClientService registeredClientService = new JsonFileRegisteredClientService("config/oidc-client-registration.json");
-
-        DynamicRegistrationClientConfigurationService clientConfigurationService = new DynamicRegistrationClientConfigurationService();
-        clientConfigurationService.setRegisteredClientService(registeredClientService);
-        clientConfigurationService.setTemplate(getRegisteredClient());
-        return clientConfigurationService;
-    }
-
-    /**
-     * Static client configuration: in production, we use a client configured from Spring properties.
-     *
-     * @return ClientConfigurationService with a single statically configured client
-     */
-    @Bean
-    @Profile("production")
-    public ClientConfigurationService clientProdConfigurationService() {
-        StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
-        clientConfigurationService.setClients(Collections.singletonMap(issuerUri, getRegisteredClient()));
-
-        return clientConfigurationService;
+    private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
+        return (userRequest) -> {
+            SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
+            SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
+            OidcIdToken idToken = userRequest.getIdToken();
+            Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(ROLE_USER);
+            if(groups.stream().anyMatch(o -> adminGroups.contains(o))) {
+                authorities.add(ROLE_ADMIN);
+            }
+            return new DefaultOidcUser(authorities, idToken);
+        };
     }
 }

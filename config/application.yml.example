@@ -38,6 +38,23 @@ spring:
     encoding: UTF-8
     content-type: text/html
 
+  security:
+          oauth2:
+              client:
+                  provider:
+                      wisvchconnect:
+                          issuer-uri: https://connect.ch.tudelft.nl
+                          clientUri: http://localhost:8080/events
+                  registration:
+                      wisvchconnect:
+                          client-id: <Insert Connect ID here>
+                          client-secret: <Insert  Connect Client Secret>
+                          scope:
+                              - openid
+                              - profile
+                              - email
+                              - ldap
+
 # Database migration automation. Set to false for development
 flyway.enabled: false
 # spring.jpa.properties.hibernate.hbm2ddl.auto: none
@@ -55,9 +72,6 @@ spring:
 
 # CH Connect Configuration
 wisvch.connect:
-  issuerUri: https://connect.ch.tudelft.nl
-  clientUri: http://localhost:8080/events
-
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
   admin-groups=<MyLDAPgroup>
 
