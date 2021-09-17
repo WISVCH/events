@@ -17,6 +17,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 
 jar {
@@ -60,9 +61,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:2.5.4'
     compile 'org.springframework.boot:spring-boot-starter-oauth2-client:2.5.4'
 
-
     //TEMP APPLICATION PROPERTIES HELPER
-    compile 'org.springframework.boot:spring-boot-properties-migrator:2.5.4'
+    runtime 'org.springframework.boot:spring-boot-properties-migrator:2.5.4'
 
 
     compile 'javax.el:javax.el-api:2.2.5'
@@ -72,10 +72,10 @@ dependencies {
     compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.0.RELEASE'
     compile 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.1.RELEASE'
 
-    compile 'com.zaxxer:HikariCP:5.0.0'
     compile 'com.google.guava:guava:30.1.1-jre'
     compile 'org.hibernate:hibernate-validator:7.0.1.Final'
     compile 'org.apache.commons:commons-lang3:3.12.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'com.datadoghq:dd-trace-api:0.86.0'
 
     compile 'org.webjars:bootstrap:4.0.0-beta'
@@ -87,8 +87,10 @@ dependencies {
     compile 'org.webjars:font-awesome:5.0.13'
     compile 'org.webjars.npm:flatpickr:4.5.1'
 
-    compile 'org.flywaydb:flyway-core:4.2.0'
+    compile 'org.flywaydb:flyway-core:5.2.0'
     compile 'org.projectlombok:lombok:1.18.10'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
     compile "com.googlecode.json-simple:json-simple:1.1.1"
     compile 'net.sf.biweekly:biweekly:0.6.0'

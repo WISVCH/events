@@ -1,17 +1,16 @@
 package ch.wisv.events.core.service.auth;
 
-import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.stereotype.Service;
 
@@ -119,8 +118,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
+        List<String> ldapGroups = userInfo.getClaimAsStringList("ldap_username");
+
         customer.setLdapGroups(
-                userInfo.getLdapGroups().stream()
+                ldapGroups.stream()
                         .map(ldapString -> {
                             try {
                                 return LdapGroup.valueOf(ldapString.toUpperCase());

@@ -124,7 +124,7 @@ public class TicketServiceImpl implements TicketService {
     public void deleteByOrder(Order order) {
         List<Ticket> tickets = ticketRepository.findAllByOrder(order);
 
-        ticketRepository.delete(tickets);
+        ticketRepository.deleteAll(tickets);
     }
 
     /**
