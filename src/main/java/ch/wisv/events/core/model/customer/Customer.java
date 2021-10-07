@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -44,6 +45,7 @@ public class Customer {
     /**
      * Field name of the customer.
      */
+    @Getter
     private String name;
 
     /**
