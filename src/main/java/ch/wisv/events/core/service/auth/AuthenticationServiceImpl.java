@@ -6,7 +6,10 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
 
+<<<<<<< HEAD
 import java.util.Arrays;
+=======
+>>>>>>> 34d005bb9f80448f608abad64daa3dbc7143e8ae
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
