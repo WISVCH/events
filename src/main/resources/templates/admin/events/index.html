@@ -77,7 +77,8 @@
                                     <i class="fas fa-fw fa-ticket-alt"></i>
                                 </a>
                                 <a th:href="'delete/' + ${event.getKey()} + '/'"
-                                   th:onclick="'return confirm(\'Are you sure you want to delete ' + ${event.title} + '?\');'"
+                                   th:data-confirm-delete="|Are you sure you want to delete  ${event.title} ?|"
+                                   onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
                                    class="btn btn-sm btn-danger">
                                     <i class="far fa-fw fa-trash-alt"></i>
                                 </a>
