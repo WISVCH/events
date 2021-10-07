@@ -1,25 +1,24 @@
-package db.migration2;
+package db.migration;
 
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
- * DB migration.
+ * DB migration which adds a document table
  */
-public class V20180928__Order_ref_ticket implements SpringJdbcMigration {
+public class V20180917__Remove_ch_username implements SpringJdbcMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
      * database supports it.
      *
      * @param jdbcTemplate The jdbcTemplate to use to execute statements.
+     *
      */
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.execute("ALTER TABLE public.ticket ADD COLUMN order_id INTEGER");
-        jdbcTemplate.execute("ALTER TABLE ONLY public.ticket ADD CONSTRAINT fk6pbiwpljchpolob40s7di41y4 FOREIGN KEY (order_id) REFERENCES "
-                                     + "public.orders(id);");
+        // Remove column ch_username.
+        jdbcTemplate.execute("ALTER TABLE public.customer DROP COLUMN ch_username");
     }
 
 }
-
