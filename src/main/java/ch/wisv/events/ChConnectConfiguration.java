@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,7 +19,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.stereotype.Component;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,10 +29,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /**
  * CHConnectConfiguration class.
  */
-@Component
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
-@EnableWebSecurity
 @Profile("!test")
 public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -54,8 +57,17 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
+                .and().authorizeRequests()
+                    .antMatchers("/administrator/**").hasRole("ADMIN")
+                    .antMatchers("/", "/management/health").permitAll()
+                    .anyRequest().permitAll()
+                .and()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                .and()
+                    .csrf()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .ignoringAntMatchers("/api/v1/**")
                 .and()
                 .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
     }
@@ -70,14 +82,17 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         return (userRequest) -> {
             SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
+            SimpleGrantedAuthority ROLE_COMMITTEE = new SimpleGrantedAuthority("ROLE_COMMITTEE");
             SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = userRequest.getIdToken();
-            System.out.println(idToken);
             Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(ROLE_USER);
             if(groups.stream().anyMatch(o -> adminGroups.contains(o))) {
                 authorities.add(ROLE_ADMIN);
+            }
+            if (groups.stream().filter(group -> !group.equals("users")).count() > 0) {
+                authorities.add(ROLE_COMMITTEE);
             }
             return new DefaultOidcUser(authorities, idToken);
         };

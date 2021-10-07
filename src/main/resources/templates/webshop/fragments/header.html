@@ -19,12 +19,12 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
-                        <li class="nav-item m-2"  sec:authorize="hasRole('ROLE_ADMIN')">
+                        <li class="nav-item m-2"  sec:authorize="hasRole('ADMIN')">
                             <a th:href="@{/administrator/}" class="btn btn-block btn-primary">
                                 Admin panel
                             </a>
                         </li>
-                    <li class="nav-item m-2" sec:authorize="hasRole('ROLE_COMMITTEE')">
+                    <li class="nav-item m-2" sec:authorize="hasRole('COMMITTEE')">
                         <a th:href="@{/sales/}" class="btn btn-block btn-primary">
                             Committee Sales
                         </a>
