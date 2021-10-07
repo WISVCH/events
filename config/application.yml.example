@@ -39,21 +39,21 @@ spring:
     content-type: text/html
 
   security:
-          oauth2:
-              client:
-                  provider:
-                      wisvchconnect:
-                          issuer-uri: https://connect.ch.tudelft.nl
-                          clientUri: http://localhost:8080/events
-                  registration:
-                      wisvchconnect:
-                          client-id: <Insert Connect ID here>
-                          client-secret: <Insert  Connect Client Secret>
-                          scope:
-                              - openid
-                              - profile
-                              - email
-                              - ldap
+      oauth2:
+          client:
+              provider:
+                  wisvchconnect:
+                      issuer-uri: https://connect.ch.tudelft.nl
+                      clientUri: http://localhost:8080/events
+              registration:
+                  wisvchconnect:
+                      client-id: <Insert Connect ID here>
+                      client-secret: <Insert  Connect Client Secret>
+                      scope:
+                          - openid
+                          - profile
+                          - email
+                          - ldap
 
 # Database migration automation. Set to false for development
 flyway.enabled: false

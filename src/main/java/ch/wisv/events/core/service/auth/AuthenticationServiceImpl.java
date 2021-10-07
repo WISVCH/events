@@ -6,16 +6,14 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
 
-<<<<<<< HEAD
 import java.util.Arrays;
-=======
->>>>>>> 34d005bb9f80448f608abad64daa3dbc7143e8ae
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,10 +48,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             OidcIdToken userInfo = this.getOIDCIdToken(auth);
 
             Customer customer = this.getCustomerByChUserInfo(userInfo);
-            this.updateCustomerInfo(customer, userInfo);
+            // TODO: fix customer update info
+//            this.updateCustomerInfo(customer, userInfo);
 
             return customer;
-        } catch (CustomerInvalidException | CustomerNotFoundException | InvalidTokenException e) {
+        } catch (CustomerInvalidException | InvalidTokenException e) {
             return null;
         }
     }
@@ -80,13 +79,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * Get a Customer by CHUserInfo.
+     * Get a Customer by OidcIdToken.
      *
-     * @param userInfo of type CHUserInfo.
+     * @param userInfo of type OidcIdToken.
      *
      * @return Customer
      *
-     * @throws CustomerInvalidException when the CHUserInfo will result in an invalid
+     * @throws CustomerInvalidException when the OidcIdToken will result in an invalid
      */
     private Customer getCustomerByChUserInfo(OidcIdToken userInfo) throws CustomerInvalidException {
         try {
@@ -99,7 +98,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (CustomerNotFoundException ignored) {
         }
 
-        return customerService.createByOIDCIdToken(userInfo);
+        return customerService.createByOidcIdToken(userInfo);
     }
 
     /**

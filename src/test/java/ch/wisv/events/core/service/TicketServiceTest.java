@@ -196,12 +196,12 @@ public class TicketServiceTest extends ServiceTest {
         this.fillOrderWithAmountOfProducts(order, random);
 
         when(ticketRepository.findAllByOrder(order)).thenReturn(ImmutableList.of(ticket3));
-        doNothing().when(ticketRepository).delete(ImmutableList.of(ticket3));
+        doNothing().when(ticketRepository).delete(ticket3);
 
         ticketService.deleteByOrder(order);
 
         verify(ticketRepository, times(1)).findAllByOrder(order);
-        verify(ticketRepository, times(1)).delete(ImmutableList.of(ticket3));
+        verify(ticketRepository, times(1)).delete(ticket3);
     }
 
     @Test

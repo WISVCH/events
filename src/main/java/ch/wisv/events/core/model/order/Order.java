@@ -14,9 +14,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import static org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -24,6 +25,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO;
 @Entity
 @Table(name = "orders")
 @Data
+@Getter
+@Setter
 public class Order {
 
     /**

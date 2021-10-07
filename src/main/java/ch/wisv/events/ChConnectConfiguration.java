@@ -3,13 +3,13 @@ package ch.wisv.events;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -30,6 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Component
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
+@EnableWebSecurity
 @Profile("!test")
 public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -71,6 +72,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
             SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
             SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = userRequest.getIdToken();
+            System.out.println(idToken);
             Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(ROLE_USER);
