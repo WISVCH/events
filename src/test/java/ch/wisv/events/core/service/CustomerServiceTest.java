@@ -278,17 +278,18 @@ public class CustomerServiceTest extends ServiceTest {
      * Test if create by ChUserInfo
      */
     @Test
-    public void testCreateByChUserInfo() throws Exception {
+    public void testCreateByOidcUser() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
         when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("name", "name");
+        claims.put("sub", "sub");
+        claims.put("given_name", "name");
         claims.put("email", "email");
         claims.put("ldapUsername", "ldapUsername");
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
+        OidcIdToken idToken = new OidcIdToken("TOKEN", Instant.now(),
                 Instant.now().plusSeconds(60), claims);
 
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
@@ -307,14 +308,15 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expect(CustomerInvalidException.class);
 
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("name", null);
+        claims.put("sub", "sub");
+        claims.put("given_name", null);
         claims.put("email", null);
         claims.put("ldapUsername", "ldapUsername");
 
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
-                Instant.now(), claims);
+        OidcIdToken idToken = new OidcIdToken("TOKEN", Instant.now(),
+                Instant.now().plusSeconds(60), claims);
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 
         customerService.createByOidcUser(oidcUser);
