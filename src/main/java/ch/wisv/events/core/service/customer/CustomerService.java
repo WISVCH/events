@@ -5,6 +5,7 @@ import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,13 +85,13 @@ public interface CustomerService {
     void create(Customer customer) throws CustomerInvalidException;
 
     /**
-     * Add a new customer by OidcUserInfo.
+     * Add a new customer by OidcUser.
      *
-     * @param userInfo of type OidcIdToken
+     * @param userInfo of type OidcUser
      *
      * @throws CustomerInvalidException when Customer is invalid
      */
-    Customer createByOidcIdToken(OidcIdToken userInfo) throws CustomerInvalidException;
+    Customer createByOidcUser(OidcUser userInfo) throws CustomerInvalidException;
 
     /**
      * Update a existing customer.

@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 /**
@@ -135,12 +134,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Add a new customer by OidcIdToken.
+     * Add a new customer by OidcUser.
      *
-     * @param userInfo of type OidcIdToken
+     * @param userInfo of type OidcUser
      */
     @Override
-    public Customer createByOidcIdToken(OidcIdToken userInfo) throws CustomerInvalidException {
+    public Customer createByOidcUser(OidcUser userInfo) throws CustomerInvalidException {
         Customer customer = new Customer(userInfo.getSubject(), userInfo.getGivenName(), userInfo.getEmail(), "");
         this.create(customer);
 

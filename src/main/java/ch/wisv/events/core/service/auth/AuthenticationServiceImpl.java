@@ -12,8 +12,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,11 +45,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Customer getCurrentCustomer() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            OidcIdToken userInfo = this.getOIDCIdToken(auth);
 
-            Customer customer = this.getCustomerByChUserInfo(userInfo);
-            // TODO: fix customer update info
-//            this.updateCustomerInfo(customer, userInfo);
+            OidcUser oidcUser = this.getOidcUser(auth);
+
+            Customer customer = this.getCustomerByOidcUser(oidcUser);
+            // TODO: fix updateCustomerInfo
+//            this.updateCustomerInfo(customer, oidcUser);
 
             return customer;
         } catch (CustomerInvalidException | InvalidTokenException e) {
@@ -64,18 +65,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      *
      * @return OIDCIdToken
      */
-    private OidcIdToken getOIDCIdToken(Authentication auth) throws InvalidTokenException {
-        if (!(auth instanceof OidcIdToken)) {
+    private DefaultOidcUser getOidcUser(Authentication auth) throws InvalidTokenException {
+        if (!(auth.getPrincipal() instanceof DefaultOidcUser)) {
             throw new InvalidTokenException("Invalid authentication");
         }
 
-        OidcIdToken oidcToken = (OidcIdToken) auth;
-
-        if (oidcToken.getEmail() == null) {
+        DefaultOidcUser oidcUser = (DefaultOidcUser) auth.getPrincipal();
+        if (oidcUser.getEmail() == null) {
             throw new InvalidTokenException("Invalid UserInfo object");
         }
 
-        return  oidcToken;
+        return oidcUser;
     }
 
     /**
@@ -87,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      *
      * @throws CustomerInvalidException when the OidcIdToken will result in an invalid
      */
-    private Customer getCustomerByChUserInfo(OidcIdToken userInfo) throws CustomerInvalidException {
+    private Customer getCustomerByOidcUser(OidcUser userInfo) throws CustomerInvalidException {
         try {
             return customerService.getBySub(userInfo.getSubject());
         } catch (CustomerNotFoundException ignored) {
@@ -98,7 +98,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (CustomerNotFoundException ignored) {
         }
 
-        return customerService.createByOidcIdToken(userInfo);
+        return customerService.createByOidcUser(userInfo);
     }
 
     /**
@@ -110,7 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @throws CustomerInvalidException  when the Customer is invalid.
      * @throws CustomerNotFoundException when the Customer does not exists.
      */
-    private void updateCustomerInfo(Customer customer, OidcIdToken userInfo) throws CustomerInvalidException, CustomerNotFoundException {
+    private void updateCustomerInfo(Customer customer, OidcUser userInfo) throws CustomerInvalidException, CustomerNotFoundException {
         if (customer.getSub() == null || customer.getSub().equals("")) {
             customer.setSub(userInfo.getSubject());
         }

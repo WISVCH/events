@@ -1,5 +1,6 @@
 package ch.wisv.events;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -80,11 +82,16 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
+        final OidcUserService delegate = new OidcUserService();
+
         return (userRequest) -> {
+            OidcUser oidcUser = delegate.loadUser(userRequest);
+
             SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
             SimpleGrantedAuthority ROLE_COMMITTEE = new SimpleGrantedAuthority("ROLE_COMMITTEE");
             SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
-            OidcIdToken idToken = userRequest.getIdToken();
+            OidcIdToken idToken = oidcUser.getIdToken();
+
             Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(ROLE_USER);
@@ -94,7 +101,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
             if (groups.stream().filter(group -> !group.equals("users")).count() > 0) {
                 authorities.add(ROLE_COMMITTEE);
             }
-            return new DefaultOidcUser(authorities, idToken);
+            return new DefaultOidcUser(authorities, idToken, oidcUser.getUserInfo());
         };
     }
 }
