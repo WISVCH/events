@@ -13,16 +13,16 @@ import ch.wisv.events.core.service.customer.CustomerServiceImpl;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -286,10 +286,14 @@ public class CustomerServiceTest extends ServiceTest {
         claims.put("name", "name");
         claims.put("email", "email");
         claims.put("ldapUsername", "ldapUsername");
+        OidcUserInfo userInfo = new OidcUserInfo(claims);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
+                Instant.now().plusSeconds(60), claims);
 
-        OidcIdToken userInfo = new OidcIdToken("", Instant.EPOCH, Instant.EPOCH, claims);
+        DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 
-        Customer customer = customerService.createByOidcIdToken(userInfo);
+        Customer customer = customerService.createByOidcUser(oidcUser);
 
         assertEquals("name", customer.getName());
         assertEquals("email", customer.getEmail());
@@ -307,9 +311,13 @@ public class CustomerServiceTest extends ServiceTest {
         claims.put("email", null);
         claims.put("ldapUsername", "ldapUsername");
 
-        OidcIdToken userInfo = new OidcIdToken("", Instant.EPOCH, Instant.EPOCH, claims);
+        OidcUserInfo userInfo = new OidcUserInfo(claims);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
+                Instant.now(), claims);
+        DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 
-        customerService.createByOidcIdToken(userInfo);
+        customerService.createByOidcUser(oidcUser);
     }
 
     /**

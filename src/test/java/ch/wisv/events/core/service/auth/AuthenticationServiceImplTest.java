@@ -90,7 +90,7 @@ public class AuthenticationServiceImplTest extends ServiceTest {
 //
 //        userInfo.setLdapGroups(ldapGroups);
 //
-//        Authentication auth = mock(Aut].class);
+//        Authentication auth = mock(Auth.class);
 //        when(((OidcUserAuthority) auth).getUserInfo()).thenReturn(userInfo);
 //        when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
 //        when(customerService.getByEmail(null)).thenThrow(CustomerNotFoundException.class);
