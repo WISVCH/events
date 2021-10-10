@@ -3,8 +3,6 @@ package ch.wisv.events.core.service.customer;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.time.LocalDateTime;
@@ -90,6 +88,8 @@ public interface CustomerService {
      * @param userInfo of type OidcUser
      *
      * @throws CustomerInvalidException when Customer is invalid
+     *
+     * @return customer
      */
     Customer createByOidcUser(OidcUser userInfo) throws CustomerInvalidException;
 

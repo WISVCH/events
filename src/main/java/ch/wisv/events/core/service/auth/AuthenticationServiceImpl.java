@@ -49,8 +49,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             OidcUser oidcUser = this.getOidcUser(auth);
 
             Customer customer = this.getCustomerByOidcUser(oidcUser);
-            // TODO: fix updateCustomerInfo
-//            this.updateCustomerInfo(customer, oidcUser);
+
+            try {
+                this.updateCustomerInfo(customer, oidcUser);
+            } catch (CustomerNotFoundException ignored) {
+            }
 
             return customer;
         } catch (CustomerInvalidException | InvalidTokenException e) {
@@ -121,7 +124,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
-        List<String> ldapGroups = Arrays.asList(userInfo.getClaim("ldap_username")); //TODO check if this works
+        List<String> ldapGroups = Arrays.asList(userInfo.getClaim("ldap_username"));
 
         customer.setLdapGroups(
                 ldapGroups.stream()
