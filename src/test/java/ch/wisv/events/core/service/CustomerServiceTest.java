@@ -286,9 +286,11 @@ public class CustomerServiceTest extends ServiceTest {
         claims.put("name", "name");
         claims.put("email", "email");
         claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
                 Instant.now().plusSeconds(60), claims);
 
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
@@ -310,10 +312,12 @@ public class CustomerServiceTest extends ServiceTest {
         claims.put("name", null);
         claims.put("email", null);
         claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
 
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("", Instant.now(),
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
                 Instant.now(), claims);
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 

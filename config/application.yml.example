@@ -32,7 +32,6 @@ spring:
   thymeleaf:
   # THYMELEAF (ThymeleafAutoConfiguration)
     check-template-location: true
-    prefix: :./config/templates/
     suffix: .html
     mode: HTML
     encoding: UTF-8
@@ -54,6 +53,9 @@ spring:
                           - profile
                           - email
                           - ldap
+  mail:
+    host: 127.0.0.1
+    port: 1025
 
 # Database migration automation. Set to false for development
 flyway.enabled: false
@@ -62,18 +64,18 @@ flyway.enabled: false
 # Serve connect
 server:
     port: 8080
-    context-path: /events
-
-# Spring mail
-spring:
-    mail:
-        host: 127.0.0.1
-        port: 1025
+    servlet:
+      context-path: /events
 
 # CH Connect Configuration
 wisvch.connect:
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
-  admin-groups=<MyLDAPgroup>
+  admin-groups:
+    - <MyLDAPgroup>
+
+# CH Events Configuration
+wisvch.events:
+  image.path: http://localhost:8080/events/api/v1/documents/
 
 # CH Payments Configuration
 wisvch.payments:
