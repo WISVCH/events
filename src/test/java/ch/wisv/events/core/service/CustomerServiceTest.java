@@ -318,7 +318,7 @@ public class CustomerServiceTest extends ServiceTest {
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
-                Instant.now(), claims);
+                Instant.now().plusSeconds(60), claims);
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 
         customerService.createByOidcUser(oidcUser);
