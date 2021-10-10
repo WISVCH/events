@@ -36,7 +36,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public final class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
+public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * Groups that are admin in the system.
@@ -52,7 +52,12 @@ public final class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     @Setter
     private List<String> betaUsers;
 
-    public final void configure(HttpSecurity http) throws Exception {
+    /**
+     * The configuration of the authentication
+     * @param http
+     * @throws Exception
+     */
+    public void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
@@ -94,14 +99,12 @@ public final class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
             Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(roleUser);
-            if(groups.stream().anyMatch(o -> adminGroups.contains(o))) {
+            if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {
                 authorities.add(roleAdmin);
             }
-
             if (groups.stream().anyMatch(group -> !group.equals("users"))) {
                 authorities.add(roleCommittee);
             }
-
             return new DefaultOidcUser(authorities, idToken, oidcUser.getUserInfo());
         };
     }
