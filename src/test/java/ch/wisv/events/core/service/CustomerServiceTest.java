@@ -278,18 +278,19 @@ public class CustomerServiceTest extends ServiceTest {
      * Test if create by ChUserInfo
      */
     @Test
-    public void testCreateByOidcUser() throws Exception {
+    public void testCreateByChUserInfo() throws Exception {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
         when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("sub", "sub");
-        claims.put("given_name", "name");
+        claims.put("name", "name");
         claims.put("email", "email");
         claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("TOKEN", Instant.now(),
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
                 Instant.now().plusSeconds(60), claims);
 
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
@@ -308,15 +309,16 @@ public class CustomerServiceTest extends ServiceTest {
         thrown.expect(CustomerInvalidException.class);
 
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("sub", "sub");
-        claims.put("given_name", null);
+        claims.put("name", null);
         claims.put("email", null);
         claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
 
         OidcUserInfo userInfo = new OidcUserInfo(claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        OidcIdToken idToken = new OidcIdToken("TOKEN", Instant.now(),
-                Instant.now().plusSeconds(60), claims);
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
+                Instant.now(), claims);
         DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
 
         customerService.createByOidcUser(oidcUser);
