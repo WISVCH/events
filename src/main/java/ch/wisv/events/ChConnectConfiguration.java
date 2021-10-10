@@ -78,6 +78,10 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
                 .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
     }
 
+    /**
+     * Configure the CORS response.
+     * @return CorsConfigurationSource
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -85,6 +89,10 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    /**
+     * OidcUserService. This decides the right of the logged-in user.
+     * @return OAuth2UserService
+     */
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         final OidcUserService delegate = new OidcUserService();
 
