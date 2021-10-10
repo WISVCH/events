@@ -205,6 +205,7 @@ public class ProductServiceImpl implements ProductService {
     private void updateLinkedProducts(Product product, List<Product> products, boolean linked) {
         products.forEach(p -> {
             p.setLinked(linked);
+            p.setSellStart((linked) ? product.getSellStart() : null);
             p.setSellEnd((linked) ? product.getSellEnd() : null);
 
             productRepository.save(p);

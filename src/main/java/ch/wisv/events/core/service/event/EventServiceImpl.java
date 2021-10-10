@@ -241,7 +241,8 @@ public class EventServiceImpl implements EventService {
         products.forEach(p -> {
             try {
                 p.setLinked(linked);
-                p.setSellEnd((linked) ? event.getStart() : null);
+                p.setSellStart((linked) ? event.getStart() : null);
+                p.setSellEnd((linked) ? event.getEnding() : null);
                 productService.update(p);
             } catch (ProductNotFoundException | ProductInvalidException ignored) {
             }
