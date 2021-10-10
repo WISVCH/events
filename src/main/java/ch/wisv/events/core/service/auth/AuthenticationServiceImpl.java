@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             try {
                 this.updateCustomerInfo(customer, oidcUser);
-            } catch (CustomerNotFoundException ignored){
+            } catch (CustomerNotFoundException ignored) {
             }
 
             return customer;

@@ -53,7 +53,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     private List<String> betaUsers;
 
     /**
-     * The configuration of the authentication
+     * The configuration of the authentication.
      * @param http
      * @throws Exception
      */
