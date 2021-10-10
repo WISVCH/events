@@ -1,12 +1,10 @@
 package ch.wisv.events;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +36,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
+public final class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * Groups that are admin in the system.
@@ -54,7 +52,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     @Setter
     private List<String> betaUsers;
 
-    public void configure(HttpSecurity http) throws Exception {
+    public final void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
@@ -88,20 +86,22 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
         return (userRequest) -> {
             OidcUser oidcUser = delegate.loadUser(userRequest);
 
-            SimpleGrantedAuthority ROLE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
-            SimpleGrantedAuthority ROLE_COMMITTEE = new SimpleGrantedAuthority("ROLE_COMMITTEE");
-            SimpleGrantedAuthority ROLE_USER = new SimpleGrantedAuthority("ROLE_USER");
+            SimpleGrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+            SimpleGrantedAuthority roleCommittee = new SimpleGrantedAuthority("ROLE_COMMITTEE");
+            SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = oidcUser.getIdToken();
 
             Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(ROLE_USER);
+            authorities.add(roleUser);
             if(groups.stream().anyMatch(o -> adminGroups.contains(o))) {
-                authorities.add(ROLE_ADMIN);
+                authorities.add(roleAdmin);
             }
-            if (groups.stream().filter(group -> !group.equals("users")).count() > 0) {
-                authorities.add(ROLE_COMMITTEE);
+
+            if (groups.stream().anyMatch(group -> !group.equals("users"))) {
+                authorities.add(roleCommittee);
             }
+
             return new DefaultOidcUser(authorities, idToken, oidcUser.getUserInfo());
         };
     }
