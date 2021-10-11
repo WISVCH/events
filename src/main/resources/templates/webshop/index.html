@@ -68,6 +68,7 @@
                                             <div class="col-12" th:if="${event.getShortDescription() != ''}">
                                                 <i class="fas fa-info fa-fw"></i>
                                                 <span th:text="${event.getShortDescription()}"></span>
+                                                <span th:text="${event.getShortDescription()}" th:data-markdown="enable"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -194,6 +195,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/sprintf.js/1.0.0/sprintf.min.js}"></script>
+<script th:src="@{/js/markdown-it.min.js}"></script>
 <script th:src="@{/js/js.storage.min.js}"></script>
 <script th:src="@{/js/webshop/webshop.min.js}"></script>
 <script>
