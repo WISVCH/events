@@ -7,6 +7,7 @@ import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -124,7 +125,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
-        List<String> ldapGroups = Arrays.asList(userInfo.getClaim("ldap_username"));
+        Collection<String> ldapGroups = userInfo.getClaim("ldap_groups");
 
         customer.setLdapGroups(
                 ldapGroups.stream()
