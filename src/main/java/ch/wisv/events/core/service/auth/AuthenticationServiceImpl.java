@@ -6,9 +6,7 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
