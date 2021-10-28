@@ -58,7 +58,7 @@ spring:
     port: 1025
 
 # Database migration automation. Set to false for development
-flyway.enabled: false
+  flyway.enabled: false
 # spring.jpa.properties.hibernate.hbm2ddl.auto: none
 
 # Serve connect
