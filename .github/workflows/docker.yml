@@ -23,6 +23,7 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v2
       with:
+        distribution: 'temurin'
         java-version: '8'
     - name: Setup for test report
       run: |
