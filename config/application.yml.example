@@ -32,34 +32,50 @@ spring:
   thymeleaf:
   # THYMELEAF (ThymeleafAutoConfiguration)
     check-template-location: true
-    prefix: :./config/templates/
     suffix: .html
     mode: HTML
     encoding: UTF-8
     content-type: text/html
 
+  security:
+      oauth2:
+          client:
+              provider:
+                  wisvchconnect:
+                      issuer-uri: https://connect.ch.tudelft.nl
+                      clientUri: http://localhost:8080/events
+              registration:
+                  wisvchconnect:
+                      client-id: <Insert Connect ID here>
+                      client-secret: <Insert  Connect Client Secret>
+                      scope:
+                          - openid
+                          - profile
+                          - email
+                          - ldap
+  mail:
+    host: 127.0.0.1
+    port: 1025
+
 # Database migration automation. Set to false for development
-flyway.enabled: false
+  flyway.enabled: false
 # spring.jpa.properties.hibernate.hbm2ddl.auto: none
 
 # Serve connect
 server:
     port: 8080
-    context-path: /events
-
-# Spring mail
-spring:
-    mail:
-        host: 127.0.0.1
-        port: 1025
+    servlet:
+      context-path: /events
 
 # CH Connect Configuration
 wisvch.connect:
-  issuerUri: https://connect.ch.tudelft.nl
-  clientUri: http://localhost:8080/events
-
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
-  admin-groups=<MyLDAPgroup>
+  admin-groups:
+    - <MyLDAPgroup>
+
+# CH Events Configuration
+wisvch.events:
+  image.path: http://localhost:8080/events/api/v1/documents/
 
 # CH Payments Configuration
 wisvch.payments:

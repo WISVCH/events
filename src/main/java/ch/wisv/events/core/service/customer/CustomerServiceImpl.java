@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service.customer;
 
-import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 /**
@@ -134,13 +134,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Add a new customer by ChUserInfo.
+     * Add a new customer by OidcUser.
      *
-     * @param userInfo of type CHUserInfo
+     * @param userInfo of type OidcUser
      */
     @Override
-    public Customer createByChUserInfo(CHUserInfo userInfo) throws CustomerInvalidException {
-        Customer customer = new Customer(userInfo.getSub(), userInfo.getName(), userInfo.getEmail(), "");
+    public Customer createByOidcUser(OidcUser userInfo) throws CustomerInvalidException {
+        Customer customer = new Customer(userInfo.getSubject(), userInfo.getGivenName(), userInfo.getEmail(), "");
         this.create(customer);
 
         return customer;

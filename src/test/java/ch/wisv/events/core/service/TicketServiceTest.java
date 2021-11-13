@@ -12,6 +12,8 @@ import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 import com.google.common.collect.ImmutableList;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -196,12 +198,15 @@ public class TicketServiceTest extends ServiceTest {
         this.fillOrderWithAmountOfProducts(order, random);
 
         when(ticketRepository.findAllByOrder(order)).thenReturn(ImmutableList.of(ticket3));
-        doNothing().when(ticketRepository).delete(ImmutableList.of(ticket3));
+        doNothing().when(ticketRepository).delete(ticket3);
 
         ticketService.deleteByOrder(order);
 
+        List<Ticket> ticketList = new ArrayList<>();
+        ticketList.add(ticket3);
+
         verify(ticketRepository, times(1)).findAllByOrder(order);
-        verify(ticketRepository, times(1)).delete(ImmutableList.of(ticket3));
+        verify(ticketRepository, times(1)).deleteAll(ticketList);
     }
 
     @Test

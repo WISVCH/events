@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/overview")
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class WebshopOrderOverviewController extends WebshopController {
 
     /** Model attribute orders. */

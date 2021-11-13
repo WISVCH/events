@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.connect.common.model.CHUserInfo;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
@@ -11,13 +10,20 @@ import ch.wisv.events.core.repository.CustomerRepository;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.customer.CustomerServiceImpl;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
@@ -276,12 +282,20 @@ public class CustomerServiceTest extends ServiceTest {
         when(repository.findByRfidToken(anyString())).thenReturn(Optional.empty());
         when(repository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setName("name");
-        userInfo.setEmail("email");
-        userInfo.setLdapUsername("ldapUsername");
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("name", "name");
+        claims.put("email", "email");
+        claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
+        OidcUserInfo userInfo = new OidcUserInfo(claims);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
+                Instant.now().plusSeconds(60), claims);
 
-        Customer customer = customerService.createByChUserInfo(userInfo);
+        DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
+
+        Customer customer = customerService.createByOidcUser(oidcUser);
 
         assertEquals("name", customer.getName());
         assertEquals("email", customer.getEmail());
@@ -293,12 +307,21 @@ public class CustomerServiceTest extends ServiceTest {
     @Test
     public void testCreateByChUserInfoAssertion() throws Exception {
         thrown.expect(CustomerInvalidException.class);
-        CHUserInfo userInfo = new CHUserInfo();
-        userInfo.setName(null);
-        userInfo.setEmail(null);
-        userInfo.setLdapUsername("ldapUsername");
 
-        customerService.createByChUserInfo(userInfo);
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("name", null);
+        claims.put("email", null);
+        claims.put("ldapUsername", "ldapUsername");
+        claims.put("sub", "WISV.0001");
+        claims.put("given_name", "name");
+
+        OidcUserInfo userInfo = new OidcUserInfo(claims);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        OidcIdToken idToken = new OidcIdToken("11", Instant.now(),
+                Instant.now().plusSeconds(60), claims);
+        DefaultOidcUser oidcUser = new DefaultOidcUser(authorities, idToken, userInfo);
+
+        customerService.createByOidcUser(oidcUser);
     }
 
     /**

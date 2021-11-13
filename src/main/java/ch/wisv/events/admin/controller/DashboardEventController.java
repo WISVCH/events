@@ -66,7 +66,7 @@ public class DashboardEventController extends DashboardController {
     }
 
     /**
-     * Get request on "/admin/events/" will show overview of all Events.
+     * Get request on "/administrator/events/" will show overview of all Events.
      *
      * @param model of type Model
      *
@@ -80,7 +80,7 @@ public class DashboardEventController extends DashboardController {
     }
 
     /**
-     * Get request on "/admin/events/view/{key}" will show page to view an Event.
+     * Get request on "/administrator/events/view/{key}" will show page to view an Event.
      *
      * @param model    of type Model
      * @param redirect of type RedirectAttributes
@@ -102,7 +102,7 @@ public class DashboardEventController extends DashboardController {
     }
 
     /**
-     * Get request on "/admin/events/create/" will show page to create Event.
+     * Get request on "/administrator/events/create/" will show page to create Event.
      *
      * @param model of type Model
      *
@@ -149,7 +149,7 @@ public class DashboardEventController extends DashboardController {
     }
 
     /**
-     * Get request on "/admin/events/edit/{key}" will show the edit page to edit Event with requested key.
+     * Get request on "/administrator/events/edit/{key}" will show the edit page to edit Event with requested key.
      *
      * @param model of type Model
      * @param redirect of type RedirectAttributes
