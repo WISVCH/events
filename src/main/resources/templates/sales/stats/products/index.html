@@ -44,7 +44,7 @@
                                             <div class="progress mb-2">
                                                 <div class="progress-bar" role="progressbar" aria-valuemin="0"
                                                      aria-valuemax="100"
-                                                     th:style="'width: ' + ${((product.getSold() * 1.0) / (target * 1.0)) * 100.0} + '%'">
+                                                     th:style="'width: ' + ${((product.getSold() * 1.0) / (product.getMaxSold() * 1.0)) * 100.0} + '%'">
                                                 </div>
                                             </div>
                                         </div>
