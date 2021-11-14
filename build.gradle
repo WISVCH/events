@@ -20,18 +20,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 
-jar {
-    baseName = 'events'
-    version = project.hasProperty('buildNumber') ? buildNumber : 'SNAPSHOT'
-    archiveName = "${baseName}.${extension}"
-    manifest {
-        attributes(
-                "Implementation-Title": "Events",
-                "Implementation-Version": version
-        )
-    }
-}
-
 sourceCompatibility = 1.8
 
 repositories {
