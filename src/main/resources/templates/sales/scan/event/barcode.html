@@ -159,9 +159,8 @@
                 inputStream: {
                     type: "LiveStream",
                     constraints: {
-                        width: {min: 640},
-                        height: {min: 480},
-                        aspectRatio: {min: 1, max: 100},
+                        width: window.innerHeight, // Dimensions are reversed due to mobile portrait mode
+                        height: window.innerWidth,
                         facingMode: "environment" // or user
                     }
                 },
@@ -169,7 +168,7 @@
                     patchSize: "medium",
                     halfSample: true
                 },
-                numOfWorkers: 2,
+                numOfWorkers: 4,
                 frequency: 10,
                 decoder: {
                     readers: [{
