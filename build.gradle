@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.5.4'
+        springBootVersion = '2.5.6'
     }
     repositories {
         mavenCentral()
@@ -14,9 +14,11 @@ plugins {
     id("java-library") // or id("application")
 }
 
+tasks.withType(Jar).configureEach { setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE) }
+
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -29,73 +31,70 @@ apply plugin: 'jacoco'
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://dl.bintray.com/wisvch/maven'
-    }
 }
 
 configurations {
     // We're using HikariCP instead
-    compile.exclude module: "tomcat-jdbc"
+    implementation.exclude module: "tomcat-jdbc"
 
     // We're using Log4j2 instead
-    compile.exclude module: "spring-boot-starter-logging"
+    implementation.exclude module: "spring-boot-starter-logging"
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-devtools:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-log4j2:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-security:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-tomcat:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-web:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-mail:2.5.4'
-    compile 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-actuator:2.5.4'
-    compile 'org.springframework.boot:spring-boot-starter-oauth2-client:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     //TEMP APPLICATION PROPERTIES HELPER
-    runtime 'org.springframework.boot:spring-boot-properties-migrator:2.5.4'
+    runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
 
 
-    compile 'javax.el:javax.el-api:2.2.5'
+    implementation 'javax.el:javax.el-api:2.2.5'
 
-     compile 'org.thymeleaf:thymeleaf-spring5'
-     compile 'org.thymeleaf:thymeleaf'
-     compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-     compile 'org.thymeleaf.extras:thymeleaf-extras-java8time'
+     implementation 'org.thymeleaf:thymeleaf-spring5'
+     implementation 'org.thymeleaf:thymeleaf'
+     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+     implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time'
 
 
-    compile 'com.google.guava:guava:30.1.1-jre'
-    compile 'org.hibernate:hibernate-validator:7.0.1.Final'
-    compile 'org.apache.commons:commons-lang3:3.12.0'
-    compile 'org.apache.httpcomponents:httpclient:4.5'
-    compile 'com.datadoghq:dd-trace-api:0.86.0'
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.httpcomponents:httpclient'
+    implementation 'com.datadoghq:dd-trace-api:0.86.0'
 
-    compile 'org.webjars:bootstrap:4.0.0-beta'
-    compile 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
-    compile 'org.webjars.bower:momentjs:2.10.6'
-    compile 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
-    compile 'org.webjars.bower:quagga:0.11.6'
-    compile 'org.webjars:sprintf.js:1.0.0'
-    compile 'org.webjars:font-awesome:5.0.13'
-    compile 'org.webjars.npm:flatpickr:4.5.1'
+    implementation 'org.webjars:bootstrap:4.0.0-beta'
+    implementation 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
+    implementation 'org.webjars.bower:momentjs:2.10.6'
+    implementation 'org.webjars.bower:wisvch-bootstrap-theme:4.0.0'
+    implementation 'org.webjars.bower:quagga:0.11.6'
+    implementation 'org.webjars:sprintf.js:1.0.0'
+    implementation 'org.webjars:font-awesome:5.0.13'
+    implementation 'org.webjars.npm:flatpickr:4.5.1'
 
-    compile 'org.flywaydb:flyway-core:5.2.0'
-    compile 'org.projectlombok:lombok:1.18.10'
+    implementation 'org.flywaydb:flyway-core:5.2.0'
+    implementation 'org.projectlombok:lombok'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok'
 
-    compile "com.googlecode.json-simple:json-simple:1.1.1"
-    compile 'net.sf.biweekly:biweekly:0.6.0'
+    implementation "com.googlecode.json-simple:json-simple:1.1.1"
+    implementation 'net.sf.biweekly:biweekly:0.6.0'
 
-    runtime 'org.hsqldb:hsqldb:2.6.0'
-    runtime 'org.postgresql:postgresql:42.2.23.jre7'
+    runtimeOnly 'org.hsqldb:hsqldb'
+    runtimeOnly 'org.postgresql:postgresql'
 
-    compile 'org.fluttercode.datafactory:datafactory:0.8'
-    testCompile 'org.springframework.boot:spring-boot-starter-test:2.5.4'
-    testCompile 'org.springframework.security:spring-security-test:5.5.1'
-    testCompile 'com.tngtech.java:junit-dataprovider:1.5.0'
+    implementation 'org.fluttercode.datafactory:datafactory:0.8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'com.tngtech.java:junit-dataprovider:1.5.0'
 }
 
 jacocoTestReport {
