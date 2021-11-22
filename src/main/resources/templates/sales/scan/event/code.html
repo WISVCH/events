@@ -116,17 +116,17 @@
                     _csrf: "[[${_csrf.token}]]",
                     code: $("#code").val()
                 }
-            }).always(function (data) {
-                if (data.status === "200") {
+            }).always(function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
                     $("#successTicket").html(data.object.ticket.product.title);
                     $("#successCustomer").html(data.object.ticket.owner.name);
                     $("#successPage").removeClass("d-none");
-                } else if (data.status === "208") {
+                } else if (xhr.status === 208) {
                     $("#doubleTicket").html(data.object.ticket.product.title);
                     $("#doubleCustomer").html(data.object.ticket.owner.name);
                     $("#doublePage").removeClass("d-none");
                 } else {
-                    $("#errorMessage").html(data.responseJSON.message);
+                    $("#errorMessage").html(data.message);
                     $("#errorPage").removeClass("d-none");
                 }
             });
