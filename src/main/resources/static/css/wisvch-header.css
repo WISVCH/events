@@ -44,7 +44,6 @@ body.menu-open .page-header {
 }
 
 .wisv-header-bg {
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x, #ffffff;
 }
 
 .navbar .logo img {
@@ -54,7 +53,6 @@ body.menu-open .page-header {
 
 .wisv-header.header-left {
     width: 100%;
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 100px repeat, #ffffff;
     position: relative;
     z-index: 3
 }
@@ -71,7 +69,6 @@ body.menu-open .page-header {
 .wisv-header.header-right {
     width: 50%;
     float: right;
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
 }
 
 .wisv-header.header-right .center {
@@ -96,7 +93,6 @@ body.menu-open .page-header {
 }
 
 .top-bar .top-bar-right {
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) -93px -90px no-repeat;
     float: right;
     width: 70%;
 }
@@ -115,7 +111,6 @@ body.menu-open .page-header {
 }
 
 .top-bar .menu {
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x
 }
 
 .top-bar .menu > li:first-child {
