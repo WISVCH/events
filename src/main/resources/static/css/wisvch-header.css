@@ -44,6 +44,13 @@ body.menu-open .page-header {
 }
 
 .wisv-header-bg {
+    background-color: #ffffff;
+}
+
+@media (max-width: 991px){
+    .navbar-collapse {
+        padding-top: 3rem;
+    }
 }
 
 .navbar .logo img {
@@ -54,6 +61,7 @@ body.menu-open .page-header {
 .wisv-header.header-left {
     width: 100%;
     position: relative;
+    background-color: #ffffff;
     z-index: 3
 }
 
@@ -69,6 +77,7 @@ body.menu-open .page-header {
 .wisv-header.header-right {
     width: 50%;
     float: right;
+    background-color: #ffffff;
 }
 
 .wisv-header.header-right .center {
@@ -95,6 +104,7 @@ body.menu-open .page-header {
 .top-bar .top-bar-right {
     float: right;
     width: 70%;
+    background-color: #ffffff;
 }
 
 @media print, screen and (min-width: 73.75em) {
@@ -111,6 +121,7 @@ body.menu-open .page-header {
 }
 
 .top-bar .menu {
+    background-color: #ffffff;
 }
 
 .top-bar .menu > li:first-child {
