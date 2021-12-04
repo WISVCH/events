@@ -43,7 +43,7 @@
                         <div class="dropdown-item event-template-item"
                              th:each="template : ${T(ch.wisv.events.admin.utils.EventTemplate).values()}"
                              th:attr="data-template=${template.toJson()}">
-                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
+                            <a class="btn btn-block btn-info text-left" th:text="${template.getTemplateName()}"></a>
                         </div>
                     </div>
                 </div>
@@ -280,7 +280,7 @@
                             <div class="dropdown-item product-template-item"
                                  th:each="template : ${T(ch.wisv.events.admin.utils.ProductTemplate).values()}"
                                  th:attr="data-template=${template.toJson()}">
-                                <a class="btn btn-block btn-light text-left"
+                                <a class="btn btn-block btn-info text-left"
                                    th:text="${template.getTemplateName()}"></a>
                             </div>
                         </div>
