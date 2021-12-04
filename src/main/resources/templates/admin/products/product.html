@@ -123,23 +123,23 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
-                                            <div class="form-check col-6">
-                                                <label class="form-check-label custom-control custom-checkbox">
-                                                    CH members only
-                                                    <input type="checkbox" class="custom-control-input"
+                                            <div class="col-6">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="productChOnly"
                                                            th:field="*{chOnly}"
-                                                           th:checked="${product.isChOnly()}">
-                                                    <span class="custom-control-indicator"></span>
-                                                </label>
+                                                           th:checked="${product.isChOnly()}"/>
+                                                    <label class="custom-control-label text-dark font-weight-normal"
+                                                           for="productChOnly">CH members only</label>
+                                                </div>
                                             </div>
-                                            <div class="form-check col-6">
-                                                <label class="form-check-label custom-control custom-checkbox">
-                                                    Product can be reserved
-                                                    <input type="checkbox" class="custom-control-input"
-                                                           th:field="*{reservable}"
-                                                           th:checked="${product.isReservable()}">
-                                                    <span class="custom-control-indicator"></span>
-                                                </label>
+                                            <div class="col-6">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="productReservable"
+                                                           th:field="*{chOnly}"
+                                                           th:checked="${product.isChOnly()}"/>
+                                                    <label class="custom-control-label text-dark font-weight-normal"
+                                                           for="productReservable">Product can be reserved</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

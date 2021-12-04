@@ -131,15 +131,9 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label class="mb-2">Categories</label>
-                                    <div class="form-check"
-                                         th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
-                                        <label class="form-check-label custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" disabled
-                                                   th:value="${category}"
-                                                   th:checked="${event.getCategories().contains(category)}">
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description text-dark font-weight-normal">[[${category.getDisplayName()}]]</span>
-                                        </label>
+                                    <div class="custom-control custom-checkbox" th:each="category : ${T(ch.wisv.events.core.model.event.EventCategory).values()}">
+                                        <input type="checkbox" class="custom-control-input" disabled th:id="'categoryCheck' + ${category.getDisplayName()}" th:checked="${event.getCategories().contains(category)}">
+                                        <label class="custom-control-label text-dark font-weight-normal" th:for="'categoryCheck' + ${category.getDisplayName()}">[[${category.getDisplayName()}]]</label>
                                     </div>
                                 </div>
                             </div>

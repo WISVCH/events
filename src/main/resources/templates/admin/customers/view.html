@@ -71,11 +71,11 @@
                                     </label>
                                 </div>
                                 <div class="form-group col-sm-12">
-                                    <label class="form-check-label custom-control custom-checkbox">Verified CH member
+                                    <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input"
                                                th:checked="${customer.isVerifiedChMember()}" disabled>
-                                        <span class="custom-control-indicator"></span>
-                                    </label>
+                                        <label class="custom-control-label text-dark font-weight-normal">Verified CH member</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
