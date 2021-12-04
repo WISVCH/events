@@ -62,7 +62,7 @@
 
                                             <div class="col-12 mb-4">
                                                 <!--/*@thymesVar id="cat" type="ch.wisv.events.core.model.event.EventCategory"*/-->
-                                                <div class="badge badge-secondary"
+                                                <div class="badge badge-secondary text-white"
                                                      th:each="cat : ${event.getCategories()}"
                                                      th:text="${cat.getDisplayName()}"></div>
                                             </div>
