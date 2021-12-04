@@ -288,6 +288,17 @@ h1 .badge-danger, .btn-danger {
     border-color: #ef4545 !important;
 }
 
+h1 .badge-info {
+    border-color: #ef4545;
+    background-color: #ef4545;
+}
+
+.badge-info:hover {
+    background: rgba(255, 255, 255, 0.75) !important;
+    color: #ef4545 !important;
+    border-color: #ef4545 !important;
+}
+
 /**
  * Alerts
  */
