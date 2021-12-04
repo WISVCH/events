@@ -7,7 +7,6 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     font-style: normal;
-    color: #40556a;
     text-rendering: optimizeLegibility;
     font-weight: 500;
 }
@@ -29,9 +28,6 @@ a:hover {
 /**
  * Backgrounds
  */
-.bg-primary {
-    background: #40556a !important;
-}
 
 /**
  * Sidebar
