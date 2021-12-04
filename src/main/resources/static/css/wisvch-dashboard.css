@@ -1,11 +1,11 @@
 body {
-    font-family: Lato, "Helvetica Neue", sans-serif;
+    font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     max-width: calc(100vw);
     overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Noto Sans, Lato, "Helvetica Neue", sans-serif;
+    font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     font-style: normal;
     color: #40556a;
     text-rendering: optimizeLegibility;

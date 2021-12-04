@@ -84,7 +84,7 @@ body.menu-open .page-header {
 }
 
 .top-bar {
-    font-family: Noto Sans, Lato, "Helvetica Neue", sans-serif;
+    font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     position: relative;
     z-index: 10
 }
