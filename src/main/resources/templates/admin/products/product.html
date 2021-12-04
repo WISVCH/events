@@ -96,8 +96,10 @@
                                     <div class="form-group col-12">
                                         <label>Price*</label>
                                         <div class="input-group">
-                                            <div class="input-group-addon">
-                                                <i class="fas fa-fw fa-euro-sign"></i>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                  <i class="fas fa-fw fa-euro-sign"></i>
+                                                </span>
                                             </div>
                                             <input type="number" step="0.01" class="form-control"
                                                    th:field="*{cost}" th:value="${product.getCost()}" required>
@@ -215,9 +217,12 @@
                 <div class="input-group" style="width: 100%">
                     <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                            placeholder="Search for a product">
-                    <span class="input-group-addon">
-                            <i class="fa fa-fw fa-search"></i>
+
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-fw fa-search"></i>
                         </span>
+                    </div>
                 </div>
                 <small class="form-text text-muted">Start typing to look for a product.</small>
             </div>

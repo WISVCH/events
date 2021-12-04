@@ -72,8 +72,10 @@
                                 <div class="form-group col-12">
                                     <label>Price</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fas fa-fw fa-euro-sign"></i>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-fw fa-euro-sign"></i>
+                                            </span>
                                         </div>
                                         <input type="number" step="0.01" class="form-control"
                                                th:value="${product.getCost()}" readonly>

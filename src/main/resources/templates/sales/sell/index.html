@@ -37,15 +37,19 @@
                             <h6 class="card-header" th:text="${product.getTitle()}"></h6>
                             <div class="card-body">
                                 <div class="input-group">
-                                    <div class="input-group-addon decrease">
-                                        <i class="fa fa-minus fa-fw"></i>
+                                    <div class="input-group-append decrease">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-fw fa-minus"></i>
+                                        </span>
                                     </div>
                                     <input type="number" class="form-control" step="1"
                                            style="text-align: center"
                                            min="0" th:max="${product.getMaxSoldPerCustomer()}"
                                            th:attr="data-product-key=${product.getKey()}">
-                                    <div class="input-group-addon increase">
-                                        <i class="fa fa-plus fa-fw"></i>
+                                    <div class="input-group-append increase">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-fw fa-plus"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <small class="form-text text-muted">Maximum of [[${product.getMaxSoldPerCustomer()}]]
