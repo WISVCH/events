@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * DashboardWebhookController class.
  */
 @Controller
-@RequestMapping("/administrator/penningmeester")
+@RequestMapping("/administrator/treasurer")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardPenningmeesterController extends DashboardController {
+public class DashboardTreasurerController extends DashboardController {
 
     /** OrderService. */
     private final OrderService orderService;
@@ -33,7 +33,7 @@ public class DashboardPenningmeesterController extends DashboardController {
      * @param orderService of type OrderService
      */
     @Autowired
-    public DashboardPenningmeesterController(OrderService orderService) {
+    public DashboardTreasurerController(OrderService orderService) {
         this.orderService = orderService;
     }
 
@@ -48,7 +48,7 @@ public class DashboardPenningmeesterController extends DashboardController {
     public String index(Model model) {
         model.addAttribute("productMap", this.generateProductMap());
 
-        return "admin/penningmeester/index";
+        return "admin/treasurer/index";
     }
 
     /**

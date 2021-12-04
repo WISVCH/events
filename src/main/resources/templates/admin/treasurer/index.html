@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{/images/favicon.png}">
 
-    <title>CH Events - Dashboard > Penningmeester</title>
+    <title>CH Events - Dashboard > Treasurer</title>
 
     <!--Bootstrap core CSS -->
     <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
@@ -33,7 +33,7 @@
             <div th:replace="fragments/messages :: messages"></div>
 
             <div class="table-responsive">
-                <table id="penningmeesterOverview" class="table table-striped">
+                <table id="treasurerOverview" class="table table-striped">
                     <thead class="thead-inverse bg-primary">
                     <tr>
                         <th>Date</th>
@@ -88,7 +88,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script th:inline="javascript">
     $(document).ready(function () {
-        var table = $('#penningmeesterOverview');
+        var table = $('#treasurerOverview');
         table.DataTable({
             order: [
                 [0, "desc"]

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class DashboardPenningmeesterControllerTest extends ControllerTest {
+public class DashboardTreasurerControllerTest extends ControllerTest {
 
     @Test
     public void testIndex() throws Exception {
@@ -44,9 +44,9 @@ public class DashboardPenningmeesterControllerTest extends ControllerTest {
         LocalDate date = order.getPaidAt().toLocalDate();
         map.put(LocalDate.of(date.getYear(), date.getMonthValue(), 1), ImmutableMap.of(product, 2));
 
-        mockMvc.perform(get("/administrator/penningmeester"))
+        mockMvc.perform(get("/administrator/treasurer"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("admin/penningmeester/index"))
+                .andExpect(view().name("admin/treasurer/index"))
                 .andExpect(model().attribute("productMap", map));
     }
 }
