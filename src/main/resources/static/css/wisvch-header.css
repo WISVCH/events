@@ -44,16 +44,17 @@ body.menu-open .page-header {
 }
 
 .wisv-header-bg {
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 0 repeat-x, #ffffff;
 }
 
 .navbar .logo img {
-    height: 5.625rem;
+    margin: .5rem;
+    height: 4rem;
 }
 
 .wisv-header.header-left {
     width: 100%;
-    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 100px repeat;
+    background: url(https://ch.tudelft.nl/wp-content/themes/rechallenge/assets/images/top-bar-bg.png) 0 100px repeat, #ffffff;
     position: relative;
     z-index: 3
 }
