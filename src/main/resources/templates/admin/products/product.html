@@ -7,12 +7,23 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" th:href="@{/images/favicon.png}">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/icons/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/icons/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/icons/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/icons/site.webmanifest}">
+    <link rel="mask-icon" th:href="@{/icons/safari-pinned-tab.svg}" color="#1e274a">
+    <link rel="shortcut icon" th:href="@{/icons/favicon.ico}">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" th:content="@{/icons/browserconfig.xml}">
+    <meta name="theme-color" content="#ffffff">
 
     <title>CH Events - Dashboard > Products</title>
 
     <!--Bootstrap core CSS -->
-    <link th:href="@{/webjars/wisvch-bootstrap-theme/4.0.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/uet5duo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
@@ -42,7 +53,7 @@
                         <div class="dropdown-item product-template-item"
                              th:each="template : ${T(ch.wisv.events.admin.utils.ProductTemplate).values()}"
                              th:attr="data-template=${template.toJson()}">
-                            <a class="btn btn-block btn-light text-left" th:text="${template.getTemplateName()}"></a>
+                            <a class="btn btn-block btn-info text-left" th:text="${template.getTemplateName()}"></a>
                         </div>
                     </div>
                 </div>
@@ -95,8 +106,10 @@
                                     <div class="form-group col-12">
                                         <label>Price*</label>
                                         <div class="input-group">
-                                            <div class="input-group-addon">
-                                                <i class="fas fa-fw fa-euro-sign"></i>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                  <i class="fas fa-fw fa-euro-sign"></i>
+                                                </span>
                                             </div>
                                             <input type="number" step="0.01" class="form-control"
                                                    th:field="*{cost}" th:value="${product.getCost()}" required>
@@ -122,23 +135,23 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
-                                            <div class="form-check col-6">
-                                                <label class="form-check-label custom-control custom-checkbox">
-                                                    CH members only
-                                                    <input type="checkbox" class="custom-control-input"
+                                            <div class="col-6">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="productChOnly"
                                                            th:field="*{chOnly}"
-                                                           th:checked="${product.isChOnly()}">
-                                                    <span class="custom-control-indicator"></span>
-                                                </label>
+                                                           th:checked="${product.isChOnly()}"/>
+                                                    <label class="custom-control-label text-dark font-weight-normal"
+                                                           for="productChOnly">CH members only</label>
+                                                </div>
                                             </div>
-                                            <div class="form-check col-6">
-                                                <label class="form-check-label custom-control custom-checkbox">
-                                                    Product can be reserved
-                                                    <input type="checkbox" class="custom-control-input"
-                                                           th:field="*{reservable}"
-                                                           th:checked="${product.isReservable()}">
-                                                    <span class="custom-control-indicator"></span>
-                                                </label>
+                                            <div class="col-6">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="productReservable"
+                                                           th:field="*{chOnly}"
+                                                           th:checked="${product.isChOnly()}"/>
+                                                    <label class="custom-control-label text-dark font-weight-normal"
+                                                           for="productReservable">Product can be reserved</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +175,7 @@
                                 </div>
 
                                 <table class="table">
-                                    <thead class="thead-inverse thead-small bg-primary">
+                                    <thead class="thead-dark thead-small bg-primary">
                                     <tr>
                                         <th>Name</th>
                                         <th></th>
@@ -214,9 +227,12 @@
                 <div class="input-group" style="width: 100%">
                     <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
                            placeholder="Search for a product">
-                    <span class="input-group-addon">
-                            <i class="fa fa-fw fa-search"></i>
+
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-fw fa-search"></i>
                         </span>
+                    </div>
                 </div>
                 <small class="form-text text-muted">Start typing to look for a product.</small>
             </div>

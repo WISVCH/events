@@ -1,13 +1,12 @@
 body {
-    font-family: Lato, "Helvetica Neue", sans-serif;
+    font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     max-width: calc(100vw);
     overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Noto Sans, Lato, "Helvetica Neue", sans-serif;
+    font-family: nimbus-sans, "Noto Sans", Lato, "Helvetica Neue", sans-serif;
     font-style: normal;
-    color: #40556a;
     text-rendering: optimizeLegibility;
     font-weight: 500;
 }
@@ -29,9 +28,6 @@ a:hover {
 /**
  * Backgrounds
  */
-.bg-primary {
-    background: #40556a !important;
-}
 
 /**
  * Sidebar
@@ -57,7 +53,7 @@ a:hover {
     margin-bottom: 0;
 }
 
-.thead-inverse th {
+.thead-dark th {
     background-color: inherit;
 }
 
@@ -217,7 +213,7 @@ label {
     color: #40556a
 }
 
-.input-group-addon {
+.input-group-text {
     border-radius: 0;
     border: 2px solid #e7ebf1;
     color: #40556a;
@@ -228,7 +224,7 @@ label {
     border-right: 0 !important;
 }
 
-.form-control + .input-group-addon:not(:first-child) {
+.form-control + .input-group-text:not(:first-child) {
     border-left: 2px solid #e7ebf1;
 }
 
@@ -288,26 +284,15 @@ h1 .badge-danger, .btn-danger {
     border-color: #ef4545 !important;
 }
 
-h1 .badge-info, .btn-info {
-    border-color: #058cce;
-    background-color: #058cce;
+h1 .badge-info {
+    border-color: #ef4545;
+    background-color: #ef4545;
 }
 
-.badge-info:hover, .btn-info:hover {
+.badge-info:hover {
     background: rgba(255, 255, 255, 0.75) !important;
-    color: #058cce !important;
-    border-color: #058cce !important;
-}
-
-.btn-success {
-    border-color: #8ac926;
-    background-color: #8ac926;
-}
-
-.btn-success:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
-    color: #8ac926 !important;
-    border-color: #8ac926 !important;
+    color: #ef4545 !important;
+    border-color: #ef4545 !important;
 }
 
 /**
@@ -331,8 +316,8 @@ h1 .badge-info, .btn-info {
 }
 
 .alert-info {
-    color: #058cce !important;
-    border-color: #058cce !important;
+    color: #2AA1A9 !important;
+    border-color: #2AA1A9 !important;
 }
 
 .alert-success {
@@ -350,7 +335,7 @@ h1 .badge-info, .btn-info {
 
 .progress .progress-bar {
     height: 30px;
-    background-color: #058cce;
+    background-color: #2AA1A9;
     line-height: 30px;
     padding-left: .25rem;
 }
