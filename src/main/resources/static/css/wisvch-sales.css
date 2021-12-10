@@ -4,6 +4,10 @@
     vertical-align: baseline
 }
 
+.navbar-brand img {
+    width: 32px;
+}
+
 .container-fluid {
     padding-top: calc(60px + 1.5rem);
 }

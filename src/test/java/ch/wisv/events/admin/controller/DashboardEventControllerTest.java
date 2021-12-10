@@ -266,8 +266,8 @@ public class DashboardEventControllerTest extends ControllerTest {
         assertEquals("Description of Symposium", test.getDescription());
         assertEquals(LocalDateTime.of(2018,1,1,10,0), test.getStart());
         assertEquals(LocalDateTime.of(2018,1,1,11,0), test.getEnding());
-        assertEquals(new Integer(100), test.getMaxSold());
-        assertEquals(new Integer(100), test.getTarget());
+        assertEquals(Integer.valueOf(100), test.getMaxSold());
+        assertEquals(Integer.valueOf(100), test.getTarget());
     }
 
     @Test
