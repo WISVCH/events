@@ -13,7 +13,6 @@ buildscript {
 
 plugins {
     id("java-library") // or id("application")
-    id 'org.springframework.boot' version '2.6.1' apply false
 }
 
 tasks.withType(Jar).configureEach { setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE) }
