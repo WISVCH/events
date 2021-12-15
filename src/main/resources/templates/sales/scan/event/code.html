@@ -129,12 +129,12 @@
                 }
             }).always(function (data, textStatus, xhr) {
                 if (xhr.status === 200) {
-                    $("#successTicket").html(data.object.ticket.product.title);
-                    $("#successCustomer").html(data.object.ticket.owner.name);
+                    $("#successTicket").html(data.object.ticket.productTitle);
+                    $("#successCustomer").html(data.object.ticket.ownerName);
                     $("#successPage").removeClass("d-none");
                 } else if (xhr.status === 208) {
-                    $("#doubleTicket").html(data.object.ticket.product.title);
-                    $("#doubleCustomer").html(data.object.ticket.owner.name);
+                    $("#doubleTicket").html(data.object.ticket.productTitle);
+                    $("#doubleCustomer").html(data.object.ticket.ownerName);
                     $("#doublePage").removeClass("d-none");
                 } else {
                     $("#errorMessage").html(data.message);

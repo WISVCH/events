@@ -9,6 +9,8 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
 import java.util.Objects;
+
+import ch.wisv.events.sales.model.ScanDto;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,8 +122,9 @@ public class SalesScanRestController {
         try {
             Event event = eventService.getByKey(key);
             Ticket ticket = this.getTicketByUniqueCode(event, code);
+            ScanDto scan = new ScanDto(ticket.getProduct().getTitle(), ticket.getOwner().getName());
 
-            json.put("ticket", ticket);
+            json.put("ticket", scan);
 
             if (ticket.getStatus() == TicketStatus.OPEN) {
                 ticketService.updateStatus(ticket, TicketStatus.SCANNED);
