@@ -6,12 +6,12 @@ import lombok.Data;
 public class ScanDto {
 
     /**
-     * Title of the product scanned
+     * Title of the product scanned.
      */
     private String productTitle;
 
     /**
-     * The name of the ticket owner
+     * The name of the ticket owner.
      */
     private String ownerName;
 
