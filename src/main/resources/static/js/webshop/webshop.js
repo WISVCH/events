@@ -180,3 +180,9 @@ var ShoppingBasket;
     };
 })
 (jQuery);
+
+$(document).ready(function () {
+    $('[data-markdown="enable"]').each(function(){
+        $(this).html(window.markdownit().renderInline($(this).text()));
+    });
+});

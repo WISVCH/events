@@ -5,9 +5,7 @@ import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.order.OrderService;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,8 +56,10 @@ public class DashboardTreasurerController extends DashboardController {
      */
     private Map<LocalDate, Map<Product, Integer>> generateProductMap() {
         Map<LocalDate, Map<Product, Integer>> map = new TreeMap<>();
+        List<Order> allPaidOrders = orderService.getAllPaid();
+        Collections.reverse(allPaidOrders);
 
-        for (Order order : orderService.getAllPaid()) {
+        for (Order order : allPaidOrders) {
             if (order.getPaymentMethod() == PaymentMethod.IDEAL || order.getPaymentMethod() == PaymentMethod.SOFORT) {
                 LocalDate date = order.getPaidAt().toLocalDate();
                 date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);

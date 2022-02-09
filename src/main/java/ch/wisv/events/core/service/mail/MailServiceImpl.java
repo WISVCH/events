@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.MailSendException;
@@ -101,13 +102,14 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper message;
 
         try {
-            message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            message = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED, "UTF-8");
             message.setSubject("[CH Events] " + subject);
             message.setFrom("noreply@ch.tudelft.nl");
             message.setTo(recipientEmail);
 
             // Create the HTML body using Thymeleaf
             message.setText(content, true); // true = isHtml
+            message.addInline("ch-logo.png", new ClassPathResource("/static/images/ch-logo.png"), "image/png");
 
             // Send mail
             this.mailSender.send(mimeMessage);

@@ -108,9 +108,9 @@ public class Product {
 
     /**
      * This product can be reserved instead of paid directly at checkout.
-     * Defaults to true.
+     * Defaults to false.
      */
-    private boolean reservable = true;
+    private boolean reservable = false;
 
     /**
      * Product constructor.
