@@ -30,6 +30,8 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     @Test
     public void testPaymentOverview() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
+        order.getOrderProducts().get(0).getProduct().setReservable(true);
+
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
                 .andExpect(status().isOk())
