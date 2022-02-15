@@ -147,8 +147,8 @@
                                             <div class="col-6">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="productReservable"
-                                                           th:field="*{chOnly}"
-                                                           th:checked="${product.isChOnly()}"/>
+                                                           th:field="*{reservable}"
+                                                           th:checked="${product.isReservable()}"/>
                                                     <label class="custom-control-label text-dark font-weight-normal"
                                                            for="productReservable">Product can be reserved</label>
                                                 </div>
