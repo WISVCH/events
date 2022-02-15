@@ -140,14 +140,14 @@ public class DashboardWebhookController extends DashboardController {
      *
      * @param redirect of type RedirectAttributes
      * @param webhook  of type Webhook
-     * @param webhookKey      of type String
+     * @param key      of type String
      *
      * @return redirect to edit page
      */
     @PostMapping("/edit/{key}")
-    public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook, @PathVariable String webhookKey) {
+    public String edit(RedirectAttributes redirect, @ModelAttribute Webhook webhook, @PathVariable String key) {
         try {
-            webhook.setKey(webhookKey);
+            webhook.setKey(key);
             webhookService.update(webhook);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook changes saves!");
 
