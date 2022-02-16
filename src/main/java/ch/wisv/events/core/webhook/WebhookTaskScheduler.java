@@ -66,6 +66,10 @@ public class WebhookTaskScheduler {
                 "Authorization",
                 "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
         );
+        httpPost.setHeader(
+                "EventAuthorization",
+                "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
+        );
         httpPost.setEntity(new StringEntity(webhookTask.getObject().toJSONString(), "UTF8"));
 
         try {
