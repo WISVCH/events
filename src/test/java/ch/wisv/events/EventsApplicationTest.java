@@ -7,6 +7,7 @@ import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.utils.LdapGroup;
 import ch.wisv.events.webshop.service.PaymentsService;
+import ch.wisv.events.webshop.service.PaymentsServiceImpl;
 import com.google.common.collect.ImmutableList;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
@@ -59,15 +60,10 @@ public class EventsApplicationTest {
 
     @Bean
     @Primary
-    public PaymentsService paymentService() {
+    public PaymentsService paymentsService() {
         PaymentsService paymentsService = Mockito.mock(PaymentsService.class);
 
-        Mockito.when(paymentsService.getPaymentsMollieUrl(Mockito.any(Order.class))).then(invocation -> "https://paymentURL.com");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-561")).thenReturn("WAITING");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-562")).thenReturn("PAID");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-563")).thenReturn("CANCELLED");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-564")).thenReturn("STATUS_EXCEPTION");
-        Mockito.when(paymentsService.getPaymentsOrderStatus("123-345-565")).thenThrow(new PaymentsConnectionException(""));
+        Mockito.when(paymentsService.getMollieUrl(Mockito.any(Order.class))).then(invocation -> "https://paymentURL.com");
 
         return paymentsService;
     }

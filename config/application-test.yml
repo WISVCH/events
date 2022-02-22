@@ -15,7 +15,7 @@ spring:
     username: postgres
 
     # Password to log in with <MyDbPassword> in database <MyDb>
-    password:
+    password: postgres
 
   data.jpa.repositories.enabled: true
 

@@ -1,31 +1,31 @@
 package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
+import be.woutschoovaerts.mollie.Client;
+import be.woutschoovaerts.mollie.ClientBuilder;
+import be.woutschoovaerts.mollie.data.common.Amount;
+import be.woutschoovaerts.mollie.data.payment.PaymentMethod;
+import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
+import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
+import be.woutschoovaerts.mollie.exception.MollieException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
-import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
-import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
-import datadog.trace.api.Trace;
+
 import javax.validation.constraints.NotNull;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -35,221 +35,167 @@ import org.springframework.validation.annotation.Validated;
 @Service
 public class PaymentsServiceImpl implements PaymentsService {
 
-    /** HTTP success status code of CH Payments. */
-    private static final int SUCCESS_PAYMENT_STATUS_CODE = 201;
-
-    /** OrderService. */
+    /**
+     * OrderService.
+     */
     private final OrderService orderService;
 
-    /** MailService. */
+    /**
+     * Mollie Client.
+     */
+    private Client mollie;
+
+    /**
+     * MailService.
+     */
     private final MailService mailService;
 
-    /** Payments issuer url. */
-    @Value("${wisvch.payments.issuerUri}")
-    @NotNull
-    private String issuerUri;
-
-    /** Payments client url. */
-    @Value("${wisvch.payments.clientUri}")
+    /**
+     * Payments client url.
+     */
+    @Value("${mollie.clientUri}")
     @NotNull
     private String clientUri;
-
-    /** HTTP client. */
-    private HttpClient httpClient;
 
     /**
      * Default constructor.
      *
      * @param orderService of type OrderService
+     * @param apiKey       of type String
      * @param mailService  of type MailService
      */
     @Autowired
-    public PaymentsServiceImpl(OrderService orderService, MailService mailService) {
+    public PaymentsServiceImpl(OrderService orderService, @Value("${mollie.apikey:null}") String apiKey, MailService mailService) {
         this.orderService = orderService;
         this.mailService = mailService;
-        this.httpClient = HttpClients.createDefault();
+        this.mollie = new ClientBuilder().withApiKey(apiKey).build();
     }
 
-    /**
-     * Constructor with HttpClient.
-     *
-     * @param orderService of type OrderService
-     * @param httpClient   of type HttpClient
-     * @param mailService  of type MailService
-     */
-    public PaymentsServiceImpl(OrderService orderService, HttpClient httpClient, MailService mailService) {
+    public PaymentsServiceImpl(OrderService orderService, Client mollie, MailService mailService) {
         this.orderService = orderService;
-        this.httpClient = httpClient;
         this.mailService = mailService;
+        this.mollie = mollie;
     }
 
     /**
-     * Get the Order status of Payments.
-     *
-     * @param paymentsReference of type String
-     *
-     * @return String
-     */
-    @Trace
-    @Override
-    public String getPaymentsOrderStatus(String paymentsReference) {
-        try {
-            HttpGet httpGet = new HttpGet(issuerUri + "/api/orders/" + paymentsReference);
-            httpGet.setHeader("Accept", "application/json");
-
-            HttpResponse response = this.httpClient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-
-            if (entity != null) {
-                JSONObject responseObject = (JSONObject) JSONValue.parse(EntityUtils.toString(entity));
-
-                if (responseObject.containsKey("status")) {
-                    return (String) responseObject.get("status");
-                }
-            }
-        } catch (Exception e) {
-            mailService.sendError("Payment provider is not responding", e);
-        }
-
-        throw new PaymentsConnectionException("Payment provider is not responding");
-    }
-
-    /**
-     * Get a Mollie Url via Payments.
-     *
+     * Creates a payment at mollie and gets the checkout url from the response body.
      * @param order of type Order
      *
-     * @return String
+     * @return the checkout url to redirect the user to
      */
-    @Trace
     @Override
-    public String getPaymentsMollieUrl(Order order) {
-        HttpPost httpPost = this.createPaymentsOrderHttpPost(order);
+    public String getMollieUrl(Order order) {
 
+        PaymentRequest paymentRequest = createMolliePaymentRequestFromOrder(order);
+
+        //First try is for IOExceptions coming from the Mollie Client.
         try {
-            HttpResponse response = this.httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
+            // Create the payment over at Mollie
+            PaymentResponse molliePayment = mollie.payments().createPayment(paymentRequest);
 
-            if (entity != null) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                String responseString = EntityUtils.toString(entity);
-                JSONObject responseObject = (JSONObject) JSONValue.parse(responseString);
+            // All good, update the order and return the payment url
+            updateOrderWithPaymentResponse(order, molliePayment);
 
-                if (statusCode == SUCCESS_PAYMENT_STATUS_CODE) {
-                    this.setChPaymentsReference(order, responseObject);
-                    return this.getRedirectUrl(responseObject);
-                } else {
-                    throw new PaymentsInvalidException((String) responseObject.get("message"));
-                }
-            }
-        } catch (Exception e) {
+            return molliePayment.getLinks().getCheckout().getHref();
+
+        } catch (MollieException e) {
             mailService.sendError("Can't fetch mollie url", e);
+            handleMollieError(e);
+            return null;
         }
-
-        throw new PaymentsConnectionException("Payment provider is not responding");
     }
 
     /**
-     * Map a CH Payments status to a OrderStatus.
+     * Creates a payment request to use with the mollie client in order to start a payment interaction with Mollie.
      *
-     * @param status of type String
-     *
-     * @return OrderStatus
+     * @param order with type Order
+     * @return a payment request that corresponds to the data in order
+     */
+    private PaymentRequest createMolliePaymentRequestFromOrder(Order order) {
+        Map<String, Object> metadata = new HashMap<>();
+
+        PaymentMethod method;
+
+        if (order.getPaymentMethod() == ch.wisv.events.core.model.order.PaymentMethod.IDEAL) {
+            method = PaymentMethod.IDEAL;
+        } else {
+            method = PaymentMethod.SOFORT;
+        }
+
+        String returnUrl = clientUri + "/return/" + order.getPublicReference();
+        String webhookUrl = clientUri + "/api/v1/orders/status";
+
+        double value = order.getOrderProducts().stream()
+                .mapToDouble(OrderProduct::getPrice)
+                .sum();
+
+        value = order.getPaymentMethod().calculateCostIncludingTransaction(value);
+        Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value)).currency("EUR").build();
+        return PaymentRequest.builder()
+                .method(Optional.of(List.of(method)))
+                .amount(paymentAmount)
+                .description("W.I.S.V. 'Christiaan Huygens' Payments")
+                .redirectUrl(Optional.of(returnUrl))
+                .webhookUrl(Optional.of(webhookUrl))
+                .metadata(metadata)
+                .build();
+    }
+
+
+    /**
+     *  updates the order status with the given provider reference.
+     * @param providerOrderReference reference of the order used by mollie
+     * @return the updated order
      */
     @Override
-    public OrderStatus mapStatusToOrderStatus(String status) throws PaymentsStatusUnknown {
-        switch (status) {
-            case "WAITING":
-                return OrderStatus.PENDING;
-            case "PAID":
-                return OrderStatus.PAID;
-            case "CANCELLED":
-                return OrderStatus.CANCELLED;
-            case "EXPIRED":
-                return OrderStatus.EXPIRED;
-            default:
-                throw new PaymentsStatusUnknown(status);
-        }
-    }
-
-    /**
-     * Create payments HTTP Post Body.
-     *
-     * @param order of type Order
-     *
-     * @return JSONObject
-     */
-    private JSONObject createPaymentsHttpPostBody(Order order) {
-        JSONObject object = new JSONObject();
-        object.put("name", order.getOwner().getName());
-        object.put("email", order.getOwner().getEmail());
-        object.put("method", order.getPaymentMethod().toString());
-        object.put("returnUrl", clientUri + "/return/" + order.getPublicReference());
-        object.put("webhookUrl", clientUri + "/api/v1/orders/status");
-        object.put("mailConfirmation", false);
-
-        JSONArray jsonArray = new JSONArray();
-        order.getOrderProducts().forEach(orderProduct -> {
-            for (int i = 0; i < orderProduct.getAmount(); i++) {
-                jsonArray.add(orderProduct.getProduct().getKey());
-            }
-        });
-        object.put("productKeys", jsonArray);
-
-        return object;
-    }
-
-    /**
-     * Create a HttpPost to create a Payments Order request.
-     *
-     * @param order of type Order
-     *
-     * @return HttpPost
-     */
-    private HttpPost createPaymentsOrderHttpPost(Order order) {
-        HttpPost httpPost = new HttpPost(issuerUri + "/api/orders");
-
-        JSONObject object = this.createPaymentsHttpPostBody(order);
-
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        return httpPost;
-    }
-
-    /**
-     * Get redirect url.
-     *
-     * @param responseObject of type JSONObject
-     *
-     * @return String
-     */
-    private String getRedirectUrl(JSONObject responseObject) {
-        if (responseObject.containsKey("url")) {
-            return (String) responseObject.get("url");
-        } else {
-            throw new PaymentsInvalidException("Redirect url is missing");
-        }
-    }
-
-    /**
-     * Set the CH Payments public reference.
-     *
-     * @param order          of type Order
-     * @param responseObject of type JSONObject
-     */
-    private void setChPaymentsReference(Order order, JSONObject responseObject) {
+    public Order updateStatusByProviderReference(String providerOrderReference) {
         try {
-            if (responseObject.containsKey("publicReference")) {
-                order.setChPaymentsReference((String) responseObject.get("publicReference"));
-
-                orderService.update(order);
-            } else {
-                throw new PaymentsInvalidException("Missing public reference");
-            }
-        } catch (OrderNotFoundException | OrderInvalidException e) {
-            throw new PaymentsInvalidException(e.getMessage());
+            Order order = orderService.getByChPaymentsReference(providerOrderReference);
+            return updateOrder(order);
+        } catch (OrderNotFoundException e) {
+            throw new RuntimeException("Order with providerReference " + providerOrderReference + " not found");
         }
+    }
+
+    private void updateOrderWithPaymentResponse(Order order, PaymentResponse molliePayment) {
+        // change ChPaymentsReference to ProviderReference someday
+        order.setChPaymentsReference(molliePayment.getId());
+        order.setStatus(OrderStatus.PENDING);
+        orderService.saveAndFlush(order);
+    }
+
+
+    private Order updateOrder(Order order) {
+        // This try is for the Mollie API internal HttpClient
+        try {
+            // Request a payment from Mollie
+            PaymentResponse paymentResponse = mollie.payments().getPayment(order.getChPaymentsReference());
+
+            // There are a couple of possible statuses. Enum would have been nice. We select a couple of relevant
+            // statuses to translate to our own status.
+
+            switch (paymentResponse.getStatus()) {
+                case PENDING -> order.setStatus(OrderStatus.PENDING);
+                case CANCELED -> order.setStatus(OrderStatus.CANCELLED);
+                case EXPIRED -> order.setStatus(OrderStatus.EXPIRED);
+                case PAID -> order.setStatus(OrderStatus.PAID);
+                default -> order.setStatus(order.getStatus());
+            }
+            return orderService.saveAndFlush(order);
+
+        } catch (MollieException e) {
+            mailService.sendError("Payment provider is not responding", e);
+            handleMollieError(e);
+            return order;
+        }
+    }
+
+    private void handleMollieError(MollieException mollieException) {
+        // Some error occured, but connection to Mollie succeeded, which means they have something to say.
+        Map molliePaymentError = mollieException.getDetails();
+
+        // Make the compiler shut up, this is something stupid in the Mollie API Client
+        Map error = (Map) molliePaymentError.get("error");
+        throw new RuntimeException((String) error.get("message"));
     }
 }

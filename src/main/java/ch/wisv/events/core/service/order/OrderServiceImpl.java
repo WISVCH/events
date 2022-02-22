@@ -9,6 +9,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
+
 import static ch.wisv.events.core.model.order.OrderStatus.ANONYMOUS;
 import static ch.wisv.events.core.model.order.OrderStatus.ASSIGNED;
 import static ch.wisv.events.core.model.order.OrderStatus.CANCELLED;
@@ -18,6 +19,7 @@ import static ch.wisv.events.core.model.order.OrderStatus.PAID;
 import static ch.wisv.events.core.model.order.OrderStatus.PENDING;
 import static ch.wisv.events.core.model.order.OrderStatus.REJECTED;
 import static ch.wisv.events.core.model.order.OrderStatus.RESERVATION;
+
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderProductRepository;
@@ -26,6 +28,7 @@ import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import com.google.common.collect.ImmutableList;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -43,22 +46,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    /** OrderRepository. */
+    /**
+     * OrderRepository.
+     */
     private final OrderRepository orderRepository;
 
-    /** OrderProductRepository. */
+    /**
+     * OrderProductRepository.
+     */
     private final OrderProductRepository orderProductRepository;
 
-    /** OrderValidationService. */
+    /**
+     * OrderValidationService.
+     */
     private final OrderValidationService orderValidationService;
 
-    /** ProductService. */
+    /**
+     * ProductService.
+     */
     private final ProductService productService;
 
-    /** MailService. */
+    /**
+     * MailService.
+     */
     private final MailService mailService;
 
-    /** TicketService. */
+    /**
+     * TicketService.
+     */
     private final TicketService ticketService;
 
     /**
@@ -126,7 +141,6 @@ public class OrderServiceImpl implements OrderService {
      * Create an Order form a OrderProductDto.
      *
      * @param orderProductDto of type OrderProductDto
-     *
      * @return Order
      */
     @Override
@@ -148,7 +162,6 @@ public class OrderServiceImpl implements OrderService {
      * Update an Order.
      *
      * @param order of type Order
-     *
      * @throws OrderNotFoundException when Order is not found.
      * @throws OrderInvalidException  when Order is invalid to update.
      */
@@ -204,7 +217,6 @@ public class OrderServiceImpl implements OrderService {
      * Get all reservation by a Customer.
      *
      * @param customer of type Customer
-     *
      * @return List of Order
      */
     @Override
@@ -216,7 +228,6 @@ public class OrderServiceImpl implements OrderService {
      * Get all order by a Customer.
      *
      * @param owner of type Customer
-     *
      * @return List of Order
      */
     @Override
@@ -258,7 +269,6 @@ public class OrderServiceImpl implements OrderService {
      * Method getByReference returns Order with the given Reference.
      *
      * @param reference of type String
-     *
      * @return Order
      */
     @Override
@@ -271,9 +281,7 @@ public class OrderServiceImpl implements OrderService {
      * Get Order by ChPaymentsReference.
      *
      * @param chPaymentsReference of type String
-     *
      * @return Order
-     *
      * @throws OrderNotFoundException when Order is not found
      */
     @Override
@@ -286,7 +294,6 @@ public class OrderServiceImpl implements OrderService {
      * Check if order contains CH only Product.
      *
      * @param order of type Order
-     *
      * @return boolean
      */
     @Override
@@ -310,9 +317,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllByProduct(Product product) {
         return orderProductRepository.findAllByProduct(product).stream()
-            .map(orderRepository::findAllByOrderProducts)
-            .flatMap(List::stream)
-            .collect(Collectors.toList());
+                .map(orderRepository::findAllByOrderProducts)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -326,11 +333,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Saves and flushes an Order.
+     *
+     * @param order of type Order
+     * @return the updated order
+     */
+    public Order saveAndFlush(Order order) {
+        return orderRepository.saveAndFlush(order);
+    }
+
+    /**
      * Assert if the status change is valid.
      *
      * @param order  of type Order
      * @param status of type OrderStatus
-     *
      * @throws OrderInvalidException when status change is invalid.
      */
     private void assertValidStatusChange(Order order, OrderStatus status) throws OrderInvalidException {
@@ -408,4 +424,6 @@ public class OrderServiceImpl implements OrderService {
         log.info("Order " + order.getPublicReference() + ": Status changed to RESERVATION!");
         orderRepository.saveAndFlush(order);
     }
+
+
 }
