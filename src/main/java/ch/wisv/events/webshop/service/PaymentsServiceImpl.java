@@ -7,6 +7,7 @@ import be.woutschoovaerts.mollie.data.payment.PaymentMethod;
 import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
 import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
 import be.woutschoovaerts.mollie.exception.MollieException;
+import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -175,11 +176,11 @@ public class PaymentsServiceImpl implements PaymentsService {
             // statuses to translate to our own status.
 
             switch (paymentResponse.getStatus()) {
-                case PENDING -> order.setStatus(OrderStatus.PENDING);
-                case CANCELED -> order.setStatus(OrderStatus.CANCELLED);
-                case EXPIRED -> order.setStatus(OrderStatus.EXPIRED);
-                case PAID -> order.setStatus(OrderStatus.PAID);
-                default -> order.setStatus(order.getStatus());
+                case PENDING -> orderService.updateOrderStatus(order,OrderStatus.PENDING);
+                case CANCELED -> orderService.updateOrderStatus(order,OrderStatus.CANCELLED);
+                case EXPIRED -> orderService.updateOrderStatus(order,OrderStatus.EXPIRED);
+                case PAID -> orderService.updateOrderStatus(order,OrderStatus.PAID);
+                default -> orderService.updateOrderStatus(order,order.getStatus());
             }
             return orderService.saveAndFlush(order);
 
@@ -187,6 +188,8 @@ public class PaymentsServiceImpl implements PaymentsService {
             mailService.sendError("Payment provider is not responding", e);
             handleMollieError(e);
             return order;
+        } catch (EventsException e){
+            throw new RuntimeException(e);
         }
     }
 
