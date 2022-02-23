@@ -203,7 +203,7 @@ public class WebshopPaymentController extends WebshopController {
             orderService.update(order);
             orderValidationService.assertOrderIsValidForPayment(order);
 
-            return "redirect:" + paymentsService.getPaymentsMollieUrl(order);
+            return "redirect:" + paymentsService.getMollieUrl(order);
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 

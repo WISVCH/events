@@ -1,18 +1,11 @@
 package ch.wisv.events.api.controller;
 
-import ch.wisv.events.core.exception.normal.EventsException;
-import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.PaymentsService;
-import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * OrderRestController class.
@@ -40,27 +33,15 @@ public class OrderRestController {
     }
 
     /**
-     * This endpoint is for the CH Payments.
+     * This endpoint is for the paymentprovider. Webhooks will arrive here.
      *
-     * @param body of type LinkedHashMap
+     * @param providerReference The provider Order Reference
      *
-     * @return ResponseEntity
+     * @return Status Message
      */
-    @PostMapping("/status")
-    public ResponseEntity updateOrderStatus(@RequestBody LinkedHashMap<String, Object> body) {
-        try {
-            String publicReference = (String) body.getOrDefault("publicReference", "");
-            Order order = orderService.getByChPaymentsReference(publicReference);
-            String paymentsStatus = paymentsService.getPaymentsOrderStatus(order.getChPaymentsReference());
-
-            OrderStatus status = paymentsService.mapStatusToOrderStatus(paymentsStatus);
-            orderService.updateOrderStatus(order, status);
-
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (EventsException $e) {
-            log.error($e.getMessage());
-
-            return new ResponseEntity(HttpStatus.CONFLICT);
-        }
+    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    public ResponseEntity<HttpStatus> updateOrderStatus(@RequestParam(name = "id") String providerReference) {
+        paymentsService.updateStatusByProviderReference(providerReference);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

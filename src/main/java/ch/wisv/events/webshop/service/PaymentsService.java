@@ -1,22 +1,12 @@
 package ch.wisv.events.webshop.service;
 
-import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.OrderStatus;
 
 /**
  * PaymentsService interface.
  */
 public interface PaymentsService {
 
-    /**
-     * Get the Order status of Payments.
-     *
-     * @param paymentsReference of type String
-     *
-     * @return String
-     */
-    String getPaymentsOrderStatus(String paymentsReference);
 
     /**
      * Get a Mollie Url via Payments.
@@ -25,16 +15,14 @@ public interface PaymentsService {
      *
      * @return String
      */
-    String getPaymentsMollieUrl(Order order);
+    String getMollieUrl(Order order);
 
     /**
-     * Map a CH Payments status to a OrderStatus.
+     * used to process a webhook request made by mollie to signal that the order status has changed.
      *
-     * @param status of type String
-     *
-     * @return OrderStatus
-     *
-     * @throws PaymentsStatusUnknown when the PaymentsStatus is unknown.
+     * @param providerOrderReference reference of the order used by mollie
+     * @return the updated order
      */
-    OrderStatus mapStatusToOrderStatus(String status) throws PaymentsStatusUnknown;
+    Order updateStatusByProviderReference(String providerOrderReference);
+
 }

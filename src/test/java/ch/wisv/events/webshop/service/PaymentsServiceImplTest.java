@@ -1,10 +1,17 @@
 package ch.wisv.events.webshop.service;
 
+import be.woutschoovaerts.mollie.Client;
+import be.woutschoovaerts.mollie.data.common.Link;
+import be.woutschoovaerts.mollie.data.payment.PaymentLinks;
+import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
+import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
+import be.woutschoovaerts.mollie.handler.PaymentHandler;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.PaymentsStatusUnknown;
 import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.exception.runtime.PaymentsInvalidException;
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
@@ -14,7 +21,12 @@ import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
@@ -31,6 +43,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.security.core.parameters.P;
+
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -46,16 +61,16 @@ public class PaymentsServiceImplTest extends ServiceTest {
     private OrderService orderService;
 
     @Mock
-    private HttpClient httpClient;
+    private Client mollie;
 
-    private PaymentsService paymentsService;
+    private PaymentsServiceImpl paymentsService;
 
     /**
      * SetUp method.
      */
     @Before
     public void setUp() {
-        this.paymentsService = new PaymentsServiceImpl(orderService, httpClient, mock(MailService.class));
+        this.paymentsService = new PaymentsServiceImpl(orderService, mollie, mock(MailService.class));
     }
 
     @After
@@ -63,41 +78,6 @@ public class PaymentsServiceImplTest extends ServiceTest {
         this.paymentsService = null;
     }
 
-    /**
-     * Get payments order status.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsOrderStatus() throws Exception {
-        JSONObject object = new JSONObject();
-        object.put("status", "EXPIRED");
-
-        HttpResponse httpResponse = new BasicHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "FINE!"));
-        httpResponse.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
-
-        assertEquals("EXPIRED", paymentsService.getPaymentsOrderStatus("123-456-789"));
-    }
-
-    /**
-     * Get payments order status when order status is not set.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsOrderStatusException() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        JSONObject object = new JSONObject();
-
-        HttpResponse httpResponse = new BasicHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "FINE!"));
-        httpResponse.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
-
-        paymentsService.getPaymentsOrderStatus("123-456-789");
-    }
 
     /**
      * Test get payments mollie url.
@@ -105,161 +85,60 @@ public class PaymentsServiceImplTest extends ServiceTest {
      * @throws Exception when something goes wrong
      */
     @Test
-    public void testGetPaymentsMollieUrl() throws Exception {
-        JSONObject object = new JSONObject();
-        object.put("url", "https://ch.tudelft.nl/payments/some/url");
-        object.put("publicReference", "123-345-567");
+    public void testGetMollieUrl() throws Exception {
+        Order order = createPaymentOrder(OrderStatus.PENDING,"WISVCH.1234");
 
-        Order order = this.createHttpResponseAndOrder(object, HttpStatus.SC_CREATED);
+        PaymentResponse paymentResponse = new PaymentResponse();
+        Link link = Link.builder().build();
+        paymentResponse.setLinks(PaymentLinks.builder().checkout(link).build());
+        paymentResponse.setId("thisisanid");
+        PaymentHandler handler = mock(PaymentHandler.class);
+        when(mollie.payments()).thenReturn(handler);
+        when(handler.createPayment(Mockito.any())).thenReturn(paymentResponse);
 
-        doNothing().when(order).setChPaymentsReference(any(String.class));
-        doNothing().when(orderService).update(any(Order.class));
-
-        assertEquals("https://ch.tudelft.nl/payments/some/url", paymentsService.getPaymentsMollieUrl(order));
-        verify(order, times(1)).setChPaymentsReference("123-345-567");
+        assertEquals(link.getHref(), paymentsService.getMollieUrl(order));
     }
 
-    /**
-     * Test get payments mollie url.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsMollieUrlMissingUrl() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Payment provider is not responding");
 
-        JSONObject object = new JSONObject();
-        object.put("publicReference", "123-345-567");
+    protected Customer createCustomer() {
+        Customer customer = new Customer();
+        customer.setSub("WISVCH.1234");
+        customer.setName("Test user");
+        customer.setEmail("test@test.com");
+        customer.setRfidToken("RF123456");
 
-        Order order = this.createHttpResponseAndOrder(object, HttpStatus.SC_CREATED);
-
-        doNothing().when(order).setChPaymentsReference(any(String.class));
-        doNothing().when(orderService).update(any(Order.class));
-
-        paymentsService.getPaymentsMollieUrl(order);
+        return customer;
     }
 
-    /**
-     * Test get payments mollie url.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsMollieUrlMissingPaymentsReference() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Payment provider is not responding");
+    protected Product createProduct() {
+        Product product = new Product();
+        product.setTitle("Product product");
+        product.setCost(1.d);
+        product.setSellStart(LocalDateTime.now());
+        product.setProducts(new ArrayList<>());
+        product.setMaxSoldPerCustomer(1);
 
-        JSONObject object = new JSONObject();
-        object.put("url", "https://ch.tudelft.nl/payments/some/url");
-
-        Order order = this.createHttpResponseAndOrder(object, HttpStatus.SC_CREATED);
-
-        doNothing().when(order).setChPaymentsReference(any(String.class));
-        doNothing().when(orderService).update(any(Order.class));
-
-        paymentsService.getPaymentsMollieUrl(order);
+        return product;
     }
 
-    /**
-     * Test get payments mollie url.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsMollieUrlPaymentsException() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Payment provider is not responding");
+    protected Order createPaymentOrder(OrderStatus orderStatus, String createdBy) {
+        List<Product> products = new ArrayList<>();
+        products.add(createProduct());
 
-        JSONObject object = new JSONObject();
-        object.put("message", "No valid products in the order.");
-
-        Order order = this.createHttpResponseAndOrder(object, HttpStatus.SC_BAD_REQUEST);
-        when(httpClient.execute(any(HttpPost.class))).thenThrow(new IOException("Connection lost"));
-
-        paymentsService.getPaymentsMollieUrl(order);
+        return this.createOrder(createCustomer(), products, orderStatus, createdBy);
     }
 
-    /**
-     * Test get payments mollie url.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testGetPaymentsMollieUrlConnectionException() throws Exception {
-        thrown.expect(PaymentsConnectionException.class);
-        thrown.expectMessage("Payment provider is not responding");
+    protected Order createOrder(Customer customer, List<Product> products, OrderStatus status, String createdBy) {
+        Order order = new Order();
+        order.setOwner(customer);
+        order.setStatus(status);
+        order.setCreatedBy(createdBy);
+        order.setPaymentMethod(PaymentMethod.IDEAL);
 
-        JSONObject object = new JSONObject();
-        object.put("message", "No valid products in the order.");
-
-        Order order = this.createHttpResponseAndOrder(object, HttpStatus.SC_BAD_REQUEST);
-
-        paymentsService.getPaymentsMollieUrl(order);
-    }
-
-    /**
-     * Map Payments status to OrderStatus.
-     *
-     * @throws Exception when something goes wrong
-     */
-    @Test
-    public void testMapStatusToOrderStatusPending() throws Exception {
-        assertEquals(OrderStatus.PENDING, paymentsService.mapStatusToOrderStatus("WAITING"));
-    }
-
-    @Test
-    public void testMapStatusToOrderStatusPaid() throws Exception {
-        assertEquals(OrderStatus.PAID, paymentsService.mapStatusToOrderStatus("PAID"));
-    }
-
-    @Test
-    public void testMapStatusToOrderStatusCancelled() throws Exception {
-        assertEquals(OrderStatus.CANCELLED, paymentsService.mapStatusToOrderStatus("CANCELLED"));
-    }
-
-    @Test
-    public void testMapStatusToOrderStatusExpired() throws Exception {
-        assertEquals(OrderStatus.EXPIRED, paymentsService.mapStatusToOrderStatus("EXPIRED"));
-    }
-
-    @Test
-    public void testMapStatusToOrderStatusUnknown() throws Exception {
-        thrown.expect(PaymentsStatusUnknown.class);
-        paymentsService.mapStatusToOrderStatus("UNKNOWN");
-    }
-
-    /**
-     * Create a HTTP Response mock and Order.
-     *
-     * @param object     of type JSONObject
-     * @param httpStatus of type int
-     *
-     * @return Order
-     *
-     * @throws IOException when something goes wrong.
-     */
-    private Order createHttpResponseAndOrder(JSONObject object, int httpStatus) throws IOException {
-        HttpResponse httpResponse = new BasicHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "CREATED!"));
-        httpResponse.setEntity(new StringEntity(object.toJSONString(), "UTF8"));
-
-        when(httpClient.execute(any(HttpPost.class))).thenReturn(httpResponse);
-
-        Order order = mock(Order.class);
-        Customer customer = mock(Customer.class);
-
-        OrderProduct orderProduct = mock(OrderProduct.class);
-        Product product = mock(Product.class);
-        when(product.getKey()).thenReturn(UUID.randomUUID().toString());
-        when(orderProduct.getProduct()).thenReturn(product);
-        when(orderProduct.getAmount()).thenReturn(1L);
-
-        when(customer.getName()).thenReturn("Test");
-        when(customer.getEmail()).thenReturn("test@test.com");
-        when(order.getOwner()).thenReturn(customer);
-        when(order.getPaymentMethod()).thenReturn(PaymentMethod.IDEAL);
-        when(order.getPublicReference()).thenReturn(UUID.randomUUID().toString());
-        when(order.getOrderProducts()).thenReturn(ImmutableList.of(orderProduct));
+        products.forEach(product -> {
+            OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
+            order.addOrderProduct(orderProduct);
+        });
 
         return order;
     }

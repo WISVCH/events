@@ -59,8 +59,11 @@ dependencies {
 
 
     implementation 'javax.el:javax.el-api:2.2.5'
+    implementation "be.woutschoovaerts:mollie:3.6.1"
+    implementation"net.objecthunter:exp4j:0.4.8"
 
-     implementation 'org.thymeleaf:thymeleaf-spring5'
+
+    implementation 'org.thymeleaf:thymeleaf-spring5'
      implementation 'org.thymeleaf:thymeleaf'
      implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
      implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time'
@@ -112,5 +115,10 @@ task jacocoFix(type: Copy) {
         fileName.replace("jacocoTestReport.xml", "jacoco.xml")
     }
 }
+
+test {
+    maxHeapSize = "4096m"
+}
+
 
 check.dependsOn jacocoTestReport

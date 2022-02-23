@@ -147,4 +147,6 @@ public interface OrderService {
      */
     void delete(Order order);
 
+    Order saveAndFlush(Order order);
+
 }
