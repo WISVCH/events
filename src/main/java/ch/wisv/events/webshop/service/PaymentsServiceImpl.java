@@ -43,7 +43,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     /**
      * Mollie Client.
      */
-    private Client mollie;
+    private final Client mollie;
 
     /**
      * MailService.
