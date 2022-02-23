@@ -90,6 +90,7 @@ public class WebhookServiceImpl implements WebhookService {
         webhook.setPayloadUrl(model.getPayloadUrl());
         webhook.setWebhookTriggers(model.getWebhookTriggers());
         webhook.setActive(model.isActive());
+        webhook.setSecret(model.getSecret());
         webhook.setLdapGroup(model.getLdapGroup());
 
         this.assertIsValidWebhook(webhook);
