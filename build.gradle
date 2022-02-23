@@ -116,4 +116,9 @@ task jacocoFix(type: Copy) {
     }
 }
 
+test {
+    maxHeapSize = "4096m"
+}
+
+
 check.dependsOn jacocoTestReport
