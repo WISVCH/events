@@ -127,7 +127,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         String webhookUrl = clientUri + "/api/v1/orders/status";
 
         double value = order.getOrderProducts().stream()
-                .mapToDouble(OrderProduct::getPrice)
+                .mapToDouble(op -> op.getPrice() * op.getAmount())
                 .sum();
 
         value = order.getPaymentMethod().calculateCostIncludingTransaction(value);
