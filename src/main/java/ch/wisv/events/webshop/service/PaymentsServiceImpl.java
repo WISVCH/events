@@ -115,6 +115,17 @@ public class PaymentsServiceImpl implements PaymentsService {
     private PaymentRequest createMolliePaymentRequestFromOrder(Order order) {
         Map<String, Object> metadata = new HashMap<>();
 
+        metadata.put("orderId", order.getPublicReference());
+
+        String productString = "";
+        // Add the names, quantities and prices of the products to the metadata.
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            // Make string of product name, quantity and price
+            productString +=  orderProduct.getProduct().getTitle() + " (" + orderProduct.getAmount() + "x)" + " - €" + orderProduct.getPrice() + "; ";
+        }
+
+        metadata.put("products", productString);
+
         PaymentMethod method;
 
         if (order.getPaymentMethod() == ch.wisv.events.core.model.order.PaymentMethod.IDEAL) {
@@ -135,7 +146,9 @@ public class PaymentsServiceImpl implements PaymentsService {
         return PaymentRequest.builder()
                 .method(Optional.of(List.of(method)))
                 .amount(paymentAmount)
-                .description("W.I.S.V. 'Christiaan Huygens' Payments")
+                .description("W.I.S.V. 'Christiaan Huygens'")
+                .consumerName(Optional.of(order.getOwner().getName()))
+                .billingEmail(Optional.of(order.getOwner().getEmail()))
                 .redirectUrl(Optional.of(returnUrl))
                 .webhookUrl(Optional.of(webhookUrl))
                 .metadata(metadata)
