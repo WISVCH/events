@@ -184,12 +184,12 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertProductInSellIntervalBefore() throws Exception {
-        this.assertProductInSellInterval(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
+        this.assertProductInSellInterval(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2), "Test product is not yet for sale");
     }
 
     @Test
     public void assertProductInSellIntervalAfter() throws Exception {
-        this.assertProductInSellInterval(LocalDateTime.now().minusMinutes(2), LocalDateTime.now().minusMinutes(1));
+        this.assertProductInSellInterval(LocalDateTime.now().minusMinutes(2), LocalDateTime.now().minusMinutes(1), "Test product is no longer for sale");
     }
 
     @Test
@@ -267,9 +267,9 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         orderValidationService.assertOrderIsValidForPayment(order);
     }
 
-    private void assertProductInSellInterval(LocalDateTime localDateTime, LocalDateTime localDateTime2) throws Exception {
+    private void assertProductInSellInterval(LocalDateTime localDateTime, LocalDateTime localDateTime2, String message) throws Exception {
         thrown.expect(OrderInvalidException.class);
-        thrown.expectMessage("Test product is no longer for sale");
+        thrown.expectMessage(message);
 
         Event event = new Event();
         event.setMaxSold(15);
