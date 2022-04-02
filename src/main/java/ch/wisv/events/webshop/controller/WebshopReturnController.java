@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 
 /**
  * WebshopReturnController class.
@@ -49,12 +51,13 @@ public class WebshopReturnController extends WebshopController {
             Order order = orderService.getByReference(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
-            List<String> redirectUrls = order.getOrderProducts().stream()
+            // Get all OrderProducts that have a redirect url.
+            List<Product> productsWithRedirect = order.getOrderProducts().stream()
                     .map(OrderProduct::getProduct)
-                    .map(Product::getRedirectUrl)
-                    .filter(Objects::nonNull)
-                    .toList();
-            model.addAttribute(MODEL_ATTR_REDIRECTS, redirectUrls);
+                    .filter(product -> Objects.nonNull(product.getRedirectUrl()) && !product.getRedirectUrl().isEmpty())
+                    .collect(Collectors.toList());
+
+            model.addAttribute(MODEL_ATTR_REDIRECT_PRODUCTS, productsWithRedirect);
 
             switch (order.getStatus()) {
                 case PENDING:
