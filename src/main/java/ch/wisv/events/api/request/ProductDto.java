@@ -49,7 +49,7 @@ public class ProductDto {
     private String sellEnd;
 
     /**
-     * (Optional) link to redirect buyer to after the buy went though
+     * (Optional) link to redirect buyer to after the payment succeeded. Can be used for forms.
      */
     private String redirectUrl;
 
