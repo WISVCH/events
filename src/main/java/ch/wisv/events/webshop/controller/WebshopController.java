@@ -33,6 +33,9 @@ abstract class WebshopController {
     /** Model attr message type message. */
     static final String MODEL_ATTR_MESSAGE = "message";
 
+    /** Model attr redirect type redirects list. */
+    static final String MODEL_ATTR_REDIRECTS = "redirects";
+
     /** OrderService. */
     final OrderService orderService;
 

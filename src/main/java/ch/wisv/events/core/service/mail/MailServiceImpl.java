@@ -55,6 +55,7 @@ public class MailServiceImpl implements MailService {
             final Context ctx = new Context(new Locale("en"));
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
+            ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx));

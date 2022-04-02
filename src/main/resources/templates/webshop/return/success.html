@@ -54,6 +54,28 @@
                 </div>
             </div>
 
+            <div th:if="${redirects != null and !redirects.isEmpty()}" class="row my-4">
+                <div class="row">
+                    <div class="col my-4">
+                        <h4 class="display-4">Before you go!</h4>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p class="text-justify">You ordered one or more products with attached forms!
+                        Please visit all the links available down below</p>
+                </div>
+            </div>
+
+            <tr th:each="redirect: ${redirects}">
+                <div class="row mb-5 justify-content-center" >
+                    <div class="col-auto mr-auto">
+                        <a th:href="${redirect}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            Fill in the form!
+                        </a>
+                    </div>
+                </div>
+            </tr>
+
             <div class="row">
                 <div class="col-auto mr-auto">
                     <a th:href="@{/}" class="btn btn-secondary">

@@ -113,6 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
+        model.setRedirectUrl(product.getRedirectUrl());
         model.setCost(product.getCost());
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());

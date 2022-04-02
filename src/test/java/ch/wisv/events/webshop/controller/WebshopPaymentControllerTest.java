@@ -53,6 +53,28 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     }
 
     @Test
+    public void testOrderWithRedirectLink() throws Exception {
+        Order order = this.createPaymentOrder(OrderStatus.PAID, "events-webshop");
+        order.getOrderProducts().get(0).getProduct().setRedirectUrl("https://test.nl");
+
+        mockMvc.perform(get("/return/" + order.getPublicReference()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("webshop/return/success"))
+                .andExpect(content().string(containsString("href=\"https://test.nl\"")));
+    }
+
+    @Test
+    public void testOrderWithoutRedirectLink() throws Exception {
+        Order order = this.createPaymentOrder(OrderStatus.PAID, "events-webshop");
+        order.getOrderProducts().get(0).getProduct().setRedirectUrl(null);
+
+        mockMvc.perform(get("/return/" + order.getPublicReference()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("webshop/return/success"))
+                .andExpect(content().string(not(containsString("href=\"https://test.nl\""))));
+    }
+
+    @Test
     public void testPaymentOverviewOrderAmountZero() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");
         order.setAmount(0.d);

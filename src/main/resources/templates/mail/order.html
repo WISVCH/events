@@ -321,14 +321,62 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    &nbsp;
+                                                    &nbsp;<table cellspacing="0" cellpadding="0" width="100%"
+                                                                 style="border-collapse: collapse !important;">
+                                                    <tr>
+                                                        <td>
+                                                            <h3>Form links for your orders!</h3>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                            <table th:if="${redirectLinks}" cellspacing="0"
+                                                                   cellpadding="0" width="100%"
+                                                                   style="border-collapse: collapse !important;">
+                                                                <tr>
+                                                                    <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                                        <table cellspacing="0" cellpadding="0"
+                                                                               width="100%"
+                                                                               style="border-collapse: collapse !important;">
+                                                                            <tr>
+                                                                                <td class="grey-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                                    Event
+                                                                                </td>
+                                                                                <td class="grey-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                                    Link
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr th:each="ticket: ${tickets}"
+                                                                                th:if="${ticket.getProduct().getRedirectUrl() != null}"
+                                                                                }>
+                                                                                <td class="white-header"
+                                                                                    th:text="${ticket.getProduct().getTitle()}"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                                    product name
+                                                                                </td>
+                                                                                <td class="white-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                                    <a th:href="${ticket.getProduct().getRedirectUrl()}"
+                                                                                       th:text="${ticket.getProduct().getRedirectUrl()}"></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        &nbsp;
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
                                                 </td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
                             </table>
-
 
                             <table class="force-full-width" cellspacing="0" cellpadding="20" bgcolor="#1E274A"
                                    style="border-collapse: collapse !important;width: 100% !important;">

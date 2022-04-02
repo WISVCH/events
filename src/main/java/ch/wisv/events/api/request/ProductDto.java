@@ -49,6 +49,11 @@ public class ProductDto {
     private String sellEnd;
 
     /**
+     * (Optional) link to redirect buyer to after the buy went though
+     */
+    private String redirectUrl;
+
+    /**
      * If the product is only for CH members.
      */
     @NotNull

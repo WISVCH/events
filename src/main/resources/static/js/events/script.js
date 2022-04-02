@@ -130,6 +130,7 @@ $(document).ready(function () {
             var data = {
                 title: $("#productTitle").val(),
                 description: $("#productDescription").val(),
+                redirectUrl: $("#productRedirectUrl").val(),
                 cost: $("#productCost").val(),
                 maxSold: $("#maxSold").val(),
                 maxSoldPerCustomer: $("#productMaxSoldPerCustomer").val(),
