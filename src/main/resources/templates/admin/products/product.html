@@ -84,11 +84,13 @@
                                         </label>
                                     </div>
                                     <div class="form-group col-12">
-                                        <label>Redirect url (Redirects the user to this url after buying this product.
-                                            Keep empty if you don't want a redirect)
+                                        <label>Redirect URL
                                             <input type="url" pattern="https://.*" class="form-control"
                                                    th:field="*{redirectUrl}"
                                                    th:text="${product.getRedirectUrl()}"/>
+                                            <small class="form-text text-muted">
+                                                Redirects the user to this URL after buying this product. URL must start with <b>https://</b>. Keep empty if you don't want a redirect.
+                                            </small>
                                         </label>
                                     </div>
                                     <div class="col-12">
