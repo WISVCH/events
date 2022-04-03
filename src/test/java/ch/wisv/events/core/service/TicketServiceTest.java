@@ -170,7 +170,7 @@ public class TicketServiceTest extends ServiceTest {
      */
     @Test
     public void getAllByCustomer() {
-        when(ticketRepository.findAllByOwner(customer)).thenReturn(ImmutableList.of(ticket1, ticket2));
+        when(ticketRepository.findAllByOwnerOrderByIdDesc(customer)).thenReturn(ImmutableList.of(ticket1, ticket2));
         List<Ticket> tickets = ticketService.getAllByCustomer(customer);
 
         assertEquals(ImmutableList.of(ticket1, ticket2), tickets);
@@ -181,7 +181,7 @@ public class TicketServiceTest extends ServiceTest {
      */
     @Test
     public void getAllByCustomerEmpty() {
-        when(ticketRepository.findAllByOwner(customer)).thenReturn(ImmutableList.of());
+        when(ticketRepository.findAllByOwnerOrderByIdDesc(customer)).thenReturn(ImmutableList.of());
         List<Ticket> tickets = ticketService.getAllByCustomer(customer);
 
         assertEquals(ImmutableList.of(), tickets);
