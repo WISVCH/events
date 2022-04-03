@@ -21,7 +21,7 @@ public class V20220402__Add_redirect_to_product implements SpringJdbcMigration {
     public void migrate(JdbcTemplate jdbcTemplate) {
         // Remove column ch_username.
         jdbcTemplate.execute("ALTER TABLE public.product ADD COLUMN redirect_url varchar(255)");
-        jdbcTemplate.execute("UPDATE public.product SET varchar = NULL");
+        jdbcTemplate.execute("UPDATE public.product SET redirect_url = NULL");
     }
 
 }
