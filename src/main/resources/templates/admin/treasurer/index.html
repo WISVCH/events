@@ -67,10 +67,10 @@
                                 <tbody>
                                 <tr th:each="product : ${date.value}">
                                     <td th:text="${product.key}"></td>
-                                    <td th:text="${product.value.getLeft()}" class="text-center"></td>
-                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getRight(), 1, 'POINT', 2, 'COMMA')}"
+                                    <td th:text="${product.value.getRight()}" class="text-center"></td>
+                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getLeft(), 1, 'POINT', 2, 'COMMA')}"
                                         class="text-right">
-                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getRight() * product.value.getLeft(), 1, 'POINT', 2, 'COMMA')}"
+                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getLeft() * product.value.getRight(), 1, 'POINT', 2, 'COMMA')}"
                                         class="text-right"></td>
                                 </tr>
                                 </tbody>
