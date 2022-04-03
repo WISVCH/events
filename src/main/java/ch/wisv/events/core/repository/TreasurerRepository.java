@@ -7,6 +7,7 @@ import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,13 +15,10 @@ import java.util.Optional;
 /**
  * OrderRepository interface.
  */
-public interface TreasurerRepository extends JpaRepository<TreasurerData, Integer> {
+public interface TreasurerRepository extends CrudRepository<TreasurerData, Integer> {
 
     @Query("" +
-            "SELECT B.TITLE," +
-            "B.PRICE," +
-            "B.AMOUNT," +
-            "O.PAID_AT " +
+            "SELECT new ch.wisv.events.admin.model.TreasurerData(B.TITLE,B.PRICE,B.AMOUNT,O.PAID_AT) " +
             "FROM " +
             "(SELECT * " +
             "FROM " +
