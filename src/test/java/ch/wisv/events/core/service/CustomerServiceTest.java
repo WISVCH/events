@@ -329,7 +329,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testDelete() {
-        when(orderRepository.findAllByOwnerOrderByCreatedAt(this.customer)).thenReturn(Collections.emptyList());
+        when(orderRepository.findAllByOwnerOrderByCreatedAtDesc(this.customer)).thenReturn(Collections.emptyList());
 
         customerService.delete(this.customer);
         verify(repository, times(1)).delete(this.customer);
@@ -340,7 +340,7 @@ public class CustomerServiceTest extends ServiceTest {
      */
     @Test
     public void testDeleteCustomerPlacedOrders() {
-        when(orderRepository.findAllByOwnerOrderByCreatedAt(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
+        when(orderRepository.findAllByOwnerOrderByCreatedAtDesc(this.customer)).thenReturn(Collections.singletonList(any(Order.class)));
 
         thrown.expect(CustomerAlreadyPlacedOrdersException.class);
         thrown.expectMessage("Customer has already placed orders, so it can not be deleted!");

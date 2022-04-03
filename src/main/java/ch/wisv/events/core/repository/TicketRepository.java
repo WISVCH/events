@@ -39,7 +39,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
      *
      * @return List
      */
-    List<Ticket> findAllByOwner(Customer owner);
+    List<Ticket> findAllByOwnerOrderByIdDesc(Customer owner);
 
     /**
      * Find all Ticket by Order.

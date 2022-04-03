@@ -100,7 +100,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public List<Ticket> getAllByCustomer(Customer customer) {
-        return ticketRepository.findAllByOwner(customer);
+        return ticketRepository.findAllByOwnerOrderByIdDesc(customer);
     }
 
     /**
