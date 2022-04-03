@@ -27,7 +27,7 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
 </head>
 
@@ -95,21 +95,22 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/date-eu.js"></script>
 <script th:inline="javascript">
     $(document).ready(function () {
         var table = $('#treasurerOverview');
         table.DataTable({
-            order: [
-                [0, "asc"]
-            ],
-            ordering: true,
-            pageLength: 12,
             columnDefs: [
                 {type: 'date-eu', width: "140px", targets: 0}
-            ]
+            ],
+            order: [
+                [0, "desc"]
+            ],
+            ordering: true,
+            pageLength: 12
+
         });
 
         var dataTablesFilter = $('.dataTables_filter');
