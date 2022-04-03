@@ -1,5 +1,6 @@
 package ch.wisv.events.core.repository;
 
+import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
 import ch.wisv.events.core.model.webhook.WebhookTaskStatus;
 import java.util.List;
@@ -25,5 +26,14 @@ public interface WebhookTaskRepository extends JpaRepository<WebhookTask, Intege
      * @return List
      */
     List<WebhookTask> findAllByWebhookTaskStatus(WebhookTaskStatus webhookTaskStatus);
+
+    /**
+     * Returns all WebhookTasks associated with the given webhook
+     *
+     * @param webhook of type Webhook
+     *
+     * @return List
+     */
+    List<WebhookTask> findAllByWebhook(Webhook webhook);
 
 }
