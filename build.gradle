@@ -84,7 +84,7 @@ dependencies {
     implementation 'org.webjars:font-awesome:5.0.13'
     implementation 'org.webjars.npm:flatpickr:4.5.1'
 
-    implementation 'org.flywaydb:flyway-core:5.2.0'
+    implementation 'org.flywaydb:flyway-core'
     implementation 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
