@@ -68,9 +68,11 @@ public class DashboardTreasurerController extends DashboardController {
      */
     private Map<LocalDate, Map<String, Pair<Double, Integer>>> generateProductMap() {
         List<TreasurerData> treasurerData = orderRepository.findallPayments();
+        ListIterator<TreasurerData> listIterator = treasurerData.listIterator(treasurerData.size());
         Map<LocalDate, Map<String, Pair<Double, Integer>>> map = new TreeMap<>();
 
-        for (TreasurerData data : treasurerData) {
+        while (listIterator.hasPrevious()) {
+            TreasurerData data = listIterator.previous();
             LocalDate date = data.getPaidAt().toLocalDate();
             date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
