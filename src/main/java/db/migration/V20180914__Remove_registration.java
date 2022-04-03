@@ -1,26 +1,24 @@
 package db.migration;
 
-import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.flywaydb.core.api.migration.BaseJavaMigration;
+import org.flywaydb.core.api.migration.Context;
+
+import java.sql.Statement;
 
 /**
  * DB migration which adds a document table
  */
-public class V20180914__Remove_registration implements SpringJdbcMigration {
+public class V20180914__Remove_registration extends BaseJavaMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
      * database supports it.
      *
-     * @param jdbcTemplate The jdbcTemplate to use to execute statements.
-     *
-     * @throws Exception when the migration failed.
+     * @param context of type Context
+     * @throws Exception when something is wrong
      */
-    @Override
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        try {
-            // Begin transaction
-            jdbcTemplate.execute("BEGIN;");
+    public void migrate(Context context) throws Exception {
+        try (Statement select = context.getConnection().createStatement()) {
 
             // Remove constraints
             String constraints = "ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey CASCADE;\n"
@@ -32,7 +30,7 @@ public class V20180914__Remove_registration implements SpringJdbcMigration {
                     + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fk6pbiwpljchpolob40s7di41y4 CASCADE;\n"
                     + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkko3c91odb9f49kc3visnv21be CASCADE;\n"
                     + "ALTER TABLE ONLY public.registration DROP CONSTRAINT fkthagckur8igeragp1vx3qewlx CASCADE;\n";
-            jdbcTemplate.execute(constraints);
+            select.execute(constraints);
 
             // Remove tables
             String removeTables = "DROP TABLE public.address;\n"
@@ -40,20 +38,13 @@ public class V20180914__Remove_registration implements SpringJdbcMigration {
                     + "DROP TABLE public.profile;\n"
                     + "DROP TABLE public.registration;\n"
                     + "DROP TABLE public.study_details;\n";
-            jdbcTemplate.execute(removeTables);
+            select.execute(removeTables);
 
             // Remove columns
             String removeColumns = "ALTER TABLE public.product DROP COLUMN includes_registration;\n"
                     + "ALTER TABLE public.event DROP COLUMN ch_only;\n"
                     + "ALTER TABLE public.orders DROP COLUMN ch_only;\n";
-            jdbcTemplate.execute(removeColumns);
-
-            // Commit
-            jdbcTemplate.execute("COMMIT;");
-        } catch (Exception e) {
-            jdbcTemplate.execute("ROLLBACK;");
-
-            throw e;
+            select.execute(removeColumns);
         }
     }
 
