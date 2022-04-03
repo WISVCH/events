@@ -91,6 +91,11 @@ public class Product {
     public LocalDateTime sellEnd;
 
     /**
+     * Field redirect url.
+     */
+    public String redirectUrl;
+
+    /**
      * Field productList.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
@@ -133,6 +138,7 @@ public class Product {
         this();
         this.title = productDto.getTitle();
         this.description = productDto.getDescription();
+        this.redirectUrl = productDto.getRedirectUrl();
         this.cost = productDto.getCost();
         this.maxSold = productDto.getMaxSold();
         this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();

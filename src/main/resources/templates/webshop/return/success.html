@@ -54,6 +54,34 @@
                 </div>
             </div>
 
+            <div th:if="${redirect_products != null and !redirect_products.isEmpty()}" class="my-4">
+                <div class="row">
+                    <div class="col my-4">
+                        <h5 class="display-3">Before you go!</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-justify">You ordered one or more products with attached forms or links!
+                            Please visit all the links available down below.</p>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product name</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product: ${redirect_products}">
+                            <td th:text="${product.title}"></td>
+                            <td><a th:href="${product.redirectUrl}" class="btn btn-primary btn-block" target="_blank" rel="noopener noreferrer">Fill in the form!</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="row">
                 <div class="col-auto mr-auto">
                     <a th:href="@{/}" class="btn btn-secondary">

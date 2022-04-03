@@ -114,6 +114,9 @@ public class DashboardProductController extends DashboardController {
     @PostMapping("/create")
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
+            if (product.getRedirectUrl() != null && product.getRedirectUrl().length() == 0){
+               product.setRedirectUrl(null);
+            }
             productService.create(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Product with title " + product.getTitle() + " has been created!");
@@ -165,6 +168,9 @@ public class DashboardProductController extends DashboardController {
     public String update(RedirectAttributes redirect, @ModelAttribute Product product, @PathVariable String key) {
         try {
             product.setKey(key);
+            if (product.getRedirectUrl() != null && product.getRedirectUrl().length() == 0){
+                product.setRedirectUrl(null);
+            }
             productService.update(product);
             webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Product changes have been saved!");

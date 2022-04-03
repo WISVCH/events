@@ -2,14 +2,22 @@ package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.order.OrderProduct;
+import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.service.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 
 /**
  * WebshopReturnController class.
@@ -42,6 +50,14 @@ public class WebshopReturnController extends WebshopController {
         try {
             Order order = orderService.getByReference(key);
             model.addAttribute(MODEL_ATTR_ORDER, order);
+
+            // Get all OrderProducts that have a redirect url.
+            List<Product> productsWithRedirect = order.getOrderProducts().stream()
+                    .map(OrderProduct::getProduct)
+                    .filter(product -> Objects.nonNull(product.getRedirectUrl()) && !product.getRedirectUrl().isEmpty())
+                    .collect(Collectors.toList());
+
+            model.addAttribute(MODEL_ATTR_REDIRECT_PRODUCTS, productsWithRedirect);
 
             switch (order.getStatus()) {
                 case PENDING:
