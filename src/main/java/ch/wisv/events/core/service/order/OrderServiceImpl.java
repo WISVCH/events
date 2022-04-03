@@ -232,7 +232,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getAllByOwner(Customer owner) {
-        return orderRepository.findAllByOwnerOrderByCreatedAt(owner);
+        return orderRepository.findAllByOwnerOrderByCreatedAtDesc(owner);
     }
 
     /**

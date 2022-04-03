@@ -1,6 +1,8 @@
 package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.order.Order;
+import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
@@ -9,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * WebshopOrderOverviewController class.

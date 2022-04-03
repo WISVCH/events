@@ -32,7 +32,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      *
      * @return List
      */
-    List<Order> findAllByOwnerOrderByCreatedAt(Customer owner);
+    List<Order> findAllByOwnerOrderByCreatedAtDesc(Customer owner);
 
     /**
      * Find Reservation Orders by Customer.
