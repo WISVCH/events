@@ -8,7 +8,6 @@ import ch.wisv.events.core.repository.WebhookRepository;
 import java.util.List;
 import java.util.Optional;
 
-import ch.wisv.events.core.repository.WebhookTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
