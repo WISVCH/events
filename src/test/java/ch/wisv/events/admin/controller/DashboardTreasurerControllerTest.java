@@ -40,9 +40,10 @@ public class DashboardTreasurerControllerTest extends ControllerTest {
         Order order1 = this.createOrder(customer, ImmutableList.of(product), OrderStatus.PENDING, "test");
         orderService.updateOrderStatus(order1, OrderStatus.PAID);
 
-        Map<LocalDate, Map<Product, Integer>> map = new TreeMap<>();
+        Map<LocalDate, Map<String, Pair<Double, Integer>>> map = new TreeMap<>();
         LocalDate date = order.getPaidAt().toLocalDate();
-        map.put(LocalDate.of(date.getYear(), date.getMonthValue(), 1), ImmutableMap.of(product, 2));
+        map.put(LocalDate.of(date.getYear(), date.getMonthValue(), 1), ImmutableMap.of(product.title,
+                new ImmutablePair<>(product.cost, 2)));
 
         mockMvc.perform(get("/administrator/treasurer"))
                 .andExpect(status().is2xxSuccessful())
