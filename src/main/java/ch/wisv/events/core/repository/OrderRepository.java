@@ -82,11 +82,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByOrderProducts(OrderProduct orderProduct);
 
     @Query(value =
-            "SELECT B.TITLE AS title,B.PRICE AS price,B.AMOUNT AS amount,O.PAID_AT AS paidAt" +
+            "SELECT B.TITLE AS title,B.PRICE AS price,B.AMOUNT AS amount,O.PAID_AT AS paidAt " +
                     "FROM " +
-                    "(SELECT * " +
+                    "( SELECT * " +
                     "FROM " +
-                    "(SELECT P.COST," +
+                    "( SELECT P.COST," +
                     "P.SOLD," +
                     "P.TITLE," +
                     "OP.AMOUNT," +

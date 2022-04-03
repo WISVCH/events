@@ -78,7 +78,7 @@ public class DashboardTreasurerController extends DashboardController {
             if (!list.containsKey(data.getTitle())) {
                 list.put(data.getTitle(), new ImmutablePair<>(data.getPrice(), data.getAmount()));
             } else {
-                list.put(data.getTitle(), 
+                list.put(data.getTitle(),
                         new ImmutablePair<>(data.getPrice(), list.get(data.getTitle()).getRight()+data.getAmount())
                 );
             }
