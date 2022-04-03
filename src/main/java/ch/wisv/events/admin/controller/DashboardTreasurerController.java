@@ -1,14 +1,11 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.admin.model.TreasurerData;
-import ch.wisv.events.core.model.order.Order;
-import ch.wisv.events.core.model.order.PaymentMethod;
-import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.repository.TreasurerRepository;
-import ch.wisv.events.core.service.order.OrderService;
+import ch.wisv.events.core.model.treasurer.TreasurerData;
+
 import java.time.LocalDate;
 import java.util.*;
 
+import ch.wisv.events.core.repository.OrderRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DashboardTreasurerController extends DashboardController {
 
     /** TreasurerRepository */
-    private final TreasurerRepository treasurerRepository;
+    private final OrderRepository orderRepository;
 
     /**
      * DashboardWebhookController constructor.
      *
-     * @param treasurerRepository of type TreasurerRepository
+     * @param orderRepository of type OrderRepository
      */
     @Autowired
-    public DashboardTreasurerController(TreasurerRepository treasurerRepository) {
-        this.treasurerRepository = treasurerRepository;
+    public DashboardTreasurerController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     /**
@@ -70,18 +67,20 @@ public class DashboardTreasurerController extends DashboardController {
      * @return HashMap
      */
     private Map<LocalDate, Map<String, Pair<Double, Integer>>> generateProductMap() {
-        List<TreasurerData> treasurerData = treasurerRepository.findallPayments();
+        List<TreasurerData> treasurerData = orderRepository.findallPayments();
         Map<LocalDate, Map<String, Pair<Double, Integer>>> map = new TreeMap<>();
 
         for (TreasurerData data : treasurerData) {
-            LocalDate date = data.paidAt.toLocalDate();
+            LocalDate date = data.getPaidAt().toLocalDate();
             date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
             Map<String, Pair<Double, Integer>> list = map.getOrDefault(date, new HashMap<>());
-            if (!list.containsKey(data.title)) {
-                list.put(data.title, new ImmutablePair<>(data.price, data.amount));
+            if (!list.containsKey(data.getTitle())) {
+                list.put(data.getTitle(), new ImmutablePair<>(data.getPrice(), data.getAmount()));
             } else {
-                list.put(data.title, new ImmutablePair<>(data.price, list.get(data.title).getRight()+data.amount));
+                list.put(data.getTitle(), 
+                        new ImmutablePair<>(data.getPrice(), list.get(data.getTitle()).getRight()+data.getAmount())
+                );
             }
 
             map.put(date, list);
