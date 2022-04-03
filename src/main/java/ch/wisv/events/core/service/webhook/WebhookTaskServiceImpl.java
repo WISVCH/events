@@ -64,4 +64,14 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
 
         this.create(webhookTask);
     }
+
+    /**
+     * Deletes all triggers bound to this webhook.
+     *
+     * @param webhook of type Webhook
+     */
+    public void deleteByWebhook(Webhook webhook) {
+        List<WebhookTask> tasks = webhookTaskRepository.findAllByWebhook(webhook);
+        webhookTaskRepository.deleteAll(tasks);
+    }
 }

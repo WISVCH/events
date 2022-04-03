@@ -7,6 +7,8 @@ import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookRepository;
 import java.util.List;
 import java.util.Optional;
+
+import ch.wisv.events.core.repository.WebhookTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,19 @@ public class WebhookServiceImpl implements WebhookService {
     private final WebhookRepository repository;
 
     /**
+     * WebhookTaskService.
+     */
+    private final WebhookTaskService webhookTaskService;
+
+    /**
      * Constructor WebhookServiceImpl creates a new WebhookServiceImpl instance.
      *
      * @param repository of type WebhookRepository
      */
     @Autowired
-    public WebhookServiceImpl(WebhookRepository repository) {
+    public WebhookServiceImpl(WebhookRepository repository, WebhookTaskService webhookTaskService) {
         this.repository = repository;
+        this.webhookTaskService = webhookTaskService;
     }
 
     /**
@@ -105,6 +113,7 @@ public class WebhookServiceImpl implements WebhookService {
      */
     @Override
     public void delete(Webhook model) {
+        webhookTaskService.deleteByWebhook(model);
         repository.delete(model);
     }
 

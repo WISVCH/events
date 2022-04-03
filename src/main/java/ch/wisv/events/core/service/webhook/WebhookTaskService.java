@@ -31,4 +31,10 @@ public interface WebhookTaskService {
      */
     void create(WebhookTrigger webhookTrigger, Webhook webhook, JSONObject jsonObject);
 
+    /**
+     * Deletes all triggers associated to the given webhook.
+     *
+     * @param webhook of type Webhook
+     */
+    void deleteByWebhook(Webhook webhook);
 }
