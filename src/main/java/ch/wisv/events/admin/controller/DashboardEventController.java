@@ -10,9 +10,19 @@ import ch.wisv.events.core.service.document.DocumentService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.webhook.WebhookPublisher;
-import java.io.IOException;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -237,6 +247,43 @@ public class DashboardEventController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
             return "redirect:/administrator/events/";
+        }
+    }
+
+    /**
+     *
+     */
+    @GetMapping(value = "/overview/csv/{key}", produces = "text/csv")
+    public HttpEntity<? extends Object> csvExport(@PathVariable String key) {
+        try {
+            Event event = eventService.getByKey(key);
+            List<Ticket> tickets = event.getProducts().stream()
+                    .flatMap(product -> ticketService.getAllByProduct(product).stream())
+                    .collect(Collectors.toList());
+            String csvData = tickets.stream()
+                    .map(t -> t.getOwner().getName() + ";" + t.getOwner().getEmail() + ";" + t.getProduct().title)
+                    .collect(Collectors.joining("\n"));
+            csvData = "Name;Email;Product\n" + csvData;
+            InputStream bufferedInputStream = new ByteArrayInputStream(csvData.getBytes(StandardCharsets.UTF_8));
+            InputStreamResource fileInputStream = new InputStreamResource(bufferedInputStream);
+
+            String filename = event.getTitle() + "_export.csv";
+
+            // setting HTTP headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+            // defining the custom Content-Type
+            headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
+
+            return new ResponseEntity<>(
+                    fileInputStream,
+                    headers,
+                    HttpStatus.OK
+            );
+        } catch (EventNotFoundException e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/administrator/events/");
+            return new ResponseEntity<String>(headers,HttpStatus.FOUND);
         }
     }
 

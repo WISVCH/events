@@ -45,6 +45,12 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
+            <div class="row  my-2">
+                <div class="col-auto">
+                    <a th:href="@{'/administrator/events/overview/csv/' + ${event.getKey()} + '/'}" class="btn btn-secondary btn-block">export to csv</a>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table id="soldProductTable" class="table table-hover">
                     <thead class="thead-dark bg-primary">
