@@ -1,6 +1,7 @@
 package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.OrderNotFoundException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -58,6 +59,7 @@ public class WebshopReturnController extends WebshopController {
                     .collect(Collectors.toList());
 
             model.addAttribute(MODEL_ATTR_REDIRECT_PRODUCTS, productsWithRedirect);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
 
             switch (order.getStatus()) {
                 case PENDING:
