@@ -32,7 +32,10 @@ public class WebshopCustomerController extends WebshopController {
     /** Redirect to the payment page. */
     private static final String REDIRECT_CHECKOUT_PAYMENT = "redirect:/checkout/%s/payment";
 
-    /** Redirect to the customer create page. */
+    /** Redirect to the CH Connect customer checkout page. */
+    private static final String REDIRECT_CHECKOUT_CUSTOMER_CHCONNECT = "redirect:/checkout/%s/customer/chconnect";
+
+    /** Redirect to the Guest customer checkout page. */
     private static final String REDIRECT_CHECKOUT_CUSTOMER_GUEST = "redirect:/checkout/%s/customer/guest";
 
     /** CustomerService. */
@@ -76,7 +79,11 @@ public class WebshopCustomerController extends WebshopController {
                 return this.orderCheck(order);
             }
 
-            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
+            Customer customer = authenticationService.getCurrentCustomer();
+            if(customer != null) {
+                return String.format(REDIRECT_CHECKOUT_CUSTOMER_CHCONNECT, key);
+            }
+
             model.addAttribute(MODEL_ATTR_ORDER, order);
             model.addAttribute("chOnly", orderService.containsChOnlyProduct(order));
 
