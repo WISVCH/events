@@ -35,6 +35,8 @@ public class WebshopCustomerControllerTest extends ControllerTest {
     public void testCustomerOptions() throws Exception {
         Order order = this.createOrder(null, new ArrayList<>(), OrderStatus.ANONYMOUS, "events-webshop");
 
+        // Logout
+        mockMvc.perform(post("/logout"));
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/customer"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("webshop/checkout/customer"))
