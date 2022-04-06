@@ -43,6 +43,19 @@ public class WebshopCustomerControllerTest extends ControllerTest {
                 .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/customer/guest\"")));
     }
 
+    /**
+     * Customer chconnect tests
+     */
+    @Test
+    public void testCustomerChconnectOptions() throws Exception {
+        Order order = this.createOrder(null, new ArrayList<>(), OrderStatus.ANONYMOUS, "events-webshop");
+
+        // Expect redirect to chconnect
+        mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/customer"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/customer/chconnect"));
+    }
+
     @Test
     public void testCustomerOptionsNotAnonymous() throws Exception {
         Order order = this.createOrder(null, new ArrayList<>(), OrderStatus.ASSIGNED, "events-webshop");
