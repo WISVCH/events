@@ -95,13 +95,26 @@ public class Ticket {
 
     /**
      * Can the ticket be transferred to another customer by the given customer.
-     * This is only possible if the ticket is not scanned and not already transfered.
+     * This is only possible if the ticket is not scanned and not already transferred and if the ticket is valid.
+     * Tickets of CH Only products can only be transferred to Verified CH customers.
      * The ticket can be transferred if the current customer is the owner of the ticket or if the current customer is an admin.
      * @param customer of type Customer
      *
      * @return boolean
      */
     public boolean canTransfer(Customer customer) {
-        return this.status == TicketStatus.OPEN && (this.owner.equals(customer) || customer.isAdmin());
+        // Check if the ticket is not scanned and not already transferred and if the ticket is valid.
+        if(this.status != TicketStatus.OPEN || !this.valid)
+            return false;
+
+        // Check if the product is of type CH Only
+        if(this.product.isChOnly() && !customer.isVerifiedChMember())
+            return false;
+
+        // Check if the current customer is the owner of the ticket or if the current customer is an admin.
+        if (!this.owner.equals(customer) && !customer.isAdmin())
+            return false;
+
+        return true;
     }
 }
