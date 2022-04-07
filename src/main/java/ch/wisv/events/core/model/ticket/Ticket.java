@@ -92,4 +92,16 @@ public class Ticket {
         this.uniqueCode = uniqueCode;
         this.valid = true;
     }
+
+    /**
+     * Can the ticket be transferred to another customer by the given customer.
+     * This is only possible if the ticket is not scanned and not already transfered.
+     * The ticket can be transferred if the current customer is the owner of the ticket or if the current customer is an admin.
+     * @param customer of type Customer
+     *
+     * @return boolean
+     */
+    public boolean canTransfer(Customer customer) {
+        return this.status == TicketStatus.OPEN && (this.owner.equals(customer) || customer.isAdmin());
+    }
 }

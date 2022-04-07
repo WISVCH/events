@@ -1,16 +1,18 @@
 package ch.wisv.events.webshop.controller;
 
+import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.service.auth.AuthenticationService;
+import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * WebshopOrderOverviewController class.
@@ -25,6 +27,9 @@ public class WebshopTicketController extends WebshopController {
     /** TicketService. */
     private final TicketService ticketService;
 
+    /** CustomerService. */
+    private final CustomerService customerService;
+
     /**
      * @param authenticationService of type AuthenticationService
      * @param orderService          of type OrderService
@@ -32,10 +37,12 @@ public class WebshopTicketController extends WebshopController {
      */
     public WebshopTicketController(
             AuthenticationService authenticationService,
+            CustomerService customerService,
             OrderService orderService,
             TicketService ticketService
     ) {
         super(orderService, authenticationService);
+        this.customerService = customerService;
         this.ticketService = ticketService;
     }
 
@@ -46,19 +53,65 @@ public class WebshopTicketController extends WebshopController {
      * @return String
      */
     @GetMapping("/{key}/transfer")
-    public String getTransferPage(Model model, @PathVariable String key) {
+    public String getTransferPage(Model model, RedirectAttributes redirect, @PathVariable String key) {
         Customer customer = authenticationService.getCurrentCustomer();
 
         try {
             Ticket ticket = ticketService.getByKey(key);
+
+            if(!ticket.canTransfer(customer))
+                throw new TicketNotTransferableException();
 
             model.addAttribute(MODEL_ATTR_CUSTOMER, customer);
             model.addAttribute(MODEL_ATTR_TICKET, ticket);
 
             return "webshop/tickets/transfer";
         }
+        catch (TicketNotTransferableException e) {
+            redirect.addFlashAttribute("MODEL_ATTR_ERROR", "Ticket is not transferable");
+            return "redirect:/overview";
+        }
         catch (Exception e) {
             return "redirect:/overview";
         }
     }
+
+    /** Transfer ticket.
+     * @param model    of type Model
+     * @param key      of type String
+     *
+     * @return String
+     */
+    @PostMapping("/{key}/transfer")
+    public String transferTicket(Model model, RedirectAttributes redirect, @PathVariable String key, @RequestParam("email") String email) {
+        Customer customer = authenticationService.getCurrentCustomer();
+
+        try {
+            Ticket ticket = ticketService.getByKey(key);
+
+            if(!ticket.canTransfer(customer))
+                throw new TicketNotTransferableException();
+
+            // Check if customer with email exists
+            Customer transferCustomer = customerService.getByEmail(email);
+
+            ticketService.transfer(ticket, transferCustomer);
+
+            redirect.addFlashAttribute("MODEL_ATTR_SUCCESS", "Ticket has been transferred to " + transferCustomer.getEmail());
+
+            return "redirect:/overview";
+        }
+        catch (TicketNotTransferableException e) {
+            redirect.addFlashAttribute("MODEL_ATTR_ERROR", "Ticket is not transferable");
+            return "redirect:/overview";
+        }
+        catch (CustomerNotFoundException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Customer with email " + email + " does not exist.");
+            return "redirect:/tickets/" + key + "/transfer";
+        }
+        catch (Exception e) {
+            return "redirect:/overview";
+        }
+    }
+
 }

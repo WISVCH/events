@@ -104,4 +104,10 @@ public interface TicketService {
      */
     List<Ticket> getAll();
 
+    /**
+     * Transfer a Ticket to another Customer.
+     * @param customer of type Customer
+     */
+    void transfer(Ticket ticket, Customer customer);
+
 }
