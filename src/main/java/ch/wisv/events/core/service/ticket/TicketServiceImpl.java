@@ -198,4 +198,19 @@ public class TicketServiceImpl implements TicketService {
         return ticketUnique;
     }
 
+    /**
+     * Transfer a Ticket to another Customer.
+     * @param customer of type Customer
+     */
+    public void transfer(Ticket ticket, Customer customer) {
+        // Generate new unique code
+        String uniqueCode = this.generateUniqueString(ticket.getProduct());
+
+        // Update ticket
+        ticket.setUniqueCode(uniqueCode);
+        ticket.setOwner(customer);
+
+        ticketRepository.saveAndFlush(ticket);
+    }
+
 }
