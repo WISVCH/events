@@ -59,8 +59,8 @@ public class WebshopTicketController extends WebshopController {
         try {
             Ticket ticket = ticketService.getByKey(key);
 
-            if(!ticket.canTransfer(customer))
-                throw new TicketNotTransferableException();
+
+            ticket.canTransfer(customer, null);
 
             model.addAttribute(MODEL_ATTR_CUSTOMER, customer);
             model.addAttribute(MODEL_ATTR_TICKET, ticket);
@@ -84,20 +84,18 @@ public class WebshopTicketController extends WebshopController {
      */
     @PostMapping("/{key}/transfer")
     public String transferTicket(Model model, RedirectAttributes redirect, @PathVariable String key, @RequestParam("email") String email) {
-        Customer customer = authenticationService.getCurrentCustomer();
+        Customer currentCustomer = authenticationService.getCurrentCustomer();
 
         try {
             Ticket ticket = ticketService.getByKey(key);
 
-            if(!ticket.canTransfer(customer))
-                throw new TicketNotTransferableException();
+            // Find new customer by email
+            Customer newCustomer = customerService.getByEmail(email);
 
-            // Check if customer with email exists
-            Customer transferCustomer = customerService.getByEmail(email);
+            // Transfer the ticket
+            ticketService.transfer(ticket, currentCustomer, newCustomer);
 
-            ticketService.transfer(ticket, transferCustomer);
-
-            redirect.addFlashAttribute("MODEL_ATTR_SUCCESS", "Ticket has been transferred to " + transferCustomer.getEmail());
+            redirect.addFlashAttribute("MODEL_ATTR_SUCCESS", "Ticket has been transferred to " + newCustomer.getEmail());
 
             return "redirect:/overview";
         }

@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.ticket;
 
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -200,15 +201,19 @@ public class TicketServiceImpl implements TicketService {
 
     /**
      * Transfer a Ticket to another Customer.
-     * @param customer of type Customer
+     * @param currentCustomer of type Customer
+     * @param newCustomer of type Customer
      */
-    public void transfer(Ticket ticket, Customer customer) {
+    public void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
+        // Check if the ticket can be transferred
+        ticket.canTransfer(currentCustomer, newCustomer);
+
         // Generate new unique code
         String uniqueCode = this.generateUniqueString(ticket.getProduct());
 
         // Update ticket
         ticket.setUniqueCode(uniqueCode);
-        ticket.setOwner(customer);
+        ticket.setOwner(newCustomer);
 
         ticketRepository.saveAndFlush(ticket);
     }

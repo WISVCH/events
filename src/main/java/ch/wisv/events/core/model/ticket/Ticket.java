@@ -1,5 +1,6 @@
 package ch.wisv.events.core.model.ticket;
 
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
@@ -98,23 +99,20 @@ public class Ticket {
      * This is only possible if the ticket is not scanned and not already transferred and if the ticket is valid.
      * Tickets of CH Only products can only be transferred to Verified CH customers.
      * The ticket can be transferred if the current customer is the owner of the ticket or if the current customer is an admin.
-     * @param customer of type Customer
-     *
-     * @return boolean
+     * @param currentCustomer of type Customer
+     * @param newCustomer of type Customer
      */
-    public boolean canTransfer(Customer customer) {
+    public void canTransfer(Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
         // Check if the ticket is not scanned and not already transferred and if the ticket is valid.
         if(this.status != TicketStatus.OPEN || !this.valid)
-            return false;
+            throw new TicketNotTransferableException("Ticket is already scanned or not valid.");
 
-        // Check if the product is of type CH Only
-        if(this.product.isChOnly() && !customer.isVerifiedChMember())
-            return false;
+        // Check if the ticket is a CH Only product and if the new customer is not a verified CH customer.
+        if(newCustomer != null && this.product.isChOnly() && !newCustomer.isVerifiedChMember())
+            throw new TicketNotTransferableException("Ticket can only be transferred to a verified CH member.");
 
         // Check if the current customer is the owner of the ticket or if the current customer is an admin.
-        if (!this.owner.equals(customer) && !customer.isAdmin())
-            return false;
-
-        return true;
+        if (!this.owner.equals(currentCustomer) && !currentCustomer.isAdmin())
+            throw new TicketNotTransferableException("Ticket can only be transferred to the owner.");
     }
 }
