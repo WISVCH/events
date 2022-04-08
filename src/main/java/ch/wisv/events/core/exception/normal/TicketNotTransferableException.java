@@ -20,6 +20,6 @@ public class TicketNotTransferableException extends EventsException {
      * @param message of type String
      */
     public TicketNotTransferableException(String message) {
-        super(LogLevelEnum.DEBUG, message);
+        super(LogLevelEnum.DEBUG, "Ticket is not transferable: " + message);
     }
 }

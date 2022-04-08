@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.ticket;
 
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
@@ -106,8 +107,9 @@ public interface TicketService {
 
     /**
      * Transfer a Ticket to another Customer.
-     * @param customer of type Customer
+     * @param currentCustomer of type Customer
+     * @param newCustomer of type Customer
      */
-    void transfer(Ticket ticket, Customer customer);
+    void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException;
 
 }
