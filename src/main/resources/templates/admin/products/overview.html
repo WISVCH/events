@@ -53,6 +53,7 @@
                         <th>Email</th>
                         <th>Product</th>
                         <th>Status</th>
+                        <th>Reference</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -67,6 +68,10 @@
                                th:text="${ticket.getProduct().getTitle()}"></a>
                         </td>
                         <td th:text="${ticket.getStatus().toString()}"></td>
+                        <td>
+                            <a th:href="@{'/administrator/orders/view/' + ${ticket.getOrder().getPublicReference()} + '/'}"
+                               th:text="${ticket.getOrder().getPublicReference().split('-')[0]}"></a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
