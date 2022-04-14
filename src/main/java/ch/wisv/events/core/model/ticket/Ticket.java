@@ -104,15 +104,22 @@ public class Ticket {
      */
     public void canTransfer(Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
         // Check if the ticket is not scanned and not already transferred and if the ticket is valid.
-        if(this.status != TicketStatus.OPEN || !this.valid)
-            throw new TicketNotTransferableException("Ticket is already scanned or not valid.");
+        if(this.status != TicketStatus.OPEN)
+            throw new TicketNotTransferableException("Ticket is already scanned.");
+
+        if(!this.valid)
+            throw new TicketNotTransferableException("Ticket is not valid.");
 
         // Check if the ticket is a CH Only product and if the new customer is not a verified CH customer.
         if(newCustomer != null && this.product.isChOnly() && !newCustomer.isVerifiedChMember())
             throw new TicketNotTransferableException("Ticket can only be transferred to a verified CH member.");
 
-        // Check if the current customer is the owner of the ticket or if the current customer is an admin.
-        if (!this.owner.equals(currentCustomer) && !currentCustomer.isAdmin())
+        // Check if the current customer is the owner of the ticket
+        if (!this.owner.equals(currentCustomer))
             throw new TicketNotTransferableException("Ticket can only be transferred to the owner.");
+
+        // Check if ticket is not transferred to the same customer.
+        if(this.owner.equals(newCustomer))
+            throw new TicketNotTransferableException("Sadly you can not transfer a ticket to yourself.. Lezen is adten.");
     }
 }
