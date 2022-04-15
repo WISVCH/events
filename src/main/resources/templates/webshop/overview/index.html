@@ -220,7 +220,7 @@
                                                        class="btn btn-primary btn-block">
                                                         <span>Fill in the form!</span>
                                                     </a>
-                                                    <a th:href="@{'/tickets/'+ ${ticket.getKey()}+'/transfer'}"
+                                                    <a th:if="${ticket.canTransfer(ticket.getOwner(), null, null)}" th:href="@{'/tickets/'+ ${ticket.getKey()}+'/transfer'}"
                                                        class="btn btn-danger btn-block">
                                                         <span>Transfer ticket</span>
                                                     </a>

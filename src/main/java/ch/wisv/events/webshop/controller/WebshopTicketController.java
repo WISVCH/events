@@ -1,6 +1,7 @@
 package ch.wisv.events.webshop.controller;
 
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
+import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.ticket.Ticket;
@@ -59,16 +60,19 @@ public class WebshopTicketController extends WebshopController {
         try {
             Ticket ticket = ticketService.getByKey(key);
 
-
-            ticket.canTransfer(customer, null);
+            ticket.canTransfer(customer, null, null);
 
             model.addAttribute(MODEL_ATTR_CUSTOMER, customer);
             model.addAttribute(MODEL_ATTR_TICKET, ticket);
 
             return "webshop/tickets/transfer";
         }
+        catch (TicketNotFoundException e){
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Ticket not found");
+            return "redirect:/overview";
+        }
         catch (TicketNotTransferableException e) {
-            redirect.addFlashAttribute("MODEL_ATTR_ERROR", "Ticket is not transferable");
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
             return "redirect:/overview";
         }
         catch (Exception e) {
@@ -95,12 +99,16 @@ public class WebshopTicketController extends WebshopController {
             // Transfer the ticket
             ticketService.transfer(ticket, currentCustomer, newCustomer);
 
-            redirect.addFlashAttribute("MODEL_ATTR_SUCCESS", "Ticket has been transferred to " + newCustomer.getEmail());
+            redirect.addFlashAttribute(MODEL_ATTR_SUCCESS, "Ticket has been transferred to " + newCustomer.getEmail());
 
             return "redirect:/overview";
         }
+        catch (TicketNotFoundException e){
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, "Ticket not found");
+            return "redirect:/overview";
+        }
         catch (TicketNotTransferableException e) {
-            redirect.addFlashAttribute("MODEL_ATTR_ERROR", "Ticket is not transferable");
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
             return "redirect:/overview";
         }
         catch (CustomerNotFoundException e) {

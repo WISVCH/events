@@ -98,13 +98,6 @@ public class Product {
     public List<Product> products;
 
     /**
-     * Event this product is for. Multiple products can be used by one Event.
-     * It is not necessary for a product to be linked to an Event.
-     */
-    @ManyToOne(targetEntity = Event.class,fetch = FetchType.EAGER)
-    public Event event;
-
-    /**
      * Flag if product is linked.
      */
     public boolean linked;

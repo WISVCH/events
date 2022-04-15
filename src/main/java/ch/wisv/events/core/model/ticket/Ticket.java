@@ -105,7 +105,7 @@ public class Ticket {
      * @param currentCustomer of type Customer
      * @param newCustomer of type Customer
      */
-    public void canTransfer(Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
+    public boolean canTransfer(Customer currentCustomer, Customer newCustomer, Event event) throws TicketNotTransferableException {
         // Check if the ticket is not scanned and not already transferred and if the ticket is valid.
         if(this.status != TicketStatus.OPEN)
             throw new TicketNotTransferableException("Ticket is already scanned.");
@@ -113,7 +113,6 @@ public class Ticket {
         if(!this.valid)
             throw new TicketNotTransferableException("Ticket is not valid.");
 
-        Event event = this.product.getEvent();
         // Check when the ticket product is linked to an event if that event has not passed.
         if(event != null && LocalDateTime.now().isAfter(event.getEnding()))
             throw new TicketNotTransferableException("Related event has already passed.");
@@ -127,7 +126,9 @@ public class Ticket {
             throw new TicketNotTransferableException("Ticket can only be transferred to the owner.");
 
         // Check if ticket is not transferred to the same customer.
-        if(this.owner.equals(newCustomer))
+        if(newCustomer != null && this.owner.equals(newCustomer))
             throw new TicketNotTransferableException("Sadly you can not transfer a ticket to yourself.. Lezen is adten.");
+
+        return true;
     }
 }

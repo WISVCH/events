@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service;
 
 import ch.wisv.events.ServiceTest;
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
@@ -10,6 +11,7 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
@@ -38,6 +40,10 @@ public class TicketTransferTest extends ServiceTest {
     @Mock
     private AuthenticationService authenticationService;
 
+    @Mock
+    /** EventService. */
+    private EventService eventService;
+
     /** MailService. */
     @Mock
     private MailService mailService;
@@ -59,7 +65,7 @@ public class TicketTransferTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        ticketService = new TicketServiceImpl(ticketRepository, mailService);
+        ticketService = new TicketServiceImpl(ticketRepository, eventService, mailService);
 
         customer1 = new Customer();
         customer1.setVerifiedChMember(true);
@@ -145,7 +151,11 @@ public class TicketTransferTest extends ServiceTest {
         Event event = new Event();
         event.setEnding(LocalDateTime.now().minusDays(1));
 
-        product1.setEvent(event);
+        try {
+            when(eventService.getByProduct(product1)).thenReturn(event);
+        } catch (EventNotFoundException e) {
+            fail("Should not have thrown any exception");
+        }
 
         TicketNotTransferableException thrown = assertThrows(TicketNotTransferableException.class, () -> ticketService.transfer(ticket1, customer1, customer2));
         assert (thrown.getMessage().contains("Related event has already passed."));
