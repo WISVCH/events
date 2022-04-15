@@ -11,6 +11,8 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.wisv.events.core.service.mail.MailService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +32,19 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
 
     /**
+     * MailService.
+     */
+    private final MailService mailService;
+
+    /**
      * TicketServiceImpl constructor.
      *
      * @param ticketRepository of type TicketRepository
+     * @param mailService of type MailService
      */
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, MailService mailService) {
         this.ticketRepository = ticketRepository;
+        this.mailService = mailService;
     }
 
     /**
@@ -216,6 +225,9 @@ public class TicketServiceImpl implements TicketService {
         ticket.setOwner(newCustomer);
 
         ticketRepository.saveAndFlush(ticket);
+
+        // Send email to new customer
+        mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
     }
 
 }

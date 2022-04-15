@@ -6,13 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
+import ch.wisv.events.core.model.event.Event;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -100,6 +96,13 @@ public class Product {
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     public List<Product> products;
+
+    /**
+     * Event this product is for. Multiple products can be used by one Event.
+     * It is not necessary for a product to be linked to an Event.
+     */
+    @ManyToOne(targetEntity = Event.class,fetch = FetchType.EAGER)
+    public Event event;
 
     /**
      * Flag if product is linked.

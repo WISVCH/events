@@ -9,6 +9,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 import com.google.common.collect.ImmutableList;
@@ -39,6 +40,10 @@ public class TicketServiceTest extends ServiceTest {
     @Mock
     private TicketRepository ticketRepository;
 
+    /** MailService. */
+    @Mock
+    private MailService mailService;
+
     /** TicketService. */
     private TicketService ticketService;
 
@@ -56,7 +61,7 @@ public class TicketServiceTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        ticketService = new TicketServiceImpl(ticketRepository);
+        ticketService = new TicketServiceImpl(ticketRepository, mailService);
 
         ticket1 = new Ticket();
         ticket2 = new Ticket();

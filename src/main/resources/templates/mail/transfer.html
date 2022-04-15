@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>CH Events mail</title>
+    <!-- Designed by https://github.com/kaytcat -->
+    <!-- Header image designed by Freepik.com -->
+
+    <style type="text/css">
+        /* Take care of image borders and formatting */
+
+        img {
+            max-width: 600px;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+
+        a img {
+            border: none;
+        }
+
+        img.barcode {
+            width: 226px;
+            height: 100px;
+            display: block;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        #outlook a {
+            padding: 0;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .backgroundTable {
+            margin: 0 auto;
+            padding: 0;
+            width: 100%;
+        !important;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        .ExternalClass * {
+            line-height: 115%;
+        }
+
+        /* General styling */
+
+        td {
+            font-family: Arial, sans-serif;
+            color: #5e5e5e;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: none;
+            width: 100%;
+            height: 100%;
+            color: #5e5e5e;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        h1 {
+            margin: 10px 0;
+        }
+
+        a {
+            color: #2b934f;
+            text-decoration: none;
+        }
+
+        .body-padding {
+            padding: 0 75px;
+        }
+
+        .force-full-width {
+            width: 100% !important;
+        }
+
+        .icons {
+            text-align: right;
+            padding-right: 30px;
+        }
+
+        .logo {
+            text-align: center;
+            padding-left: 30px;
+        }
+
+        .logo img {
+            width: 90%;
+        }
+
+        .computer-image {
+            padding-left: 30px;
+        }
+
+        .header-text {
+            text-align: center;
+            padding-right: 30px;
+            padding-left: 20px;
+        }
+
+        .header {
+            color: #232925;
+            font-size: 24px;
+        }
+
+        .grey-header {
+            background-color: #dedede;
+            padding: 5px;
+            font-weight: bold;
+        }
+
+        .white-header {
+            background-color: #f3f3f3;
+            padding: 5px;
+        }
+
+
+    </style>
+    <style type="text/css" media="screen">
+        @media screen {
+            @import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
+            /* Thanks Outlook 2013! */
+            * {
+                font-family: 'PT Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
+            }
+        }
+    </style>
+    <style type="text/css" media="only screen and (max-width: 599px)">
+        /* Mobile styles */
+        @media only screen and (max-width: 599px) {
+
+            table[class*="w320"] {
+                width: 320px !important;
+            }
+
+            td[class*="icons"] {
+                display: block !important;
+                text-align: center !important;
+                padding: 0 !important;
+            }
+
+            td[class*="logo"] {
+                display: block !important;
+                text-align: center !important;
+                padding: 0 !important;
+            }
+
+            td[class*="computer-image"] {
+                display: block !important;
+                width: 230px !important;
+                padding: 0 45px !important;
+                border-bottom: 1px solid #e3e3e3 !important;
+            }
+
+            td[class*="header-text"] {
+                display: block !important;
+                text-align: center !important;
+                padding: 0 25px !important;
+                padding-bottom: 25px !important;
+            }
+
+            *[class*="mobile-hide"] {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                line-height: 0 !important;
+                font-size: 0 !important;
+            }
+
+            td[class="mobile-block"] {
+                display: block !important;
+                width: 260px !important;
+            }
+
+        }
+    </style>
+</head>
+<body offset="0" class="body"
+      style="padding: 0;margin: 0;display: block;background: #ffffff;-webkit-text-size-adjust: none;-webkit-font-smoothing: antialiased;width: 100%;height: 100%;color: #5e5e5e;font-weight: 400;font-size: 16px;"
+      bgcolor="#ffffff">
+<table align="center" cellpadding="0" cellspacing="0" width="100%" height="100%"
+       style="border-collapse: collapse !important;">
+    <tr>
+        <td align="center" valign="top"
+            style="background-color: #ffffff;font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;"
+            width="100%">
+
+            <center>
+                <table cellspacing="0" cellpadding="0" width="600" class="w320"
+                       style="border-collapse: collapse !important;">
+                    <tr>
+                        <td align="center" valign="top"
+                            style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+
+                            <table class="force-full-width" cellspacing="0" cellpadding="0" bgcolor="#415569"
+                                   style="border-collapse: collapse !important;width: 100% !important;">
+                                <tr>
+                                    <td style="background-color: #1E274A;font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: center;border-collapse: collapse;"
+                                        class="logo">
+                                        <br/>
+                                        <img src="cid:ch-logo.png"
+                                             alt="Logo"
+                                             style="max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table cellspacing="0" cellpadding="0" class="force-full-width" bgcolor="#1E274A"
+                                   style="border-collapse: collapse !important;width: 100% !important;">
+                                <tr>
+                                    <td style="color: #ffffff;font-family: Arial, sans-serif;font-size: 16px;text-align: center;border-collapse: collapse;padding-right: 30px;padding-left: 20px;"
+                                        class="header-text">
+                                        <br/>
+                                        <span style="font-size: 24px;"><span th:text="${oldCustomer.getName()}"></span> send you a ticket!</span><br/>
+                                        <span th:text="${oldCustomer.getName()}"></span> transferred a ticket to you. In this email you find a newly generated barcode.
+                                        <br/>
+                                        <br/>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                            <table class="force-full-width" cellspacing="0" cellpadding="30" bgcolor="#ebebeb"
+                                   style="border-collapse: collapse !important;width: 100% !important;">
+                                <tr>
+                                    <td class="mobile-block" width="325"
+                                        style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                        <table cellspacing="0" cellpadding="0" width="100%"
+                                               style="border-collapse: collapse !important;">
+                                            <tr>
+                                                <td>
+                                                    <h3>Ticket overview</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                    <table cellspacing="0" cellpadding="0" width="100%"
+                                                           style="border-collapse: collapse !important;">
+                                                        <tr>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Description
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Barcode
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="white-header"
+                                                                th:text="${ticket.getProduct().getTitle()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                T.U.E.S.DAY
+                                                            </td>
+                                                            <td class="white-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                <img th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
+                                                                     width="226px"
+                                                                     class="barcode" alt="">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    &nbsp;<table th:if="${redirectLink}" cellspacing="0" cellpadding="0" width="100%"
+                                                                 style="border-collapse: collapse !important;">
+                                                    <tr>
+                                                        <td>
+                                                            <h3>Form links for your ticket!</h3>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                            <table cellspacing="0"
+                                                                   cellpadding="0" width="100%"
+                                                                   style="border-collapse: collapse !important;">
+                                                                <tr>
+                                                                    <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                                        <table cellspacing="0" cellpadding="0"
+                                                                               width="100%"
+                                                                               style="border-collapse: collapse !important;">
+                                                                            <tr>
+                                                                                <td class="grey-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                                    Description
+                                                                                </td>
+                                                                                <td class="grey-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                                    Link
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td class="white-header"
+                                                                                    th:text="${ticket.getProduct().getTitle()}"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                                </td>
+                                                                                <td class="white-header"
+                                                                                    style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                                    <a th:href="${ticket.getProduct().getRedirectUrl()}"
+                                                                                       th:text="${ticket.getProduct().getRedirectUrl()}"></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        &nbsp;
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="force-full-width" cellspacing="0" cellpadding="20" bgcolor="#1E274A"
+                                   style="border-collapse: collapse !important;width: 100% !important;">
+                                <tr>
+                                    <td style="background-color: #1E274A;color: #ffffff;font-size: 14px;text-align: center;font-family: Arial, sans-serif;border-collapse: collapse;">
+                                        This mail was automatically generated by CH Events.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

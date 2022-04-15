@@ -90,7 +90,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderServiceImpl(
             OrderRepository orderRepository, OrderProductRepository orderProductRepository,
             OrderValidationService orderValidationService, ProductService productService,
-            MailService mailService, TicketService ticketService
+            MailService mailService, TicketService
+                    ticketService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -424,6 +425,4 @@ public class OrderServiceImpl implements OrderService {
         log.info("Order " + order.getPublicReference() + ": Status changed to RESERVATION!");
         orderRepository.saveAndFlush(order);
     }
-
-
 }

@@ -2,8 +2,11 @@ package ch.wisv.events.core.model.ticket;
 
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -109,6 +112,11 @@ public class Ticket {
 
         if(!this.valid)
             throw new TicketNotTransferableException("Ticket is not valid.");
+
+        Event event = this.product.getEvent();
+        // Check when the ticket product is linked to an event if that event has not passed.
+        if(event != null && LocalDateTime.now().isAfter(event.getEnding()))
+            throw new TicketNotTransferableException("Related event has already passed.");
 
         // Check if the ticket is a CH Only product and if the new customer is not a verified CH customer.
         if(newCustomer != null && this.product.isChOnly() && !newCustomer.isVerifiedChMember())

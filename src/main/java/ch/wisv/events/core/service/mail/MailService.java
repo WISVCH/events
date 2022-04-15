@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.mail;
 
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.ticket.Ticket;
 import java.util.List;
@@ -16,6 +17,14 @@ public interface MailService {
      * @param tickets of type List of Tickets
      */
     void sendOrderConfirmation(Order order, List<Ticket> tickets);
+
+    /**
+     * Method mail Transfer confirmation to Customer.
+     * @param ticket of type Ticket
+     * @param oldCustomer of type Customer
+     * @param newCustomer of type Customer
+     */
+    void sendTransferConfirmation(Ticket ticket, Customer oldCustomer, Customer newCustomer);
 
     /**
      * Method mails about a payment error.

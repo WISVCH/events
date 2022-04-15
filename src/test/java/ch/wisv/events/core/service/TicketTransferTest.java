@@ -3,14 +3,18 @@ package ch.wisv.events.core.service;
 import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,39 +34,37 @@ public class TicketTransferTest extends ServiceTest {
     @Mock
     private TicketRepository ticketRepository;
 
-    /** CustomerService. */
-    @Mock
-    private CustomerService customerService;
-
-    /** TicketService. */
-    private TicketService ticketService;
-
     /** AuthenticationService. */
     @Mock
     private AuthenticationService authenticationService;
 
+    /** MailService. */
+    @Mock
+    private MailService mailService;
+
+    /** TicketService. */
+    private TicketService ticketService;
+
     /** Tickets. */
-    private Ticket ticket1, ticket2, ticket3;
+    private Ticket ticket1, ticket2;
 
     /** Product. */
     private Product product1, product2;
 
     /** Customers. */
-    private Customer customer1, customer2, customer3;
+    private Customer customer1, customer2;
 
     /**
      * Setup for the test class.
      */
     @Before
     public void setUp() {
-        ticketService = new TicketServiceImpl(ticketRepository);
+        ticketService = new TicketServiceImpl(ticketRepository, mailService);
 
         customer1 = new Customer();
         customer1.setVerifiedChMember(true);
 
         customer2 = new Customer();
-        customer3 = new Customer();
-
 
         product1 = new Product();
         product2 = new Product();
@@ -133,6 +135,20 @@ public class TicketTransferTest extends ServiceTest {
 
         TicketNotTransferableException thrown = assertThrows(TicketNotTransferableException.class, () -> ticketService.transfer(ticket1, customer1, customer2));
         assert (thrown.getMessage().contains("Ticket is not valid."));
+    }
+
+    /**
+     * Test ticket transfer of ticket that has a product linked to an expired event.
+     */
+    @Test
+    public void transferTicketWithExpiredEvent() {
+        Event event = new Event();
+        event.setEnding(LocalDateTime.now().minusDays(1));
+
+        product1.setEvent(event);
+
+        TicketNotTransferableException thrown = assertThrows(TicketNotTransferableException.class, () -> ticketService.transfer(ticket1, customer1, customer2));
+        assert (thrown.getMessage().contains("Related event has already passed."));
     }
 
     /**
