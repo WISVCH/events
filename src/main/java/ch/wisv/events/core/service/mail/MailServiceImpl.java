@@ -81,7 +81,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendTransferConfirmation(Ticket ticket, Customer oldCustomer, Customer newCustomer) {
         final Context ctx = new Context(new Locale("en"));
-        ctx.setVariable("tickets", ticket);
+        ctx.setVariable("ticket", ticket);
         ctx.setVariable("oldCustomer", oldCustomer);
         ctx.setVariable("oldCustomer", oldCustomer);
         ctx.setVariable("redirectLink", ticket.getProduct().getRedirectUrl());
