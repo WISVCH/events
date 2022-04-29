@@ -232,9 +232,8 @@
                                     <td style="color: #ffffff;font-family: Arial, sans-serif;font-size: 16px;text-align: center;border-collapse: collapse;padding-right: 30px;padding-left: 20px;"
                                         class="header-text">
                                         <br/>
-                                        <span style="font-size: 24px;">Thanks for your purchase!</span><br/>
-                                        Your order has been completed! In this email you find a copy of your order.
-                                        Tickets can be transferred by using the transfer button in your account under "My Events" => "My tickets", or by handing over the unique code to one another.
+                                        <span style="font-size: 24px;"><span th:text="${oldCustomer.getName()}"></span> has sent you a ticket!</span><br/>
+                                        <span th:text="${oldCustomer.getName()}"></span> transferred a ticket to you. In this email you find a newly generated barcode.
                                         <br/>
                                         <br/>
                                     </td>
@@ -247,46 +246,6 @@
                                 <tr>
                                     <td class="mobile-block" width="325"
                                         style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
-                                        <table cellspacing="0" cellpadding="0" width="100%"
-                                               style="border-collapse: collapse !important;">
-                                            <tr>
-                                                <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
-                                                    <table cellspacing="0" cellpadding="0" width="100%"
-                                                           style="border-collapse: collapse !important;">
-                                                        <tr>
-                                                            <td class="grey-header" colspan="2"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                Customer details
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                Name
-                                                            </td>
-                                                            <td class="white-header"
-                                                                th:text="${order.getOwner().getName()}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                Name Surname
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                Email
-                                                            </td>
-                                                            <td class="white-header"
-                                                                th:text="${order.getOwner().getEmail()}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                email@email.com
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                    &nbsp;
-                                                </td>
-                                            </tr>
-                                        </table>
-
                                         <table cellspacing="0" cellpadding="0" width="100%"
                                                style="border-collapse: collapse !important;">
                                             <tr>
@@ -308,7 +267,7 @@
                                                                 Barcode
                                                             </td>
                                                         </tr>
-                                                        <tr th:each="ticket : ${tickets}">
+                                                        <tr>
                                                             <td class="white-header"
                                                                 th:text="${ticket.getProduct().getTitle()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
@@ -322,11 +281,11 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    &nbsp;<table th:if="${redirectLinks}" cellspacing="0" cellpadding="0" width="100%"
+                                                    &nbsp;<table th:if="${redirectLink}" cellspacing="0" cellpadding="0" width="100%"
                                                                  style="border-collapse: collapse !important;">
                                                     <tr>
                                                         <td>
-                                                            <h3>Links for your tickets!</h3>
+                                                            <h3>Form links for your ticket!</h3>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -349,9 +308,7 @@
                                                                                     Link
                                                                                 </td>
                                                                             </tr>
-                                                                            <tr th:each="ticket: ${tickets}"
-                                                                                th:if="${ticket.getProduct().getRedirectUrl() != null}"
-                                                                                }>
+                                                                            <tr>
                                                                                 <td class="white-header"
                                                                                     th:text="${ticket.getProduct().getTitle()}"
                                                                                     style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">

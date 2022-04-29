@@ -43,6 +43,7 @@
             </a>
         </div>
     </div>
+    <div th:replace="fragments/messages :: messages"></div>
 
     <div class="row">
         <div class="col-12 col-lg-3 mb-5">
@@ -219,6 +220,10 @@
                                                        rel="noopener noreferrer"
                                                        class="btn btn-primary btn-block">
                                                         <span>Fill in the form!</span>
+                                                    </a>
+                                                    <a th:if="${ticket.canTransfer(ticket.getOwner(), null, null)}" th:href="@{'/tickets/'+ ${ticket.getKey()}+'/transfer'}"
+                                                       class="btn btn-danger btn-block">
+                                                        <span>Transfer ticket</span>
                                                     </a>
                                                     <button type="button" class="btn btn-secondary btn-block"
                                                             data-dismiss="modal">Close

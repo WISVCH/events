@@ -1,7 +1,10 @@
 package ch.wisv.events.core.service.ticket;
 
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
@@ -10,6 +13,9 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.mail.MailService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +34,24 @@ public class TicketServiceImpl implements TicketService {
     /** TicketRepository. */
     private final TicketRepository ticketRepository;
 
+    /** EventService. */
+    private final EventService eventService;
+
+    /**
+     * MailService.
+     */
+    private final MailService mailService;
+
     /**
      * TicketServiceImpl constructor.
      *
      * @param ticketRepository of type TicketRepository
+     * @param mailService of type MailService
      */
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, MailService mailService) {
         this.ticketRepository = ticketRepository;
+        this.mailService = mailService;
+        this.eventService = eventService;
     }
 
     /**
@@ -196,6 +213,35 @@ public class TicketServiceImpl implements TicketService {
         }
 
         return ticketUnique;
+    }
+
+    /**
+     * Transfer a Ticket to another Customer.
+     * @param currentCustomer of type Customer
+     * @param newCustomer of type Customer
+     */
+    public void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
+        // Get event from ticket product
+        Event event = null;
+        try {
+            event = eventService.getByProduct(ticket.getProduct());
+        } catch (EventNotFoundException ignored) {
+        }
+
+        // Check if the ticket can be transferred
+        ticket.canTransfer(currentCustomer, newCustomer, event);
+
+        // Generate new unique code
+        String uniqueCode = this.generateUniqueString(ticket.getProduct());
+
+        // Update ticket
+        ticket.setUniqueCode(uniqueCode);
+        ticket.setOwner(newCustomer);
+
+        ticketRepository.saveAndFlush(ticket);
+
+        // Send email to new customer
+        mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
     }
 
 }

@@ -1,6 +1,7 @@
 package ch.wisv.events.core.service.mail;
 
 import biweekly.util.IOUtils;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.ticket.Ticket;
 
@@ -69,6 +70,27 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+
+
+    /**
+     * Method mail transferred ticket to Customer.
+     * @param ticket of type Ticket
+     * @param oldCustomer of type Customer
+     * @param newCustomer of type Customer
+     */
+    @Override
+    public void sendTransferConfirmation(Ticket ticket, Customer oldCustomer, Customer newCustomer) {
+        final Context ctx = new Context(new Locale("en"));
+        ctx.setVariable("ticket", ticket);
+        ctx.setVariable("oldCustomer", oldCustomer);
+        ctx.setVariable("oldCustomer", oldCustomer);
+        ctx.setVariable("redirectLink", ticket.getProduct().getRedirectUrl());
+        String subject = String.format("Ticket transfer %s", ticket.getProduct().getTitle());
+
+        List<String> barcodes = List.of(ticket.getUniqueCode());
+        this.sendMailWithContent(newCustomer.getEmail(), subject, this.templateEngine.process("mail/transfer", ctx), barcodes);
+    }
+
     /**
      * Method mails about a error.
      *
@@ -114,7 +136,7 @@ public class MailServiceImpl implements MailService {
      * @param recipientEmail of type String
      * @param subject        of type String
      * @param content        of type String
-     * @param barcode        of type String
+     * @param barcodes       list of type String
      */
     private void sendMailWithContent(String recipientEmail, String subject, String content, List<String> barcodes) {
         // Prepare message using a Spring helper

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/icons/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/icons/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/icons/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/icons/site.webmanifest}">
+    <link rel="mask-icon" th:href="@{/icons/safari-pinned-tab.svg}" color="#1e274a">
+    <link rel="shortcut icon" th:href="@{/icons/favicon.ico}">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" th:content="@{/icons/browserconfig.xml}">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>CH Events</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/uet5duo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-header.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-overview.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="webshop/fragments/header :: header ('my events', 'events_header.jpg')"></nav>
+
+<div class="container-fluid">
+    <div class="row pt-5">
+        <div class="mr-auto col-lg-4 col-md-5 col-12 mb-4">
+            <a th:href="@{/}" class="btn btn-block btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to the webshop
+            </a>
+        </div>
+    </div>
+    <div th:replace="fragments/messages :: messages"></div>
+    <div class="row">
+        <div class="col-6 col-lg-4">
+            <div class="card">
+                <h6 class="card-header">Transfer ticket</h6>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <h4>
+                                [[${ticket.getProduct().getTitle()}]]
+                            </h4>
+                            <p>Transfer this ticket to another person. Note that <b>this action cannot be undone.</b></p>
+                        </div>
+                        <div class="col-12 col-lg-6 text-center mb-4">
+                            <img class="img-fluid" th:src="'https://barcode.tec-it.com/barcode.ashx?data=280433' + ${ticket.getUniqueCode()} + '&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=128&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0'">
+                        </div>
+                    </div>
+                    <form th:action="@{'./transfer'}" method="POST">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input type="email" class="form-control input-lg" name="email"
+                                           placeholder="Email address">
+                                    <small class="form-text text-muted">
+                                        Fill in the email address of the person you want to transfer the ticket to. This person must already have an account on the webshop.
+                                    </small>
+                                </div>
+
+                                <button type="submit" class="btn btn-block btn-danger">Transfer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
+</body>
+

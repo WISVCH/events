@@ -1,8 +1,12 @@
 package ch.wisv.events.core.model.ticket;
 
+import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
 import ch.wisv.events.core.model.customer.Customer;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -91,5 +95,40 @@ public class Ticket {
         this.product = product;
         this.uniqueCode = uniqueCode;
         this.valid = true;
+    }
+
+    /**
+     * Can the ticket be transferred to another customer by the given customer.
+     * This is only possible if the ticket is not scanned and not already transferred and if the ticket is valid.
+     * Tickets of CH Only products can only be transferred to Verified CH customers.
+     * The ticket can be transferred if the current customer is the owner of the ticket or if the current customer is an admin.
+     * @param currentCustomer of type Customer
+     * @param newCustomer of type Customer
+     */
+    public boolean canTransfer(Customer currentCustomer, Customer newCustomer, Event event) throws TicketNotTransferableException {
+        // Check if the ticket is not scanned and not already transferred and if the ticket is valid.
+        if(this.status != TicketStatus.OPEN)
+            throw new TicketNotTransferableException("Ticket is already scanned.");
+
+        if(!this.valid)
+            throw new TicketNotTransferableException("Ticket is not valid.");
+
+        // Check when the ticket product is linked to an event if that event has not passed.
+        if(event != null && LocalDateTime.now().isAfter(event.getEnding()))
+            throw new TicketNotTransferableException("Related event has already passed.");
+
+        // Check if the ticket is a CH Only product and if the new customer is not a verified CH customer.
+        if(newCustomer != null && this.product.isChOnly() && !newCustomer.isVerifiedChMember())
+            throw new TicketNotTransferableException("Ticket can only be transferred to a verified CH member.");
+
+        // Check if the current customer is the owner of the ticket
+        if (!this.owner.equals(currentCustomer))
+            throw new TicketNotTransferableException("Ticket can only be transferred to the owner.");
+
+        // Check if ticket is not transferred to the same customer.
+        if(newCustomer != null && this.owner.equals(newCustomer))
+            throw new TicketNotTransferableException("Sadly you can not transfer a ticket to yourself.. Lezen is adten.");
+
+        return true;
     }
 }
