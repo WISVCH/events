@@ -15,6 +15,7 @@ public enum LdapGroup {
     FILMCREW("Filmcrew"),
     FLITCIE("FlitCie"),
     GALACIE("GalaCie"),
+    HACKCIE("HackCie"),
     ICOM("iCom"),
     LANCIE("LANcie"),
     LUCIE("LuCie"),
