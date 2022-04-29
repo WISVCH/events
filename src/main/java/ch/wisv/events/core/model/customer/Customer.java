@@ -23,10 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 @Data
 public class Customer {
 
-    /** Image location. */
-    @Value("${wisvch.connect.admin.groups}")
-    private String adminGroups;
-
     /**
      * Field id of the customer.
      */
@@ -104,14 +100,5 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.rfidToken = rfidToken;
-    }
-
-    /**
-     * Check if the customer has a ldap group that is also an admin group.
-     * @return boolean
-     */
-    public boolean isAdmin() {
-        List<String> adminGroups = List.of(this.adminGroups.split(","));
-        return this.ldapGroups.stream().anyMatch(ldapGroup -> adminGroups.contains(ldapGroup.getName()));
     }
 }
