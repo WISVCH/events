@@ -15,7 +15,6 @@ public enum LdapGroup {
     FILMCREW("Filmcrew"),
     FLITCIE("FlitCie"),
     GALACIE("GalaCie"),
-    HACKCIE("HackCie"),
     ICOM("iCom"),
     LANCIE("LANcie"),
     LUCIE("LuCie"),
@@ -37,7 +36,8 @@ public enum LdapGroup {
     COW("COW"),
     COI("COI"),
     CPR("CPR"),
-    CC("CC");
+    CC("CC"),
+    HACKCIE("HackCie");
 
     /** Nam of the LdapGroup. */
     private final String name;
