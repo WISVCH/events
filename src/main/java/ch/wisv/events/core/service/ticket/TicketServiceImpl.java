@@ -13,10 +13,10 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,13 +24,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TicketServiceImpl implements TicketService {
-
-    /** /** Ticket unique code length. */
-    private static final int TICKET_UNIQUE_LENGTH = 6;
-
-    /** Ticket unique code allowed chars. */
-    private static final String TICKET_UNIQUE_ALLOWED_CHARS = "0123456789";
-
     /** TicketRepository. */
     private final TicketRepository ticketRepository;
 
@@ -206,10 +199,11 @@ public class TicketServiceImpl implements TicketService {
      * @return String
      */
     private String generateUniqueString(Product product) {
-        String ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
+        // Generate a UUID
+        String ticketUnique = UUID.randomUUID().toString();
 
         while (ticketRepository.existsByProductAndUniqueCode(product, ticketUnique)) {
-            ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
+            ticketUnique = UUID.randomUUID().toString();
         }
 
         return ticketUnique;
