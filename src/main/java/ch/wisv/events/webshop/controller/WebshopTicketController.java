@@ -9,11 +9,17 @@ import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import ch.wisv.events.core.util.QrCode;
+import com.google.zxing.WriterException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * WebshopOrderOverviewController class.
@@ -120,4 +126,36 @@ public class WebshopTicketController extends WebshopController {
         }
     }
 
+    /**
+     * Get QR-code of ticket.
+     */
+    @GetMapping("/{key}/qrcode.png")
+    public void getQrCode(HttpServletResponse response, @PathVariable String key) throws IOException {
+        Customer customer = authenticationService.getCurrentCustomer();
+        try {
+            Ticket ticket = ticketService.getByKey(key);
+
+            if (!ticket.owner.equals(customer)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
+            BufferedImage qrCode = ticketService.generateQrCode(ticket);
+            byte[] bytes = QrCode.bufferedImageToBytes(qrCode);
+
+            response.setContentType("image/png");
+            response.setContentLength(bytes.length);
+            response.getOutputStream().write(bytes);
+            response.getOutputStream().close();
+        }
+        catch (TicketNotFoundException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        catch (WriterException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        catch (IOException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
