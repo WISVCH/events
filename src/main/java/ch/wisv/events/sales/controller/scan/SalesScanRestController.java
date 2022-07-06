@@ -30,7 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SalesScanRestController {
 
     /** Unique code length. */
-    private static final int UNIQUE_CODE_LENGTH = 6;
+    private static final int UNIQUE_CODE_LEGACY_LENGTH = 6;
+    private static final int UNIQUE_CODE_UUID_LENGTH = 36;
 
     /** Barcode length. */
     private static final int BARCODE_LENGTH = 13;
@@ -64,7 +65,7 @@ public class SalesScanRestController {
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid EAN 13 barcode length!");
         }
 
-        String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LENGTH + 1), barcode.length() - 1);
+        String uniqueCode = barcode.substring(barcode.length() - (UNIQUE_CODE_LEGACY_LENGTH + 1), barcode.length() - 1);
 
         return this.handleScanTicket(key, uniqueCode);
     }
@@ -77,7 +78,7 @@ public class SalesScanRestController {
      */
     @PostMapping("/code")
     public ResponseEntity codeScanner(@PathVariable String key, @RequestParam("code") String code) {
-        if (code.length() != UNIQUE_CODE_LENGTH) {
+        if (code.length() != UNIQUE_CODE_UUID_LENGTH && code.length() != UNIQUE_CODE_LEGACY_LENGTH) {
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid unique code length!");
         }
 
