@@ -15,10 +15,14 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 import com.google.common.collect.ImmutableList;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.util.*;
+
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -105,6 +109,40 @@ public class TicketServiceTest extends ServiceTest {
         when(ticketRepository.findByProductAndUniqueCode(product, "123456")).thenReturn(Optional.empty());
 
         ticketService.getByUniqueCode(product, "123456");
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    @Test
+    public void generateQrCodeException() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        String uniqueCode = "131313";
+        Ticket ticket = new Ticket();
+        ticket.setUniqueCode(uniqueCode);
+
+        BufferedImage qrCode = ticketService.generateQrCode(ticket);
+    }
+
+    /**
+     * End-to-end test generation of a QR code.
+     * @throws Exception
+     */
+    @Test
+    public void generateQrCode() throws Exception {
+        String uniqueCode = UUID.randomUUID().toString();
+        Ticket ticket = new Ticket();
+        ticket.setUniqueCode(uniqueCode);
+
+        BufferedImage qrCode = ticketService.generateQrCode(ticket);
+
+        LuminanceSource source = new BufferedImageLuminanceSource(qrCode);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        QRCodeReader reader = new QRCodeReader();
+        String decodedUniqueCode = reader.decode(bitmap).getText();
+
+        assertEquals(uniqueCode, decodedUniqueCode);
     }
 
     /**
