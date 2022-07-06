@@ -26,7 +26,7 @@ public class WebhookTaskScheduler {
     private static final int WEBHOOK_TASK_INTERVAL_SECONDS = 60;
 
     /** Initial task interval delay in seconds */
-    private static final int WEBHOOK_TASK_INTERVAL_INITIAL_DELAY = 180;
+    private static final int WEBHOOK_TASK_INTERVAL_INITIAL_DELAY = 600;
 
     /** WebhookTaskRepository. */
     private final WebhookTaskRepository webhookTaskRepository;
