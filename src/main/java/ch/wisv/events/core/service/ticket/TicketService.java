@@ -7,6 +7,9 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
+import com.google.zxing.WriterException;
+
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -111,5 +114,14 @@ public interface TicketService {
      * @param newCustomer of type Customer
      */
     void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException;
+
+    /**
+     * Generate a QR code for a Ticket.
+     * @param ticket of type Ticket
+     * @return BufferedImage
+     * @throws WriterException when QR code is not generated
+     * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
+     */
+    BufferedImage generateQrCode(Ticket ticket) throws WriterException, IllegalArgumentException;
 
 }

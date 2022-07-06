@@ -11,12 +11,19 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
+
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.stereotype.Service;
 
 /**
@@ -207,6 +214,26 @@ public class TicketServiceImpl implements TicketService {
         }
 
         return ticketUnique;
+    }
+
+    /**
+     * Generate a QR code from the uniqueCode.
+     * @param ticket of type Ticket
+     * @throws WriterException when QR code is not generated
+     * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
+     * @return BufferedImage
+     */
+    public BufferedImage generateQrCode(Ticket ticket) throws IllegalArgumentException, WriterException {
+        // Assert that the uniqueCode is a UUID (LEGACY CHECK)
+        if (!ticket.getUniqueCode().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException("The uniqueCode is not a UUID");
+        }
+
+        // Generate a QR code
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(ticket.getUniqueCode(), BarcodeFormat.QR_CODE, 13 * 13, 13 * 13);
+
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
     /**
