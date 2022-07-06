@@ -25,6 +25,9 @@ public class WebhookTaskScheduler {
     /** Task interval in seconds. */
     private static final int WEBHOOK_TASK_INTERVAL_SECONDS = 60;
 
+    /** Initial task interval delay in seconds */
+    private static final int WEBHOOK_TASK_INTERVAL_INITIAL_DELAY = 180;
+
     /** WebhookTaskRepository. */
     private final WebhookTaskRepository webhookTaskRepository;
 
@@ -41,7 +44,7 @@ public class WebhookTaskScheduler {
     /**
      * Method webhookTask ...
      */
-    @Scheduled(fixedRate = WEBHOOK_TASK_INTERVAL_SECONDS * 1000)
+    @Scheduled(fixedRate = WEBHOOK_TASK_INTERVAL_SECONDS * 1000, initialDelay = WEBHOOK_TASK_INTERVAL_INITIAL_DELAY * 1000)
     public void webhookTask() {
         List<WebhookTask> webhookTaskList = this.webhookTaskRepository.findAllByWebhookTaskStatus(WebhookTaskStatus.PENDING);
 
