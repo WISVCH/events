@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
+import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -229,11 +230,7 @@ public class TicketServiceImpl implements TicketService {
             throw new IllegalArgumentException("The uniqueCode is not a UUID");
         }
 
-        // Generate a QR code
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(ticket.getUniqueCode(), BarcodeFormat.QR_CODE, 13 * 13, 13 * 13);
-
-        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+        return QrCode.generateQrCode(ticket.getUniqueCode());
     }
 
     /**
@@ -262,7 +259,11 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.saveAndFlush(ticket);
 
         // Send email to new customer
-        mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
+        try {
+            BufferedImage qrCode = this.generateQrCode(ticket);
+            mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer, qrCode);
+        } catch (WriterException e) {
+        }
     }
 
 }
