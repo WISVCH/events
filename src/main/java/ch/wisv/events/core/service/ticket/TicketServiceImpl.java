@@ -259,11 +259,7 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.saveAndFlush(ticket);
 
         // Send email to new customer
-        try {
-            BufferedImage qrCode = this.generateQrCode(ticket);
-            mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer, qrCode);
-        } catch (WriterException e) {
-        }
+        mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
     }
 
 }
