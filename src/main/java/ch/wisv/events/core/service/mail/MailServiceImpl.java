@@ -5,6 +5,7 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.ticket.Ticket;
 
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
+import ch.wisv.events.core.util.QrCode;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -65,8 +69,7 @@ public class MailServiceImpl implements MailService {
             ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
-            List<String> barcodes = tickets.stream().map(Ticket::getUniqueCode).collect(java.util.stream.Collectors.toList());
-            this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), barcodes);
+            this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), tickets);
         }
     }
 
@@ -87,8 +90,8 @@ public class MailServiceImpl implements MailService {
         ctx.setVariable("redirectLink", ticket.getProduct().getRedirectUrl());
         String subject = String.format("Ticket transfer %s", ticket.getProduct().getTitle());
 
-        List<String> barcodes = List.of(ticket.getUniqueCode());
-        this.sendMailWithContent(newCustomer.getEmail(), subject, this.templateEngine.process("mail/transfer", ctx), barcodes);
+        List<Ticket> tickets = List.of(ticket);
+        this.sendMailWithContent(newCustomer.getEmail(), subject, this.templateEngine.process("mail/transfer", ctx), tickets);
     }
 
     /**
@@ -136,9 +139,9 @@ public class MailServiceImpl implements MailService {
      * @param recipientEmail of type String
      * @param subject        of type String
      * @param content        of type String
-     * @param barcodes       list of type String
+     * @param uniqueCodes       list of type String
      */
-    private void sendMailWithContent(String recipientEmail, String subject, String content, List<String> barcodes) {
+    private void sendMailWithContent(String recipientEmail, String subject, String content, List<Ticket> tickets) {
         // Prepare message using a Spring helper
         MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper message;
@@ -153,23 +156,33 @@ public class MailServiceImpl implements MailService {
             message.setText(content, true); // true = isHtml
             message.addInline("ch-logo.png", new ClassPathResource("/static/images/ch-logo.png"), "image/png");
 
-            for (String barcode : barcodes) {
-                // Get barcode from url
-                String url = "https://barcode.tec-it.com/barcode.ashx?data=978020" + barcode + "&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0";
-                URL urlObj = new URL(url);
-                InputStream is = urlObj.openStream();
-                byte[] bytes = IOUtils.toByteArray(is);
+            for (Ticket ticket : tickets) {
+                String uniqueCode = ticket.getUniqueCode();
+                // Retrieve and return barcode (LEGACY)
+                if (uniqueCode.length() == 6){
+                    // Get barcode from url
+                    String url = "https://barcode.tec-it.com/barcode.ashx?data=978020" + uniqueCode + "&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0";
+                    URL urlObj = new URL(url);
+                    InputStream is = urlObj.openStream();
+                    byte[] bytes = IOUtils.toByteArray(is);
 
-                // Attach image inline to message
-                message.addInline("ch-" + barcode + ".png", new ByteArrayResource(bytes), "image/png");
+                    // Attach image inline to message
+                    message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+                } else {
+                    BufferedImage qrCode = QrCode.generateQrCode(uniqueCode);
+                    byte[] bytes = QrCode.bufferedImageToBytes(qrCode);
+                    message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+                }
             }
 
             // Send mail
             this.mailSender.send(mimeMessage);
-        } catch (MessagingException | IOException  e) {
+        } catch (MessagingException | IOException | WriterException  e) {
             throw new MailPreparationException("Unable to prepare email", e.getCause());
         } catch (MailException m) {
             throw new MailSendException("Unable to send email", m.getCause());
         }
     }
+
+
 }
