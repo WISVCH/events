@@ -25,6 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class SalesScanRestControllerTest extends ControllerTest {
 
+    /**
+     * Test barcode scan. (LEGACY)
+     *
+     * @throws Exception when error
+     */
     @Test
     public void testBarcodeScanner() throws Exception {
         Event event = this.createEvent();
@@ -35,6 +40,10 @@ public class SalesScanRestControllerTest extends ControllerTest {
         Order order = this.createOrder(createCustomer(), ImmutableList.of(product), OrderStatus.PAID, "sales-scan-test");
         Ticket ticket = ticketService.createByOrder(order).get(0);
 
+        // Override the unique code to generate a legacy barcode
+        String uniqueCode = RandomStringUtils.random(6, "0123456789");
+        ticket.setUniqueCode(uniqueCode);
+
         String barcode = RandomStringUtils.random(6, "0123456789") + ticket.getUniqueCode();
         barcode += Barcode.calculateChecksum(barcode.toCharArray());
 
@@ -44,6 +53,11 @@ public class SalesScanRestControllerTest extends ControllerTest {
                 .andExpect(status().is(200));
     }
 
+    /**
+     * Test barcode double scan. (LEGACY)
+     *
+     * @throws Exception when error
+     */
     @Test
     public void testBarcodeScannerDouble() throws Exception {
         Event event = this.createEvent();
@@ -54,6 +68,10 @@ public class SalesScanRestControllerTest extends ControllerTest {
         Order order = this.createOrder(createCustomer(), ImmutableList.of(product), OrderStatus.PAID, "sales-scan-test");
         Ticket ticket = ticketService.createByOrder(order).get(0);
         ticketService.updateStatus(ticket, TicketStatus.SCANNED);
+
+        // Override the unique code to generate a legacy barcode
+        String uniqueCode = RandomStringUtils.random(6, "0123456789");
+        ticket.setUniqueCode(uniqueCode);
 
         String barcode = RandomStringUtils.random(6, "0123456789") + ticket.getUniqueCode();
         barcode += Barcode.calculateChecksum(barcode.toCharArray());
@@ -97,6 +115,32 @@ public class SalesScanRestControllerTest extends ControllerTest {
         mockMvc.perform(
                 post("/api/v1/sales/scan/event/" + event.getKey() + "/code")
                         .param("code", ticket.getUniqueCode()))
+                .andExpect(status().is(200));
+    }
+
+
+    /**
+     * Test code scan. (LEGACY)
+     *
+     * @throws Exception when error
+     */
+    @Test
+    public void testLegacyCodeScanner() throws Exception {
+        Event event = this.createEvent();
+        Product product = this.createProduct();
+        event.addProduct(product);
+        eventRepository.saveAndFlush(event);
+
+        Order order = this.createOrder(createCustomer(), ImmutableList.of(product), OrderStatus.PAID, "sales-scan-test");
+        Ticket ticket = ticketService.createByOrder(order).get(0);
+
+        // Override the unique code to generate a legacy barcode
+        String uniqueCode = RandomStringUtils.random(6, "0123456789");
+        ticket.setUniqueCode(uniqueCode);
+
+        mockMvc.perform(
+                        post("/api/v1/sales/scan/event/" + event.getKey() + "/code")
+                                .param("code", ticket.getUniqueCode()))
                 .andExpect(status().is(200));
     }
 

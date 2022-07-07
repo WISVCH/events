@@ -11,12 +11,16 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
+
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
-import org.apache.commons.lang3.RandomStringUtils;
+import ch.wisv.events.core.util.QrCode;
+import com.google.zxing.WriterException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,13 +28,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TicketServiceImpl implements TicketService {
-
-    /** /** Ticket unique code length. */
-    private static final int TICKET_UNIQUE_LENGTH = 6;
-
-    /** Ticket unique code allowed chars. */
-    private static final String TICKET_UNIQUE_ALLOWED_CHARS = "0123456789";
-
     /** TicketRepository. */
     private final TicketRepository ticketRepository;
 
@@ -121,7 +118,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
-     * Get all Tickets by a Order.
+     * Get all Tickets of an Order.
      *
      * @param order of type Order
      *
@@ -206,13 +203,30 @@ public class TicketServiceImpl implements TicketService {
      * @return String
      */
     private String generateUniqueString(Product product) {
-        String ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
+        // Generate a UUID
+        String ticketUnique = UUID.randomUUID().toString();
 
         while (ticketRepository.existsByProductAndUniqueCode(product, ticketUnique)) {
-            ticketUnique = RandomStringUtils.random(TICKET_UNIQUE_LENGTH, TICKET_UNIQUE_ALLOWED_CHARS);
+            ticketUnique = UUID.randomUUID().toString();
         }
 
         return ticketUnique;
+    }
+
+    /**
+     * Generate a QR code from the uniqueCode.
+     * @param ticket of type Ticket
+     * @throws WriterException when QR code is not generated
+     * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
+     * @return BufferedImage
+     */
+    public BufferedImage generateQrCode(Ticket ticket) throws IllegalArgumentException, WriterException {
+        // Assert that the uniqueCode is a UUID (LEGACY CHECK)
+        if (!ticket.getUniqueCode().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException("The uniqueCode is not a UUID");
+        }
+
+        return QrCode.generateQrCode(ticket.getUniqueCode());
     }
 
     /**

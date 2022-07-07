@@ -27,19 +27,37 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
 
     <style>
         html,
         body {
-            overflow: hidden;
             height: calc(100vh);
             width: calc(100vw);
+            background-color: #000000;
+            color: #ffffff;
         }
 
-        .container-fluid h3 {
+        .container-fluid {
+            z-index: 2;
+        }
+
+        h3 {
             border-bottom: 0;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 16px;
+        }
+
+        h3 span {
+            color: #f1f3f7;
+            font-weight: normal;
+        }
+
+        #video-container {
+            padding: 0px;
         }
     </style>
 </head>
@@ -47,31 +65,23 @@
 <body id="scanPage">
 <nav th:replace="fragments/header :: header"></nav>
 
+<div th:if="${error}" class="alert alert-dismissible fade show alert-danger w-100" role="alert">
+    <span class="fa fa-exclamation" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+    <strong>ERROR:</strong> <span th:text="${error}"></span>
+</div>
 
 <div class="container-fluid">
-    <div class="row pt-5">
-        <main class="col-12" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
-
-            <div class="row text-center">
-                <h3 class="w-100 mb-5" th:text="${event.getTitle()}"></h3>
-
-                <div class="col-12">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" id="code" name="code"
-                               placeholder="Unique code">
-                    </div>
-
-                    <button id="submit" class="btn btn-lg btn-block btn-secondary">Submit</button>
-                </div>
-            </div>
-        </main>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Scan QR code for event: <span th:text="${event.getTitle()}"></span></h3>
+        </div>
     </div>
 </div>
 
 <div class="fixed-bottom p-3">
-    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/qrcode'}" class="btn btn-lg btn-block btn-dark">
-        go to QR code scanner
+    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" class="btn btn-lg btn-block btn-dark">
+        go to code scanner
     </a>
 </div>
 
@@ -114,43 +124,65 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#submit").on('click touchstart', function (e) {
-            e.preventDefault();
 
-            $.ajax({
-                method: "POST",
-                url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
-                type: "json",
-                data: {
-                    _csrf: "[[${_csrf.token}]]",
-                    code: $("#code").val()
-                }
-            }).always(function (data, textStatus, xhr) {
-                if (xhr.status === 200) {
-                    $("#successTicket").html(data.object.ticket.productTitle);
-                    $("#successCustomer").html(data.object.ticket.ownerName);
-                    $("#successPage").removeClass("d-none");
-                } else if (xhr.status === 208) {
-                    $("#doubleTicket").html(data.object.ticket.productTitle);
-                    $("#doubleCustomer").html(data.object.ticket.ownerName);
-                    $("#doublePage").removeClass("d-none");
-                } else {
-                    $("#errorMessage").html(data.message);
-                    $("#errorPage").removeClass("d-none");
-                }
-            });
-        });
+<div class="container-fluid" id="video-container">
+    <video id="qr-video"></video>
+</div>
 
-        $("#errorPage, #successPage, #doublePage").on('click touchstart', function (e) {
-            e.preventDefault();
+<script th:src="@{/js/sales/qr-scanner.umd.min.js}"></script>
+<script type="text/javascript">
+    let videoElem = document.getElementById('qr-video');
+    videoElem.style.width = '100%';
+    videoElem.style.height = '100%';
+    let active = true;
+    const qrScanner = new QrScanner(
+        videoElem,
+        result => {
+            console.log(result);
+            if(active) {
+                active = false;
+                $.ajax({
+                    method: "POST",
+                    url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
+                    type: "json",
+                    data: {
+                        _csrf: "[[${_csrf.token}]]",
+                        code: result.data
+                    }
+                }).always(function (data, textStatus, xhr) {
+                    console.log(data);
+                    if (xhr.status === 200) {
+                        $("#successTicket").html(data.object.ticket.productTitle);
+                        $("#successCustomer").html(data.object.ticket.ownerName);
+                        $("#successPage").removeClass("d-none");
+                    } else if (xhr.status === 208) {
+                        $("#doubleTicket").html(data.object.ticket.productTitle);
+                        $("#doubleCustomer").html(data.object.ticket.ownerName);
+                        $("#doublePage").removeClass("d-none");
+                    } else {
+                        $("#errorMessage").html(data.responseJSON.message);
+                        $("#errorPage").removeClass("d-none");
+                    }
+                });
+            }
+        },
+        {
+            preferredCamera: 'environment',
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        }
+    );
+    qrScanner.start();
 
-            $("#errorPage").addClass("d-none");
-            $("#doublePage").addClass("d-none");
-            $("#successPage").addClass("d-none");
-        });
+
+    $("#errorPage, #successPage, #doublePage").on('click touchstart', function (e) {
+        e.preventDefault();
+
+        $("#errorPage").addClass("d-none");
+        $("#doublePage").addClass("d-none");
+        $("#successPage").addClass("d-none");
+
+        active = true;
     });
 </script>
-
 </body>

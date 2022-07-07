@@ -46,7 +46,7 @@
             </div>
             <div class="row mb-4" th:each=" event : ${events}">
                 <div class="col">
-                    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/barcode'}"
+                    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/qrcode'}"
                        class="btn btn-lg btn-block btn-secondary">
                         <span th:text="${event.getTitle()}"></span>
                         <i class="fa fa-arrow-right fa-fw" aria-hidden="true"></i>

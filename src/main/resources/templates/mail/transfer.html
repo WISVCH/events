@@ -28,6 +28,12 @@
             display: block;
         }
 
+        img.qrcode {
+            widht: 226px;
+            height: 226px;
+            display: block;
+        }
+
         table {
             border-collapse: collapse !important;
         }
@@ -264,7 +270,7 @@
                                                             </td>
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                Barcode
+                                                                Ticket
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -275,9 +281,12 @@
                                                             </td>
                                                             <td class="white-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                <img th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
+                                                                <img th:if="${ticket.getUniqueCode().length() == 6}" th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
                                                                      width="226px"
                                                                      class="barcode" alt="">
+                                                                <img th:if="${ticket.getUniqueCode().length() != 6}" th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
+                                                                     width="226px"
+                                                                     class="qrcode" alt="">
                                                             </td>
                                                         </tr>
                                                     </table>

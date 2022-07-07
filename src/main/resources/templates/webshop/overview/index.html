@@ -211,8 +211,11 @@
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <div class="modal-body text-center my-5">
+                                                <div th:if="${ticket.getUniqueCode().length() == 6}" class="modal-body text-center my-5">
                                                     <img th:src="'https://barcode.tec-it.com/barcode.ashx?data=280433' + ${ticket.getUniqueCode()} + '&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=128&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0'">
+                                                </div>
+                                                <div th:if="${ticket.getUniqueCode().length() != 6}" class="modal-body text-center">
+                                                    <img class="img-fluid" th:src="@{'/tickets/'+ ${ticket.getKey()}+'/qrcode.png'}">
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a th:if="${ticket.getProduct().getRedirectUrl() != null}" th:href="${ticket.getProduct().getRedirectUrl()}"

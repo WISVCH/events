@@ -56,8 +56,11 @@
                             </h4>
                             <p>Transfer this ticket to another person. Note that <b>this action cannot be undone.</b></p>
                         </div>
-                        <div class="col-12 col-lg-6 text-center mb-4">
+                        <div th:if="${ticket.getUniqueCode().length() == 6}" class="col-12 col-lg-6 text-center mb-4">
                             <img class="img-fluid" th:src="'https://barcode.tec-it.com/barcode.ashx?data=280433' + ${ticket.getUniqueCode()} + '&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=128&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0'">
+                        </div>
+                        <div th:if="${ticket.getUniqueCode().length() != 6}" class="col-12 col-lg-6 text-center mb-4">
+                            <img class="img-fluid" th:src="@{'/tickets/'+ ${ticket.getKey()}+'/qrcode.png'}">
                         </div>
                     </div>
                     <form th:action="@{'./transfer'}" method="POST">
