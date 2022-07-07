@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/icons/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/icons/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/icons/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/icons/site.webmanifest}">
+    <link rel="mask-icon" th:href="@{/icons/safari-pinned-tab.svg}" color="#1e274a">
+    <link rel="shortcut icon" th:href="@{/icons/favicon.ico}">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" th:content="@{/icons/browserconfig.xml}">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>CH Events - Sales > Scan</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/uet5duo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+
+    <style>
+        html,
+        body {
+            height: calc(100vh);
+            width: calc(100vw);
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .container-fluid {
+            z-index: 2;
+        }
+
+        h3 {
+            border-bottom: 0;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 16px;
+        }
+
+        h3 span {
+            color: #f1f3f7;
+            font-weight: normal;
+        }
+
+        #video-container {
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body id="scanPage">
+<nav th:replace="fragments/header :: header"></nav>
+
+<div th:if="${error}" class="alert alert-dismissible fade show alert-danger w-100" role="alert">
+    <span class="fa fa-exclamation" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+    <strong>ERROR:</strong> <span th:text="${error}"></span>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Scan QR code for event: <span th:text="${event.getTitle()}"></span></h3>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-bottom p-3">
+    <a th:href="@{'/sales/scan/event/' + ${event.getKey()} + '/code'}" class="btn btn-lg btn-block btn-dark">
+        go to code scanner
+    </a>
+</div>
+
+<div class="fixed-top py-2 text-white d-none" id="errorPage"
+     style="height: calc(100vh); z-index: 1100; background-color: #ff3b30;">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-exclamation"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="errorMessage"></h4>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-top py-2 text-white d-none" id="doublePage"
+     style="height: calc(100vh - .5rem); background-color: #ffb142">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-check-double"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="doubleTicket"></h4>
+            <h4 class="display-4 text-white" style="font-size: 2rem;" id="doubleCustomer"></h4>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-top py-2 text-white d-none" id="successPage"
+     style="height: calc(100vh - .5rem); background-color: #6dc04f">
+    <div class="row h-100 align-items-center">
+        <div class="col-12 text-center">
+            <p style="font-size: 7.5rem;">
+                <i class="fas fa-check"></i>
+            </p>
+            <h4 class="display-4 text-white" style="font-size: 3.5rem;" id="successTicket"></h4>
+            <h4 class="display-4 text-white" style="font-size: 2rem;" id="successCustomer"></h4>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<div class="container-fluid" id="video-container">
+    <video id="qr-video"></video>
+</div>
+
+<script th:src="@{/js/sales/qr-scanner.umd.min.js}"></script>
+<script type="text/javascript">
+    let videoElem = document.getElementById('qr-video');
+    videoElem.style.width = '100%';
+    videoElem.style.height = '100%';
+    let active = true;
+    const qrScanner = new QrScanner(
+        videoElem,
+        result => {
+            console.log(result);
+            if(active) {
+                active = false;
+                $.ajax({
+                    method: "POST",
+                    url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
+                    type: "json",
+                    data: {
+                        _csrf: "[[${_csrf.token}]]",
+                        code: result.data
+                    }
+                }).always(function (data, textStatus, xhr) {
+                    console.log(data);
+                    if (xhr.status === 200) {
+                        $("#successTicket").html(data.object.ticket.productTitle);
+                        $("#successCustomer").html(data.object.ticket.ownerName);
+                        $("#successPage").removeClass("d-none");
+                    } else if (xhr.status === 208) {
+                        $("#doubleTicket").html(data.object.ticket.productTitle);
+                        $("#doubleCustomer").html(data.object.ticket.ownerName);
+                        $("#doublePage").removeClass("d-none");
+                    } else {
+                        $("#errorMessage").html(data.responseJSON.message);
+                        $("#errorPage").removeClass("d-none");
+                    }
+                });
+            }
+        },
+        {
+            preferredCamera: 'environment',
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        }
+    );
+    qrScanner.start();
+
+
+    $("#errorPage, #successPage, #doublePage").on('click touchstart', function (e) {
+        e.preventDefault();
+
+        $("#errorPage").addClass("d-none");
+        $("#doublePage").addClass("d-none");
+        $("#successPage").addClass("d-none");
+
+        active = true;
+    });
+</script>
+</body>
