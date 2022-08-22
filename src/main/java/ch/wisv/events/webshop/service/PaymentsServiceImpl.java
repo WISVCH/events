@@ -143,6 +143,12 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         value = order.getPaymentMethod().calculateCostIncludingTransaction(value);
         Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value)).currency("EUR").build();
+
+        // TODO: remove these logs
+        System.out.println(Double.toString(value));
+        System.out.print(paymentAmount.toString());
+
+
         return PaymentRequest.builder()
                 .method(Optional.of(List.of(method)))
                 .amount(paymentAmount)
