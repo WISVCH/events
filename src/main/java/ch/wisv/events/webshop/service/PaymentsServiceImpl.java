@@ -113,7 +113,7 @@ public class PaymentsServiceImpl implements PaymentsService {
      * @param order with type Order
      * @return a payment request that corresponds to the data in order
      */
-    private PaymentRequest createMolliePaymentRequestFromOrder(Order order) {
+    protected PaymentRequest createMolliePaymentRequestFromOrder(Order order) {
         Map<String, Object> metadata = new HashMap<>();
 
         metadata.put("orderId", order.getPublicReference());
