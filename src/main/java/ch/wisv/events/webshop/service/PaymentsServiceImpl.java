@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,13 +142,8 @@ public class PaymentsServiceImpl implements PaymentsService {
                 .mapToDouble(op -> op.getPrice() * op.getAmount())
                 .sum();
 
-        value = order.getPaymentMethod().calculateCostIncludingTransaction(value);
-        Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value)).currency("EUR").build();
-
-        // TODO: remove these logs
-        System.out.println(Double.toString(value));
-        System.out.print(paymentAmount.toString());
-
+        value = order.getPaymentMethod().calculateCostIncludingTransaction(value);  
+        Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING)).currency("EUR").build();
 
         return PaymentRequest.builder()
                 .method(Optional.of(List.of(method)))
