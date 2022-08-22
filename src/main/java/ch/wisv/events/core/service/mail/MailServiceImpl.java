@@ -156,22 +156,24 @@ public class MailServiceImpl implements MailService {
             message.setText(content, true); // true = isHtml
             message.addInline("ch-logo.png", new ClassPathResource("/static/images/ch-logo.png"), "image/png");
 
-            for (Ticket ticket : tickets) {
-                String uniqueCode = ticket.getUniqueCode();
-                // Retrieve and return barcode (LEGACY)
-                if (uniqueCode.length() == 6){
-                    // Get barcode from url
-                    String url = "https://barcode.tec-it.com/barcode.ashx?data=978020" + uniqueCode + "&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0";
-                    URL urlObj = new URL(url);
-                    InputStream is = urlObj.openStream();
-                    byte[] bytes = IOUtils.toByteArray(is);
-
-                    // Attach image inline to message
-                    message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
-                } else {
-                    BufferedImage qrCode = QrCode.generateQrCode(uniqueCode);
-                    byte[] bytes = QrCode.bufferedImageToBytes(qrCode);
-                    message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+            if(tickets != null) {
+                for (Ticket ticket : tickets) {
+                    String uniqueCode = ticket.getUniqueCode();
+                    // Retrieve and return barcode (LEGACY)
+                    if (uniqueCode.length() == 6){
+                        // Get barcode from url
+                        String url = "https://barcode.tec-it.com/barcode.ashx?data=978020" + uniqueCode + "&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0";
+                        URL urlObj = new URL(url);
+                        InputStream is = urlObj.openStream();
+                        byte[] bytes = IOUtils.toByteArray(is);
+    
+                        // Attach image inline to message
+                        message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+                    } else {
+                        BufferedImage qrCode = QrCode.generateQrCode(uniqueCode);
+                        byte[] bytes = QrCode.bufferedImageToBytes(qrCode);
+                        message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+                    }
                 }
             }
 
