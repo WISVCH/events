@@ -21,6 +21,13 @@ public interface CustomerService {
     List<Customer> getAllCustomers();
 
     /**
+     * Get count of customers.
+     *
+     * @return customer count
+     */
+    long count();
+
+    /**
      * Method getAllCustomerCreatedAfter ...
      *
      * @param after of type LocalDateTime

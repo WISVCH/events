@@ -21,6 +21,13 @@ public interface EventService {
     List<Event> getAll();
 
     /**
+     * Get the count of all events.
+     *
+     * @return the eventcount
+     */
+    long count();
+
+    /**
      * Get all Events between a lowerBound and upperBound.
      *
      * @param lowerBound of type LocalDateTime

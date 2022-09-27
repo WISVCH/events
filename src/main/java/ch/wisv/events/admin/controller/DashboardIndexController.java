@@ -61,11 +61,11 @@ public class DashboardIndexController extends DashboardController {
     public String index(Model model) {
         List<Event> upcomingEvents = this.determineUpcomingEvents();
 
-        int totalEvents = this.eventService.getAll().size();
+        long totalEvents = this.eventService.count();
         model.addAttribute("totalEvents", totalEvents);
         model.addAttribute("increaseEvents", this.calculateChangePercentage(this.determineTotalEventsLastMonth(), totalEvents));
 
-        int totalCustomers = this.customerService.getAllCustomers().size();
+        long totalCustomers = this.customerService.count();
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(this.determineTotalCustomersLastMonth(), totalCustomers));
 
