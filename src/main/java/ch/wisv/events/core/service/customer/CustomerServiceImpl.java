@@ -53,6 +53,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Get count of customers.
+     *
+     * @return customer count
+     */
+    @Override
+    public long count() {
+        return customerRepository.count();
+    }
+
+    /**
      * Method getAllCustomerCreatedAfter ...
      *
      * @param after of type LocalDateTime

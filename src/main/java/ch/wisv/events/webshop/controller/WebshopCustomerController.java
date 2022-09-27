@@ -106,6 +106,7 @@ public class WebshopCustomerController extends WebshopController {
             }
 
             Customer customer = authenticationService.getCurrentCustomer();
+            authenticationService.
             orderService.addCustomerToOrder(order, customer);
 
             return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());

@@ -57,6 +57,16 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * Get the count of all events.
+     *
+     * @return the eventcount
+     */
+    @Override
+    public long count() {
+        return eventRepository.count();
+    }
+
+    /**
      * Get all event between an lower and upper bound.
      *
      * @param lowerBound of type LocalDateTime
