@@ -117,7 +117,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             customer.setSub(userInfo.getSubject());
         }
 
-        if (customer.getEmail() == null || customer.getEmail().equals("")) {
+        if (customer.getEmail() == null || customer.getEmail().equals("") || !customer.getEmail().equals(userInfo.getEmail())) {
             customer.setEmail(userInfo.getEmail());
         }
 
