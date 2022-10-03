@@ -133,7 +133,13 @@
                     </div>
 
                     <div class="card-footer">
-                        <a href="#" class="btn btn-primary btn-block btn-shopping-basket"
+                        <button class="btn btn-block btn-danger disabled btn-secondary"
+                                th:if="${product.isSoldOut() || event.isSoldOut()}"
+                                disabled>
+                            Sold out
+                        </button>
+                        <a th:if="${!product.isSoldOut() && !event.isSoldOut()}"
+                           href="#" class="btn btn-primary btn-block btn-shopping-basket"
                            th:attr="data-product-key=${product.getKey()}, data-product-title=${product.getTitle()}, data-product-cost=${product.getCost()}, data-customer-limit=${product.getMaxSoldPerCustomer()}">
                             Add to basket
                         </a>

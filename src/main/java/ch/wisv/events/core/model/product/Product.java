@@ -205,4 +205,13 @@ public class Product {
     public void increaseReserved(int amount) {
         this.reserved += amount;
     }
+
+    /**
+     * Is the product sold out.
+     *
+     * @return boolean
+     */
+    public boolean isSoldOut() {
+        return this.maxSold != null && this.sold >= this.maxSold;
+    }
 }
