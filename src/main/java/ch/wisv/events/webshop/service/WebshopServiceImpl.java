@@ -26,7 +26,6 @@ public class WebshopServiceImpl implements WebshopService {
         List<Product> salableProducts = event.getProducts().stream()
                 .filter(this.isAfterSellStart())
                 .filter(this.isBeforeSellEnd())
-                .filter(this.filterProductSoldOut())
                 .collect(Collectors.toList());
         event.setProducts(salableProducts);
 
@@ -45,15 +44,6 @@ public class WebshopServiceImpl implements WebshopService {
         return events.stream().map(this::filterEventProductNotSalable)
                 .filter(event -> event.getProducts().size() > 0)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Check if Product is not sold out.
-     *
-     * @return Predicate
-     */
-    private Predicate<Product> filterProductSoldOut() {
-        return product -> product.getMaxSold() == null || product.getSold() != product.getMaxSold();
     }
 
     /**

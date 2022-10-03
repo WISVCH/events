@@ -228,4 +228,13 @@ public class Event {
     private double calcProgress(double reserved) {
         return Math.min(Math.round(((reserved / (double) this.target) * 100.d) * 100.d) / 100.d, 100.d);
     }
+
+    /**
+     * Check if the event is sold out.
+     *
+     * @return boolean
+     */
+    public boolean isSoldOut() {
+        return this.maxSold != null && this.getSold() >= this.maxSold;
+    }
 }
