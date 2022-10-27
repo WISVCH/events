@@ -75,6 +75,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Method getAllCustomerCreatedAfter ...
+     *
+     * @param after of type LocalDateTime
+     *
+     * @return long
+     */
+    @Override
+    public long countAllCustomerCreatedAfter(LocalDateTime after) {
+        return customerRepository.countAllByCreatedAtAfter(after);
+    }
+
+
+    /**
      * Get a customer by key.
      *
      * @param key key

@@ -56,7 +56,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @param after  of type LocalDateTime
      * @param before of type LocalDateTime
      *
-     * @return List
+     * @return the count of all
+     */
+    long countAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
+
+    /**
+     * Find all Event with start between a period of time.
+     *
+     * @param after  of type LocalDateTime
+     * @param before of type LocalDateTime
+     *
+     * @return List of Events
      */
     List<Event> findAllByStartIsAfterAndStartIsBefore(LocalDateTime after, LocalDateTime before);
 
