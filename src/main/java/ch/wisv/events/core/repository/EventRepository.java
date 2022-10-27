@@ -87,7 +87,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "select count(*) as ticketsCount, avg(status)*100 as percentageScanned " +
                     "from Ticket A INNER JOIN (Select distinct products_id FROM ticket T1 INNER JOIN (Select products_id from " +
                     "event_products EP INNER JOIN " +
-                    "(Select id from event e where e.start > NOW() - ?1 and e.ending - ?2 < NOW()) E " +
+                    "(Select id from event e where e.start > ?1 and e.ending < ?2) E " +
                     "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id WHERE status=1) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true)
     Attendence getAttendenceFromEventsInDateRange(LocalDateTime start, LocalDateTime End);
