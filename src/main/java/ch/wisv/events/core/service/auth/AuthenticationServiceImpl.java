@@ -7,6 +7,7 @@ import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
@@ -118,7 +119,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         if (customer.getEmail() == null || customer.getEmail().equals("") || !customer.getEmail().equals(userInfo.getEmail())) {
+            // Check if the email in the user's info is already in the database
+            Customer customerSameEmail = customerService.getByEmail(userInfo.getEmail());
+            if (customerSameEmail != null) {
+                // Change the emailadress and add a timestamp and string constant
+                String date = Long.toString(new Date().getTime());
+                customerSameEmail.setEmail(date + customerSameEmail.getEmail() + "@replaced.nl");
+            }
             customer.setEmail(userInfo.getEmail());
+
         }
 
         customer.setVerifiedChMember(true);
