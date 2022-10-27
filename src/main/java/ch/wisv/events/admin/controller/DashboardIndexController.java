@@ -3,6 +3,7 @@ package ch.wisv.events.admin.controller;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
+import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
@@ -10,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,20 +37,25 @@ public class DashboardIndexController extends DashboardController {
     /** TicketService. */
     private final TicketService ticketService;
 
+    /** EventRepository. */
+    private final EventRepository eventRepository;
+
     /**
      * DashboardController constructor.
      *
      * @param eventService    of type EventService
      * @param customerService of type CustomerService
      * @param ticketService   of type TicketService
+     * @param eventRepository   of type eventRepository
      */
     @Autowired
     public DashboardIndexController(
-            EventService eventService, CustomerService customerService, TicketService ticketService
+            EventService eventService, CustomerService customerService, TicketService ticketService, EventRepository eventRepository
     ) {
         this.eventService = eventService;
         this.customerService = customerService;
         this.ticketService = ticketService;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -60,6 +68,7 @@ public class DashboardIndexController extends DashboardController {
     @GetMapping()
     public String index(Model model) {
         List<Event> upcomingEvents = this.determineUpcomingEvents();
+        LocalDateTime CurrentBoardStartYear = this.getCurrentBoardStartDate();
 
         long totalEvents = this.eventService.count();
         model.addAttribute("totalEvents", totalEvents);
@@ -67,13 +76,14 @@ public class DashboardIndexController extends DashboardController {
 
         long totalCustomers = this.customerService.count();
         model.addAttribute("totalCustomers", totalCustomers);
-        model.addAttribute("increaseCustomers", this.calculateChangePercentage(this.determineTotalCustomersLastMonth(), totalCustomers));
+        model.addAttribute("increaseCustomers", this.calculateChangePercentage(totalCustomers - this.determineTotalCustomersLastMonth(), totalCustomers));
 
-        double attendanceRateCurrentBoard = this.determineAverageAttendanceRateEventCurrentBoard();
+        double attendanceRateCurrentBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear, CurrentBoardStartYear.minusMonths(1)).getPercentageScanned();
+        double attendanceRateLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1), CurrentBoardStartYear.minusMonths(1).minusYears(1)).getPercentageScanned();
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
         model.addAttribute(
                 "changeAttendanceRate",
-                this.calculateChangePercentage(this.determineAverageAttendanceRateEventPreviousBoard(), attendanceRateCurrentBoard)
+                this.calculateChangePercentage(attendanceRateLastBoard, attendanceRateCurrentBoard)
         );
 
         model.addAttribute("upcoming", upcomingEvents);
@@ -91,7 +101,7 @@ public class DashboardIndexController extends DashboardController {
      * @return double
      */
     private double calculateChangePercentage(double previous, double current) {
-        return Math.round((current - previous) / previous * 10000.d) / 100.d;
+        return Math.round(((current - previous) / previous) * 100.d) / 100.d;
     }
 
     /**
@@ -111,33 +121,6 @@ public class DashboardIndexController extends DashboardController {
         }
 
         return Math.round(numberTicketsScanned / (eventTickets.size() * 10000.d)) / 100.d;
-    }
-
-    /**
-     * Method determineAverageAttendanceRateEventCurrentBoard ...
-     *
-     * @return double
-     */
-    private double determineAverageAttendanceRateEventCurrentBoard() {
-        double average = this.getEventsCurrentBoard()
-                .stream()
-                .filter(x -> x.getStart().isBefore(LocalDateTime.now()))
-                .mapToDouble(this::determineAttendanceRateEvent)
-                .average()
-                .orElse(0);
-
-        return Math.round(average * 100.d) / 100.d;
-    }
-
-    /**
-     * Method determineAverageAttendanceRateEventCurrentBoard ...
-     *
-     * @return double
-     */
-    private double determineAverageAttendanceRateEventPreviousBoard() {
-        double average = this.getEventsPreviousBoard().stream().mapToDouble(this::determineAttendanceRateEvent).average().orElse(0);
-
-        return Math.round(average * 100.d) / 100.d;
     }
 
     /**
@@ -184,32 +167,15 @@ public class DashboardIndexController extends DashboardController {
     }
 
     /**
-     * Method getEventsCurrentBoard returns the eventsCurrentBoard of this DashboardController object.
-     *
-     * @return the eventsCurrentBoard (type List) of this DashboardController object.
+     * Returns the current boards localdatetime
+     * @return LocalDateTime
      */
-    private List<Event> getEventsCurrentBoard() {
-        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear(), 9, 1, 0, 0);
+    private LocalDateTime getCurrentBoardStartDate(){
+        LocalDateTime lowerBound = LocalDateTime.of(LocalDateTime.now().getYear(), 9, 1, 0, 0);
 
         if (LocalDateTime.now().getMonthValue() < 9) {
-            lowerbound = lowerbound.minusYears(1);
+            lowerBound = lowerBound.minusYears(1);
         }
-
-        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
-    }
-
-    /**
-     * Method getEventsPreviousBoard returns the eventsPreviousBoard of this DashboardController object.
-     *
-     * @return the eventsPreviousBoard (type List) of this DashboardController object.
-     */
-    private List<Event> getEventsPreviousBoard() {
-        LocalDateTime lowerbound = LocalDateTime.of(LocalDateTime.now().getYear() - 1, 9, 1, 0, 0);
-
-        if (LocalDateTime.now().getMonthValue() < 9) {
-            lowerbound = lowerbound.minusYears(1);
-        }
-
-        return this.eventService.getAllBetween(lowerbound, lowerbound.plusYears(1));
+        return lowerBound;
     }
 }

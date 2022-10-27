@@ -1,12 +1,16 @@
 package ch.wisv.events.core.repository;
 
+import ch.wisv.events.core.admin.Attendence;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import ch.wisv.events.core.admin.TreasurerData;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * EventRepository interface.
@@ -78,4 +82,13 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return Optional
      */
     Optional<Event> findByProductsContaining(Product product);
+
+    @Query(value =
+            "select count(*) as ticketsCount, avg(status)*100 as percentageScanned " +
+                    "from Ticket A INNER JOIN (Select distinct products_id FROM ticket T1 INNER JOIN (Select products_id from " +
+                    "event_products EP INNER JOIN " +
+                    "(Select id from event e where e.start > NOW() - ?1 and e.ending - ?2 < NOW()) E " +
+                    "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id WHERE status=1) B " +
+                    "ON A.product_id=B.products_id;", nativeQuery = true)
+    Attendence getAttendenceFromEventsInDateRange(LocalDateTime start, LocalDateTime End);
 }
