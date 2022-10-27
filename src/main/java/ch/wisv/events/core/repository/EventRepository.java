@@ -4,6 +4,8 @@ import ch.wisv.events.core.admin.Attendence;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -90,5 +92,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                     "(Select id from event e where e.start > ?1 and e.ending < ?2) E " +
                     "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id WHERE status=1) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true)
-    Attendence getAttendenceFromEventsInDateRange(LocalDateTime start, LocalDateTime End);
+    Attendence getAttendenceFromEventsInDateRange(LocalDate start, LocalDate End);
 }

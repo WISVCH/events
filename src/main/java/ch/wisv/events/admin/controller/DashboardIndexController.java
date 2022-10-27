@@ -78,8 +78,8 @@ public class DashboardIndexController extends DashboardController {
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(totalCustomers - this.determineTotalCustomersLastMonth(), totalCustomers));
 
-        double attendanceRateCurrentBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear, CurrentBoardStartYear.minusMonths(1)).getPercentageScanned();
-        double attendanceRateLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1), CurrentBoardStartYear.minusMonths(1).minusYears(1)).getPercentageScanned();
+        double attendanceRateCurrentBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.toLocalDate(), CurrentBoardStartYear.minusMonths(1).toLocalDate()).getPercentageScanned();
+        double attendanceRateLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).toLocalDate(), CurrentBoardStartYear.minusMonths(1).minusYears(1).toLocalDate()).getPercentageScanned();
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
         model.addAttribute(
                 "changeAttendanceRate",
