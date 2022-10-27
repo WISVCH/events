@@ -1,5 +1,6 @@
 package ch.wisv.events.admin.controller;
 
+import ch.wisv.events.core.admin.Attendence;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
@@ -78,8 +79,18 @@ public class DashboardIndexController extends DashboardController {
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(totalCustomers - this.determineTotalCustomersLastMonth(), totalCustomers));
 
-        double attendanceRateCurrentBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.toLocalDate(), CurrentBoardStartYear.minusMonths(1).toLocalDate()).getPercentageScanned();
-        double attendanceRateLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).toLocalDate(), CurrentBoardStartYear.minusMonths(1).minusYears(1).toLocalDate()).getPercentageScanned();
+        Attendence attCurrBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.toLocalDate(), CurrentBoardStartYear.minusMonths(1).toLocalDate());
+        Attendence attLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).toLocalDate(), CurrentBoardStartYear.minusMonths(1).minusYears(1).toLocalDate());
+
+        double attendanceRateCurrentBoard = 0d;
+        double attendanceRateLastBoard = 0d;
+
+        if(attLastBoard.getTicketsCount() != 0 && attCurrBoard.getTicketsCount() != 0) {
+            attendanceRateCurrentBoard = attCurrBoard.getPercentageScanned();
+            attendanceRateLastBoard = attLastBoard.getPercentageScanned();
+        }
+
+
         model.addAttribute("averageAttendanceRate", attendanceRateCurrentBoard);
         model.addAttribute(
                 "changeAttendanceRate",
