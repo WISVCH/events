@@ -1,6 +1,6 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.model.treasurer.TreasurerData;
+import ch.wisv.events.core.admin.TreasurerData;
 
 import java.time.LocalDate;
 import java.util.*;

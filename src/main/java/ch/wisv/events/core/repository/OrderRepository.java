@@ -7,7 +7,7 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 import java.util.Optional;
 
-import ch.wisv.events.core.model.treasurer.TreasurerData;
+import ch.wisv.events.core.admin.TreasurerData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

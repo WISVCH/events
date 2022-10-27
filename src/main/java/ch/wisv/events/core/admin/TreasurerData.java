@@ -1,4 +1,4 @@
-package ch.wisv.events.core.model.treasurer;
+package ch.wisv.events.core.admin;
 
 import java.time.LocalDateTime;
 

@@ -96,7 +96,7 @@
                 </div>
                 <div class="col">
                     <div class="card mb-4">
-                        <h6 class="card-header">Average attendance rate</h6>
+                        <h6 class="card-header">Average attendance rate past month</h6>
                         <div class="card-body text-primary">
                             <h4 class="card-title">
                                 [[${averageAttendanceRate}]]
@@ -113,7 +113,7 @@
                                         <i th:class="'fa fa-arrow-' + ((${changeAttendanceRate} > 0) ? 'up' : 'down')"></i>
                                         <strong>[[${changeAttendanceRate}]]%</strong>
                                     </span>
-                                    [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board
+                                    [[${changeAttendanceRate} > 0 ? 'more' : 'less']] than previous board in the same month
                                 </small>
                             </span>
                         </div>
