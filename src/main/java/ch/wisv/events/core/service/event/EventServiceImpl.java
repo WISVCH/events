@@ -72,7 +72,20 @@ public class EventServiceImpl implements EventService {
      * @param lowerBound of type LocalDateTime
      * @param upperBound of type LocalDateTime
      *
-     * @return List
+     * @return count
+     */
+    @Override
+    public long getCountOfAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound) {
+        return this.eventRepository.countAllByStartIsAfterAndStartIsBefore(lowerBound, upperBound);
+    }
+
+    /**
+     * Get all event between an lower and upper bound.
+     *
+     * @param lowerBound of type LocalDateTime
+     * @param upperBound of type LocalDateTime
+     *
+     * @return List of Events
      */
     @Override
     public List<Event> getAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound) {

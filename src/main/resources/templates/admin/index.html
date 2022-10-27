@@ -45,7 +45,7 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="card mb-3">
+                    <div class="card mb-4">
                         <h6 class="card-header">Total events</h6>
                         <div class="card-body text-primary">
                             <h4 class="card-title">
@@ -63,14 +63,14 @@
                                         <i th:class="'fa fa-arrow-' + ((${increaseEvents} > 0) ? 'up' : 'down')"></i>
                                         <strong>[[${increaseEvents}]]%</strong>
                                     </span>
-                                    [[${increaseEvents} > 0 ? 'more' : 'less']] than last month
+                                    [[${increaseEvents} > 0 ? 'more' : 'less']] than this month last year
                                 </small>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card mb-3">
+                    <div class="card mb-4">
                         <h6 class="card-header">Total number of customers</h6>
                         <div class="card-body text-primary">
                             <h4 class="card-title">
@@ -95,32 +95,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card mb-3">
-                        <h6 class="card-header">Average target rate</h6>
-                        <div class="card-body text-primary">
-                            <h4 class="card-title">
-                                [[${averageTargetRate}]]
-                                <small>%</small>
-                            </h4>
-                            <div class="progress mb-2">
-                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                                     th:style="'width: ' + ${averageTargetRate} + '%'">
-                                </div>
-                            </div>
-                            <span class="text-dark">
-                                <small>
-                                    <span th:class="((${changeTargetRate} > 0) ? 'text-success' : 'text-danger')">
-                                        <i th:class="'fa fa-arrow-' + ((${changeTargetRate} > 0) ? 'up' : 'down')"></i>
-                                        <strong>[[${changeTargetRate}]]%</strong>
-                                    </span>
-                                    [[${changeTargetRate} > 0 ? 'more' : 'less']] than previous board
-                                </small>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card mb-3">
+                    <div class="card mb-4">
                         <h6 class="card-header">Average attendance rate</h6>
                         <div class="card-body text-primary">
                             <h4 class="card-title">

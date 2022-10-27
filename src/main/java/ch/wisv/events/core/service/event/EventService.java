@@ -33,6 +33,16 @@ public interface EventService {
      * @param lowerBound of type LocalDateTime
      * @param upperBound of type LocalDateTime
      *
+     * @return number of events
+     */
+    long getCountOfAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound);
+
+    /**
+     * Get all Events between a lowerBound and upperBound.
+     *
+     * @param lowerBound of type LocalDateTime
+     * @param upperBound of type LocalDateTime
+     *
      * @return List of Events
      */
     List<Event> getAllBetween(LocalDateTime lowerBound, LocalDateTime upperBound);

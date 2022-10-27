@@ -46,6 +46,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<Customer> findAllByCreatedAtAfter(LocalDateTime after);
 
     /**
+     * Method countAllByCreatedAtAfter
+     *
+     * @param after of type LocalDateTime
+     *
+     * @return long
+     */
+    long countAllByCreatedAtAfter(LocalDateTime after);
+
+    /**
      * Find a Customer by its sub.
      *
      * @param sub of type String

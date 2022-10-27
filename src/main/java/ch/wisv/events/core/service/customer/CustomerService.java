@@ -37,6 +37,15 @@ public interface CustomerService {
     List<Customer> getAllCustomerCreatedAfter(LocalDateTime after);
 
     /**
+     * Method getAllCustomerCreatedAfter ...
+     *
+     * @param after of type LocalDateTime
+     *
+     * @return long
+     */
+    long countAllCustomerCreatedAfter(LocalDateTime after);
+
+    /**
      * Get a customer by key.
      *
      * @param key key
