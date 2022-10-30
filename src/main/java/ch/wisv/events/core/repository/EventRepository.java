@@ -13,6 +13,7 @@ import java.util.Optional;
 import ch.wisv.events.core.admin.TreasurerData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * EventRepository interface.
@@ -89,8 +90,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "select count(*) as ticketsCount, avg(status)*100 as percentageScanned " +
                     "from Ticket A INNER JOIN (Select distinct products_id FROM ticket T1 INNER JOIN (Select products_id from " +
                     "event_products EP INNER JOIN " +
-                    "(Select id from event e where e.start > ?1 and e.ending < ?2) E " +
-                    "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id WHERE status=1) B " +
+                    "(Select id from event e where e.ending between :startDate and :endDate) E " +
+                    "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true) //TODO fix proper date
-    Attendence getAttendenceFromEventsInDateRange(LocalDate start, LocalDate End);
+    Attendence getAttendenceFromEventsInDateRange(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime End);
 }

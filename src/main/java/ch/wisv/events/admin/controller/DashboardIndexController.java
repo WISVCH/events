@@ -79,8 +79,8 @@ public class DashboardIndexController extends DashboardController {
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(totalCustomers - this.determineTotalCustomersLastMonth(), totalCustomers));
 
-        Attendence attCurrBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.toLocalDate(), CurrentBoardStartYear.minusMonths(1).toLocalDate());
-        Attendence attLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).toLocalDate(), CurrentBoardStartYear.minusMonths(1).minusYears(1).toLocalDate());
+        Attendence attCurrBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusMonths(1), CurrentBoardStartYear);
+        Attendence attLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).minusMonths(1), CurrentBoardStartYear.minusYears(1));
 
         double attendanceRateCurrentBoard = 0d;
         double attendanceRateLastBoard = 0d;
