@@ -141,7 +141,7 @@ $(document).ready(function () {
             };
 
             $.ajax({
-                url: '/events/api/v1/products',
+                url: '/api/v1/products',
                 type: 'POST',
                 headers: {
                     'Content-Type': "application/json"
