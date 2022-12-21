@@ -143,7 +143,7 @@
                 active = false;
                 $.ajax({
                     method: "POST",
-                    url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
+                    url: "/api/v1/sales/scan/event/[[${event.getKey()}]]/code",
                     type: "json",
                     data: {
                         _csrf: "[[${_csrf.token}]]",
