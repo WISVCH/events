@@ -73,7 +73,12 @@ public class DashboardTreasurerController extends DashboardController {
 
         while (listIterator.hasPrevious()) {
             TreasurerData data = listIterator.previous();
-            LocalDate date = data.getPaidAt().toLocalDate();
+            LocalDateTime paidAt = data.getPaidAt();
+            if (paidAt == null) {
+                continue;
+            }
+
+            LocalDate date = paidAt.toLocalDate();
             date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
 
             Map<String, Pair<Double, Integer>> list = map.getOrDefault(date, new HashMap<>());
