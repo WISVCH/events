@@ -255,7 +255,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getLimitedOrders() {
-        return orderRepository.findAll(new PageRequest(0, 100, Sort.by(Sort.Direction.DESC, "createdAt")));
+        return orderRepository.findAll(PageRequest.of(0, 100).withSort(Sort.by(Sort.Direction.DESC, "createdAt"))).getContent();
     }
 
     /**
