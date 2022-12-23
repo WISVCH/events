@@ -59,7 +59,7 @@ public class DashboardOrderController extends DashboardController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute(OBJ_ORDERS, this.orderService.getAllOrders());
+        model.addAttribute(OBJ_ORDERS, this.orderService.getLimitedOrders());
 
         return "admin/orders/index";
     }

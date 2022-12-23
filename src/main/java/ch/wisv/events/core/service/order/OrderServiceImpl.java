@@ -247,6 +247,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Method getLimitedOrders returns a limited list of orders.
+     *
+     * @return List of Orders, with a limit.
+     */
+    @Override
+    public List<Order> getLimitedOrders() {
+        return orderRepository.findFirst100ByCreatedAt();
+    }
+
+    /**
      * Get a list of all the Reservation Orders.
      *
      * @return List of Orders

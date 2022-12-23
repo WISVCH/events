@@ -85,6 +85,13 @@ public interface OrderService {
     List<Order> getAllOrders();
 
     /**
+     * Method getLimitedOrders returns a limited list of orders.
+     *
+     * @return List of Orders, with a limit.
+     */
+    List<Order> getLimitedOrders();
+
+    /**
      * Get a list of all the Reservation Orders.
      *
      * @return List of Orders
