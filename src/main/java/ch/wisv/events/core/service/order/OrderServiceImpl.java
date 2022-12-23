@@ -253,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getLimitedOrders() {
-        return orderRepository.findFirst100OrderByCreatedAt();
+        return orderRepository.findAll(new PageRequest(0, 100));
     }
 
     /**

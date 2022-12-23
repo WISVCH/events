@@ -64,13 +64,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByStatus(OrderStatus status);
 
     /**
-     * Find the first 100 Order, ordered by the creation date.
-     *
-     * @return List of Orders.
-     */
-    List<Order> findFirst100OrderByCreatedAt();
-
-    /**
      * Find one by CH Payments Reference.
      *
      * @param chPaymentsReference of type String
@@ -106,6 +99,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
                     "INNER JOIN ORDERS O ON B.ORDER_ID = O.ID " +
                     "WHERE O.STATUS = 5 " +
                     "AND (O.PAYMENT_METHOD = 2 " +
-                    "OR O.PAYMENT_METHOD = 3) ORDER BY paidAt DESC LIMIT 200", nativeQuery = true)
+                    "OR O.PAYMENT_METHOD = 3)", nativeQuery = true)
     List<TreasurerData> findallPayments();
 }
