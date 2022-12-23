@@ -68,7 +68,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      *
      * @return List of Orders.
      */
-    List<Order> findFirst100ByCreatedAt();
+    List<Order> findFirst100OrderByCreatedAt();
 
     /**
      * Find one by CH Payments Reference.
