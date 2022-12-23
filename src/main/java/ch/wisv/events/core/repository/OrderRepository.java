@@ -64,6 +64,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByStatus(OrderStatus status);
 
     /**
+     * Find the first 100 Order, ordered by the creation date.
+     *
+     * @return List of Orders.
+     */
+    List<Order> findFirst100ByCreatedAt();
+
+    /**
      * Find one by CH Payments Reference.
      *
      * @param chPaymentsReference of type String
