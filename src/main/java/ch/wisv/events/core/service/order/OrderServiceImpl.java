@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.MailSendException;
 
 /**
  * OrderServiceImpl class.
@@ -390,7 +391,6 @@ public class OrderServiceImpl implements OrderService {
      */
     private void updateOrderStatusToPaid(Order order, OrderStatus prevStatus) {
         List<Ticket> tickets = ticketService.createByOrder(order);
-        mailService.sendOrderConfirmation(order, tickets);
 
         order.setTicketCreated(true);
         order.setPaidAt(LocalDateTime.now());
@@ -402,6 +402,13 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.saveAndFlush(order);
         log.info("Order " + order.getPublicReference() + ": Status changed to PAID and tickets created!");
+
+        try {
+            mailService.sendOrderConfirmation(order, tickets);
+        } catch (MailSendException e) {
+            log.error("Failed to send confirmation email for order '" + order.getPublicReference() + "'!");
+            log.error(e.toString());
+        }
     }
 
     /**

@@ -172,11 +172,11 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public List<Ticket> createByOrder(Order order) {
-        if (order.isTicketCreated()) {
-            return null;
-        }
-
         List<Ticket> tickets = new ArrayList<>();
+
+        if (order.isTicketCreated()) {
+            return tickets;
+        }
 
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             for (int i = 0; i < orderProduct.getAmount(); i++) {
