@@ -106,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
      *
      * Note: This method will not update the 'cost' field. This is because changing the cost of a product
      * breaks the treasurer tab.
-     * 
+     *
      * @param product Product containing the new product information
      */
     @Override

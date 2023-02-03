@@ -124,6 +124,9 @@
                                             <input type="number" step="0.01" class="form-control"
                                                    th:field="*{cost}" th:value="${product.getCost()}" th:disabled="${product.getCost() != null}"
                                                    th:required="${product.getCost() == null}">
+                                            <small class="form-text text-muted" th:if="${product.getCost() != null}">
+                                                The price of a product can not be changed. This breaks the treasurer system. If you want to change the price, create a new product and disable the old one.
+                                            </small>
                                         </div>
                                     </div>
                                     <div class="col-12">
