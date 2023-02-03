@@ -51,7 +51,6 @@ public class Product {
     /**
      * Price/Cost of the product.
      */
-    @NotEmpty
     public Double cost;
 
     /**
