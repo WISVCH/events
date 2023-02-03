@@ -122,7 +122,8 @@
                                                 </span>
                                             </div>
                                             <input type="number" step="0.01" class="form-control"
-                                                   th:field="*{cost}" th:value="${product.getCost()}" required>
+                                                   th:field="*{cost}" th:value="${product.getCost()}" th:disabled="${product.getCost() != null}"
+                                                   th:required="${product.getCost() == null}">
                                         </div>
                                     </div>
                                     <div class="col-12">
