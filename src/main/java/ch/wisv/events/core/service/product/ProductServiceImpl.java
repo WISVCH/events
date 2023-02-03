@@ -104,6 +104,9 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Update Product using a Product.
      *
+     * Note: This method will not update the 'cost' field. This is because changing the cost of a product
+     * breaks the treasurer tab.
+     *
      * @param product Product containing the new product information
      */
     @Override
@@ -114,7 +117,6 @@ public class ProductServiceImpl implements ProductService {
         model.setTitle(product.getTitle());
         model.setDescription(product.getDescription());
         model.setRedirectUrl(product.getRedirectUrl());
-        model.setCost(product.getCost());
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());
         model.setSellEnd(product.getSellEnd());
