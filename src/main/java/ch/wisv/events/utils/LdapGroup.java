@@ -37,7 +37,8 @@ public enum LdapGroup {
     COI("COI"),
     CPR("CPR"),
     CC("CC"),
-    HACKCIE("HackCie");
+    HACKCIE("HackCie"),
+    CHESSCO("CHessCo");
 
     /** Nam of the LdapGroup. */
     private final String name;
