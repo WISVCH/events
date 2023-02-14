@@ -117,29 +117,4 @@ public class AuthenticationServiceImplTest extends ServiceTest {
         assertNotEquals("email", oneTimeOrderCustomer.getEmail());
         assertEquals("email", customer.getEmail());
     }
-
-    // TODO: add customer update info
-//    @Test
-//    public void testUpdateCustomerInfo() throws Exception {
-//        Customer customer = new Customer();
-//
-//        HashMap<String, Object> claims = new HashMap<>();
-//        OidcUserInfo userInfo = new OidcUserInfo(claims);
-//
-//        HashSet<String> ldapGroups = new HashSet<>();
-//        ldapGroups.add("CHBEHEER");
-//        ldapGroups.add("TEST");
-//
-//        userInfo.setLdapGroups(ldapGroups);
-//
-//        Authentication auth = mock(Auth.class);
-//        when(((OidcUserAuthority) auth).getUserInfo()).thenReturn(userInfo);
-//        when(customerService.getBySub(null)).thenThrow(CustomerNotFoundException.class);
-//        when(customerService.getByEmail(null)).thenThrow(CustomerNotFoundException.class);
-//        when(customerService.createByChUserInfo(userInfo)).thenReturn(customer);
-//
-//        SecurityContextHolder.getContext().setAuthentication(auth);
-//        assertEquals(customer, authenticationService.getCurrentCustomer());
-//        assertEquals(1, customer.getLdapGroups().size());
-//    }
 }

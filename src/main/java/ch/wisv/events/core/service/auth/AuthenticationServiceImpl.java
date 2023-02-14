@@ -122,12 +122,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             // Check if the email in the user's info is already in the database
             try {
                 Customer customerSameEmail = customerService.getByEmail(userInfo.getEmail());
-                String date = Long.toString(new Date().getTime());
-                // Add date, replace the @ in the email by a _ and add @replaced.wisv.ch
-                // This is to prevent the same email from being used twice. One might suggest merging the two accounts,
-                // but this is not secure, as the user might not be the owner of the other account.
-                String replacedEmail = date + customerSameEmail.getEmail().replace("@", "_") + "@replaced.wisv.ch";
-                customerSameEmail.setEmail(replacedEmail);
+                if (customerSameEmail != null) {
+                    String date = Long.toString(new Date().getTime());
+                    // Add date, replace the @ in the email by a _ and add @replaced.wisv.ch
+                    // This is to prevent the same email from being used twice. One might suggest merging the two accounts,
+                    // but this is not secure, as the user might not be the owner of the other account.
+                    String replacedEmail = date + customerSameEmail.getEmail().replace("@", "_") + "@replaced.wisv.ch";
+                    customerSameEmail.setEmail(replacedEmail);
+                    customerService.update(customerSameEmail);
+                }
             } catch (CustomerNotFoundException ignored) {
                 // Do nothing
             }
