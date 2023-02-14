@@ -120,14 +120,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (customer.getEmail() == null || customer.getEmail().equals("") || !customer.getEmail().equals(userInfo.getEmail())) {
             // Check if the email in the user's info is already in the database
-            Customer customerSameEmail = customerService.getByEmail(userInfo.getEmail());
-            if (customerSameEmail != null) {
-                // Change the emailadress and add a timestamp and string constant
+            try {
+                Customer customerSameEmail = customerService.getByEmail(userInfo.getEmail());
                 String date = Long.toString(new Date().getTime());
-                customerSameEmail.setEmail(date + customerSameEmail.getEmail() + "@replaced.nl");
+                // Add date, replace the @ in the email by a _ and add @replaced.wisv.ch
+                String replacedEmail = date + customerSameEmail.getEmail().replace("@", "_") + "@replaced.wisv.ch";
+                customerSameEmail.setEmail(replacedEmail);
+            } catch (CustomerNotFoundException ignored) {
+                // Do nothing
             }
             customer.setEmail(userInfo.getEmail());
-
         }
 
         customer.setVerifiedChMember(true);
