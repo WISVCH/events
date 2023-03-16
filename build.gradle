@@ -73,7 +73,6 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.apache.httpcomponents:httpclient'
-    implementation 'com.datadoghq:dd-trace-api:0.86.0'
     implementation 'com.google.zxing:core:3.5.0'
     implementation 'com.google.zxing:javase:3.5.0'
 
