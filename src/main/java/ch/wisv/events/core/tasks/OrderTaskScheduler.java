@@ -3,12 +3,11 @@ package ch.wisv.events.core.tasks;
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.ArrayUtils;
-
-import java.time.LocalDateTime;
 
 /**
  * OrderTaskScheduler class.
