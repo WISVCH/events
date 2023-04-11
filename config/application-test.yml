@@ -57,6 +57,7 @@ server:
 wisvch.connect:
   issuerUri: https://connect.ch.tudelft.nl
   clientUri: https://localhost:8080/events
+  claimName: google_groups
 
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
   admin-groups: chbeheer

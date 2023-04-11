@@ -74,7 +74,7 @@ public class AuthenticationServiceImplTest extends ServiceTest {
         claims.put("sub", "WISVCH.1234");
         claims.put("email", "email");
         claims.put("given_name", "name");
-        claims.put("ldap_groups", new HashSet<>());
+        claims.put("google_groups", new HashSet<>());
         OidcUserInfo userInfo = new OidcUserInfo(claims);
 
         OidcUserAuthority auth = mock(OidcUserAuthority.class);
@@ -98,7 +98,7 @@ public class AuthenticationServiceImplTest extends ServiceTest {
         claims.put("sub", "WISVCH.1234");
         claims.put("email", "email");
         claims.put("given_name", "name");
-        claims.put("ldap_groups", new HashSet<>());
+        claims.put("google_groups", new HashSet<>());
         OidcUserInfo userInfo = new OidcUserInfo(claims);
 
         Customer oneTimeOrderCustomer = new Customer();
