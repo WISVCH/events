@@ -139,7 +139,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
-        Collection<String> ldapGroups = userInfo.getClaim("ldap_groups");
+        Collection<String> ldapGroups = userInfo.getClaim("google_groups");
 
         customer.setLdapGroups(
                 ldapGroups.stream()
