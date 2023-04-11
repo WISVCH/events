@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * The claim name of the authentication groups.
      */
-    @Value("${wisvch.connect.claimName}")
+    @Value("${wisvch.connect.claim-name}")
     @Getter
     @Setter
     private String claimName;
