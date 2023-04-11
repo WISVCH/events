@@ -53,6 +53,13 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
     private List<String> betaUsers;
 
     /**
+     * The claim name of the authentication groups.
+     */
+    @Getter
+    @Setter
+    private String claimName;
+
+    /**
      * The configuration of the authentication.
      * @param http
      * @throws Exception
@@ -104,7 +111,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
             SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = oidcUser.getIdToken();
 
-            Collection<String> groups = (Collection<String>) idToken.getClaims().get("google_groups");
+            Collection<String> groups = (Collection<String>) idToken.getClaims().get(claimName);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(roleUser);
             if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {

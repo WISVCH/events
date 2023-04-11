@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -19,8 +23,16 @@ import org.springframework.stereotype.Service;
 /**
  * AuthenticationService class.
  */
+@ConfigurationProperties(prefix = "wisvch.connect")
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    /**
+     * The claim name of the authentication groups.
+     */
+    @Getter
+    @Setter
+    private String claimName;
 
     /**
      * CustomerService.
@@ -35,6 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationServiceImpl(CustomerService customerService) {
         this.customerService = customerService;
     }
+
 
     /**
      * Get the Customer that is currently logged in.
@@ -139,7 +152,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
-        Collection<String> ldapGroups = userInfo.getClaim("google_groups");
+        Collection<String> ldapGroups = userInfo.getClaim(claimName);
 
         customer.setLdapGroups(
                 ldapGroups.stream()
