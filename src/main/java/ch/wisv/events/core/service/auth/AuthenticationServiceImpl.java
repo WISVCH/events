@@ -5,31 +5,32 @@ import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.utils.LdapGroup;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * AuthenticationService class.
  */
-@ConfigurationProperties(prefix = "wisvch.connect")
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
      * The claim name of the authentication groups.
      */
+    @Value("${wisvch.connect.claimName}")
     @Getter
     @Setter
     private String claimName;

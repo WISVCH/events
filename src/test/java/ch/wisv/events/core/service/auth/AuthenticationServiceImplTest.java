@@ -24,8 +24,8 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+import org.springframework.test.context.TestPropertySource;
 import org.thymeleaf.extras.springsecurity5.auth.Authorization;
-
 public class AuthenticationServiceImplTest extends ServiceTest {
 
     /** CustomerService. */
@@ -33,11 +33,12 @@ public class AuthenticationServiceImplTest extends ServiceTest {
     private CustomerService customerService;
 
     /** AuthenticationService. */
-    private AuthenticationService authenticationService;
+    private AuthenticationServiceImpl authenticationService;
 
     @Before
     public void setUp() {
         authenticationService = new AuthenticationServiceImpl(customerService);
+        authenticationService.setClaimName("google_groups");
     }
 
     @After
