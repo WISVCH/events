@@ -104,7 +104,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
             SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = oidcUser.getIdToken();
 
-            Collection<String> groups = (Collection<String>) idToken.getClaims().get("ldap_groups");
+            Collection<String> groups = (Collection<String>) idToken.getClaims().get("google_groups");
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(roleUser);
             if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {
