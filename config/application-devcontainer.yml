@@ -1,0 +1,99 @@
+############## Production properties #############################################################
+# This is the default property file which can be used as a template for default configuration.   #
+# Copy this file to `/config/application.properties`, with the runnable jar in the `/` directory #
+##################################################################################################
+
+spring:
+ datasource:
+   # DATABASE PROPERTIES
+   driverClassName: org.postgresql.Driver
+   # Change <MyDb> with the name of your database name
+   url: jdbc:postgresql://localhost:5432/events
+
+   # Username to log in to the database
+   # It's recommended to create a dedicated Database user instead of using the default postgres user
+   username: postgres
+
+   # Password to log in with <MyDbPassword> in database <MyDb>
+   password: postgres
+
+ data.jpa.repositories.enabled: true
+
+ jpa:
+   # Set to false in production to prevent spamming of console
+   show-sql: true
+   hibernate.type: trace
+   type: trace
+   database-platform: org.hibernate.dialect.PostgreSQLDialect
+   generate-ddl: true
+   hibernate.hb2mddl.auto: create-drop
+
+   # This setting defines the database creation/update behaviour. Change with caution.
+   properties.hibernate.default_schema: public
+
+ thymeleaf:
+ # THYMELEAF (ThymeleafAutoConfiguration)
+   check-template-location: true
+   suffix: .html
+   mode: HTML
+   encoding: UTF-8
+   content-type: text/html
+
+ mail:
+   host: 127.0.0.1
+   port: 1025
+
+ security:
+     oauth2:
+         client:
+             provider:
+                 wisvchconnect:
+                     issuer-uri: https://connect.ch.tudelft.nl
+                     clientUri: http://localhost:8080/events
+             registration:
+                 wisvchconnect:
+                     client-id: 88f11260-3d8b-46a0-b9c3-5746624d1c71
+                     client-secret: Y-GZMy1a_JjusofICshTV7s-5mUeW6v3m_5ctWU0wrdeZfTeSABAiZ7fQUIBcwhRo0c7GUbtKC32BTtnlk-ozg
+                     scope:
+                         - openid
+                         - profile
+                         - email
+                         - ldap
+ logging:
+   level:
+     org.hibernate.SQL: debug
+     org.hibernate.type: TRACE
+     org:
+       hibernate:
+         type:
+           descriptor:
+             sql:
+               BasicBinder: TRACE
+
+
+   # Spring mail
+# Database migration automation. Set to false for development
+spring.flyway.enabled: false
+# spring.jpa.properties.hibernate.hbm2ddl.auto: none
+
+# Serve connect
+server:
+   port: 8080
+   servlet.context-path: /events
+
+# CH Connect Configuration
+wisvch.connect:
+ # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
+ admin-groups:
+   - hoothub
+   - beheer
+ claimName: google_groups
+
+# CH Events Configuration
+wisvch.events:
+ image.path: http://localhost:8080/events/api/v1/documents/
+
+# CH mollie api key
+mollie:
+ apikey: test
+ clientUri: http://localhost:8080/events
