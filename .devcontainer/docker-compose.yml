@@ -1,0 +1,46 @@
+version: '3.8'
+
+volumes:
+  postgres-data:
+
+services:
+  app:
+    container_name: javadev
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      -spring_profiles_active=devcontainer
+
+    volumes:
+      - ../..:/workspaces:cached
+      
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:postgres
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: events
+      POSTGRES_DB: events
+      POSTGRES_HOST_AUTH_METHOD: trust
+  
+  mailcatcher:
+    image: schickling/mailcatcher
+    network_mode: service:postgres
+    restart: on-failure
+    ports:
+    - "1080:1080"
+    - "1025:1025"
+
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
