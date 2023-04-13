@@ -83,6 +83,7 @@
                                         </div>
                                     </div>
                                     <div th:id="${event.getKey()}" class="carousel slide align-self-end w-100 "
+                                         th:if="${!event.hasExternalProductUrl()}"
                                          data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             <li th:data-target="'#' + ${event.getKey()}"
@@ -146,7 +147,26 @@
                                             <span class="sr-only">Next</span>
                                         </a>
                                     </div>
-
+                                    <div th:id="${event.getKey()}"
+                                         class="col-12 align-self-end"
+                                         th:if="${event.hasExternalProductUrl()}">
+                                        <div class="row">
+                                            <div class="card">
+                                                <div class="card-body bg-transparent"
+                                                     style="background-color: #f1f3f7;">
+                                                    <span th:text="${event.getDescription()}"
+                                                          th:data-markdown="enable"></span>
+                                                </div>
+                                                <div class="card-footer text-center">
+                                                    <a th:href="${event.getExternalProductUrl()}"
+                                                       target="_blank"
+                                                       class="btn btn-primary btn-block">
+                                                        Register here
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
