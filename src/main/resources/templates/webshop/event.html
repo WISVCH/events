@@ -110,7 +110,7 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <div class="card-deck">
+            <div class="card-deck" th:if="${!event.hasExternalProductUrl()}">
                 <div class="card mb-3" th:each="product : ${event.getProducts()}">
                     <div class="card-header bg-light text-center">
                         <h4 class="card-title my-1" th:text="${product.getTitle()}"></h4>
@@ -146,6 +146,19 @@
                     </div>
                 </div>
             </div>
+            <div class="card mb-3" th:if="${event.hasExternalProductUrl()}">
+                    <div class="card-body bg-transparent my-4" style="background-color: #f1f3f7;">
+                        <span th:text="${event.getDescription()}"
+                              th:data-markdown="enable"></span>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="${event.getExternalProductUrl()}"
+                           target="_blank"
+                           class="btn btn-primary btn-block">
+                            Register here
+                        </a>
+                    </div>
+                </div>
         </main>
     </div>
 </div>
