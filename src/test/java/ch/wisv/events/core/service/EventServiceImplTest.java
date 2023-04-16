@@ -209,6 +209,18 @@ public class EventServiceImplTest extends ServiceTest {
     }
 
     @Test
+    public void testCreateInvalidExternalURLWithProduct() throws EventInvalidException{
+        Product product = new Product();
+        this.event.addProduct(product);
+        this.event.setExternalProductUrl("https://example.com");
+
+        thrown.expect(EventInvalidException.class);
+        thrown.expectMessage("It is not possible to use products when using an external product URL.");
+
+        service.create(this.event);
+    }
+
+    @Test
     public void testGetByKey() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.of(this.event));
 

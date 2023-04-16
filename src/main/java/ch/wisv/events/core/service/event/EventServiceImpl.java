@@ -252,6 +252,10 @@ public class EventServiceImpl implements EventService {
         if (event.getProducts().stream().distinct().count() != event.getProducts().size()) {
             throw new EventInvalidException("It is not possible to add the same product twice or more!");
         }
+
+        if (event.getProducts().size() > 0 && event.hasExternalProductUrl()) {
+            throw new EventInvalidException("It is not possible to use products when using an external product URL.");
+        }
     }
 
     /**
