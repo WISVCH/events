@@ -97,6 +97,21 @@ $(document).ready(function () {
         }
     });
 
+    const externalProductUrlField = document.getElementById("externalProductUrl");
+
+    function validateExternalProductUrlField() {
+        let products = $("#products");
+        let productsSize = products.children().length;
+
+        if (productsSize > 0 && externalProductUrlField.value !== "") {
+            externalProductUrlField.setCustomValidity("It is not possible to use products when using an external product URL.");
+        } else {
+            externalProductUrlField.setCustomValidity("");
+        }
+    }
+
+    externalProductUrlField.addEventListener("input", validateExternalProductUrlField);
+
     $('.remove-product').on('click', function (e) {
         e.preventDefault();
 
@@ -118,6 +133,9 @@ $(document).ready(function () {
             followingProduct.attr('id', 'products' + (i - 1));
             followingProduct.attr('name', 'products[' + (i - 1) + ']');
         }
+
+        // After changing the amount of products, recheck that there is not both an external product url and products
+        validateExternalProductUrlField();
     });
 
     $("#createNewProductButton").on('click', function (e) {
@@ -193,6 +211,9 @@ $(document).ready(function () {
         $("#noProducts").remove();
 
         initTooltips();
+
+        // After changing the amount of products, recheck that there is not both an external product url and products
+        validateExternalProductUrlField();
     }
 
     function initTooltips() {
