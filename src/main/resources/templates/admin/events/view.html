@@ -69,6 +69,13 @@
                                     </label>
                                 </div>
                                 <div class="form-group col-12">
+                                    <label>External Product URL
+                                        <input type="text" class="form-control"
+                                               th:value="${event.getExternalProductUrl()}"
+                                               readonly>
+                                    </label>
+                                </div>
+                                <div class="form-group col-12">
                                     <label>Image</label>
                                     <img th:src="${event.getImageUrl()}"
                                          class="img-thumbnail d-block" style="height: 150px;" alt="">

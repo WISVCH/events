@@ -142,6 +142,9 @@ public class DashboardEventController extends DashboardController {
             if (file.getSize() > 0) {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
+            if (event.getExternalProductUrl() != null && event.getExternalProductUrl().length() == 0){
+               event.setExternalProductUrl(null);
+            }
             eventService.create(event);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Event " + event.getTitle() + " has been created!");
 
@@ -204,6 +207,9 @@ public class DashboardEventController extends DashboardController {
                 eventService.addDocumentImage(event, documentService.storeDocument(file));
             }
             event.setKey(key);
+            if (event.getExternalProductUrl() != null && event.getExternalProductUrl().length() == 0){
+               event.setExternalProductUrl(null);
+            }
             eventService.update(event);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Event changes saved!");
 
