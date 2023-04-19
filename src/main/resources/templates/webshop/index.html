@@ -150,22 +150,11 @@
                                     <div th:id="${event.getKey()}"
                                          class="col-12 align-self-end"
                                          th:if="${event.hasExternalProductUrl()}">
-                                        <div class="row">
-                                            <div class="card">
-                                                <div class="card-body bg-transparent"
-                                                     style="background-color: #f1f3f7;">
-                                                    <span th:text="${event.getDescription()}"
-                                                          th:data-markdown="enable"></span>
-                                                </div>
-                                                <div class="card-footer text-center">
-                                                    <a th:href="${event.getExternalProductUrl()}"
-                                                       target="_blank"
-                                                       class="btn btn-primary btn-block">
-                                                        Register here
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <a th:href="${event.getExternalProductUrl()}"
+                                           target="_blank"
+                                           class="btn btn-primary btn-block">
+                                            Register here
+                                        </a>
                                     </div>
                                 </div>
                             </div>
