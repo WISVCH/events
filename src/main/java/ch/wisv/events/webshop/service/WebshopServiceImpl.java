@@ -42,7 +42,7 @@ public class WebshopServiceImpl implements WebshopService {
     @Override
     public List<Event> filterEventProductNotSalable(List<Event> events) {
         return events.stream().map(this::filterEventProductNotSalable)
-                .filter(event -> event.getProducts().size() > 0)
+                .filter(event -> event.getProducts().size() > 0 || event.hasExternalProductUrl())
                 .collect(Collectors.toList());
     }
 

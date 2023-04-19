@@ -75,6 +75,11 @@ public class Event {
     private String imageUrl;
 
     /**
+     * Field externalProductUrl link to external url for registering for the Event.
+     */
+    private String externalProductUrl;
+
+    /**
      * Product that are related to this event and can be sold. OneToMany so one Product can be used by one Event, but
      * an Event can contain multiple Products.
      */
@@ -236,5 +241,15 @@ public class Event {
      */
     public boolean isSoldOut() {
         return this.maxSold != null && this.getSold() >= this.maxSold;
+    }
+
+    /**
+     * Check if the event has an external ticker URL configured
+     *
+     * @return boolean
+     */
+
+    public boolean hasExternalProductUrl() {
+        return this.externalProductUrl != null && this.externalProductUrl.length() > 0;
     }
 }
