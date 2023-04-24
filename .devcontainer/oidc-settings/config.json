@@ -1,0 +1,19 @@
+{
+    "idp_name": "http://localhost",
+    "port": 9000,
+    "client_config": [
+      {
+        "client_id": "events-dev",
+        "client_secret": "events-dev-secret",
+        "redirect_uris": [
+          "http://localhost:8080/events/login/oauth2/code/wisvchconnect"
+          ]
+      }
+    ],
+    "claim_mapping": {
+        "auth": [ "google_username", "google_groups"],
+        "email": [ "email" ],
+        "openid": [ "sub" , "id"],
+        "profile": [ "name" ]
+    }
+  }

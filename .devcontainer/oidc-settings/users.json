@@ -1,0 +1,18 @@
+[
+    {
+      "id": "NORMAL_USER",
+      "sub": "WISVCH.404",
+      "email": "usert@test.wisv.ch",
+      "name": "User Test",
+      "google_username": "usert",
+      "google_groups": []
+    },
+    {
+      "id": "ADMIN_USER",
+      "sub": "WISVCH.405",
+      "email": "usera@test.wisv.ch",
+      "name": "User Admin",
+      "google_username": "usera",
+      "google_groups": ["beheer"]
+    }
+  ]

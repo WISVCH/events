@@ -1,0 +1,32 @@
+[
+    {
+      "ClientId": "implicit-mock-client",
+      "Description": "Client for implicit flow",
+      "AllowedGrantTypes": ["implicit"],
+      "AllowAccessTokensViaBrowser": true,
+      "RedirectUris": ["http://localhost:8080/events/login/oauth2/code/wisvchconnect"],
+      "AllowedScopes": ["openid", "profile", "email", "auth"],
+      "IdentityTokenLifetime": 3600,
+      "AccessTokenLifetime": 3600
+    },
+    {
+      "ClientId": "client-credentials-mock-client",
+      "ClientSecrets": ["client-credentials-mock-client-secret"],
+      "Description": "Client for client credentials flow",
+      "AllowedGrantTypes": ["client_credentials"],
+      "AllowedScopes": ["events"],
+      "ClientClaimsPrefix": "",
+      "Claims": [
+        {
+          "Type": "string_claim",
+          "Value": "string_claim_value",
+          "ValueType": "string"
+        },
+        {
+          "Type": "json_claim",
+          "Value": "[\"value1\", \"value2\"]",
+          "ValueType": "json"
+        }
+      ]
+    }
+  ]

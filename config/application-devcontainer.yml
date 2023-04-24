@@ -15,9 +15,12 @@ spring:
    username: postgres
 
    # Password to log in with <MyDbPassword> in database <MyDb>
-   password: postgres
+   password: 
 
  data.jpa.repositories.enabled: true
+
+ flyway:
+  enabled: false
 
  jpa:
    # Set to false in production to prevent spamming of console
@@ -48,37 +51,25 @@ spring:
          client:
              provider:
                  wisvchconnect:
-                     issuer-uri: https://connect.ch.tudelft.nl
+                     issuer-uri: https://localhost:4011
                      clientUri: http://localhost:8080/events
              registration:
-                 wisvchconnect:
-                     client-id: 88f11260-3d8b-46a0-b9c3-5746624d1c71
-                     client-secret: Y-GZMy1a_JjusofICshTV7s-5mUeW6v3m_5ctWU0wrdeZfTeSABAiZ7fQUIBcwhRo0c7GUbtKC32BTtnlk-ozg
+                 wisvchconnect:d
+                     client-id: client-credentials-mock-client
+                     client-secret: client-credentials-mock-client-secret
                      scope:
-                         - openid
+                         - auth
                          - profile
                          - email
-                         - ldap
- logging:
-   level:
-     org.hibernate.SQL: debug
-     org.hibernate.type: TRACE
-     org:
-       hibernate:
-         type:
-           descriptor:
-             sql:
-               BasicBinder: TRACE
+                         - openid
 
 
-   # Spring mail
+# Spring mail
 # Database migration automation. Set to false for development
-spring.flyway.enabled: false
-# spring.jpa.properties.hibernate.hbm2ddl.auto: none
 
 # Serve connect
 server:
-   port: 8080
+   port: 8081
    servlet.context-path: /events
 
 # CH Connect Configuration
