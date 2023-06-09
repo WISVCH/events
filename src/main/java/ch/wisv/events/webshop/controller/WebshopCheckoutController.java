@@ -28,6 +28,8 @@ public class WebshopCheckoutController extends WebshopController {
     /** Error message no products in Order. */
     private static final String ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS = "Shopping basket can not be empty!";
 
+    private static final String ERROR_MESSAGE_ORDER_NOT_AGREED = "You have to agree with the General Terms and Conditions to proceed to checkout.";
+
     /** Username of the user that created this order. */
     private static final String USERNAME_ORDER_CREATED = "events-webshop";
 
@@ -64,6 +66,11 @@ public class WebshopCheckoutController extends WebshopController {
     @PostMapping
     public String checkoutShoppingBasket(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         try {
+            if (orderProductDto.getAgreedGTC() == Boolean.FALSE) {
+                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_NOT_AGREED);
+
+                return REDIRECT_EVENTS_HOME;
+            }
             if (orderProductDto.getProducts().isEmpty()) {
                 redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS);
 
