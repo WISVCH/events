@@ -153,6 +153,10 @@ textarea:focus {
     transition: box-shadow 0.15s linear, -webkit-box-shadow 0.15s linear
 }
 
+#checkoutShoppingBasket {
+    float: right;
+}
+
 select.form-control {
     height: 2.4375rem !important;
     padding: .5rem;
