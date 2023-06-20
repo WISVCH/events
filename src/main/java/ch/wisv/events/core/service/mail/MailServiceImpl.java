@@ -43,6 +43,8 @@ public class MailServiceImpl implements MailService {
     /** SpringTemplateEngine. */
     private final SpringTemplateEngine templateEngine;
 
+    private final String linkGTC = "https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf";
+
     /**
      * MailServiceImpl constructor.
      *
@@ -67,6 +69,7 @@ public class MailServiceImpl implements MailService {
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
             ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
+            ctx.setVariable("linkGTC", linkGTC);
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), tickets);
