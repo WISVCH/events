@@ -66,13 +66,14 @@ public class WebshopCheckoutController extends WebshopController {
     @PostMapping
     public String checkoutShoppingBasket(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         try {
-            if (orderProductDto.getAgreedGTC() == Boolean.FALSE) {
-                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_NOT_AGREED);
+            if (orderProductDto.getProducts().isEmpty()) {
+                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS);
 
                 return REDIRECT_EVENTS_HOME;
             }
-            if (orderProductDto.getProducts().isEmpty()) {
-                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_WITHOUT_PRODUCTS);
+            System.out.println(orderProductDto);
+            if (orderProductDto.getAgreedGTC().equals(Boolean.FALSE)) {
+                redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_NOT_AGREED);
 
                 return REDIRECT_EVENTS_HOME;
             }
