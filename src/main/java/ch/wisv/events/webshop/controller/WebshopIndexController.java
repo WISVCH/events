@@ -35,6 +35,11 @@ public class WebshopIndexController extends WebshopController {
     private final WebshopService webshopService;
 
     /**
+     * Link to General Terms and Conditions
+     */
+    private final String linkGTC = "https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf";
+
+    /**
      * WebshopController constructor.
      *
      * @param eventService          of type EventService
@@ -66,6 +71,7 @@ public class WebshopIndexController extends WebshopController {
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
         model.addAttribute(MODEL_ATTR_EVENTS, webshopService.filterEventProductNotSalable(upcoming));
         model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
+        model.addAttribute("linkGTC", linkGTC);
 
         return "webshop/index";
     }
