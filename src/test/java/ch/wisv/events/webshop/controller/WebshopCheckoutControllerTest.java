@@ -8,7 +8,6 @@ import ch.wisv.events.core.model.order.OrderProductDto;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
