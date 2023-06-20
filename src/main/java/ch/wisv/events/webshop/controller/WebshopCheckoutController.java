@@ -71,7 +71,6 @@ public class WebshopCheckoutController extends WebshopController {
 
                 return REDIRECT_EVENTS_HOME;
             }
-            System.out.println(orderProductDto);
             if (orderProductDto.getAgreedGTC().equals(Boolean.FALSE)) {
                 redirect.addFlashAttribute(MODEL_ATTR_ERROR, ERROR_MESSAGE_ORDER_NOT_AGREED);
 
