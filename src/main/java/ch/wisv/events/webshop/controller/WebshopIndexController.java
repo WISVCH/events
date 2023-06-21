@@ -8,10 +8,14 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.WebshopService;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * WebshopIndexController class.
@@ -33,6 +37,13 @@ public class WebshopIndexController extends WebshopController {
 
     /** WebshopService. */
     private final WebshopService webshopService;
+
+    /**
+     * Link to General Terms and Conditions
+     */
+    @Value("${links.gtc}")
+    @NotNull
+    private String linkGTC;
 
     /**
      * WebshopController constructor.
@@ -66,6 +77,7 @@ public class WebshopIndexController extends WebshopController {
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
         model.addAttribute(MODEL_ATTR_EVENTS, webshopService.filterEventProductNotSalable(upcoming));
         model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
+        model.addAttribute("linkGTC", linkGTC);
 
         return "webshop/index";
     }

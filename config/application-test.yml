@@ -80,3 +80,6 @@ management:
   endpoints:
     enabled: false
     health.enabled: true
+
+links:
+  gtc: https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf

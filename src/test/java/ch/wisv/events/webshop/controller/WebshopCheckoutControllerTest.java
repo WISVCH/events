@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class WebshopCheckoutControllerTest extends ControllerTest {
-
     @Test
     public void testCheckoutShoppingBasket() throws Exception {
         Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
@@ -38,6 +38,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                 post("/checkout")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products['" + product.getKey() + "']", "2")
+                        .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/checkout/*"));
@@ -48,6 +49,20 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
         assertEquals(OrderStatus.ANONYMOUS, order.getStatus());
     }
 
+    @Test
+    public void testCheckOutShoppingBasketNotAgreed() throws Exception {
+        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        productRepository.saveAndFlush(product);
+
+        mockMvc.perform(
+                        post("/checkout")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("products['" + product.getKey() + "']", "2")
+                                .sessionAttr("orderProduct", new OrderProductDto()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(flash().attribute("error", "You have to agree with the General Terms and Conditions to proceed to checkout."));
+    }
     @Test
     public void testCheckoutShoppingBasketEmptyBasket() throws Exception {
         mockMvc.perform(
@@ -72,6 +87,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products['" + product2.getKey() + "']", "2")
                         .param("products['" + product.getKey() + "']", "3")
+                        .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
@@ -91,6 +107,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products['" + product.getKey() + "']", "1")
                         .param("products['" + product2.getKey() + "']", "3")
+                        .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/checkout/*"));
@@ -119,6 +136,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                 post("/checkout")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products['" + product.getKey() + "']", "11")
+                        .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
@@ -131,6 +149,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                 post("/checkout")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("products['123-345-567']", "2")
+                        .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
