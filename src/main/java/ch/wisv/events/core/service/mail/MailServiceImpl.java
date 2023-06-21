@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.NotNull;
 
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
@@ -43,7 +45,10 @@ public class MailServiceImpl implements MailService {
     /** SpringTemplateEngine. */
     private final SpringTemplateEngine templateEngine;
 
-    private final String linkGTC = "https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf";
+    /** Link to GTC. */
+    @Value("${links.gtc}")
+    @NotNull
+    private String linkGTC;
 
     /**
      * MailServiceImpl constructor.

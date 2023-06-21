@@ -8,10 +8,14 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.WebshopService;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * WebshopIndexController class.
@@ -37,7 +41,9 @@ public class WebshopIndexController extends WebshopController {
     /**
      * Link to General Terms and Conditions
      */
-    private final String linkGTC = "https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf";
+    @Value("${links.gtc}")
+    @NotNull
+    private String linkGTC;
 
     /**
      * WebshopController constructor.
