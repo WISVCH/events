@@ -188,6 +188,10 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInvalidException("Price is required, and therefore should be filled in!");
         }
 
+        if (product.getVatRate() == null) {
+            throw new ProductInvalidException("VAT rate is required, and therefore should be filled in!");
+        }
+
         if (product.getProducts().stream().distinct().count() != product.getProducts().size()) {
             throw new ProductInvalidException("It is not possible to add the same product twice or more!");
         }

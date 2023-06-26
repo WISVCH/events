@@ -202,6 +202,7 @@ public class ProductServiceImplTest extends ServiceTest {
         when(product1.getTitle()).thenReturn("Title");
         when(product1.getSellEnd()).thenReturn(null);
         when(product1.getCost()).thenReturn(0.d);
+        when(product1.getVatRate()).thenReturn(VatRate.VAT_HIGH);
         when(product1.getMaxSoldPerCustomer()).thenReturn(1);
         when(product1.getSellStart()).thenReturn(null).thenReturn(LocalDateTime.now());
 

@@ -55,8 +55,7 @@ public class Product {
     /**
      * VAT of the product.
      */
-    @Enumerated(EnumType.STRING)
-    public VatRate vatRate = VatRate.VAT_FREE;
+    public VatRate vatRate;
 
     /**
      * Products sold.
@@ -127,6 +126,7 @@ public class Product {
         // Set default sold to zero.
         this.sold = 0;
         this.reserved = 0;
+        this.vatRate = VatRate.VAT_FREE;
     }
 
     /**
