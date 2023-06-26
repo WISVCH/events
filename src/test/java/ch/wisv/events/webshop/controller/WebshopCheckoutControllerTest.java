@@ -53,7 +53,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckOutShoppingBasketNotAgreed() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
