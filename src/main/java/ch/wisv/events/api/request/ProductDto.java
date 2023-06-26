@@ -1,6 +1,8 @@
 package ch.wisv.events.api.request;
 
 import javax.validation.constraints.NotNull;
+
+import ch.wisv.events.core.util.VatRate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +29,12 @@ public class ProductDto {
      */
     @NotNull
     private Double cost;
+
+    /**
+     * VAT of a Product.
+     */
+    @NotNull
+    private VatRate vatRate;
 
     /**
      * (Optional) Max sold of a Product.

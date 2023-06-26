@@ -37,6 +37,12 @@ public class OrderProduct {
     private Double price;
 
     /**
+     * Field vat.
+     */
+    @NotNull
+    private Double vat = 0.0;
+
+    /**
      * Field amount.
      */
     @NotNull
@@ -53,5 +59,6 @@ public class OrderProduct {
         this.product = product;
         this.price = price;
         this.amount = amount;
+        this.vat = Math.round(price / (100 + product.getVatRate().getVatRate()) * product.getVatRate().getVatRate() * 100.0) / 100.0;
     }
 }

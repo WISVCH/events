@@ -325,16 +325,28 @@
 
                     </label>
                 </div>
-                <div class="form-group">
-                    <label>Price*</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="fas fa-fw fa-euro-sign"></i>
-                            </span>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label>Price*</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fas fa-fw fa-euro-sign"></i>
+                                </span>
+                            </div>
+                            <input type="number" id="productCost" step="0.01" class="form-control required"
+                                   placeholder="Price of the product">
                         </div>
-                        <input type="number" id="productCost" step="0.01" class="form-control required"
-                               placeholder="Price of the product">
+                        <small class="form-text text-muted">Including VAT.</small>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>VAT Rate*</label>
+                        <select id="productVatRate" class="form-control required">
+                            <option value="VAT_FREE">VAT Free</option>
+                            <option value="VAT_ZERO">Zero (0%)</option>
+                            <option value="VAT_LOW">Low (9%)</option>
+                            <option value="VAT_HIGH">High (21%)</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">

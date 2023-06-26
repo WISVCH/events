@@ -186,7 +186,8 @@ public abstract class ControllerTest {
     protected OrderProduct createOrderProduct(Product product) {
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setProduct(product);
-        orderProduct.setPrice(10.0);
+        orderProduct.setPrice(12.10);
+        orderProduct.setVat(2.10);
         orderProduct.setAmount((long) 10);
 
         orderProductRepository.saveAndFlush(orderProduct);

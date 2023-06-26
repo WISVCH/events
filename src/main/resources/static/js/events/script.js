@@ -150,6 +150,7 @@ $(document).ready(function () {
                 description: $("#productDescription").val(),
                 redirectUrl: $("#productRedirectUrl").val(),
                 cost: $("#productCost").val(),
+                vatRate: $("#productVatRate").val(),
                 maxSold: $("#maxSold").val(),
                 maxSoldPerCustomer: $("#productMaxSoldPerCustomer").val(),
                 sellStart: $("#productSellStart").val() === '' ? null : $("#productSellStart").val(),

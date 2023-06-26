@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 
-import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.util.VatRate;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -52,6 +51,12 @@ public class Product {
      * Price/Cost of the product.
      */
     public Double cost;
+
+    /**
+     * VAT of the product.
+     */
+    @Enumerated(EnumType.STRING)
+    public VatRate vatRate = VatRate.VAT_FREE;
 
     /**
      * Products sold.
@@ -135,6 +140,7 @@ public class Product {
         this.description = productDto.getDescription();
         this.redirectUrl = productDto.getRedirectUrl();
         this.cost = productDto.getCost();
+        this.vatRate = productDto.getVatRate();
         this.maxSold = productDto.getMaxSold();
         this.maxSoldPerCustomer = productDto.getMaxSoldPerCustomer();
         this.chOnly = productDto.isChOnly();
@@ -155,17 +161,19 @@ public class Product {
      * @param title       Title of the product
      * @param description Description of the product
      * @param cost        Price/Cost of the product
+     * @param vatRate     VAT of the product
      * @param maxSold     Maximum number sold of the product
      * @param sellStart   Start selling date
      * @param sellEnd     End selling date
      */
     public Product(
-            String title, String description, Double cost, Integer maxSold, LocalDateTime sellStart, LocalDateTime sellEnd
+            String title, String description, Double cost, VatRate vatRate, Integer maxSold, LocalDateTime sellStart, LocalDateTime sellEnd
     ) {
         this();
         this.title = title;
         this.description = description;
         this.cost = cost;
+        this.vatRate = vatRate;
         this.maxSold = maxSold;
         this.sellStart = sellStart;
         this.sellEnd = sellEnd;

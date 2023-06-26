@@ -382,6 +382,49 @@
 
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <h3>Receipt</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                    <table cellspacing="0" cellpadding="0" width="100%"
+                                                           style="border-collapse: collapse !important;">
+                                                        <tr>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Description
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Price
+                                                            </td>
+                                                        </tr>
+                                                        <tr th:each="orderProduct : ${order.orderProducts}">
+                                                            <td class="white-header"
+                                                                th:text="${orderProduct.getAmount()} + 'x ' + ${orderProduct.getProduct().getTitle()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                T.U.E.S.DAY
+                                                            </td>
+                                                            <td class="white-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                <span th:text="${orderProduct.getPrice()}"></span> € <small style="color: #5e5e5e;" th:text="'incl €' + ${orderProduct.getVat()} + ' VAT'"></small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Total
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                <span th:text="${order.getAmount()}"></span> € <small style="color: #5e5e5e;" th:text="'incl €' + ${order.getVat()} + ' VAT'"></small>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>

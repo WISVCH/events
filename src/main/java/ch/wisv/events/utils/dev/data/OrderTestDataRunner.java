@@ -95,6 +95,9 @@ public class OrderTestDataRunner extends TestDataRunner {
             orderProduct.setProduct(product);
             orderProduct.setAmount(1L);
             orderProduct.setPrice(product.getCost());
+            Double vatRate = Math.round(product.getCost() / (100 + product.getVatRate().getVatRate()) * product
+                    .getVatRate().getVatRate() * 100.0) / 100.0;
+            orderProduct.setVat(vatRate);
 
             orderProductRepository.saveAndFlush(orderProduct);
 
@@ -113,6 +116,7 @@ public class OrderTestDataRunner extends TestDataRunner {
             order.setPaymentMethod(PaymentMethod.valueOf((String) jsonObject.get("paymentMethod")));
             order.setTicketCreated(true);
             order.setAmount(order.getOrderProducts().stream().mapToDouble(x -> x.getAmount() * x.getPrice()).sum());
+            order.setVat(order.getOrderProducts().stream().mapToDouble(x -> x.getAmount() * x.getVat()).sum());
 
             return order;
         }

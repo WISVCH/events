@@ -58,6 +58,12 @@ public class Order {
     private Double amount;
 
     /**
+     * VAT of the order.
+     */
+    @NotNull
+    private Double vat = 0.0;
+
+    /**
      * Field products list of Products in the Order.
      */
     @ManyToMany(targetEntity = OrderProduct.class, fetch = FetchType.EAGER)
@@ -132,5 +138,9 @@ public class Order {
                         .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
                         .sum()
         );
+
+        this.setVat(Math.round(this.getOrderProducts().stream()
+                .mapToDouble(orderProduct -> orderProduct.getVat() * orderProduct.getAmount()
+                ).sum() * 100.0) / 100.0);
     }
 }

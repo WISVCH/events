@@ -139,7 +139,7 @@ public class MailServiceImpl implements MailService {
      * @param recipientEmail of type String
      * @param subject        of type String
      * @param content        of type String
-     * @param uniqueCodes       list of type String
+     * @param tickets        List of tickets
      */
     private void sendMailWithContent(String recipientEmail, String subject, String content, List<Ticket> tickets) {
         // Prepare message using a Spring helper
