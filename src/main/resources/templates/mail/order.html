@@ -413,7 +413,7 @@
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
-                                                                th:text="'€' + ${orderProduct.getPrice()}"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                             </td>
                                                             <td class="white-header"
@@ -428,7 +428,7 @@
                                                                 Total
                                                             </td>
                                                             <td class="grey-header"
-                                                                th:text="'€' + ${order.getAmount()}"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                             </td>
                                                             <td colspan="2"
@@ -442,7 +442,7 @@
                                                             <td th:text="${entry.key.getPercentage()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;font-weight: bold;">
                                                             </td>
-                                                            <td th:text="'€' + ${entry.value}"
+                                                            <td th:text="'€ ' + ${#numbers.formatDecimal(entry.value, 1, 'POINT', 2, 'COMMA')}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;">
                                                             </td>
                                                         </tr>
