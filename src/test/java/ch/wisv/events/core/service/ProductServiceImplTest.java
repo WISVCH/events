@@ -9,6 +9,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.ProductServiceImpl;
+import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class ProductServiceImplTest extends ServiceTest {
                 "Product",
                 "Description",
                 1.d,
+                VatRate.VAT_HIGH,
                 100,
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(1)

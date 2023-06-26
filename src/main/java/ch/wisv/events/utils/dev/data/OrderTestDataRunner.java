@@ -98,6 +98,7 @@ public class OrderTestDataRunner extends TestDataRunner {
             Double vatRate = Math.round(product.getCost() / (100 + product.getVatRate().getVatRate()) * product
                     .getVatRate().getVatRate() * 100.0) / 100.0;
             orderProduct.setVat(vatRate);
+            orderProduct.setVatRate(product.getVatRate());
 
             orderProductRepository.saveAndFlush(orderProduct);
 

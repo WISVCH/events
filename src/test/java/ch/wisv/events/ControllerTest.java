@@ -22,6 +22,7 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.webhook.WebhookService;
+import ch.wisv.events.core.util.VatRate;
 import ch.wisv.events.utils.LdapGroup;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
@@ -150,6 +151,7 @@ public abstract class ControllerTest {
         Product product = new Product();
         product.setTitle("Product product");
         product.setCost(1.d);
+        product.setVatRate(VatRate.VAT_HIGH);
         product.setSellStart(LocalDateTime.now());
         product.setProducts(new ArrayList<>());
         product.setMaxSoldPerCustomer(1);
@@ -188,6 +190,7 @@ public abstract class ControllerTest {
         orderProduct.setProduct(product);
         orderProduct.setPrice(12.10);
         orderProduct.setVat(2.10);
+        orderProduct.setVatRate(VatRate.VAT_HIGH);
         orderProduct.setAmount((long) 10);
 
         orderProductRepository.saveAndFlush(orderProduct);

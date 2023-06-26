@@ -86,6 +86,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T16:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
@@ -101,6 +102,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("title", "Product")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
@@ -117,6 +119,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T18:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
@@ -133,11 +136,29 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T16:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
                 .andExpect(flash().attribute("error", "Price is required, and therefore should be filled in!"));
+    }
+
+    @Test
+    public void testCreatePostMissingVatRate() throws Exception {
+        Product product = new Product();
+
+        mockMvc.perform(post("/administrator/products/create")
+                        .param("title", "Product")
+                        .param("sellStart", "2018-01-02T16:00")
+                        .param("sellEnd", "2018-01-02T17:00")
+                        .param("cost", "1.50")
+                        .param("vatRate", "")
+                        .param("maxSoldPerCustomer", "1")
+                        .sessionAttr("product", product))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(flash().attribute("error", "VatRate is required, and therefore should be filled in!"));
     }
 
     @Test
@@ -149,6 +170,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T16:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "26")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
@@ -165,6 +187,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T16:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "0")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
@@ -181,6 +204,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("sellStart", "2018-01-02T16:00")
                                 .param("sellEnd", "2018-01-02T17:00")
                                 .param("cost", "1.50")
+                                .param("vatRate", "VAT_HIGH")
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
