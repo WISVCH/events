@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.NotNull;
 
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
@@ -43,6 +45,11 @@ public class MailServiceImpl implements MailService {
     /** SpringTemplateEngine. */
     private final SpringTemplateEngine templateEngine;
 
+    /** Link to GTC. */
+    @Value("${links.gtc}")
+    @NotNull
+    private String linkGTC;
+
     /**
      * MailServiceImpl constructor.
      *
@@ -67,6 +74,7 @@ public class MailServiceImpl implements MailService {
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
             ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
+            ctx.setVariable("linkGTC", linkGTC);
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), tickets);
