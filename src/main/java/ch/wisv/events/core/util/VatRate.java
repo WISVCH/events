@@ -18,4 +18,11 @@ public enum VatRate {
     public String toString() {
         return this.name() + " (" + this.vatRate + "%)";
     }
+
+    public String getPercentage() {
+        if (this.name() == "VAT_FREE") {
+            return "VAT Free";
+        }
+        return this.vatRate + "%";
+    }
 }

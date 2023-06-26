@@ -399,6 +399,11 @@
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 Price
+                                                                </td>
+                                                            <td class="grey-header"
+                                                                colspan="2"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                VAT
                                                             </td>
                                                         </tr>
                                                         <tr th:each="orderProduct : ${order.orderProducts}">
@@ -408,8 +413,13 @@
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
+                                                                th:text="'€' + ${orderProduct.getPrice()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                <span th:text="${orderProduct.getPrice()}"></span> € <small style="color: #5e5e5e;" th:text="'incl €' + ${orderProduct.getVat()} + ' VAT'"></small>
+                                                            </td>
+                                                            <td class="white-header"
+                                                                colspan="2"
+                                                                th:text="${orderProduct.getVatRate().getPercentage()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -418,8 +428,22 @@
                                                                 Total
                                                             </td>
                                                             <td class="grey-header"
+                                                                th:text="'€' + ${order.getAmount()}"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
-                                                                <span th:text="${order.getAmount()}"></span> € <small style="color: #5e5e5e;" th:text="'incl €' + ${order.getVat()} + ' VAT'"></small>
+                                                            </td>
+                                                            <td colspan="2"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                VAT
+                                                            </td>
+                                                        </tr>
+                                                        <!-- Loop over VatRates -->
+                                                        <tr th:each="entry : ${order.getTotalVatPerRate()}">
+                                                            <td colspan="2"></td>
+                                                            <td th:text="${entry.key.getPercentage()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;font-weight: bold;">
+                                                            </td>
+                                                            <td th:text="'€' + ${entry.value}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;">
                                                             </td>
                                                         </tr>
                                                     </table>

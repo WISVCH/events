@@ -3,6 +3,7 @@ package ch.wisv.events.core.model.order;
 import ch.wisv.events.core.model.customer.Customer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -15,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
+
+import ch.wisv.events.core.util.VatRate;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -142,5 +145,19 @@ public class Order {
         this.setVat(Math.round(this.getOrderProducts().stream()
                 .mapToDouble(orderProduct -> orderProduct.getVat() * orderProduct.getAmount()
                 ).sum() * 100.0) / 100.0);
+    }
+
+    /**
+     * Get VAT per Rate.
+     */
+    public HashMap<VatRate, Double> getTotalVatPerRate() {
+        HashMap<VatRate, Double> vatRates = new HashMap<>();
+
+        this.getOrderProducts().forEach(orderProduct -> {
+            Double vat = vatRates.getOrDefault(orderProduct.getVatRate(), 0.0);
+            vatRates.put(orderProduct.getProduct().getVatRate(), vat + orderProduct.getVat() * orderProduct.getAmount());
+        });
+
+        return vatRates;
     }
 }
