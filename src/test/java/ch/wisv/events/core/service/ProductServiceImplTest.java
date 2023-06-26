@@ -166,6 +166,7 @@ public class ProductServiceImplTest extends ServiceTest {
         ProductDto productDto = new ProductDto();
         productDto.setTitle("Tile");
         productDto.setCost(1.d);
+        productDto.setVatRate(VatRate.VAT_HIGH);
         productDto.setDescription("Test");
         productDto.setMaxSold(1);
         productDto.setMaxSoldPerCustomer(1);
@@ -176,6 +177,7 @@ public class ProductServiceImplTest extends ServiceTest {
         verify(productRepository, times(1)).saveAndFlush(any(Product.class));
         assertEquals(productDto.getTitle(), product.getTitle());
         assertEquals(productDto.getCost(), product.getCost());
+        assertEquals(productDto.getVatRate(), product.getVatRate());
         assertEquals(productDto.getDescription(), product.getDescription());
         assertEquals(productDto.getMaxSold(), product.getMaxSold());
         assertEquals(productDto.getMaxSoldPerCustomer(), product.getMaxSoldPerCustomer());
