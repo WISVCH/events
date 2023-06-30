@@ -158,7 +158,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                         .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/products/create/"))
-                .andExpect(flash().attribute("error", "VAT Rate is required, and therefore should be filled in!"));
+                .andExpect(flash().attribute("error", "VAT rate is required, and therefore should be filled in!"));
     }
 
     @Test
