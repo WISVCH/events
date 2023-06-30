@@ -55,6 +55,7 @@ public class Product {
     /**
      * VAT of the product.
      */
+    @Enumerated(EnumType.STRING)
     public VatRate vatRate;
 
     /**

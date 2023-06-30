@@ -45,6 +45,7 @@ public class OrderProduct {
     /**
      * Field vatRate.
      */
+    @Enumerated(EnumType.STRING)
     @NotNull
     private VatRate vatRate;
 
