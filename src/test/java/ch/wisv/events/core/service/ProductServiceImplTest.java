@@ -9,6 +9,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.product.ProductServiceImpl;
+import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class ProductServiceImplTest extends ServiceTest {
                 "Product",
                 "Description",
                 1.d,
+                VatRate.VAT_HIGH,
                 100,
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(1)
@@ -164,6 +166,7 @@ public class ProductServiceImplTest extends ServiceTest {
         ProductDto productDto = new ProductDto();
         productDto.setTitle("Tile");
         productDto.setCost(1.d);
+        productDto.setVatRate(VatRate.VAT_HIGH);
         productDto.setDescription("Test");
         productDto.setMaxSold(1);
         productDto.setMaxSoldPerCustomer(1);
@@ -174,6 +177,7 @@ public class ProductServiceImplTest extends ServiceTest {
         verify(productRepository, times(1)).saveAndFlush(any(Product.class));
         assertEquals(productDto.getTitle(), product.getTitle());
         assertEquals(productDto.getCost(), product.getCost());
+        assertEquals(productDto.getVatRate(), product.getVatRate());
         assertEquals(productDto.getDescription(), product.getDescription());
         assertEquals(productDto.getMaxSold(), product.getMaxSold());
         assertEquals(productDto.getMaxSoldPerCustomer(), product.getMaxSoldPerCustomer());
@@ -198,6 +202,7 @@ public class ProductServiceImplTest extends ServiceTest {
         when(product1.getTitle()).thenReturn("Title");
         when(product1.getSellEnd()).thenReturn(null);
         when(product1.getCost()).thenReturn(0.d);
+        when(product1.getVatRate()).thenReturn(VatRate.VAT_HIGH);
         when(product1.getMaxSoldPerCustomer()).thenReturn(1);
         when(product1.getSellStart()).thenReturn(null).thenReturn(LocalDateTime.now());
 

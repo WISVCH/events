@@ -19,6 +19,7 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.core.service.order.OrderValidationServiceImpl;
 import ch.wisv.events.core.service.ticket.TicketService;
+import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -58,6 +59,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         orderValidationService = new OrderValidationServiceImpl(orderRepository, ticketService, eventService);
 
         product = mock(Product.class);
+        when(product.getVatRate()).thenReturn(VatRate.VAT_HIGH);
 
         order = new Order();
         order.setOwner(mock(Customer.class));
@@ -101,6 +103,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
     @Test
     public void assertOrderIsValidInvalidCreatedBy() throws Exception {
         order.setAmount(1.d);
+        order.setVat(0.17d);
         order.setCreatedBy(null);
 
         thrown.expect(OrderInvalidException.class);
@@ -128,8 +131,10 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getSold()).thenReturn(9);
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(null);
+        when(product.getVatRate()).thenReturn(VatRate.VAT_FREE);
 
         order.setAmount(1.d);
+        order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
 
@@ -145,6 +150,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(null);
 
         order.setAmount(1.d);
+        order.setVat(0.17d);
 
         thrown.expect(OrderExceedEventLimitException.class);
         thrown.expectMessage("Event limit exceeded (max 0 tickets allowed).");
@@ -160,6 +166,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(null);
 
         order.setAmount(1.d);
+        order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
 
@@ -175,6 +182,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(10);
 
         order.setAmount(1.d);
+        order.setVat(0.17d);
 
         thrown.expect(OrderExceedProductLimitException.class);
         thrown.expectMessage("Product limit exceeded (max 0 tickets allowed).");
@@ -253,6 +261,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
     @Test
     public void assertOrderIsValidForIdealPayment() throws Exception {
         order.setAmount(1.d);
+        order.setVat(0.17d);
         order.setStatus(OrderStatus.PENDING);
 
         orderValidationService.assertOrderIsValidForPayment(order);
@@ -284,6 +293,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(10);
 
         order.setAmount(1.d);
+        order.setVat(0.17d);
 
         orderValidationService.assertOrderIsValid(order);
     }

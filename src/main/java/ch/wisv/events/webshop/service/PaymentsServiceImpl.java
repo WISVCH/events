@@ -121,8 +121,11 @@ public class PaymentsServiceImpl implements PaymentsService {
         String productString = "";
         // Add the names, quantities and prices of the products to the metadata.
         for (OrderProduct orderProduct : order.getOrderProducts()) {
-            // Make string of product name, quantity and price
-            productString +=  orderProduct.getProduct().getTitle() + " (" + orderProduct.getAmount() + "x)" + " - €" + orderProduct.getPrice() + "; ";
+            // Make string of product name, quantity, price and vat.
+            productString +=  orderProduct.getProduct().getTitle()
+                            + " (" + orderProduct.getAmount() + "x)"
+                            + " - €" + orderProduct.getPrice()
+                            + "(incl. " + orderProduct.getVat() + "VAT ; ";
         }
 
         metadata.put("products", productString);

@@ -113,19 +113,33 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group col-12">
-                                        <label>Price*</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                  <i class="fas fa-fw fa-euro-sign"></i>
-                                                </span>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label>Price*</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                          <i class="fas fa-fw fa-euro-sign"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                           th:field="*{cost}" th:value="${product.getCost()}" required>
+                                                </div>
+                                                <small class="form-text text-muted">Including VAT.</small>
+                                                <small class="form-text text-muted" th:if="${product.getCost() != null}">
+                                                    <b>The price of a product must not be changed.</b> This breaks the treasurer system. If you want to change the price, create a new product and disable the old one. Changing the price can only be done if no orders have been made yet.
+                                                </small>
                                             </div>
-                                            <input type="number" step="0.01" class="form-control"
-                                                   th:field="*{cost}" th:value="${product.getCost()}" required>
-                                            <small class="form-text text-muted" th:if="${product.getCost() != null}">
-                                                <b>The price of a product must not be changed.</b> This breaks the treasurer system. If you want to change the price, create a new product and disable the old one. Changing the price can only be done if no orders have been made yet.
-                                            </small>
+                                            <div class="form-group col-6">
+                                                <label>VAT Rate*</label>
+                                                <select id="productVatRate" class="form-control required" th:field="*{vatRate}">
+                                                    <option value="VAT_FREE" th:selected="${product.getVatRate().name() == 'VAT_FREE'}">VAT Free</option>
+                                                    <option value="VAT_ZERO" th:selected="${product.getVatRate().name() == 'VAT_ZERO'}">Zero (0%)</option>
+                                                    <option value="VAT_LOW" th:selected="${product.getVatRate().name() == 'VAT_LOW'}">Low (9%)</option>
+                                                    <option value="VAT_HIGH" th:selected="${product.getVatRate().name() == 'VAT_HIGH'}">High (21%)</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12">

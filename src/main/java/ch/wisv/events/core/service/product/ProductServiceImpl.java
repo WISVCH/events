@@ -115,6 +115,7 @@ public class ProductServiceImpl implements ProductService {
         model.setDescription(product.getDescription());
         model.setRedirectUrl(product.getRedirectUrl());
         model.setCost(product.getCost());
+        model.setVatRate(product.getVatRate());
         model.setMaxSold(product.getMaxSold());
         model.setSellStart(product.getSellStart());
         model.setSellEnd(product.getSellEnd());
@@ -185,6 +186,10 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.getCost() == null) {
             throw new ProductInvalidException("Price is required, and therefore should be filled in!");
+        }
+
+        if (product.getVatRate() == null) {
+            throw new ProductInvalidException("VAT rate is required, and therefore should be filled in!");
         }
 
         if (product.getProducts().stream().distinct().count() != product.getProducts().size()) {

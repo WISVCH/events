@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ch.wisv.events.core.util.VatRate;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -94,6 +95,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
         Product product = new Product();
         product.setTitle("Product product1");
         product.setCost(13.95d);
+        product.setVatRate(VatRate.VAT_HIGH);
         product.setSellStart(LocalDateTime.now());
         product.setProducts(new ArrayList<>());
         product.setMaxSoldPerCustomer(1);
@@ -132,6 +134,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
         Product product = new Product();
         product.setTitle("Product product");
         product.setCost(1.d);
+        product.setVatRate(VatRate.VAT_HIGH);
         product.setSellStart(LocalDateTime.now());
         product.setProducts(new ArrayList<>());
         product.setMaxSoldPerCustomer(1);

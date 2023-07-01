@@ -130,6 +130,15 @@ public class OrderValidationServiceImpl implements OrderValidationService {
             throw new OrderInvalidException("Order amount does not match");
         }
 
+        Double vatShouldBe = Math.round(order.getOrderProducts()
+                .stream()
+                .mapToDouble(orderProduct -> orderProduct.getVat() * orderProduct.getAmount())
+                .sum() * 100.0) / 100.0;
+
+        if (!order.getVat().equals(vatShouldBe)) {
+            throw new OrderInvalidException("Order vat does not match");
+        }
+
         if (order.getCreatedBy() == null || order.getCreatedBy().equals("")) {
             throw new OrderInvalidException("Order created by can not be null");
         }
