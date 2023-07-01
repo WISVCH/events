@@ -20,7 +20,7 @@ public class V202306030__Add_vat_fields extends BaseJavaMigration {
      */
     public void migrate(Context context) throws Exception {
         try (Statement select = context.getConnection().createStatement()) {
-            select.execute("ALTER TABLE public.products ADD COLUMN vat_rate varchar(255) NOT NULL DEFAULT 'VAT_FREE'");
+            select.execute("ALTER TABLE public.product ADD COLUMN vat_rate varchar(255) NOT NULL DEFAULT 'VAT_FREE'");
 
             select.execute("ALTER TABLE public.order_product ADD COLUMN vat_rate varchar(255) NOT NULL DEFAULT 'VAT_FREE'");
             select.execute("ALTER TABLE public.order_product ADD COLUMN vat DOUBLE PRECISION NOT NULL DEFAULT 0");
