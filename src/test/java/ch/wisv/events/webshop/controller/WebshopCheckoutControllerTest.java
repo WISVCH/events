@@ -9,6 +9,8 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
+
+import ch.wisv.events.core.util.VatRate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WebshopCheckoutControllerTest extends ControllerTest {
     @Test
     public void testCheckoutShoppingBasket() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
@@ -51,7 +53,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckOutShoppingBasketNotAgreed() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 100, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
         mockMvc.perform(
@@ -76,10 +78,10 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckoutShoppingBasketExceedProductLimit() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 2, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 2, LocalDateTime.now(), LocalDateTime.now());
         productRepository.saveAndFlush(product);
 
-        Product product2 = new Product("test", "test ticket", 1.33d, null, LocalDateTime.now(), LocalDateTime.now());
+        Product product2 = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, null, LocalDateTime.now(), LocalDateTime.now());
         productRepository.saveAndFlush(product2);
 
         mockMvc.perform(
@@ -96,10 +98,10 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckoutShoppingBasketExceedProductLimitEnforcingRightLimit() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 2, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 2, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product);
 
-        Product product2 = new Product("test", "test ticket", 1.33d, 10, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Product product2 = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 10, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         productRepository.saveAndFlush(product2);
 
         mockMvc.perform(
@@ -115,7 +117,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
 
     @Test
     public void testCheckoutShoppingBasketExceedEventLimit() throws Exception {
-        Product product = new Product("test", "test ticket", 1.33d, 20, LocalDateTime.now(), LocalDateTime.now());
+        Product product = new Product("test", "test ticket", 1.33d, VatRate.VAT_HIGH, 20, LocalDateTime.now(), LocalDateTime.now());
         productRepository.saveAndFlush(product);
 
         Event event = new Event(

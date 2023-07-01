@@ -4,6 +4,8 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
+import ch.wisv.events.core.util.VatRate;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -42,6 +44,7 @@ public class ProductTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("title"),
                 (String) jsonObject.get("description"),
                 (Double) jsonObject.get("cost"),
+                (VatRate) jsonObject.get("vatRate"),
                 ((Long) jsonObject.get("maxSold")).intValue(),
                 LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.MINUTES),
                 LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES)

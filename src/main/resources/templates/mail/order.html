@@ -382,6 +382,73 @@
 
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <h3>Receipt</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;">
+                                                    <table cellspacing="0" cellpadding="0" width="100%"
+                                                           style="border-collapse: collapse !important;">
+                                                        <tr>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Description
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Price
+                                                                </td>
+                                                            <td class="grey-header"
+                                                                colspan="2"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                VAT
+                                                            </td>
+                                                        </tr>
+                                                        <tr th:each="orderProduct : ${order.orderProducts}">
+                                                            <td class="white-header"
+                                                                th:text="${orderProduct.getAmount()} + 'x ' + ${orderProduct.getProduct().getTitle()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                T.U.E.S.DAY
+                                                            </td>
+                                                            <td class="white-header"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                            </td>
+                                                            <td class="white-header"
+                                                                colspan="2"
+                                                                th:text="${orderProduct.getVatRate().getPercentage()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                Total
+                                                            </td>
+                                                            <td class="grey-header"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAmount(), 1, 'POINT', 2, 'COMMA')}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                            </td>
+                                                            <td colspan="2"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                                VAT
+                                                            </td>
+                                                        </tr>
+                                                        <!-- Loop over VatRates -->
+                                                        <tr th:each="entry : ${order.getTotalVatPerRate()}">
+                                                            <td colspan="2"></td>
+                                                            <td th:text="${entry.key.getPercentage()}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;font-weight: bold;">
+                                                            </td>
+                                                            <td th:text="'€ ' + ${#numbers.formatDecimal(entry.value, 1, 'POINT', 2, 'COMMA')}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;padding: 5px;">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>

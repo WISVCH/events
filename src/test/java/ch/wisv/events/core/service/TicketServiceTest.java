@@ -13,6 +13,7 @@ import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
+import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 
 import java.awt.image.BufferedImage;
@@ -78,6 +79,7 @@ public class TicketServiceTest extends ServiceTest {
 
         product = new Product();
         product.setCost(1.d);
+        product.setVatRate(VatRate.VAT_HIGH);
         customer = new Customer();
     }
 

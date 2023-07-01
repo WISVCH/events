@@ -21,6 +21,7 @@ import ch.wisv.events.core.service.order.OrderServiceImpl;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
+import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class OrderServiceImplTest extends ServiceTest {
                 ticketService
         );
         product = mock(Product.class);
+        when(product.getVatRate()).thenReturn(VatRate.VAT_HIGH);
 
         order = new Order();
         order.setOwner(mock(Customer.class));
@@ -262,6 +264,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getCost()).thenReturn(1.d);
+        when(mockProduct.getVatRate()).thenReturn(VatRate.VAT_HIGH);
         when(productService.getByKey("123-345-456")).thenReturn(mockProduct);
 
         Order order = orderService.createOrderByOrderProductDto(orderProductDto);
