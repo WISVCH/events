@@ -116,25 +116,6 @@ public class DashboardIndexController extends DashboardController {
     }
 
     /**
-     * Method determineAttendanceRateEvent ...
-     *
-     * @param event of type Event
-     *
-     * @return double
-     */
-    private double determineAttendanceRateEvent(Event event) {
-        List<Ticket> eventTickets = event.getProducts().stream().flatMap(product -> ticketService.getAllByProduct(product).stream()).collect(
-                Collectors.toList());
-        long numberTicketsScanned = eventTickets.stream().filter(ticket -> ticket.getStatus() == TicketStatus.SCANNED).count();
-
-        if (eventTickets.size() == 0) {
-            return 0.d;
-        }
-
-        return Math.round(numberTicketsScanned / (eventTickets.size() * 10000.d)) / 100.d;
-    }
-
-    /**
      * Method determinePreviousEventAttendance ...
      *
      * @return HashMap
@@ -142,7 +123,7 @@ public class DashboardIndexController extends DashboardController {
     private HashMap<Event, Double> determinePreviousEventAttendance() {
         HashMap<Event, Double> events = new HashMap<>();
 
-        this.eventService.getPreviousEventsLastTwoWeeks().forEach(event -> events.put(event, this.determineAttendanceRateEvent(event)));
+        this.eventService.getPreviousEventsLastTwoWeeks().forEach(event -> events.put(event, eventService.getAttendance(event).getPercentageScanned()));
 
         return events;
     }

@@ -1,5 +1,6 @@
 package ch.wisv.events.core.service.event;
 
+import ch.wisv.events.core.admin.Attendence;
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
@@ -207,6 +208,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public void addDocumentImage(Event event, Document document) {
         event.setImageUrl(this.imageLocation + document.getFileName() + ".png");
+    }
+
+    /**
+     * Get attendance by Event
+     *
+     * @param event Event
+     * @return Attendance of event
+     */
+    @Override
+    public Attendence getAttendance(Event event) {
+        return eventRepository.getAttendanceFromEvent(event.getId());
     }
 
     /**
