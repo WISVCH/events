@@ -50,7 +50,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public List<Event> getAllGrantedEventByCustomer(Customer customer) {
-        if (customer.getLdapGroups().contains(LdapGroup.BESTUUR)) {
+        if (customer.getLdapGroups().contains(LdapGroup.BESTUUR) || customer.getLdapGroups().contains(LdapGroup.BEHEER)) {
             return eventService.getUpcoming();
         } else {
             return eventService.getUpcoming().stream()
