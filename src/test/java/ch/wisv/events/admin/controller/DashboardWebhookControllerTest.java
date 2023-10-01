@@ -102,7 +102,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(post("/administrator/webhooks/create")
                                 .param("payloadUrl", "https://test.frl")
-                                .param("ldapGroup", "CHBEHEER")
+                                .param("ldapGroup", "BEHEER")
                                 .sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/webhooks/"))
@@ -138,7 +138,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(post("/administrator/webhooks/edit/" + webhook.getKey())
                                 .param("payloadUrl", "https://test.frl")
-                                .param("ldapGroup", "CHBEHEER")
+                                .param("ldapGroup", "BEHEER")
                                 .sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/webhooks/view/" + webhook.getKey()))
@@ -152,7 +152,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(post("/administrator/webhooks/edit/" + webhook.getKey())
                                 .param("payloadUrl", "")
-                                .param("ldapGroup", "CHBEHEER")
+                                .param("ldapGroup", "BEHEER")
                                 .sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/administrator/webhooks/edit/" + webhook.getKey()))
