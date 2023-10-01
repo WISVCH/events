@@ -5,7 +5,7 @@ public enum LdapGroup {
     AKCIE("AkCie"),
     ANNUCIE("AnnuCie"),
     BT("Business Tour"),
-    CHBEHEER("CH Beheer"),
+    BEHEER("Beheer"),
     CHIPCIE("CHipCie"),
     CHOCO("CHoCo"),
     COMMA("ComMA"),
