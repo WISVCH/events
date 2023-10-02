@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.validation.constraints.NotNull;
 
+import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class MailServiceImpl implements MailService {
     /** SpringTemplateEngine. */
     private final SpringTemplateEngine templateEngine;
 
+    /** TicketService. */
+    private final TicketService ticketService;
+
     /** Link to GTC. */
     @Value("${links.gtc}")
     @NotNull
@@ -57,9 +61,10 @@ public class MailServiceImpl implements MailService {
      * @param templateEngine of type templateEngine
      */
     @Autowired
-    public MailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
+    public MailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine, TicketService ticketService) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -181,6 +186,14 @@ public class MailServiceImpl implements MailService {
                         BufferedImage qrCode = QrCode.generateQrCode(uniqueCode);
                         byte[] bytes = QrCode.bufferedImageToBytes(qrCode);
                         message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");
+
+                        // Get wallet passes
+                        try {
+                            byte[] walletPass = ticketService.getApplePass(ticket);
+                            message.addAttachment("ch-" + uniqueCode + ".pkpass", new ByteArrayResource(walletPass), "application/vnd.apple.pkpass");
+                        } catch (Exception e) {
+                            // Do nothing
+                        }
                     }
                 }
             }
