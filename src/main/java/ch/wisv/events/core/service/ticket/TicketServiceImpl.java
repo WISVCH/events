@@ -3,6 +3,7 @@ package ch.wisv.events.core.service.ticket;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
+import ch.wisv.events.core.exception.normal.TicketPassFailedException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -13,25 +14,32 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * TicketServiceImpl class.
  */
 @Service
 public class TicketServiceImpl implements TicketService {
-    /** TicketRepository. */
+    /**
+     * TicketRepository.
+     */
     private final TicketRepository ticketRepository;
 
-    /** EventService. */
+    /**
+     * EventService.
+     */
     private final EventService eventService;
 
     /**
@@ -39,11 +47,15 @@ public class TicketServiceImpl implements TicketService {
      */
     private final MailService mailService;
 
+    @Value("${links.passes}")
+    @NotNull
+    private String passesLink;
+
     /**
      * TicketServiceImpl constructor.
      *
      * @param ticketRepository of type TicketRepository
-     * @param mailService of type MailService
+     * @param mailService      of type MailService
      */
     public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, MailService mailService) {
         this.ticketRepository = ticketRepository;
@@ -56,7 +68,6 @@ public class TicketServiceImpl implements TicketService {
      *
      * @param product    of type Product
      * @param uniqueCode of type String
-     *
      * @return Ticket
      */
     @Override
@@ -69,9 +80,7 @@ public class TicketServiceImpl implements TicketService {
      * Get ticket by key.
      *
      * @param key of type String
-     *
      * @return Ticket
-     *
      * @throws TicketNotFoundException when ticket is not found
      */
     @Override
@@ -85,7 +94,6 @@ public class TicketServiceImpl implements TicketService {
      *
      * @param product  of type Product
      * @param customer of type Customer
-     *
      * @return List of Tickets
      */
     @Override
@@ -97,7 +105,6 @@ public class TicketServiceImpl implements TicketService {
      * Get all Ticket by a Product.
      *
      * @param product of type Product
-     *
      * @return List of Tickets
      */
     @Override
@@ -109,7 +116,6 @@ public class TicketServiceImpl implements TicketService {
      * Get all Ticket by a Customer.
      *
      * @param customer of type Customer
-     *
      * @return List of Tickets
      */
     @Override
@@ -121,7 +127,6 @@ public class TicketServiceImpl implements TicketService {
      * Get all Tickets of an Order.
      *
      * @param order of type Order
-     *
      * @return List of Tickets
      */
     @Override
@@ -167,7 +172,6 @@ public class TicketServiceImpl implements TicketService {
      * Create a Ticket by an OrderProduct.
      *
      * @param order of type Order
-     *
      * @return List of Ticket
      */
     @Override
@@ -199,7 +203,6 @@ public class TicketServiceImpl implements TicketService {
      * Generate a Ticket unique String.
      *
      * @param product of type Product
-     *
      * @return String
      */
     private String generateUniqueString(Product product) {
@@ -215,10 +218,11 @@ public class TicketServiceImpl implements TicketService {
 
     /**
      * Generate a QR code from the uniqueCode.
+     *
      * @param ticket of type Ticket
-     * @throws WriterException when QR code is not generated
-     * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
      * @return BufferedImage
+     * @throws WriterException          when QR code is not generated
+     * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
      */
     public BufferedImage generateQrCode(Ticket ticket) throws IllegalArgumentException, WriterException {
         // Assert that the uniqueCode is a UUID (LEGACY CHECK)
@@ -231,8 +235,9 @@ public class TicketServiceImpl implements TicketService {
 
     /**
      * Transfer a Ticket to another Customer.
+     *
      * @param currentCustomer of type Customer
-     * @param newCustomer of type Customer
+     * @param newCustomer     of type Customer
      */
     public void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
         // Get event from ticket product
@@ -258,4 +263,28 @@ public class TicketServiceImpl implements TicketService {
         mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
     }
 
+    public byte[] getApplePass(Ticket ticket) throws TicketPassFailedException {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+
+            Map<String, String> params = new HashMap<>();
+            params.put("name", ticket.getProduct().getTitle());
+            params.put("description", ticket.getProduct().getDescription());
+            //        Format date as yyyy-MM-dd
+            params.put("date", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            params.put("time", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_TIME));
+            params.put("location", ticket.getProduct().getEvent().getLocation());
+            params.put("code", ticket.getUniqueCode());
+
+            byte[] response = restTemplate.getForObject(passesLink +
+                    "?name={name}&description={description}&date={date}&time={time}&location={location}&code={code}"
+                    , byte[].class, params);
+
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TicketPassFailedException(e.getMessage());
+        }
+    }
 }

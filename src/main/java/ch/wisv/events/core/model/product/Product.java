@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.util.VatRate;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -94,6 +95,14 @@ public class Product {
      * Field redirect url.
      */
     public String redirectUrl;
+
+    /**
+     * Field event.
+     */
+
+    @ManyToOne
+    @JoinTable(name = "event_products", joinColumns = @JoinColumn(name = "products_id"))
+    public Event event;
 
     /**
      * Field productList.
@@ -222,4 +231,5 @@ public class Product {
     public boolean isSoldOut() {
         return this.maxSold != null && this.sold >= this.maxSold;
     }
+
 }

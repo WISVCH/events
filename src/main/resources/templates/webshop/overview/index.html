@@ -216,6 +216,10 @@
                                                 </div>
                                                 <div th:if="${ticket.getUniqueCode().length() != 6}" class="modal-body text-center">
                                                     <img class="img-fluid" th:src="@{'/tickets/'+ ${ticket.getKey()}+'/qrcode.png'}">
+                                                    <a th:href="@{'/tickets/'+ ${ticket.getKey()}+'/wallet.pkpass'}"
+                                                       target="_blank" class="col">
+                                                        <img th:src="@{/images/apple-wallet.svg}" class="apple-wallet" alt="Add to Apple Wallet">
+                                                    </a>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a th:if="${ticket.getProduct().getRedirectUrl() != null}" th:href="${ticket.getProduct().getRedirectUrl()}"

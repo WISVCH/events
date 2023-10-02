@@ -87,3 +87,7 @@ wisvch.payments:
 mollie:
   apikey: test
   clientUri: http://localhost:8080/events
+
+links:
+  gtc: https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf
+  passes: https://ch.tudelft.nl/passes
