@@ -267,12 +267,16 @@ public class TicketServiceImpl implements TicketService {
             RestTemplate restTemplate = new RestTemplate();
 
 
+            Product product = ticket.getProduct();
+            Event event = product.getEvent();
+
             Map<String, String> params = new HashMap<>();
-            params.put("title", ticket.getProduct().getTitle());
-            params.put("description", ticket.getProduct().getDescription());
-            params.put("date", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            params.put("time", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ofPattern("HH:mm")));
-            params.put("location", ticket.getProduct().getEvent().getLocation());
+            params.put("title", event.getTitle());
+            params.put("ticket", product.getTitle());
+            params.put("description", event.getDescription());
+            params.put("date", event.getStart().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            params.put("time", event.getStart().format(DateTimeFormatter.ofPattern("HH:mm")));
+            params.put("location", event.getLocation());
             params.put("name", ticket.getOwner().getName());
             params.put("code", ticket.getUniqueCode());
 
