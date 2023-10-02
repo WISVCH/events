@@ -39,7 +39,7 @@ public class Ticket {
     /**
      * Customer which owns the Ticket.
      */
-    @ManyToOne
+    @ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
     public Order order;
 
     /**
