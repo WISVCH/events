@@ -18,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,11 +41,6 @@ public class TicketServiceImpl implements TicketService {
      */
     private final EventService eventService;
 
-    /**
-     * MailService.
-     */
-    private final MailService mailService;
-
     @Value("${links.passes}")
     @NotNull
     private String passesLink;
@@ -55,11 +49,10 @@ public class TicketServiceImpl implements TicketService {
      * TicketServiceImpl constructor.
      *
      * @param ticketRepository of type TicketRepository
-     * @param mailService      of type MailService
+     * @param eventService     of type EventService
      */
-    public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, MailService mailService) {
+    public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService) {
         this.ticketRepository = ticketRepository;
-        this.mailService = mailService;
         this.eventService = eventService;
     }
 
@@ -239,7 +232,7 @@ public class TicketServiceImpl implements TicketService {
      * @param currentCustomer of type Customer
      * @param newCustomer     of type Customer
      */
-    public void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
+    public Ticket transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException {
         // Get event from ticket product
         Event event = null;
         try {
@@ -259,10 +252,16 @@ public class TicketServiceImpl implements TicketService {
 
         ticketRepository.saveAndFlush(ticket);
 
-        // Send email to new customer
-        mailService.sendTransferConfirmation(ticket, currentCustomer, newCustomer);
+        return ticket;
     }
 
+    /**
+     * Get the Apple Pass of a Ticket.
+     *
+     * @param ticket of type Ticket
+     * @return byte[]
+     * @throws TicketPassFailedException when the Apple Pass is not generated
+     */
     public byte[] getApplePass(Ticket ticket) throws TicketPassFailedException {
         try {
             RestTemplate restTemplate = new RestTemplate();

@@ -59,6 +59,7 @@ public class MailServiceImpl implements MailService {
      *
      * @param mailSender     of type JavaMailSender
      * @param templateEngine of type templateEngine
+     * @param ticketService  of type TicketService
      */
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine, TicketService ticketService) {
@@ -193,6 +194,7 @@ public class MailServiceImpl implements MailService {
                             message.addAttachment("ch-" + uniqueCode + ".pkpass", new ByteArrayResource(walletPass), "application/vnd.apple.pkpass");
                         } catch (Exception e) {
                             // Do nothing
+                            System.out.println("Unable to generate wallet pass: " + e.getMessage());
                         }
                     }
                 }
