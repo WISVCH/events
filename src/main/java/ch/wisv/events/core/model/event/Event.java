@@ -252,4 +252,12 @@ public class Event {
     public boolean hasExternalProductUrl() {
         return this.externalProductUrl != null && this.externalProductUrl.length() > 0;
     }
+
+    public String toString() {
+        return this.title;
+    }
+
+    public int hashCode() {
+        return this.id;
+    }
 }

@@ -2,6 +2,7 @@ package ch.wisv.events.core.service.ticket;
 
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.exception.normal.TicketNotTransferableException;
+import ch.wisv.events.core.exception.normal.TicketPassFailedException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
@@ -123,5 +124,7 @@ public interface TicketService {
      * @throws IllegalArgumentException when uniqueCode is not a valid UUID.
      */
     BufferedImage generateQrCode(Ticket ticket) throws WriterException, IllegalArgumentException;
+
+    byte[] getApplePass(Ticket ticket) throws TicketPassFailedException;
 
 }

@@ -44,7 +44,7 @@ public class ProductTestDataRunner extends TestDataRunner {
                 (String) jsonObject.get("title"),
                 (String) jsonObject.get("description"),
                 (Double) jsonObject.get("cost"),
-                (VatRate) jsonObject.get("vatRate"),
+                VatRate.valueOf((String) jsonObject.get("vatRate")),
                 ((Long) jsonObject.get("maxSold")).intValue(),
                 LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.MINUTES),
                 LocalDateTime.now().plusDays(days).truncatedTo(ChronoUnit.MINUTES)
