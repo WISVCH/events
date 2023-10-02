@@ -338,7 +338,6 @@ h1 .badge-info {
 }
 
 .progress .progress-bar {
-    height: 30px;
     background-color: #2AA1A9;
     line-height: 30px;
     padding-left: .25rem;

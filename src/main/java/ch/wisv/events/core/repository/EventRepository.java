@@ -87,11 +87,20 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Optional<Event> findByProductsContaining(Product product);
 
     @Query(value =
-            "select count(*) as ticketsCount, avg(status)*100 as percentageScanned " +
+            "select count(*) as ticketsCount, sum(status) as scannedCount, avg(status)*100 as percentageScanned " +
                     "from Ticket A INNER JOIN (Select distinct products_id FROM ticket T1 INNER JOIN (Select products_id from " +
                     "event_products EP INNER JOIN " +
                     "(Select id from event e where e.ending between :startDate and :endDate) E " +
                     "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true) //TODO fix proper date
     Attendence getAttendenceFromEventsInDateRange(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime End);
+
+    @Query(value =
+            "select count(*) as ticketsCount, coalesce(sum(status), 0) as scannedCount, coalesce(avg(status),0 ) * 100 as percentageScanned " +
+                    "from Ticket A INNER JOIN (Select distinct products_id FROM ticket T1 INNER JOIN (Select products_id from " +
+                    "event_products EP INNER JOIN " +
+                    "(Select :event_id as id) E " +
+                    "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id) B " +
+                    "ON A.product_id=B.products_id;", nativeQuery = true)
+    Attendence getAttendanceFromEvent(@Param("event_id") Integer event_id);
 }
