@@ -44,10 +44,6 @@ public class TicketTransferTest extends ServiceTest {
     /** EventService. */
     private EventService eventService;
 
-    /** MailService. */
-    @Mock
-    private MailService mailService;
-
     /** TicketService. */
     private TicketService ticketService;
 
@@ -65,7 +61,7 @@ public class TicketTransferTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        ticketService = new TicketServiceImpl(ticketRepository, eventService, mailService);
+        ticketService = new TicketServiceImpl(ticketRepository, eventService);
 
         customer1 = new Customer();
         customer1.setVerifiedChMember(true);
