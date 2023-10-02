@@ -269,16 +269,17 @@ public class TicketServiceImpl implements TicketService {
 
 
             Map<String, String> params = new HashMap<>();
-            params.put("name", ticket.getProduct().getTitle());
+            params.put("title", ticket.getProduct().getTitle());
             params.put("description", ticket.getProduct().getDescription());
-            //        Format date as yyyy-MM-dd
             params.put("date", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            params.put("time", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_TIME));
+            params.put("time", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ofPattern("HH:mm")));
             params.put("location", ticket.getProduct().getEvent().getLocation());
+            params.put("name", ticket.getOwner().getName());
             params.put("code", ticket.getUniqueCode());
 
             return restTemplate.getForObject(passesLink +
-                    "?name={name}&description={description}&date={date}&time={time}&location={location}&code={code}"
+                    "?title={title}&description={description}&date={date}&time={time}" +
+                            "&location={location}&code={code}&name={name}"
                     , byte[].class, params);
         } catch (Exception e) {
             e.printStackTrace();
