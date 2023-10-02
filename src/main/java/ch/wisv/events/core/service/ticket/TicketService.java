@@ -114,7 +114,7 @@ public interface TicketService {
      * @param currentCustomer of type Customer
      * @param newCustomer of type Customer
      */
-    void transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException;
+    Ticket transfer(Ticket ticket, Customer currentCustomer, Customer newCustomer) throws TicketNotTransferableException;
 
     /**
      * Generate a QR code for a Ticket.
@@ -125,6 +125,12 @@ public interface TicketService {
      */
     BufferedImage generateQrCode(Ticket ticket) throws WriterException, IllegalArgumentException;
 
+    /**
+     * Get Apple Wallet pass for a Ticket.
+     * @param ticket of type Ticket
+     * @return byte[]
+     * @throws TicketPassFailedException when pass is not generated
+     */
     byte[] getApplePass(Ticket ticket) throws TicketPassFailedException;
 
 }
