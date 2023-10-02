@@ -277,11 +277,9 @@ public class TicketServiceImpl implements TicketService {
             params.put("location", ticket.getProduct().getEvent().getLocation());
             params.put("code", ticket.getUniqueCode());
 
-            byte[] response = restTemplate.getForObject(passesLink +
+            return restTemplate.getForObject(passesLink +
                     "?name={name}&description={description}&date={date}&time={time}&location={location}&code={code}"
                     , byte[].class, params);
-
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             throw new TicketPassFailedException(e.getMessage());
