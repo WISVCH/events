@@ -8,6 +8,7 @@ import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
+import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.QrCode;
@@ -38,6 +39,9 @@ public class WebshopTicketController extends WebshopController {
     /** CustomerService. */
     private final CustomerService customerService;
 
+    /** MailService. */
+    private final MailService mailService;
+
     /**
      * @param authenticationService of type AuthenticationService
      * @param orderService          of type OrderService
@@ -47,11 +51,13 @@ public class WebshopTicketController extends WebshopController {
             AuthenticationService authenticationService,
             CustomerService customerService,
             OrderService orderService,
-            TicketService ticketService
+            TicketService ticketService,
+            MailService mailService
     ) {
         super(orderService, authenticationService);
         this.customerService = customerService;
         this.ticketService = ticketService;
+        this.mailService = mailService;
     }
 
     /** Get ticket transfer page.
@@ -104,7 +110,11 @@ public class WebshopTicketController extends WebshopController {
             Customer newCustomer = customerService.getByEmail(email);
 
             // Transfer the ticket
-            ticketService.transfer(ticket, currentCustomer, newCustomer);
+            Ticket newTicket = ticketService.transfer(ticket, currentCustomer, newCustomer);
+
+            // Send email to new customer
+            mailService.sendTransferConfirmation(newTicket, currentCustomer, newCustomer);
+
 
             redirect.addFlashAttribute(MODEL_ATTR_SUCCESS, "Ticket has been transferred to " + newCustomer.getEmail());
 
