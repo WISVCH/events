@@ -1,5 +1,6 @@
 package ch.wisv.events.admin.controller;
 
+import ch.wisv.events.core.admin.Attendence;
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
@@ -247,7 +248,7 @@ public class DashboardEventController extends DashboardController {
 
             model.addAttribute(OBJ_EVENT, event);
             model.addAttribute(OBJ_TICKETS, tickets);
-
+            model.addAttribute("attendance", eventService.getAttendance(event));
             return "admin/events/overview";
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());

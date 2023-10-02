@@ -45,9 +45,30 @@
 
             <div th:replace="fragments/messages :: messages"></div>
 
-            <div class="row  my-2">
+            <div class="row mb-4">
                 <div class="col-auto">
                     <a th:href="@{'/administrator/events/overview/csv/' + ${event.getKey()} + '/'}" class="btn btn-secondary btn-block">export to csv</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-4">
+                        <h6 class="card-header">Scanned Tickets</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                [[${attendance.getScannedCount()}]] <small>out of [[${attendance.getTicketsCount()}]]</small>
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar"
+                                     th:aria-valuenow="${attendance.getPercentageScanned()}"
+                                     aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${attendance.getPercentageScanned()} + '%;'"
+                                     th:text="${attendance.getPercentageScanned()} + '%'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
