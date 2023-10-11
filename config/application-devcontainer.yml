@@ -24,12 +24,12 @@ spring:
 
   jpa:
     # Set to false in production to prevent spamming of console
-    show-sql: true
+    show-sql: false
     hibernate.type: trace
     type: trace
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
-    hibernate.hb2mddl.auto: create-drop
+    hibernate.ddl-auto: update
 
     # This setting defines the database creation/update behaviour. Change with caution.
     properties.hibernate.default_schema: public
@@ -41,6 +41,11 @@ spring:
     mode: HTML
     encoding: UTF-8
     content-type: text/html
+    
+  web:
+    resources:
+      static-locations[0]: "file:src/main/resources/static/"
+      static-locations[1]: "classpath:/static/"
 
   mail:
     host: 127.0.0.1
@@ -61,7 +66,10 @@ spring:
               - auth
               - profile
               - email
+              - openid
               - auth
+
+logging.level.web: DEBUG
 
 # Spring mail
 # Database migration automation. Set to false for development

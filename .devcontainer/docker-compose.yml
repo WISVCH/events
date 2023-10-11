@@ -35,6 +35,14 @@ services:
       POSTGRES_DB: events
       POSTGRES_HOST_AUTH_METHOD: trust
 
+  adminer:
+    image: adminer
+    restart: always
+    depends_on: 
+      - postgres
+    ports:
+      - 8082:8080
+
   mailcatcher:
     image: schickling/mailcatcher
     restart: on-failure
