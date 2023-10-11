@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * OrderTestDataRunner.
  */
 @Component
-@Profile("dev")
+@Profile({"dev", "devcontainer"})
 @Order(value = 6)
 public class OrderTestDataRunner extends TestDataRunner {
 

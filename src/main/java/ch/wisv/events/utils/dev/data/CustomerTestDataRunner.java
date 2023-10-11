@@ -8,7 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("dev")
+@Profile({"dev", "devcontainer"})
 @Order(value = 3)
 public class CustomerTestDataRunner extends TestDataRunner {
 
