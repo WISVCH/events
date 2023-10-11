@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 volumes:
   postgres-data:
@@ -6,7 +6,7 @@ volumes:
 services:
   app:
     container_name: javadev
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     environment:
@@ -14,7 +14,7 @@ services:
 
     volumes:
       - ../..:/workspaces:cached
-      
+
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
@@ -24,7 +24,6 @@ services:
     depends_on:
       - postgres
       - mailcatcher
-      - connect
 
   postgres:
     image: postgres:latest
@@ -35,75 +34,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: events
       POSTGRES_HOST_AUTH_METHOD: trust
-  
+
   mailcatcher:
     image: schickling/mailcatcher
     restart: on-failure
     network_mode: service:postgres
-
-  connect:
-    image: soluto/oidc-server-mock
-    restart: on-failure
-    network_mode: service:postgres
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      API_SCOPES_INLINE: |
-        - Name: events
-        - Name: some-app-scope-2
-      API_RESOURCES_INLINE: |
-        - Name: events
-          Scopes:
-            - events
-      USERS_CONFIGURATION_INLINE: |
-        [
-          {
-            "id": "NORMAL_USER",
-            "sub": "WISVCH.404",
-            "email": "usert@test.wisv.ch",
-            "name": "User Test",
-            "google_username": "usert",
-            "google_groups": ["beheer"]
-          }
-        ]
-      USERS_CONFIGURATION_INLINE: |
-        [
-          {
-            "SubjectId":"1",
-            "Username":"user",
-            "Password":"user",
-            "Claims": [
-              {
-                "Type": "name",
-                "Value": "user test",
-                "ValueType": "string"
-              },
-              {
-                "Type": "email",
-                "Value": "usert@test.wisv.ch",
-                "ValueType": "string"
-              },
-              {
-                "Type": "sub",
-                "Value": "WISVCH.404",
-                "ValueType": "string"
-              },
-              {
-                "Type": "google_username",
-                "Value": "usert",
-                "ValueType": "string"
-              },
-              {
-                "Type": "google_groups",
-                "Value": "[]",
-                "ValueType": "json"
-              }
-            ]
-          }
-        ]
-      CLIENTS_CONFIGURATION_PATH: /openid-config.json
-    configs:
-      - openid-config.json
-      
-configs:
-  openid-config.json:
-    file: ./oidc-settings/openid.json

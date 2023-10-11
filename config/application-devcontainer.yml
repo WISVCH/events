@@ -4,87 +4,90 @@
 ##################################################################################################
 
 spring:
- datasource:
-   # DATABASE PROPERTIES
-   driverClassName: org.postgresql.Driver
-   # Change <MyDb> with the name of your database name
-   url: jdbc:postgresql://localhost:5432/events
+  datasource:
+    # DATABASE PROPERTIES
+    driverClassName: org.postgresql.Driver
+    # Change <MyDb> with the name of your database name
+    url: jdbc:postgresql://localhost:5432/events
 
-   # Username to log in to the database
-   # It's recommended to create a dedicated Database user instead of using the default postgres user
-   username: postgres
+    # Username to log in to the database
+    # It's recommended to create a dedicated Database user instead of using the default postgres user
+    username: postgres
 
-   # Password to log in with <MyDbPassword> in database <MyDb>
-   password: 
+    # Password to log in with <MyDbPassword> in database <MyDb>
+    password:
 
- data.jpa.repositories.enabled: true
+  data.jpa.repositories.enabled: true
 
- flyway:
-  enabled: false
+  flyway:
+    enabled: false
 
- jpa:
-   # Set to false in production to prevent spamming of console
-   show-sql: true
-   hibernate.type: trace
-   type: trace
-   database-platform: org.hibernate.dialect.PostgreSQLDialect
-   generate-ddl: true
-   hibernate.hb2mddl.auto: create-drop
+  jpa:
+    # Set to false in production to prevent spamming of console
+    show-sql: true
+    hibernate.type: trace
+    type: trace
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate.hb2mddl.auto: create-drop
 
-   # This setting defines the database creation/update behaviour. Change with caution.
-   properties.hibernate.default_schema: public
+    # This setting defines the database creation/update behaviour. Change with caution.
+    properties.hibernate.default_schema: public
 
- thymeleaf:
- # THYMELEAF (ThymeleafAutoConfiguration)
-   check-template-location: true
-   suffix: .html
-   mode: HTML
-   encoding: UTF-8
-   content-type: text/html
+  thymeleaf:
+    # THYMELEAF (ThymeleafAutoConfiguration)
+    check-template-location: true
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    content-type: text/html
 
- mail:
-   host: 127.0.0.1
-   port: 1025
+  mail:
+    host: 127.0.0.1
+    port: 1025
 
- security:
-     oauth2:
-         client:
-             provider:
-                 wisvchconnect:
-                     issuer-uri: https://localhost:4011
-                     clientUri: http://localhost:8080/events
-             registration:
-                 wisvchconnect:d
-                     client-id: client-credentials-mock-client
-                     client-secret: client-credentials-mock-client-secret
-                     scope:
-                         - auth
-                         - profile
-                         - email
-                         - openid
-
+  security:
+    oauth2:
+      client:
+        provider:
+          wisvchconnect:
+            issuer-uri: https://connect.ch.tudelft.nl
+            clientUri: http://localhost:8080/events
+        registration:
+          wisvchconnect:
+            client-id: events-devcontainer
+            client-secret: AN6tZXQea8gFFfDgs_hoUDeiBXPh6CZuvZFE9kBgxzQ2MoHgVzWkPrtSMrNpn75Ems9v4iaz6gRFf0ECY4Q8YEE
+            scope:
+              - auth
+              - profile
+              - email
+              - auth
 
 # Spring mail
 # Database migration automation. Set to false for development
 
 # Serve connect
 server:
-   port: 8081
-   servlet.context-path: /events
+  port: 8081
+  servlet.context-path: /
 
 # CH Connect Configuration
 wisvch.connect:
- # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
- admin-groups:
-   - hoothub
-   - beheer
- claimName: google_groups
+  # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
+  admin-groups:
+    - hoothub
+    - beheer
+  claimName: google_groups
 
 # CH Events Configuration
 wisvch.events:
- image.path: http://localhost:8080/events/api/v1/documents/
+  image.path: http://localhost:8080/events/api/v1/documents/
 
 # CH mollie api key
 mollie:
- apikey: test
- clientUri: http://localhost:8080/events
+  apikey: test
+  clientUri: http://localhost:8080/events
+
+links:
+  gtc: https://ch.tudelft.nl
+  passes: https://ch.tudelft.nl/passes
