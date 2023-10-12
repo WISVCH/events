@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.5.12'
+        springBootVersion = '2.5.15'
     }
     ext['log4j2.version'] = '2.17.2'
     repositories {
@@ -104,8 +104,8 @@ dependencies {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.enabled false
+        xml.required = true
+        html.required = false
     }
 }
 

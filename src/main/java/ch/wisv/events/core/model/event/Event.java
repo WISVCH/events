@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
  */
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"products"})
 public class Event {
 
     /**
@@ -255,9 +257,5 @@ public class Event {
 
     public String toString() {
         return this.title;
-    }
-
-    public int hashCode() {
-        return this.id;
     }
 }

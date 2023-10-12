@@ -1,0 +1,49 @@
+version: "3.8"
+
+volumes:
+  postgres-data:
+
+services:
+  app:
+    container_name: javadev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: devcontainer
+
+    volumes:
+      - ../..:/workspaces:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:postgres
+
+    depends_on:
+      - postgres
+      - mailcatcher
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: events
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  adminer:
+    image: adminer
+    restart: always
+    depends_on: 
+      - postgres
+    ports:
+      - 8082:8080
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    restart: on-failure
+    network_mode: service:postgres

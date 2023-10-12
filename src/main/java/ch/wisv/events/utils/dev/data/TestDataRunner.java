@@ -38,10 +38,14 @@ abstract class TestDataRunner implements CommandLineRunner {
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/resources/dev/data/" + this.jsonFileName));
 
-        for (Object object : jsonArray) {
-            JSONObject json = (JSONObject) object;
+        try {
+            for (Object object : jsonArray) {
+                JSONObject json = (JSONObject) object;
 
-            this.loop(json);
+                this.loop(json);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

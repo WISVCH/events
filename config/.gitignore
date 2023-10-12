@@ -4,3 +4,4 @@
 !.gitignore
 !application.yml.example
 !application-test.yml
+!application-devcontainer.yml

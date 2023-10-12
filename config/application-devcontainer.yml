@@ -6,73 +6,86 @@
 spring:
   datasource:
     # DATABASE PROPERTIES
-  	driverClassName: org.postgresql.Driver
+    driverClassName: org.postgresql.Driver
     # Change <MyDb> with the name of your database name
-  	url: jdbc:postgresql://localhost:5432/<MyDb>
+    url: jdbc:postgresql://localhost:5432/events
 
     # Username to log in to the database
     # It's recommended to create a dedicated Database user instead of using the default postgres user
-  	username: <MyDbUser>
+    username: postgres
 
     # Password to log in with <MyDbPassword> in database <MyDb>
-  	password: <MyDbPassword>
-  
+    password:
+
   data.jpa.repositories.enabled: true
+
+  flyway:
+    enabled: false
 
   jpa:
     # Set to false in production to prevent spamming of console
     show-sql: false
+    hibernate.type: trace
+    type: trace
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
 
     # This setting defines the database creation/update behaviour. Change with caution.
     properties.hibernate.default_schema: public
 
   thymeleaf:
-  # THYMELEAF (ThymeleafAutoConfiguration)
+    # THYMELEAF (ThymeleafAutoConfiguration)
     check-template-location: true
     suffix: .html
     mode: HTML
     encoding: UTF-8
     content-type: text/html
+    
+  web:
+    resources:
+      static-locations[0]: "file:src/main/resources/static/"
+      static-locations[1]: "classpath:/static/"
 
-  security:
-      oauth2:
-          client:
-              provider:
-                  wisvchconnect:
-                      issuer-uri: https://connect.ch.tudelft.nl
-                      clientUri: http://localhost:8080/events
-              registration:
-                  wisvchconnect:
-                      client-id: <Insert Connect ID here>
-                      client-secret: <Insert  Connect Client Secret>
-                      scope:
-                          - openid
-                          - profile
-                          - email
-                          - ldap
-                          - auth
   mail:
     host: 127.0.0.1
     port: 1025
 
+  security:
+    oauth2:
+      client:
+        provider:
+          wisvchconnect:
+            issuer-uri: https://connect.ch.tudelft.nl
+            clientUri: http://localhost:8080/events
+        registration:
+          wisvchconnect:
+            client-id: events-devcontainer
+            client-secret: AN6tZXQea8gFFfDgs_hoUDeiBXPh6CZuvZFE9kBgxzQ2MoHgVzWkPrtSMrNpn75Ems9v4iaz6gRFf0ECY4Q8YEE
+            scope:
+              - auth
+              - profile
+              - email
+              - openid
+              - auth
+
+logging.level.web: DEBUG
+
+# Spring mail
 # Database migration automation. Set to false for development
-  flyway.enabled: false
-# spring.jpa.properties.hibernate.hbm2ddl.auto: none
 
 # Serve connect
 server:
-    port: 8080
-    servlet:
-      context-path: /events
+  port: 80
+  servlet.context-path: /
 
 # CH Connect Configuration
 wisvch.connect:
   # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
   admin-groups:
-    - <MyLDAPgroup>
+    - hoothub
+    - beheer
+  claimName: google_groups
 
 # CH Events Configuration
 wisvch.events:
@@ -84,5 +97,5 @@ mollie:
   clientUri: http://localhost:8080/events
 
 links:
-  gtc: https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf
+  gtc: https://ch.tudelft.nl
   passes: https://ch.tudelft.nl/passes

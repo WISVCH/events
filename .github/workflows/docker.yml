@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Setup JDK
       uses: actions/setup-java@v3
       with:
@@ -36,19 +36,19 @@ jobs:
     - name: Test Coverage
       run: ./gradlew jacocoTestReport jacocoFix --scan
     - name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Docker meta
       id: meta
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
       with:
         images: ghcr.io/wisvch/events
         tags: type=sha, prefix={{date 'YYYYMMDD'}}-
     - name: Build and push Docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v5
       with:
         context: .
         tags: ${{ steps.meta.outputs.tags }}
