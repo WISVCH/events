@@ -60,18 +60,21 @@
                                 <tr>
                                     <th>Name</th>
                                     <th class="text-center">Number</th>
-                                    <th class="text-center">Price</th>
+                                    <th class="text-right">Price</th>
                                     <th class="text-right">Total</th>
+                                    <th class="text-center">VAT</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="product : ${date.value}">
                                     <td th:text="${product.key}"></td>
-                                    <td th:text="${product.value.getRight()}" class="text-center"></td>
+                                    <td th:text="${product.value.getMiddle()}" class="text-center"></td>
                                     <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getLeft(), 1, 'POINT', 2, 'COMMA')}"
                                         class="text-right">
-                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getLeft() * product.value.getRight(), 1, 'POINT', 2, 'COMMA')}"
+                                    <td th:text="'€ ' + ${#numbers.formatDecimal(product.value.getLeft() * product.value.getMiddle(), 1, 'POINT', 2, 'COMMA')}"
                                         class="text-right"></td>
+                                    <td th:text="${product.value.getRight()}"
+                                        class="text-center"></td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
@@ -80,6 +83,7 @@
                                     <th class="sum text-center"></th>
                                     <th class="sum currency text-right"></th>
                                     <th class="sum currency text-right"></th>
+                                    <th></th>
                                 </tr>
                                 </tfoot>
                             </table>

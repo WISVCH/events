@@ -7,4 +7,5 @@ public interface TreasurerData {
     double getPrice();
     int getAmount();
     LocalDateTime getPaidAt();
+    String getVatRate();
 }
