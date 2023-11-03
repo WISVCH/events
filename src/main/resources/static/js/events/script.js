@@ -89,7 +89,7 @@ $(document).ready(function () {
     $('#productSellEnd').flatpickr(config);
 
     $('#q').autocomplete({
-        serviceUrl: '/api/v1/products/search/unused',
+        serviceUrl: '/events/api/v1/products/search/unused',
         onSelect: function (suggestion) {
             addProductToEvent(suggestion.data, suggestion.value);
             $(this).val('');
@@ -160,7 +160,7 @@ $(document).ready(function () {
             };
 
             $.ajax({
-                url: '/api/v1/products',
+                url: '/events/api/v1/products',
                 type: 'POST',
                 headers: {
                     'Content-Type': "application/json"

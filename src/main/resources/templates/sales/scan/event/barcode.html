@@ -230,7 +230,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "/api/v1/sales/scan/event/[[${event.getKey()}]]/barcode",
+                url: "/events/api/v1/sales/scan/event/[[${event.getKey()}]]/barcode",
                 type: "json",
                 data: {
                     _csrf: "[[${_csrf.token}]]",

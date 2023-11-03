@@ -51,7 +51,7 @@ $(document).ready(function () {
     $('#sellEnd').flatpickr(config);
 
     $('#q').autocomplete({
-        serviceUrl: '/api/v1/products/search/unused',
+        serviceUrl: '/events/api/v1/products/search/unused',
         onSelect: function (suggestion) {
             addProductToEvent(suggestion.data, suggestion.value);
             $(this).val('');
