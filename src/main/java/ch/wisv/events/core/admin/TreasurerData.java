@@ -3,9 +3,12 @@ package ch.wisv.events.core.admin;
 import java.time.LocalDateTime;
 
 public interface TreasurerData {
-    String getTitle();
+    int getProductId();
+    String getEventTitle();
+    int getOrganizedBy();
+    String getProductTitle();
     double getPrice();
     int getAmount();
-    LocalDateTime getPaidAt();
     String getVatRate();
+    LocalDateTime getPaidAt();
 }

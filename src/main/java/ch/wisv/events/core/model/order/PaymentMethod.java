@@ -62,4 +62,12 @@ public enum PaymentMethod {
         return Math.round(e.evaluate() * 100.d) / 100.d;
     }
 
+    /**
+     * Return corresponding integer
+     *
+     * @return int
+     */
+    public int toInt() {
+        return this.ordinal();
+    }
 }
