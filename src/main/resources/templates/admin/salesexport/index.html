@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/icons/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/icons/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/icons/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/icons/site.webmanifest}">
+    <link rel="mask-icon" th:href="@{/icons/safari-pinned-tab.svg}" color="#1e274a">
+    <link rel="shortcut icon" th:href="@{/icons/favicon.ico}">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" th:content="@{/icons/browserconfig.xml}">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>CH Events - Dashboard > Example</title>
+
+    <!--Bootstrap core CSS -->
+    <link th:href="@{/webjars/wisvch-bootstrap-theme/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/uet5duo.css" integrity="sha384-Bg9blBrAm2v7bP2AhXtjHdM8p8EeT4YJLHwfJ/1O257DAiLyqhVtYdCB3dzdZsmb" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" integrity="sha384-bsGkvB1NLsaPUZL6GG0N5H9GOW9DK6KiHrrDvO57EJXoD9H3gzlohtuPENw9/24L" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
+        
+        <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
+            <h1>Export Sales
+                <a class="badge badge-danger" th:href="@{/administrator/treasurer}">
+                    Old Treasurer Tab
+                </a>
+            </h1>
+            <div th:replace="fragments/messages :: messages"></div>
+            <form th:action="@{./csv}" th:object="${SalesexportSubmission}" method="GET">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card mb-4">
+                                <h6 class="card-header">Month</h6>
+                                <div class="card-body">
+                                    <div class="row form">
+                                        <div class="form-group col-12">
+                                            <div class="row">
+                                                <div class="form-group col-6">
+                                                    <label>Year: <input type="number" class="form-control" th:field="*{year}" /></label>
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <label>Month: <input type="number" class="form-control" th:field="*{month}" /></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card mb-4">
+                                <h6 class="card-header">Advanced Settings</h6>
+                                <div class="card-body">
+                                    <div class="col form">
+                                        <h7>Include payment methods:</h7>
+                                        <div class="custom-control custom-checkbox" th:each="payMethod : ${T(ch.wisv.events.core.model.order.PaymentMethod).values()}">
+                                            <input type="checkbox" class="custom-control-input"
+                                            th:id="'includeCheck' + ${payMethod}"
+                                            th:field="*{includedPaymentMethods}"
+                                            th:value="${payMethod}"
+                                            th:checked="${SalesexportSubmission.getIncludedPaymentMethods().contains(payMethod)}">
+                                            <label class="custom-control-label text-dark font-weight-normal" th:for="'includeCheck' + ${payMethod}">[[${payMethod.getName()}]]</label>
+                                        </div>
+                                        <h7>Include free products:</h7>
+                                        <!-- <label>Include free products <input type="checkbox" class="custom-control-input" th:field="*{freeProductsIncluded}" /></label> -->
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                            id="includeFreeProducts"
+                                            th:field="*{freeProductsIncluded}"
+                                            th:checked="${SalesexportSubmission.isFreeProductsIncluded()}"
+                                            />
+                                            <label class="custom-control-label text-dark font-weight-normal"
+                                            for="includeFreeProducts">Include free products (also select all payment methods)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <input type="submit" class="btn btn-secondary" value="Export" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+</body>
