@@ -101,7 +101,6 @@ public class PaymentsServiceImpl implements PaymentsService {
             return molliePayment.getLinks().getCheckout().getHref();
 
         } catch (MollieException e) {
-            mailService.sendError("Can't fetch mollie url", e);
             handleMollieError(e);
             return null;
         }
