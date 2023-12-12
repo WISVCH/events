@@ -2,7 +2,7 @@ package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.admin.TreasurerData;
-import ch.wisv.events.core.admin.SalesexportSubmission;
+import ch.wisv.events.core.admin.SalesExportSubmission;
 import ch.wisv.events.utils.LdapGroup;
 
 
@@ -36,23 +36,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
- * DashboardSalesexportController class.
+ * DashboardSalesExportController class.
  */
 @Controller
 @RequestMapping("/administrator/salesexport")
 @PreAuthorize("hasRole('ADMIN')")
-public class DashboardSalesexportController extends DashboardController {
+public class DashboardSalesExportController extends DashboardController {
 
     /** TreasurerRepository */
     private final OrderRepository orderRepository;
 
     /**
-     * DashboardSalesexportController constructor.
+     * DashboardSalesExportController constructor.
      *
      * @param orderRepository of type OrderRepository
      */
     @Autowired
-    public DashboardSalesexportController(OrderRepository orderRepository) {
+    public DashboardSalesExportController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
@@ -66,7 +66,7 @@ public class DashboardSalesexportController extends DashboardController {
     @GetMapping
     public String index(Model model) {
         // model.addAttribute("productMap", this.generateProductMap());
-        model.addAttribute("SalesexportSubmission", new SalesexportSubmission());
+        model.addAttribute("SalesExportSubmission", new SalesExportSubmission());
 
         return "admin/salesexport/index";
     }
@@ -78,14 +78,14 @@ public class DashboardSalesexportController extends DashboardController {
      * 
      */
     @GetMapping(value="/csv", produces="text/csv")
-    public HttpEntity<? extends Object> csvExport(@ModelAttribute SalesexportSubmission SalesexportSubmission, Model model) {
-        model.addAttribute("SalesexportSubmission", SalesexportSubmission);
+    public HttpEntity<? extends Object> csvExport(@ModelAttribute SalesExportSubmission SalesExportSubmission, Model model) {
+        model.addAttribute("SalesExportSubmission", SalesExportSubmission);
         
         // Convert payment methods to integers
         List<Integer> paymentMethods = new ArrayList<>();
-        SalesexportSubmission.getIncludedPaymentMethods().forEach( (m) -> paymentMethods.add(m.toInt()) );
+        SalesExportSubmission.getIncludedPaymentMethods().forEach( (m) -> paymentMethods.add(m.toInt()) );
 
-        List<TreasurerData> treasurerData = orderRepository.findallPaymentsByMonth(SalesexportSubmission.getMonth(), SalesexportSubmission.getYear(), paymentMethods, SalesexportSubmission.isFreeProductsIncluded());
+        List<TreasurerData> treasurerData = orderRepository.findallPaymentsByMonth(SalesExportSubmission.getMonth(), SalesExportSubmission.getYear(), paymentMethods, SalesExportSubmission.isFreeProductsIncluded());
         
         ListIterator<TreasurerData> listIterator = treasurerData.listIterator(treasurerData.size());
         
@@ -124,7 +124,7 @@ public class DashboardSalesexportController extends DashboardController {
             }
         }
         
-        // String csvContent = "Options:\n" + SalesexportSubmission.toString() + "\n\n";
+        // String csvContent = "Options:\n" + SalesExportSubmission.toString() + "\n\n";
         // csvContent += "Event;Organized by;Product;Total income;Total amount;VAT rate\n";
         String csvContent = "Event;Organized by;Product;Total income;Total amount;VAT rate;price\n";
         for (Map.Entry<Integer, Septet<String, Integer, String, Double, Integer, String, Double>> entry : map.entrySet()) {
@@ -140,7 +140,7 @@ public class DashboardSalesexportController extends DashboardController {
         InputStream bufferedInputStream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8));
         InputStreamResource fileInputStream = new InputStreamResource(bufferedInputStream);
 
-        String filename = "Sales_overview_"+SalesexportSubmission.getYear()+"-"+SalesexportSubmission.getMonth()+"_export.csv";
+        String filename = "Sales_overview_"+SalesExportSubmission.getYear()+"-"+SalesExportSubmission.getMonth()+"_export.csv";
 
         // setting HTTP headers
         HttpHeaders headers = new HttpHeaders();

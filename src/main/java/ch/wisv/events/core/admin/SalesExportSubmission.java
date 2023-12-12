@@ -16,7 +16,7 @@ import com.google.common.collect.Lists;
  */
 @Getter
 @Setter
-public class SalesexportSubmission {
+public class SalesExportSubmission {
     
     /**
      * Year of query
@@ -38,7 +38,7 @@ public class SalesexportSubmission {
     /**
      * Default constructor.
      */
-    public SalesexportSubmission() {
+    public SalesExportSubmission() {
         
         // default: previous month
         if (LocalDate.now().getMonthValue() == 1) {
@@ -67,4 +67,3 @@ public class SalesexportSubmission {
         return settings;
     }
 }   
-

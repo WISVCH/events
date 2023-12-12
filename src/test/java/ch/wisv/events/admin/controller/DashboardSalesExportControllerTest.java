@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EventsApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class DashboardSalesexportControllerTest extends ControllerTest {
+public class DashboardSalesExportControllerTest extends ControllerTest {
 
     @Test
     public void testCsvExport() throws Exception {
