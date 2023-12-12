@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import ch.wisv.events.core.repository.OrderRepository;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +86,11 @@ public class DashboardTreasurerController extends DashboardController {
             date = LocalDate.of(date.getYear(), date.getMonthValue(), 1);            
 
             Map<String, Triple<Double, Integer, String>> list = map.getOrDefault(date, new HashMap<>());
-            if (!list.containsKey(data.getTitle())) {
-                list.put(data.getTitle(), new ImmutableTriple<>(data.getPrice(), data.getAmount(), data.getVatRate()));
+            if (!list.containsKey(data.getProductTitle())) {
+                list.put(data.getProductTitle(), new ImmutableTriple<>(data.getPrice(), data.getAmount(), data.getVatRate()));
             } else {
-                list.put(data.getTitle(),
-                        new ImmutableTriple<>(data.getPrice(), list.get(data.getTitle()).getMiddle()+data.getAmount(), data.getVatRate())
+                list.put(data.getProductTitle(),
+                        new ImmutableTriple<>(data.getPrice(), list.get(data.getProductTitle()).getMiddle()+data.getAmount(), data.getVatRate())
                 );
             }
 

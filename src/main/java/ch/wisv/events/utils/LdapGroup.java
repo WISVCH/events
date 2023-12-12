@@ -62,4 +62,15 @@ public enum LdapGroup {
         return name;
     }
 
+    /**
+     * Method intToString returns the name of the i-th LdapGroup.
+     *
+     * @param i of type int
+     * 
+     * @return String
+     */
+    public static String intToString(int i) {
+        return LdapGroup.values()[i].getName();
+    }
+
 }
