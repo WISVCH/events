@@ -41,7 +41,7 @@
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1 th:text="${event.getTitle()}"/>
             <div class="row">
-                <div class="col">
+                <div class="col-md">
                     <div class="card mb-3">
                         <h6 class="card-header">Total number of tickets sold:</h6>
                         <div class="card-body text-primary">
@@ -60,13 +60,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm">
                     <div class="card mb-3">
                         <h6 class="card-header">Amount of money earned:</h6>
                         <div class="card-body text-primary">
                             <h4 class="card-title">
                                 € [[${moneyEarned}]]
                             </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="card mb-3">
+                        <h6 class="card-header">Number of tickets scanned:</h6>
+                        <div class="card-body text-primary">
+                            <h4 class="card-title">
+                                [[${attendance.getScannedCount()}]] <small>out of [[${attendance.getTicketsCount()}]]</small>
+                            </h4>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar"
+                                     th:aria-valuenow="${attendance.getPercentageScanned()}"
+                                     aria-valuemin="0" aria-valuemax="100"
+                                     th:style="'width: ' + ${attendance.getPercentageScanned()} + '%;'"
+                                     th:text="${attendance.getPercentageScanned()} + '%'">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
