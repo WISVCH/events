@@ -122,6 +122,7 @@ public class SalesStatsController {
         model.addAttribute("ticketsSold", ticketsSold);
         model.addAttribute("event", event);
         model.addAttribute("key", event.getKey());
+        model.addAttribute("attendance", eventService.getAttendance(event));
 
         return "sales/stats/event/index";
     }
