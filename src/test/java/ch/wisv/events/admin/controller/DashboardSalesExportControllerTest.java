@@ -37,6 +37,11 @@ public class DashboardSalesExportControllerTest extends ControllerTest {
 
     @Test
     public void testCsvExport() throws Exception {
+        
+    }
+
+    @Test
+    public void testCsvExport() throws Exception {
         Product product = this.createProduct();
         Event event = this.createEvent();
         event.addProduct(product);
