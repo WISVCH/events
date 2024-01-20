@@ -6,22 +6,16 @@ import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
-import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.admin.TreasurerData;
 import ch.wisv.events.admin.utils.AggregatedProduct;
-import ch.wisv.events.utils.LdapGroup;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.TreeMap;
-import org.json.simple.JSONObject;
 
 
 
-// import com.google.common.collect.Lists;
 import java.util.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -68,28 +61,16 @@ public class DashboardSalesExportControllerTest extends ControllerTest {
 
         Order order3 = this.createOrderSingleProduct(customer, product2, 1L, OrderStatus.PENDING, "test");
         orderService.updateOrderStatus(order3, OrderStatus.PAID);
-        // order4 should not be in the aggregated product, because OrderStatus is not set to PAID
-        Order order4 = this.createOrderSingleProduct(customer, product2, 1L, OrderStatus.PENDING, "test");
+        // this last order should not be in the aggregated product, because OrderStatus is not set to PAID
+        this.createOrderSingleProduct(customer, product2, 1L, OrderStatus.PENDING, "test");
 
         List<Integer> paymentMethods = new ArrayList<>();
-        paymentMethods.add(PaymentMethod.IDEAL.toInt());
-        paymentMethods.add(0);
-        paymentMethods.add(1);
-        paymentMethods.add(2);
-        paymentMethods.add(3);
-        paymentMethods.add(4);
-        paymentMethods.add(5);
+        paymentMethods.add(order1.getPaymentMethod().toInt());
         List<TreasurerData> treasurerData = orderRepository.findallPaymentsByMonth(LocalDate.now().getMonthValue(), LocalDate.now().getYear(), paymentMethods, false);
-        List<TreasurerData> treasurerData2 = orderRepository.findallPayments();
 
         Map<Integer, AggregatedProduct> map = DashboardSalesExportController.aggregateOrders(treasurerData);
 
         
-//        System.out.println("==================== print =====================");
-//        System.out.println(treasurerData2.get(0).getPaidAt());
-//        System.out.println(product1.getId());
-//        System.out.println(map.keySet());
-//        System.out.println(treasurerData);
         assertTrue(map.containsKey(product1.getId()));
         AggregatedProduct aggrProduct1 = map.get(product1.getId());
         assertEquals(event.toString(), aggrProduct1.eventTitle);
