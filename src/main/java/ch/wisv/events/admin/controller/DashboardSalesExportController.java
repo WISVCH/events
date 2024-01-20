@@ -117,7 +117,7 @@ public class DashboardSalesExportController extends DashboardController {
      *
      * @return map with entry per product, with the product id as key
      */
-    private Map<Integer, AggregatedProduct> aggregateOrders(List<TreasurerData> treasurerData) {
+    public static Map<Integer, AggregatedProduct> aggregateOrders(List<TreasurerData> treasurerData) {
         
         ListIterator<TreasurerData> listIterator = treasurerData.listIterator(treasurerData.size());
         
@@ -162,7 +162,7 @@ public class DashboardSalesExportController extends DashboardController {
      *
      * @return string that should be written to csv file
      */
-    private String generateCsvContent(Map<Integer, AggregatedProduct> map) {
+    public static String generateCsvContent(Map<Integer, AggregatedProduct> map) {
         
         // String csvContent = "Options:\n" + SalesExportSubmission.toString() + "\n\n";
         // csvContent += "Event;Organized by;Product;Total income;Total amount;VAT rate\n";

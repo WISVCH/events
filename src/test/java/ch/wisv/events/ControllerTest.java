@@ -185,6 +185,24 @@ public abstract class ControllerTest {
         return order;
     }
 
+    protected Order createOrderSingleProduct(Customer customer, Product product, Long amount, OrderStatus status, String createdBy) {
+        Order order = new Order();
+        order.setOwner(customer);
+        order.setStatus(status);
+        order.setCreatedBy(createdBy);
+        order.setPaymentMethod(PaymentMethod.IDEAL);
+
+        
+        OrderProduct orderProduct = new OrderProduct(product, product.getCost(), amount);
+        orderProductRepository.saveAndFlush(orderProduct);
+        order.addOrderProduct(orderProduct);
+        
+
+        orderRepository.saveAndFlush(order);
+
+        return order;
+    }
+
     protected OrderProduct createOrderProduct(Product product) {
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setProduct(product);

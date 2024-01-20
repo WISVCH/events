@@ -7,7 +7,6 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collection;
-import java.time.LocalDate;
 
 import ch.wisv.events.core.admin.TreasurerData;
 import org.springframework.data.jpa.repository.JpaRepository;
