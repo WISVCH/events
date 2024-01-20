@@ -89,6 +89,72 @@ public class DashboardSalesExportControllerTest extends ControllerTest {
     }
 
     @Test
+    public void testGenerateCsvContent() throws Exception {
+        // Mostly test if amounts are correctly rounded to 2 decimals
+
+        Event event = this.createEvent();
+
+        Product product1 = this.createProduct();
+        product1.setCost(0.10d);
+        event.addProduct(product1);
+
+        AggregatedProduct aggregatedProduct1 = new AggregatedProduct();
+        aggregatedProduct1.eventTitle = event.getTitle();
+        aggregatedProduct1.organizedBy = event.getOrganizedBy().getName();
+        aggregatedProduct1.productTitle = product1.getTitle();
+        aggregatedProduct1.vatRate = product1.getVatRate().name();
+        aggregatedProduct1.price = product1.getCost();
+        aggregatedProduct1.totalIncome = product1.getCost();
+        aggregatedProduct1.totalAmount = 1;
+
+        aggregatedProduct1.totalAmount += 2;
+        aggregatedProduct1.totalIncome += 2*product1.getCost();
+
+        Product product2 = this.createProduct();
+        product2.setCost(0.30d);
+        event.addProduct(product1);
+
+        AggregatedProduct aggregatedProduct2 = new AggregatedProduct();
+        aggregatedProduct2.eventTitle = event.getTitle();
+        aggregatedProduct2.organizedBy = event.getOrganizedBy().getName();
+        aggregatedProduct2.productTitle = product2.getTitle();
+        aggregatedProduct2.vatRate = product2.getVatRate().name();
+        aggregatedProduct2.price = product2.getCost();
+        aggregatedProduct2.totalIncome = 128.1;
+        aggregatedProduct2.totalAmount = 123;
+
+        aggregatedProduct2.totalAmount += 0;
+        aggregatedProduct2.totalIncome += 0.2;
+
+        Map<Integer, AggregatedProduct> map = new HashMap<>();
+
+        map.put(product1.getId(), aggregatedProduct1);
+        map.put(product2.getId(), aggregatedProduct2);
+
+        String csvContent = DashboardSalesExportController.generateCsvContent(map);
+
+        String expectedLine1 = event.getTitle()
+                + ";" + event.getOrganizedBy().getName()
+                + ";" + product1.getTitle()
+                + ";" + "0.30"    // total income
+                + ";" + "3"       // total amount
+                + ";" + product1.getVatRate().name()
+                + ";" + "0.10";
+
+        String expectedLine2 = event.getTitle()
+                + ";" + event.getOrganizedBy().getName()
+                + ";" + product2.getTitle()
+                + ";" + "128.30"    // total income
+                + ";" + "123"       // total amount
+                + ";" + product2.getVatRate().name()
+                + ";" + "0.30";
+
+        assertTrue(csvContent.contains(expectedLine1));
+        assertTrue(csvContent.contains(expectedLine2));
+
+    }
+
+    @Test
     public void testCsvExport() throws Exception {
         Product product = this.createProduct();
         Event event = this.createEvent();

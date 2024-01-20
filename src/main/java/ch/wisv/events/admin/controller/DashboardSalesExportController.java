@@ -1,23 +1,17 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.admin.TreasurerData;
 import ch.wisv.events.core.admin.SalesExportSubmission;
 import ch.wisv.events.utils.LdapGroup;
 import ch.wisv.events.admin.utils.AggregatedProduct;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import com.google.common.collect.Lists;
 
 import ch.wisv.events.core.repository.OrderRepository;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,15 +19,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.javatuples.Septet;
 
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -166,16 +157,16 @@ public class DashboardSalesExportController extends DashboardController {
         
         // String csvContent = "Options:\n" + SalesExportSubmission.toString() + "\n\n";
         // csvContent += "Event;Organized by;Product;Total income;Total amount;VAT rate\n";
-        String csvContent = "Event;Organized by;Product;Total income;Total amount;VAT rate;price\n";
+        StringBuilder csvContent = new StringBuilder("Event;Organized by;Product;Total income;Total amount;VAT rate;price\n");
         for (Map.Entry<Integer, AggregatedProduct> entry : map.entrySet()) {
-            csvContent += entry.getValue().eventTitle                  // event title
-                        + ";" + entry.getValue().organizedBy // organized by
-                        + ";" + entry.getValue().productTitle           // product title
-                        + ";" + entry.getValue().totalIncome            // total income
-                        + ";" + entry.getValue().totalAmount            // total amount
-                        + ";" + entry.getValue().vatRate            // vat rate
-                        + ";" + entry.getValue().price + "\n";    // price
+            csvContent.append(entry.getValue().eventTitle)
+                    .append(";").append(entry.getValue().organizedBy)           // organized by
+                    .append(";").append(entry.getValue().productTitle)          // product title
+                    .append(";").append(String.format("%.2f", entry.getValue().totalIncome)) // total income
+                    .append(";").append(entry.getValue().totalAmount)           // total amount
+                    .append(";").append(entry.getValue().vatRate)               // vat rate
+                    .append(";").append(String.format("%.2f", entry.getValue().price)).append("\n"); // price
         }
-    return csvContent;
+    return csvContent.toString();
     }
 }
