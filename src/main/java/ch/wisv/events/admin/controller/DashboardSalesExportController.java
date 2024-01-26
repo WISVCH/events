@@ -125,7 +125,7 @@ public class DashboardSalesExportController extends DashboardController {
                 product.eventTitle = data.getEventTitle();
                 product.organizedBy = LdapGroup.intToString(data.getOrganizedBy());
                 product.productTitle = data.getProductTitle();
-                product.totalIncome = data.getPrice();
+                product.totalIncome = data.getPrice() * data.getAmount();
                 product.totalAmount = data.getAmount();
                 product.vatRate = data.getVatRate();
                 product.price = data.getPrice();
