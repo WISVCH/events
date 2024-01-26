@@ -151,7 +151,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
                 WHERE (:includeFreeProducts OR OP.PRICE > 0)
             ) B
             INNER JOIN PRODUCT P ON B.PRODUCT_ID = P.ID
-            INNER JOIN EVENT_PRODUCTS EP ON P.ID = EP.PRODUCTS_ID
-            INNER JOIN EVENT E ON EP.EVENT_ID = E.ID""", nativeQuery = true)
+            LEFT JOIN EVENT_PRODUCTS EP ON P.ID = EP.PRODUCTS_ID
+            LEFT JOIN EVENT E ON EP.EVENT_ID = E.ID""", nativeQuery = true)
     List<TreasurerData> findallPaymentsByMonth(@Param("month") Integer month, @Param("year") Integer year, @Param("paymentMethods") Collection<Integer> paymentMethods, @Param("includeFreeProducts") boolean includeFreeProducts);
 }
