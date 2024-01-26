@@ -130,8 +130,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value ="""
             SELECT
                 P.ID AS productId,
-                E.TITLE AS eventTitle,
-                E.ORGANIZED_BY AS organizedBy,
+                coalesce(E.TITLE,'EVENT_NOT_FOUND') AS eventTitle,
+                coalesce(E.ORGANIZED_BY, 27) AS organizedBy,
                 P.TITLE AS productTitle,
                 B.OP_PRICE AS price,
                 B.OP_AMOUNT AS amount,
