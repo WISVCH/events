@@ -32,6 +32,7 @@
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/trumbowyg/dist/ui/trumbowyg.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/trumbowyg/dist/plugins/table/ui/trumbowyg.table.min.css}">
+    <link th:href="@{/css/wisvch-trumbowyg.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -436,76 +437,12 @@
             ['table'],
             ['fullscreen']
         ],
+        minimalLinks: false,
+        defaultLinkTarget: '_blank',
+        linkTargets: ['_blank', '_self'],
+        urlProtocol: true,
     });
     description_trumbowyg.trumbowyg('html', description_textarea.val());
     description_trumbowyg.on('tbwchange', function(){ description_textarea.val(description_trumbowyg.trumbowyg('html')) })
 </script>
-<style>
-    .trumbowyg-box {
-        margin-top: 0;
-    }
-
-    #description_trumbowyg {
-        h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
-            font-family: Nimbus Sans,Noto Sans,Nimbus Sans,"Helvetica Neue",sans-serif;
-            font-style: normal;
-            font-weight: bold;
-            color: #1E274A;
-            text-rendering: optimizeLegibility;
-            border: none;
-        }
-
-        h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
-            color: #1E274A;
-        }
-
-        h1 a:hover,h1 a:focus,h2 a:hover,h2 a:focus,h3 a:hover,h3 a:focus,h4 a:hover,h4 a:focus,h5 a:hover,h5 a:focus,h6 a:hover,h6 a:focus {
-            color: #EE7203;
-        }
-
-        h1 {
-            text-transform: uppercase;
-        }
-
-        h3 {
-            font-weight: bold;
-            margin: .5rem 0 0;
-        }
-
-        h1,.h1 {
-            font-size:1.875rem;
-        }
-
-        h2,.h2 {
-            font-size: 1.5rem;
-        }
-
-        h3,.h3 {
-            font-size: 1rem;
-        }
-
-        h4,.h4 {
-            font-size: 1rem;
-        }
-
-        h5,.h5 {
-            font-size: 1rem;
-        }
-
-        h6,.h6 {
-            font-size: 1rem;
-        }
-
-        a {
-            line-height: inherit;
-            color: #EE7203;
-            text-decoration: none;
-            cursor: pointer
-        }
-
-        a:hover,a:focus {
-            color: #1E274A
-        }
-    }
-</style>
 </body>
