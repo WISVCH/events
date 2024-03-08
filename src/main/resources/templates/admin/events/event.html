@@ -437,6 +437,10 @@
             ['table'],
             ['fullscreen']
         ],
+        minimalLinks: false,
+        defaultLinkTarget: '_blank',
+        linkTargets: ['_blank', '_self'],
+        urlProtocol: true,
     });
     description_trumbowyg.trumbowyg('html', description_textarea.val());
     description_trumbowyg.on('tbwchange', function(){ description_textarea.val(description_trumbowyg.trumbowyg('html')) })
