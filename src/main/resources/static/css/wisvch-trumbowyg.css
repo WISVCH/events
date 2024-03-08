@@ -2,6 +2,15 @@
     margin-top: 0;
 }
 
+.trumbowyg-button-pane {
+    background: #f3f3f3;
+}
+
+.trumbowyg-box svg, .trumbowyg-modal svg {
+    fill: #40556a;
+    color: #40556a;
+}
+
 .trumbowyg-editor {
     h1, h2, h3 {
         border-bottom: none;
