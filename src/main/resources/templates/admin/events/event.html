@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" integrity="sha384-bsGkvB1NLsaPUZL6GG0N5H9GOW9DK6KiHrrDvO57EJXoD9H3gzlohtuPENw9/24L" crossorigin="anonymous">
     <link th:href="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/trumbowyg/dist/ui/trumbowyg.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/trumbowyg/dist/plugins/table/ui/trumbowyg.table.min.css}">
 </head>
 
 <body>
@@ -86,10 +88,12 @@
                                     </div>
                                     <div class="form-group col-12">
                                         <label>Description*
-                                            <textarea type="text" class="form-control" rows="5" style="height: 150px"
+                                            <textarea type="text" class="form-control" rows="5" style="height: 150px; display: none;"
+                                                      id="description_textarea"
                                                       th:field="*{description}"
                                                       th:text="${event.getDescription()}" required></textarea>
                                         </label>
+                                        <div id="description_trumbowyg"></div>
                                     </div>
                                     <div class="form-group col-12">
                                         <label>External Product URL
@@ -415,5 +419,93 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.3/jquery.autocomplete.min.js" integrity="sha384-ho3z3xKORnO8FNnsxPqxaNcR6d1GuTMih6RpBLpnkylaAn7AGk20OFigYuP9+sLj" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/flatpickr/4.5.1/dist/flatpickr.min.js}"></script>
+<script th:src="@{/webjars/trumbowyg/dist/trumbowyg.min.js}"></script>
+<script th:src="@{/webjars/trumbowyg/dist/plugins/cleanpaste/trumbowyg.cleanpaste.min.js}"></script>
+<script th:src="@{/webjars/trumbowyg/dist/plugins/table/trumbowyg.table.min.js}"></script>
 <script th:src="@{/js/events/script.min.js}"></script>
+<script>
+    const description_textarea = $('#description_textarea')
+    const description_trumbowyg = $('#description_trumbowyg')
+    description_trumbowyg.trumbowyg({
+        btns: [
+            ['viewHTML'],
+            ['formatting'],
+            ['strong', 'em', 'del'],
+            ['link'],
+            ['unorderedList', 'orderedList'],
+            ['table'],
+            ['fullscreen']
+        ],
+    });
+    description_trumbowyg.trumbowyg('html', description_textarea.val());
+    description_trumbowyg.on('tbwchange', function(){ description_textarea.val(description_trumbowyg.trumbowyg('html')) })
+</script>
+<style>
+    .trumbowyg-box {
+        margin-top: 0;
+    }
+
+    #description_trumbowyg {
+        h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
+            font-family: Nimbus Sans,Noto Sans,Nimbus Sans,"Helvetica Neue",sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            color: #1E274A;
+            text-rendering: optimizeLegibility;
+            border: none;
+        }
+
+        h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+            color: #1E274A;
+        }
+
+        h1 a:hover,h1 a:focus,h2 a:hover,h2 a:focus,h3 a:hover,h3 a:focus,h4 a:hover,h4 a:focus,h5 a:hover,h5 a:focus,h6 a:hover,h6 a:focus {
+            color: #EE7203;
+        }
+
+        h1 {
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-weight: bold;
+            margin: .5rem 0 0;
+        }
+
+        h1,.h1 {
+            font-size:1.875rem;
+        }
+
+        h2,.h2 {
+            font-size: 1.5rem;
+        }
+
+        h3,.h3 {
+            font-size: 1rem;
+        }
+
+        h4,.h4 {
+            font-size: 1rem;
+        }
+
+        h5,.h5 {
+            font-size: 1rem;
+        }
+
+        h6,.h6 {
+            font-size: 1rem;
+        }
+
+        a {
+            line-height: inherit;
+            color: #EE7203;
+            text-decoration: none;
+            cursor: pointer
+        }
+
+        a:hover,a:focus {
+            color: #1E274A
+        }
+    }
+</style>
 </body>
