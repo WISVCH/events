@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SalesScanEventControllerTest extends ControllerTest {
 
     @Test
-    public void testScanner() throws Exception {
+    public void testScanner() {
         // TODO: fix this test with csrf enabled.
 
         //        Event event = this.createEvent();
@@ -34,7 +34,7 @@ public class SalesScanEventControllerTest extends ControllerTest {
 
     @Test
     public void testScannerEventNotExists() throws Exception {
-        mockMvc.perform(get("/sales/scan/event/" + UUID.randomUUID().toString() + "/barcode"))
+        mockMvc.perform(get("/sales/scan/event/" + UUID.randomUUID() + "/barcode"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/sales/scan/"));
     }

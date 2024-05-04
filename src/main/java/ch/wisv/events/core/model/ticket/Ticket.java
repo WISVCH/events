@@ -126,7 +126,7 @@ public class Ticket {
             throw new TicketNotTransferableException("Ticket can only be transferred to the owner.");
 
         // Check if ticket is not transferred to the same customer.
-        if(newCustomer != null && this.owner.equals(newCustomer))
+        if(this.owner.equals(newCustomer))
             throw new TicketNotTransferableException("Sadly you can not transfer a ticket to yourself.. Lezen is adten.");
 
         return true;

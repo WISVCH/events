@@ -13,4 +13,4 @@ public class AggregatedProduct {
     public Integer totalAmount;
     public String vatRate;
     public Double price;
-};
+}

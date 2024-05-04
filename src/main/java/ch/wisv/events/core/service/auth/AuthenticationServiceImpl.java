@@ -8,8 +8,6 @@ import ch.wisv.events.utils.LdapGroup;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -83,11 +81,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return OIDCIdToken
      */
     private DefaultOidcUser getOidcUser(Authentication auth) throws InvalidTokenException {
-        if (!(auth.getPrincipal() instanceof DefaultOidcUser)) {
+        if (!(auth.getPrincipal() instanceof DefaultOidcUser oidcUser)) {
             throw new InvalidTokenException("Invalid authentication");
         }
 
-        DefaultOidcUser oidcUser = (DefaultOidcUser) auth.getPrincipal();
         if (oidcUser.getEmail() == null) {
             throw new InvalidTokenException("Invalid UserInfo object");
         }
