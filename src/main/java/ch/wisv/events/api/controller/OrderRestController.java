@@ -15,20 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/orders")
 public class OrderRestController {
 
-    /** OrderService. */
-    private final OrderService orderService;
-
     /** PaymentsService. */
     private final PaymentsService paymentsService;
 
     /**
      * OrderRestController constructor.
      *
-     * @param orderService    of type OrderService
      * @param paymentsService of type PaymentsService
      */
-    public OrderRestController(OrderService orderService, PaymentsService paymentsService) {
-        this.orderService = orderService;
+    public OrderRestController(PaymentsService paymentsService) {
         this.paymentsService = paymentsService;
     }
 

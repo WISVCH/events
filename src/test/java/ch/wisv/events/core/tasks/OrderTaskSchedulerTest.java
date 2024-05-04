@@ -22,9 +22,6 @@ import static org.mockito.Mockito.when;
 public class OrderTaskSchedulerTest extends ServiceTest {
 
     @Mock
-    private PaymentsService paymentsService;
-
-    @Mock
     private OrderService orderService;
 
     private OrderTaskScheduler orderTaskScheduler;

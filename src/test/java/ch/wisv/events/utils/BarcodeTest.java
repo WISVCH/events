@@ -19,7 +19,6 @@ public class BarcodeTest {
     @Test
     public void testIsValidEanCodeFalse() {
         String barcode = "123456000000";
-        String barcodePlusCheckDigit = "1234560000006";
 
         assertEquals(5, Barcode.calculateChecksum(barcode.toCharArray()));
         assertFalse(Barcode.isValidEanCode(barcode));

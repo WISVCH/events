@@ -1,7 +1,6 @@
 package ch.wisv.events.core.service.auth;
 
 import ch.wisv.events.ServiceTest;
-import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 
@@ -18,14 +17,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
-import org.springframework.test.context.TestPropertySource;
-import org.thymeleaf.extras.springsecurity5.auth.Authorization;
+
 public class AuthenticationServiceImplTest extends ServiceTest {
 
     /** CustomerService. */

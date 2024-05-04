@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.admin.Attendence;
+import ch.wisv.events.core.admin.Attendance;
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.document.Document;
@@ -124,5 +124,5 @@ public interface EventService {
      * @param event Event
      * @return Attendance of event
      */
-    Attendence getAttendance(Event event);
+    Attendance getAttendance(Event event);
 }

@@ -1,11 +1,10 @@
 package ch.wisv.events.core.repository;
 
-import ch.wisv.events.core.admin.Attendence;
+import ch.wisv.events.core.admin.Attendance;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +91,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                     "(Select id from event e where e.ending between :startDate and :endDate) E " +
                     "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true) //TODO fix proper date
-    Attendence getAttendenceFromEventsInDateRange(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime End);
+    Attendance getAttendanceFromEventsInDateRange(@Param("startDate") LocalDateTime start,
+                                                  @Param("endDate") LocalDateTime End);
 
     @Query(value =
             "select count(*) as ticketsCount, coalesce(sum(status), 0) as scannedCount, coalesce(avg(status),0 ) * 100 as percentageScanned " +
@@ -101,5 +101,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                     "(Select :event_id as id) E " +
                     "ON E.id=EP.event_id) T2 ON T1.product_id=T2.products_id) B " +
                     "ON A.product_id=B.products_id;", nativeQuery = true)
-    Attendence getAttendanceFromEvent(@Param("event_id") Integer event_id);
+    Attendance getAttendanceFromEvent(@Param("event_id") Integer event_id);
 }

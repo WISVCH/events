@@ -1,9 +1,7 @@
 package ch.wisv.events.admin.controller;
 
-import ch.wisv.events.core.admin.Attendence;
+import ch.wisv.events.core.admin.Attendance;
 import ch.wisv.events.core.model.event.Event;
-import ch.wisv.events.core.model.ticket.Ticket;
-import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
@@ -13,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,9 +32,6 @@ public class DashboardIndexController extends DashboardController {
     /** CustomerService. */
     private final CustomerService customerService;
 
-    /** TicketService. */
-    private final TicketService ticketService;
-
     /** EventRepository. */
     private final EventRepository eventRepository;
 
@@ -46,16 +40,14 @@ public class DashboardIndexController extends DashboardController {
      *
      * @param eventService    of type EventService
      * @param customerService of type CustomerService
-     * @param ticketService   of type TicketService
      * @param eventRepository   of type eventRepository
      */
     @Autowired
     public DashboardIndexController(
-            EventService eventService, CustomerService customerService, TicketService ticketService, EventRepository eventRepository
+            EventService eventService, CustomerService customerService, EventRepository eventRepository
     ) {
         this.eventService = eventService;
         this.customerService = customerService;
-        this.ticketService = ticketService;
         this.eventRepository = eventRepository;
     }
 
@@ -79,8 +71,10 @@ public class DashboardIndexController extends DashboardController {
         model.addAttribute("totalCustomers", totalCustomers);
         model.addAttribute("increaseCustomers", this.calculateChangePercentage(totalCustomers - this.determineTotalCustomersLastMonth(), totalCustomers));
 
-        Attendence attCurrBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusMonths(1), CurrentBoardStartYear);
-        Attendence attLastBoard = this.eventRepository.getAttendenceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).minusMonths(1), CurrentBoardStartYear.minusYears(1));
+        Attendance attCurrBoard =
+                this.eventRepository.getAttendanceFromEventsInDateRange(CurrentBoardStartYear.minusMonths(1), CurrentBoardStartYear);
+        Attendance attLastBoard =
+                this.eventRepository.getAttendanceFromEventsInDateRange(CurrentBoardStartYear.minusYears(1).minusMonths(1), CurrentBoardStartYear.minusYears(1));
 
         double attendanceRateCurrentBoard = 0d;
         double attendanceRateLastBoard = 0d;

@@ -34,23 +34,18 @@ public class SalesSellCustomerController {
     /** OrderService. */
     private final OrderService orderService;
 
-    /** OrderValidationService. */
-    private final OrderValidationService orderValidationService;
-
     /**
      * SalesSellCustomerController constructor.
      *
      * @param orderService           of type OrderService
      * @param customerService        of type CustomerService
-     * @param orderValidationService of type OrderValidationService
      */
     @Autowired
     public SalesSellCustomerController(
-            OrderService orderService, CustomerService customerService, OrderValidationService orderValidationService
+            OrderService orderService, CustomerService customerService
     ) {
         this.orderService = orderService;
         this.customerService = customerService;
-        this.orderValidationService = orderValidationService;
     }
 
     /**
