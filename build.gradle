@@ -60,7 +60,6 @@ dependencies {
 
     implementation 'javax.el:javax.el-api:2.2.5'
     implementation "be.woutschoovaerts:mollie:3.6.1"
-    implementation"net.objecthunter:exp4j:0.4.8"
 
 
     implementation 'org.thymeleaf:thymeleaf-spring5'
