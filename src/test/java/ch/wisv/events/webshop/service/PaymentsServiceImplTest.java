@@ -15,11 +15,9 @@ import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import ch.wisv.events.core.util.VatRate;
 import org.junit.After;
@@ -32,7 +30,6 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -85,10 +82,9 @@ public class PaymentsServiceImplTest extends ServiceTest {
     /**
      * Test get payments mollie url with decimals.
      *
-     * @throws Exception when something goes wrong
      */
     @Test
-    public void testCreateMolliePaymentRequestFromOrder() throws Exception {
+    public void testCreateMolliePaymentRequestFromOrder() {
         List<Product> products = new ArrayList<>();
 
         // Use a product ending on .05 to ensure correct rounding of decimals

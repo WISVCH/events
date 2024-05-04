@@ -21,8 +21,7 @@ public interface PaymentsService {
      * used to process a webhook request made by mollie to signal that the order status has changed.
      *
      * @param providerOrderReference reference of the order used by mollie
-     * @return the updated order
      */
-    Order updateStatusByProviderReference(String providerOrderReference);
+    void updateStatusByProviderReference(String providerOrderReference);
 
 }

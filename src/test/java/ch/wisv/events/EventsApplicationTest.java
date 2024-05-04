@@ -1,13 +1,11 @@
 package ch.wisv.events;
 
-import ch.wisv.events.core.exception.runtime.PaymentsConnectionException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.utils.LdapGroup;
 import ch.wisv.events.webshop.service.PaymentsService;
-import ch.wisv.events.webshop.service.PaymentsServiceImpl;
 import com.google.common.collect.ImmutableList;
 import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
@@ -69,17 +67,16 @@ public class EventsApplicationTest {
     }
 
     @Component
-    public class TestRunner implements CommandLineRunner {
+    public static class TestRunner implements CommandLineRunner {
 
         /**
          * Callback used to run the bean.
          *
          * @param args incoming main method arguments
          *
-         * @throws Exception on error
          */
         @Override
-        public void run(String... args) throws Exception {
+        public void run(String... args) {
 
         }
     }

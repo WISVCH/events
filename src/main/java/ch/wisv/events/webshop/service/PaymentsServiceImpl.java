@@ -161,15 +161,15 @@ public class PaymentsServiceImpl implements PaymentsService {
 
 
     /**
-     *  updates the order status with the given provider reference.
+     * updates the order status with the given provider reference.
+     *
      * @param providerOrderReference reference of the order used by mollie
-     * @return the updated order
      */
     @Override
-    public Order updateStatusByProviderReference(String providerOrderReference) {
+    public void updateStatusByProviderReference(String providerOrderReference) {
         try {
             Order order = orderService.getByChPaymentsReference(providerOrderReference);
-            return updateOrder(order);
+            updateOrder(order);
         } catch (OrderNotFoundException e) {
             throw new RuntimeException("Order with providerReference " + providerOrderReference + " not found");
         }
