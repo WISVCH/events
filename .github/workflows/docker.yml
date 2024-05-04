@@ -34,7 +34,7 @@ jobs:
     - name: Run a build and generate the dependency graph which will be submitted post-job
       run: ./gradlew build
     - name: Test Coverage
-      run: ./gradlew jacocoTestReport jacocoFix --scan
+      run: ./gradlew jacocoTestReport
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
