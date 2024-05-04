@@ -1,8 +1,7 @@
 buildscript {
     ext {
-        springBootVersion = '2.5.15'
+        springBootVersion = '2.7.18'
     }
-    ext['log4j2.version'] = '2.17.2'
     repositories {
         mavenCentral()
     }
