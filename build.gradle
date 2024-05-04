@@ -104,24 +104,6 @@ dependencies {
     implementation 'org.javatuples:javatuples:1.2'
 }
 
-jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = false
-    }
-}
-
-task jacocoFix(type: Copy) {
-    from 'build/reports/jacoco/test/jacocoTestReport.xml'
-    into './src/main/java/'
-    rename { String fileName ->
-        fileName.replace("jacocoTestReport.xml", "jacoco.xml")
-    }
-}
-
 test {
     maxHeapSize = "4096m"
 }
-
-
-check.dependsOn jacocoTestReport
