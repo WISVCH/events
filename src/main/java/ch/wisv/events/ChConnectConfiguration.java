@@ -68,8 +68,7 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                .csrf().disable()
-                .authorizeRequests()
+                .csrf()
                 .and().authorizeRequests()
                     .antMatchers("/administrator/**").hasRole("ADMIN")
                     .antMatchers("/", "/management/health").permitAll()
