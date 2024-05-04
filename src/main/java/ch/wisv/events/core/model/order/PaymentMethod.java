@@ -1,8 +1,8 @@
 package ch.wisv.events.core.model.order;
 
 import lombok.Getter;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+
+import java.util.function.Function;
 
 /**
  * Payment method enum.
@@ -12,37 +12,37 @@ public enum PaymentMethod {
     /**
      * User paid his order with cash.
      */
-    CASH("cash", new ExpressionBuilder("x")),
+    CASH("cash", cost -> cost),
 
     /**
      * User paid his order by card.
      */
-    CARD("card", new ExpressionBuilder("x")),
+    CARD("card", cost -> cost),
 
     /**
      * User paid his order via Mollie iDeal.
      */
-    IDEAL("ideal", new ExpressionBuilder("x + 0.35")),
+    IDEAL("ideal", cost -> cost + 0.35),
 
     /**
      * User paid his order via Mollie SOFORT.
      */
-    SOFORT("sofort", new ExpressionBuilder("1.01089 * x + 0.3025")),
+    SOFORT("sofort", cost -> 1.01089 * cost + 0.3025),
 
     /**
      * User paid his order via another method.
      */
-    OTHER("other", new ExpressionBuilder("x"));
+    OTHER("other", cost -> cost);
 
     /** gets the name. */
     @Getter
     private final String name;
 
-    /** gets the expressionbuilder. */
+    /** gets the transaction cost function. */
     @Getter
-    private final ExpressionBuilder transactionCost;
+    private final Function<Double, Double> transactionCost;
 
-    PaymentMethod(String name, ExpressionBuilder transactionCost) {
+    PaymentMethod(String name, Function<Double, Double> transactionCost) {
         this.name = name;
         this.transactionCost = transactionCost;
     }
@@ -55,11 +55,7 @@ public enum PaymentMethod {
      * @return double
      */
     public double calculateCostIncludingTransaction(double cost) {
-        Expression e = this.getTransactionCost().variables("x")
-                .build()
-                .setVariable("x", cost);
-
-        return Math.round(e.evaluate() * 100.d) / 100.d;
+        return Math.round(transactionCost.apply(cost) * 100.d) / 100.d;
     }
 
     /**
