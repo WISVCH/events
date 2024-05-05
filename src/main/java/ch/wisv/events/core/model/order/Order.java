@@ -51,7 +51,7 @@ public class Order {
      * Field customer customer that order this.
      */
     @ManyToOne
-    @NotNull
+    // @NotNull
     private Customer owner;
 
     /**
@@ -75,7 +75,7 @@ public class Order {
     /**
      * Field createdBy the name of the person who created the order.
      */
-    @NotNull
+    // @NotNull
     private String createdBy;
 
     /**
