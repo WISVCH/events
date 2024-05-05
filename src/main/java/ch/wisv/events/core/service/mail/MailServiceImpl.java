@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.validation.constraints.NotNull;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.validation.constraints.NotNull;
 
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.QrCode;
@@ -29,8 +29,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-
+import org.thymeleaf.spring6.SpringTemplateEngine;
 /**
  * MailService implementation.
  */

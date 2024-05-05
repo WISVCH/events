@@ -8,11 +8,11 @@ import ch.wisv.events.core.model.product.Product;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -39,7 +39,7 @@ public class Ticket {
     /**
      * Customer which owns the Ticket.
      */
-    @ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
+    @ManyToOne(cascade = {jakarta.persistence.CascadeType.ALL})
     public Order order;
 
     /**
