@@ -76,7 +76,7 @@ logging.level.web: DEBUG
 
 # Serve connect
 server:
-  port: 80
+  port: 8080
   servlet.context-path: /
 
 # CH Connect Configuration
