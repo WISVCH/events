@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 /**
  * EventsApplication class.
@@ -26,14 +25,14 @@ public class EventsApplication {
         SpringApplication.run(EventsApplication.class, args);
     }
 
-    /**
-     * Enables Time formating in thymeleaf.
-     *
-     * @return Java8TimeDialect
-     */
-    @Bean
-    public Java8TimeDialect java8TimeDialect() {
-        return new Java8TimeDialect();
-    }
+    // /**
+    //  * Enables Time formating in thymeleaf.
+    //  *
+    //  * @return Java8TimeDialect
+    //  */
+    // @Bean
+    // public Java8TimeDialect java8TimeDialect() {
+    //     return new Java8TimeDialect();
+    // }
 
 }
