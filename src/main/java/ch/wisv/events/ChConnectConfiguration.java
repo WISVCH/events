@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,7 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
+public class ChConnectConfiguration {
 
     /**
      * Groups that are admin in the system.
@@ -64,14 +65,15 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
      * @param http
      * @throws Exception
      */
-    public void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
                 .csrf()
-                .and().authorizeRequests()
-                    .antMatchers("/administrator/**").hasRole("ADMIN")
-                    .antMatchers("/", "/management/health").permitAll()
+                .and().authorizeHttpRequests()
+                    .requestMatchers("/administrator/**").hasRole("ADMIN")
+                    .requestMatchers("/", "/management/health").permitAll()
                     .anyRequest().permitAll()
                 .and()
                     .logout()
@@ -79,9 +81,10 @@ public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                     .csrf()
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    .ignoringAntMatchers("/api/v1/**")
+                    .ignoringRequestMatchers("/api/v1/**")
                 .and()
                 .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
+        return http.build();
     }
 
     /**
