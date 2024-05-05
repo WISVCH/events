@@ -29,10 +29,9 @@ public interface OrderValidationService {
      * @param order    of type Order
      * @param customer of type Customer
      *
-     * @throws OrderInvalidException             when the Order is invalid for the Customer
      * @throws OrderExceedCustomerLimitException when Customer limit will be exceeded
      */
-    void assertOrderIsValidForCustomer(Order order, Customer customer) throws OrderInvalidException, OrderExceedCustomerLimitException;
+    void assertOrderIsValidForCustomer(Order order, Customer customer) throws OrderExceedCustomerLimitException;
 
     /**
      * Assert if an Order is valid to go to the payment process.

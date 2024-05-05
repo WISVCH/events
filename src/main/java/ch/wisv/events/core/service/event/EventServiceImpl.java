@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service.event;
 
-import ch.wisv.events.core.admin.Attendence;
+import ch.wisv.events.core.admin.Attendance;
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
@@ -217,7 +217,7 @@ public class EventServiceImpl implements EventService {
      * @return Attendance of event
      */
     @Override
-    public Attendence getAttendance(Event event) {
+    public Attendance getAttendance(Event event) {
         return eventRepository.getAttendanceFromEvent(event.getId());
     }
 

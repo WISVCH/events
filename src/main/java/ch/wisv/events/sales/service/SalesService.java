@@ -1,6 +1,5 @@
 package ch.wisv.events.sales.service;
 
-import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -32,5 +31,5 @@ public interface SalesService {
      * @param event of type Event
      * @return list of Orders
      */
-    List<Order> getAllOrdersByEvent(Event event) throws EventNotFoundException;
+    List<Order> getAllOrdersByEvent(Event event);
 }

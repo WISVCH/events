@@ -89,7 +89,7 @@ public class DashboardSalesExportControllerTest extends ControllerTest {
     }
 
     @Test
-    public void testGenerateCsvContent() throws Exception {
+    public void testGenerateCsvContent() {
         // Mostly test if amounts are correctly rounded to 2 decimals
 
         Event event = this.createEvent();

@@ -154,9 +154,6 @@ public class DashboardSalesExportController extends DashboardController {
      * @return string that should be written to csv file
      */
     public static String generateCsvContent(Map<Integer, AggregatedProduct> map) {
-        
-        // String csvContent = "Options:\n" + SalesExportSubmission.toString() + "\n\n";
-        // csvContent += "Event;Organized by;Product;Total income;Total amount;VAT rate\n";
         StringBuilder csvContent = new StringBuilder("Event;Organized by;Product;Total income;Total amount;VAT rate;price\n");
         for (Map.Entry<Integer, AggregatedProduct> entry : map.entrySet()) {
             csvContent.append(entry.getValue().eventTitle)

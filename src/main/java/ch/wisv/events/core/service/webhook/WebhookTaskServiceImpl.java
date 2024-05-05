@@ -46,7 +46,7 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
     @Override
     public void create(WebhookTask webhookTask) {
         webhookTaskRepository.saveAndFlush(webhookTask);
-        log.info("Created WebhookTask #" + webhookTask.getId() + ": " + webhookTask.toString());
+        log.info("Created WebhookTask #" + webhookTask.getId() + ": " + webhookTask);
     }
 
     /**

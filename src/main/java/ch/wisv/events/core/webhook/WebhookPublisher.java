@@ -77,12 +77,10 @@ public class WebhookPublisher {
         if (webhook.getLdapGroup() == ch.wisv.events.utils.LdapGroup.BEHEER) {
             return true;
         } else {
-            if (content instanceof Event) {
-                Event event = (Event) content;
+            if (content instanceof Event event) {
 
                 return webhook.getLdapGroup() == event.getOrganizedBy();
-            } else if (content instanceof Product) {
-                Product product = (Product) content;
+            } else if (content instanceof Product product) {
 
                 try {
                     Event event = eventService.getByProduct(product);
