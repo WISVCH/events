@@ -6,56 +6,48 @@
 <nav class="col-sm-3 col-md-2 d-none d-sm-block sidebar" th:fragment="sidebar">
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{/administrator/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI() == '/administrator/' ? 'active':''}">
+            <a th:href="@{/administrator/}" class="nav-link">
                 <i class="fas fa-tachometer-alt fa-fw" aria-hidden="true"></i> Overview
             </a>
         </li>
     </ul>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{/administrator/events/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/events/') ? 'active':''}">
+            <a th:href="@{/administrator/events/}" class="nav-link">
                 <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Events
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{/administrator/products/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/products/') ? 'active':''}">
+            <a th:href="@{/administrator/products/}" class="nav-link">
                 <i class="fas fa-ticket-alt fa-fw" aria-hidden="true"></i> Products
             </a>
         </li>
     </ul>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{/administrator/orders/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/orders/') ? 'active':''}">
+            <a th:href="@{/administrator/orders/}" class="nav-link">
                 <i class="fa fa-shopping-cart fa-fw" aria-hidden="true"></i> Orders
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{/administrator/customers/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/customers/') ?  'active':''}">
+            <a th:href="@{/administrator/customers/}" class="nav-link">
                 <i class="fa fa-users fa-fw" aria-hidden="true"></i> Customers
             </a>
         </li>
     </ul>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{/administrator/webhooks/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/webhooks/') ? 'active':''}">
+            <a th:href="@{/administrator/webhooks/}" class="nav-link">
                 <i class="fa fa-globe fa-fw" aria-hidden="true"></i> Webhooks
             </a>
-            <a th:href="@{/administrator/tasks/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/tasks/') ? 'active':''}">
+            <a th:href="@{/administrator/tasks/}" class="nav-link">
                 <i class="fa fa-list fa-fw" aria-hidden="true"></i> Tasks
             </a>
         </li>
     </ul>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{/administrator/salesexport/}" class="nav-link"
-               th:classappend="${#httpServletRequest.getRequestURI().contains('/administrator/salesexport/') ? 'active':''}">
+            <a th:href="@{/administrator/salesexport/}" class="nav-link">
                 <i class="far fa-money-bill-alt fa-fw" aria-hidden="true"></i> Sales Export
             </a>
         </li>
