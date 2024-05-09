@@ -23,6 +23,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import static org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
@@ -75,7 +77,7 @@ public class Order {
     /**
      * Field createdBy the name of the person who created the order.
      */
-    // @NotNull
+    @NotNull
     private String createdBy;
 
     /**
@@ -120,6 +122,8 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.status = OrderStatus.ANONYMOUS;
         this.orderProducts = new ArrayList<>();
+        this.createdBy = "ANONYMOUS";
+        this.amount = 0d;
     }
 
     /**
