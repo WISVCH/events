@@ -129,7 +129,9 @@ public abstract class ControllerTest {
         event.setStart(LocalDateTime.now().plusMonths(1));
         event.setEnding(LocalDateTime.now().plusMonths(1).plusHours(1));
         event.setTarget(100);
-
+        event.setDescription("description");
+        event.setShortDescription("short description");
+        
         eventRepository.saveAndFlush(event);
 
         return event;
