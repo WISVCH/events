@@ -33,7 +33,7 @@
 </head>
 
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Webshop', 'events_header.jpg')"></nav>
+<nav th:replace="~{webshop/fragments/header :: header ('Webshop', 'events_header.jpg')}"></nav>
 
 <div class="container-fluid">
     <div class="row">
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div th:replace="fragments/messages :: messages"></div>
+            <div th:replace="~{fragments/messages :: messages}"></div>
 
             <div class="row justify-content-left">
                 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->

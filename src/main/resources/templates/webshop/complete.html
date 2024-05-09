@@ -35,22 +35,22 @@
 <body>
 
 <div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PAID}">
-    <nav th:replace="tickets/fragments/header :: header ('Thanks for ordering!', 'events_header.jpg')"></nav>
+    <nav th:replace="~{tickets/fragments/header :: header ('Thanks for ordering!', 'events_header.jpg')}"></nav>
 </div>
 
 <div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).PENDING}">
-    <nav th:replace="tickets/fragments/header :: header ('Waiting for the payment', 'events_header.jpg')"></nav>
+    <nav th:replace="~{tickets/fragments/header :: header ('Waiting for the payment', 'events_header.jpg')}"></nav>
 </div>
 
 <div th:if="${order.getStatus() == T(ch.wisv.events.core.model.order.OrderStatus).CANCELLED}">
-    <nav th:replace="tickets/fragments/header :: header ('Order cancelled', 'events_header.jpg')"></nav>
+    <nav th:replace="~{tickets/fragments/header :: header ('Order cancelled', 'events_header.jpg')}"></nav>
 </div>
 
 
 <div class="container-fluid">
     <div class="row">
         <main class="col p-5" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
+            <div th:replace="~{fragments/messages :: messages}"></div>
 
             <div class="row justify-content-center">
                 <div class="col-12 col-md-6 text-center"
