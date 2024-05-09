@@ -23,7 +23,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO;
 

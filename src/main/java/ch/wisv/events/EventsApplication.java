@@ -3,7 +3,6 @@ package ch.wisv.events;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -24,15 +23,4 @@ public class EventsApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventsApplication.class, args);
     }
-
-    // /**
-    //  * Enables Time formating in thymeleaf.
-    //  *
-    //  * @return Java8TimeDialect
-    //  */
-    // @Bean
-    // public Java8TimeDialect java8TimeDialect() {
-    //     return new Java8TimeDialect();
-    // }
-
 }

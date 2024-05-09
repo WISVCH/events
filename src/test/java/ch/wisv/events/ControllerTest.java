@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.aspectj.weaver.ast.Or;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -131,7 +130,7 @@ public abstract class ControllerTest {
         event.setTarget(100);
         event.setDescription("description");
         event.setShortDescription("short description");
-        
+
         eventRepository.saveAndFlush(event);
 
         return event;
