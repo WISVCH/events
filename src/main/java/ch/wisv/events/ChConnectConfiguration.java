@@ -9,10 +9,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -33,7 +33,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
@@ -68,22 +68,25 @@ public class ChConnectConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .csrf()
-                .and().authorizeHttpRequests()
+                .cors(Customizer.withDefaults())
+                .csrf(Customizer.withDefaults())
+                .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers("/administrator/**").hasRole("ADMIN")
                     .requestMatchers("/", "/management/health").permitAll()
                     .anyRequest().permitAll()
-                .and()
-                    .logout()
+                    )
+                .logout(logout -> logout
                     .logoutSuccessUrl("/")
-                .and()
-                    .csrf()
+                    )
+                .csrf(csrf -> csrf
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .ignoringRequestMatchers("/api/v1/**")
-                .and()
-                .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
+                )
+                .oauth2Login(oauth -> oauth
+                    .userInfoEndpoint(userInfo -> userInfo 
+                        .oidcUserService(oidcUserService())
+                    )
+                );
         return http.build();
     }
 
