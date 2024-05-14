@@ -45,13 +45,13 @@
 </head>
 
 <body id="scanPage">
-<nav th:replace="fragments/header :: header"></nav>
+<nav th:replace="~{fragments/header :: header}"></nav>
 
 
 <div class="container-fluid">
     <div class="row pt-5">
         <main class="col-12" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
+            <div th:replace="~{fragments/messages :: messages}"></div>
 
             <div class="row text-center">
                 <h3 class="w-100 mb-5" th:text="${event.getTitle()}"></h3>
