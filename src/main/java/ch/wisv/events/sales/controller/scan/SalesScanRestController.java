@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * SalesScanRestController.
  */
 @RestController
-@RequestMapping(value = "/api/v1/sales/scan/event/{key}")
+@RequestMapping({"/api/v1/sales/scan/event/{key}","/api/v1/sales/scan/event/{key}/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanRestController {
 

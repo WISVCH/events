@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/scan/ticket")
+@RequestMapping({"/sales/scan/ticket","/sales/scan/ticket/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanTicketController {
 

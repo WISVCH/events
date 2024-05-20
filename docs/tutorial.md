@@ -31,13 +31,13 @@ Lets say you want to create two pages on paths `/events/example/page-1` and on `
 
 ```java
 @Controller
-@RequestMapping(value = "/events/example")
+@RequestMapping({"/events/example","/events/example/"})
 public class MyController { 
 
-    @RequestMapping(value= "/page-1")
+    @RequestMapping({"/page-1","/page-1/"})
     public String handlePageOne() { return "page 1"; }
 
-    @RequestMapping(value= "/page-2")
+    @RequestMapping({"/page-2","/page-2/"})
     public String handlePageTwo() { return "page 2"; }
 }
 ```
@@ -46,10 +46,10 @@ Or you could uses a `@PathVariable` which makes a part of the Path variable whic
 
 ```java
 @Controller
-@RequestMapping(value = "/events/example")
+@RequestMapping({"/events/example","/events/example/"})
 public class MyController { 
 
-    @RequestMapping(value= "/{page}")
+    @RequestMapping({"/{page}","/{page}/"})
     public String handleBothPages(@PathVariable String page) { return page; }
 }
 ```

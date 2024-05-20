@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/scan/barcode/{uniqueCode}")
+@RequestMapping({"/sales/scan/barcode/{uniqueCode}","/sales/scan/barcode/{uniqueCode}/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanBarcodeController {
 

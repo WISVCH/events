@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardOrderController class.
  */
 @Controller
-@RequestMapping(value = "/administrator/orders")
+@RequestMapping({"/administrator/orders","/administrator/orders/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardOrderController extends DashboardController {
 

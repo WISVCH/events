@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/scan/event/{key}")
+@RequestMapping({"/sales/scan/event/{key}","/sales/scan/event/{key}/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanEventController {
 

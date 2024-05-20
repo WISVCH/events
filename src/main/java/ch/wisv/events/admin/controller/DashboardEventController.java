@@ -37,7 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardEventController class.
  */
 @Controller
-@RequestMapping(value = "/administrator/events")
+@RequestMapping({"/administrator/events","/administrator/events/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardEventController extends DashboardController {
 

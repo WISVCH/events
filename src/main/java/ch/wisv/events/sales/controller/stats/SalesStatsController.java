@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/stats")
+@RequestMapping({"/sales/stats","/sales/stats/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesStatsController {
     /**

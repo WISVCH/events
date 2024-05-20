@@ -79,7 +79,7 @@ public class ProductRestController {
      *
      * @return Search Object
      */
-    @GetMapping(value = "/search/unused")
+    @GetMapping({"/search/unused","/search/unused/"})
     @PreAuthorize("hasRole('ADMIN')")
     public Search getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();

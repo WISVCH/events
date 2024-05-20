@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * DashboardController.
  */
 @Controller
-@RequestMapping(value = "/administrator")
+@RequestMapping({"/administrator","/administrator/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardIndexController extends DashboardController {
 

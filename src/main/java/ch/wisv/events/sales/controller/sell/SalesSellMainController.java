@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * SalesSellMainController class.
  */
 @Controller
-@RequestMapping(value = "/sales/sell")
+@RequestMapping({"/sales/sell","/sales/sell/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesSellMainController {
 

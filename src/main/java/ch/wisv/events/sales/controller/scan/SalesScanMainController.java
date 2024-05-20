@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * SalesScanMainController class.
  */
 @Controller
-@RequestMapping(value = "/sales/scan")
+@RequestMapping({"/sales/scan","/sales/scan/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanMainController {
 
