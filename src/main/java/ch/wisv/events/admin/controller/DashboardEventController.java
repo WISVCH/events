@@ -257,7 +257,7 @@ public class DashboardEventController extends DashboardController {
     /**
      *
      */
-    @GetMapping(value = "/overview/csv/{key}", produces = "text/csv")
+    @GetMapping(value = {"/overview/csv/{key}","/overview/csv/{key}/"}, produces = "text/csv")
     public HttpEntity<? extends Object> csvExport(@PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);

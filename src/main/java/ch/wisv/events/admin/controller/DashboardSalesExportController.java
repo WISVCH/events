@@ -69,7 +69,7 @@ public class DashboardSalesExportController extends DashboardController {
      * Exports sales of month to csv
      * 
      */
-    @GetMapping(value="/csv", produces="text/csv")
+    @GetMapping(value = {"/csv", "/csv"}, produces="text/csv")
     public HttpEntity<? extends Object> csvExport(@ModelAttribute SalesExportSubmission SalesExportSubmission, Model model) {
         model.addAttribute("SalesExportSubmission", SalesExportSubmission);
         
