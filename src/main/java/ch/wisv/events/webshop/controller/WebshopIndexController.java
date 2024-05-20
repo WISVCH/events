@@ -71,7 +71,7 @@ public class WebshopIndexController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping({"/","//"})
+    @GetMapping({"","/"})
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
