@@ -49,7 +49,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return path to customers index template
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_CUSTOMERS, customerService.getAllCustomers());
 

@@ -57,7 +57,7 @@ public class DashboardIndexController extends DashboardController {
      *
      * @return path to Thymeleaf template
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         List<Event> upcomingEvents = this.determineUpcomingEvents();
         LocalDateTime CurrentBoardStartYear = this.getCurrentBoardStartDate();

@@ -43,7 +43,7 @@ public class DashboardWebhookController extends DashboardController {
      *
      * @return path to Thymeleaf template location
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_WEBHOOKS, webhookService.getAll());
 

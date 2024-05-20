@@ -80,7 +80,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return path to Thymeleaf template
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_EVENTS, eventService.getAll());
 

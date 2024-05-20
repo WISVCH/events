@@ -57,7 +57,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_ORDERS, this.orderService.getLimitedOrders());
 
