@@ -55,7 +55,7 @@ public class SalesSellCustomerController {
      *
      * @return String
      */
-    @GetMapping("")
+    @GetMapping({"","/"})
     public String identifyCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
@@ -75,7 +75,7 @@ public class SalesSellCustomerController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping({"","/"})
     public String determineCustomer(RedirectAttributes redirect, @PathVariable String publicReference, @ModelAttribute Customer customer) {
         Order order;
         try {
