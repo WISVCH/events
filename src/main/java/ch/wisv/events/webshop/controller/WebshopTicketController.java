@@ -140,7 +140,7 @@ public class WebshopTicketController extends WebshopController {
     /**
      * Get QR-code of ticket.
      */
-    @GetMapping({"/{key}/qrcode.png","/{key}/qrcode.png/"})
+    @GetMapping("/{key}/qrcode.png")
     public void getQrCode(HttpServletResponse response, @PathVariable String key) throws IOException {
         Customer customer = authenticationService.getCurrentCustomer();
         try {
@@ -173,7 +173,7 @@ public class WebshopTicketController extends WebshopController {
     /**
      * Get wallet pass of ticket.
      */
-    @GetMapping({"/{key}/wallet.pkpass","/{key}/wallet.pkpass/"})
+    @GetMapping("/{key}/wallet.pkpass")
     public void getApplePass(HttpServletResponse response, @PathVariable  String key) throws IOException {
         Customer customer = authenticationService.getCurrentCustomer();
         try {
