@@ -118,7 +118,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
 
     @Test
     public void testResendConfirmationMailNotFound() throws Exception {
-        Order order = this.createOrder(this.createCustomer(), ImmutableList.of(this.createProduct()), OrderStatus.RESERVATION, "tests");
+        this.createOrder(this.createCustomer(), ImmutableList.of(this.createProduct()), OrderStatus.RESERVATION, "tests");
 
         mockMvc.perform(get("/administrator/orders/resend-confirmation-mail/not-found"))
                 .andExpect(status().is3xxRedirection())

@@ -31,14 +31,14 @@
 </head>
 
 <body>
-<nav th:replace="sales/fragments/header :: header"></nav>
+<nav th:replace="~{sales/fragments/header :: header}"></nav>
 
 <!--/*@thymesVar id="product" type="ch.wisv.events.core.model.product.Product"*/-->
 <div class="container-fluid">
 
     <div class="row">
         <main class="col-12" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
+            <div th:replace="~{fragments/messages :: messages}"></div>
 
             <form class="form w-100" id="orderForm" th:action="@{/sales/sell/}" method="POST">
                 <div class="row justify-content-center">

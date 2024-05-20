@@ -4,7 +4,6 @@ import ch.wisv.events.ServiceTest;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.webshop.service.PaymentsService;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import org.junit.After;

@@ -2,8 +2,8 @@ package ch.wisv.events.core.model.order;
 
 import ch.wisv.events.core.model.product.Product;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import ch.wisv.events.core.util.VatRate;
 import lombok.AccessLevel;

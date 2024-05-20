@@ -10,9 +10,7 @@ import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.auth.AuthenticationService;
-import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
-import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 

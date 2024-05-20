@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.util.VatRate;

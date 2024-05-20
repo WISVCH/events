@@ -119,7 +119,7 @@ public class TicketServiceTest extends ServiceTest {
         Ticket ticket = new Ticket();
         ticket.setUniqueCode(uniqueCode);
 
-        BufferedImage qrCode = ticketService.generateQrCode(ticket);
+        ticketService.generateQrCode(ticket);
     }
 
     /**

@@ -1,16 +1,10 @@
 package ch.wisv.events.core.model.order;
 
-import ch.wisv.events.core.model.customer.Customer;
-import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.util.VatRate;
-import com.google.common.collect.ImmutableList;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PaymentMethodTest {

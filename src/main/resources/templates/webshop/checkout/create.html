@@ -33,12 +33,12 @@
 </head>
 
 <body>
-<nav th:replace="webshop/fragments/header :: header ('Checkout as guest', 'events_header.jpg')"></nav>
+<nav th:replace="~{webshop/fragments/header :: header ('Checkout as guest', 'events_header.jpg')}"></nav>
 
 <div class="container">
     <div class="row">
         <main class="col py-5" role="main">
-            <div th:replace="fragments/messages :: messages"></div>
+            <div th:replace="~{fragments/messages :: messages}"></div>
 
             <div class="row">
                 <div class="col">
