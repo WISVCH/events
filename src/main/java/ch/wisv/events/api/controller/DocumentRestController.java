@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * DocumentRestController class.
  */
 @RestController
-@RequestMapping("/api/v1/documents")
+@RequestMapping({"/api/v1/documents","/api/v1/documents/"})
 public class DocumentRestController {
 
     /** DocumentService. */

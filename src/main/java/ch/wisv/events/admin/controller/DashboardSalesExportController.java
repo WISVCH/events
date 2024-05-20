@@ -31,7 +31,7 @@ import org.springframework.http.ResponseEntity;
  * DashboardSalesExportController class.
  */
 @Controller
-@RequestMapping("/administrator/salesexport")
+@RequestMapping({"/administrator/salesexport","/administrator/salesexport/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardSalesExportController extends DashboardController {
 

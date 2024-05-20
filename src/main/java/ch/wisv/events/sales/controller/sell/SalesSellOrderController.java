@@ -61,7 +61,7 @@ public class SalesSellOrderController {
      *
      * @return String
      */
-    @GetMapping("/{ending}")
+    @GetMapping({"/{ending}","/{ending}/"})
     public String complete(RedirectAttributes redirect, @PathVariable String publicReference, @PathVariable String ending) {
         try {
             orderService.getByReference(publicReference);

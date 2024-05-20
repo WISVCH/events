@@ -50,7 +50,7 @@ public class SalesScanEventController {
      *
      * @return String
      */
-    @GetMapping("/{method}")
+    @GetMapping({"/{method}","/{method}/"})
     public String scanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * WebshopPaymentController class.
  */
 @Controller
-@RequestMapping("/checkout/{key}/payment")
+@RequestMapping({"/checkout/{key}/payment","/checkout/{key}/payment/"})
 public class WebshopPaymentController extends WebshopController {
 
     /** Error message order not suitable for checkout. */
@@ -102,7 +102,7 @@ public class WebshopPaymentController extends WebshopController {
      *
      * @return String string
      */
-    @GetMapping("/reservation")
+    @GetMapping({"/reservation","/reservation/"})
     public String paymentReservation(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = this.getOrderAndCheck(key);
@@ -124,7 +124,7 @@ public class WebshopPaymentController extends WebshopController {
      *
      * @return String string
      */
-    @GetMapping("/ideal")
+    @GetMapping({"/ideal","/ideal/"})
     public String paymentIdeal(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.IDEAL);
     }
@@ -137,7 +137,7 @@ public class WebshopPaymentController extends WebshopController {
      *
      * @return String string
      */
-    @GetMapping("/sofort")
+    @GetMapping({"/sofort","/sofort/"})
     public String paymentSofort(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.SOFORT);
     }

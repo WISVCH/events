@@ -82,7 +82,7 @@ public class SalesStatsController {
      * @param key   of type String
      * @return String
      */
-    @GetMapping("/products/{key}")
+    @GetMapping({"/products/{key}","/products/{key}/"})
     public String ticketSalesindex(Model model, @PathVariable String key) throws EventNotFoundException {
         Event event = eventService.getByKey(key);
 
@@ -100,7 +100,7 @@ public class SalesStatsController {
      * @param key   of type String
      * @return String
      */
-    @GetMapping("/event/{key}")
+    @GetMapping({"/event/{key}","/event/{key}/"})
     public String eventSalesView(Model model, @PathVariable String key) throws EventNotFoundException {
         Event event = eventService.getByKey(key);
         List<Order> orders = salesService.getAllOrdersByEvent(event).stream().peek((Order order) -> {

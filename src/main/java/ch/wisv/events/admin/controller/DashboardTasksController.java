@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/administrator/tasks")
+@RequestMapping({"/administrator/tasks","/administrator/tasks/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardTasksController extends DashboardController {
 
@@ -33,7 +33,7 @@ public class DashboardTasksController extends DashboardController {
      *
      * @return path to Thymeleaf template location
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_TASKS, webhookTaskService.getAll());
 

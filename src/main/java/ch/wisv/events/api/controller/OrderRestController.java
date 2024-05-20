@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
  * OrderRestController class.
  */
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping({"/api/v1/orders","/api/v1/orders/"})
 public class OrderRestController {
 
     /** PaymentsService. */

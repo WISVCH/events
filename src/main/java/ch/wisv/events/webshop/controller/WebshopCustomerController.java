@@ -26,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * WebshopCustomerController.
  */
 @Controller
-@RequestMapping("/checkout/{key}/customer")
+@RequestMapping({"/checkout/{key}/customer","/checkout/{key}/customer/"})
 public class WebshopCustomerController extends WebshopController {
 
     /** Redirect to the payment page. */
@@ -96,7 +96,7 @@ public class WebshopCustomerController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/chconnect")
+    @GetMapping({"/chconnect","/chconnect/"})
     @PreAuthorize("hasRole('USER')")
     public String customerChConnect(RedirectAttributes redirect, @PathVariable String key) {
         try {
@@ -125,7 +125,7 @@ public class WebshopCustomerController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/guest")
+    @GetMapping({"/guest","/guest/"})
     public String customerGuest(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -155,7 +155,7 @@ public class WebshopCustomerController extends WebshopController {
      *
      * @return String
      */
-    @PostMapping("/guest")
+    @PostMapping({"/guest","/guest/"})
     public String checkoutGuest(RedirectAttributes redirect, @PathVariable String key, @ModelAttribute Customer customer) {
         try {
             Order order = orderService.getByReference(key);

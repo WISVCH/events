@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardProductController.
  */
 @Controller
-@RequestMapping("/administrator/products")
+@RequestMapping({"/administrator/products","/administrator/products/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardProductController extends DashboardController {
 
@@ -74,7 +74,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/view/{key}")
+    @GetMapping({"/view/{key}","/view/{key}"})
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             model.addAttribute(OBJ_PRODUCT, productService.getByKey(key));
@@ -94,7 +94,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return thymeleaf template path
      */
-    @GetMapping("/create")
+    @GetMapping({"/create","/create/"})
     public String create(Model model) {
         if (!model.containsAttribute(OBJ_PRODUCT)) {
             model.addAttribute(OBJ_PRODUCT, new Product());
@@ -111,7 +111,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return redirect
      */
-    @PostMapping("/create")
+    @PostMapping({"/create","/create/"})
     public String create(RedirectAttributes redirect, @ModelAttribute Product product) {
         try {
             if (product.getRedirectUrl() != null && product.getRedirectUrl().length() == 0){
@@ -140,7 +140,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return thymeleaf template path
      */
-    @GetMapping("/edit/{key}")
+    @GetMapping({"/edit/{key}","/edit/{key}/"})
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             if (!model.containsAttribute(OBJ_PRODUCT)) {
@@ -164,7 +164,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return String
      */
-    @PostMapping("/edit/{key}")
+    @PostMapping({"/edit/{key}","/edit/{key}/"})
     public String update(RedirectAttributes redirect, @ModelAttribute Product product, @PathVariable String key) {
         try {
             product.setKey(key);
@@ -193,7 +193,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/overview/{key}")
+    @GetMapping({"/overview/{key}","/overview/{key}/"})
     public String overview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);
@@ -217,7 +217,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return redirect
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping({"/delete/{key}","/delete/{key}/"})
     public String delete(RedirectAttributes redirectAttributes, @PathVariable String key) {
         try {
             Product product = productService.getByKey(key);

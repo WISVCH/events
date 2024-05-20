@@ -71,7 +71,7 @@ public class WebshopIndexController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/")
+    @GetMapping({"/","//"})
     public String index(Model model) {
         List<Event> upcoming = eventService.getUpcoming();
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
@@ -90,7 +90,7 @@ public class WebshopIndexController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/{key}")
+    @GetMapping({"/{key}","/{key}/"})
     public String index(Model model, @PathVariable String key) {
         try {
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());

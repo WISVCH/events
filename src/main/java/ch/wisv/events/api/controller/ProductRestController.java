@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * ProductRESTController.
  */
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping({"/api/v1/products","/api/v1/products/"})
 public class ProductRestController {
 
     /**
