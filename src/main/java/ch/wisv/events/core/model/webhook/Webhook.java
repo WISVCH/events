@@ -3,10 +3,10 @@ package ch.wisv.events.core.model.webhook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import lombok.Data;
 
 @Entity

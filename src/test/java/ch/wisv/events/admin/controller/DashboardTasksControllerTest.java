@@ -2,8 +2,10 @@ package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
+import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
 import com.google.common.collect.ImmutableList;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

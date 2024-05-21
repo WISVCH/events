@@ -9,9 +9,12 @@ import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.junit.Test;

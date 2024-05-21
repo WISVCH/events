@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 import ch.wisv.events.core.util.VatRate;
 import lombok.AccessLevel;
@@ -23,7 +23,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import static org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
@@ -52,7 +51,7 @@ public class Order {
      * Field customer customer that order this.
      */
     @ManyToOne
-    // @NotNull
+    @NotNull
     private Customer owner;
 
     /**
@@ -121,8 +120,6 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.status = OrderStatus.ANONYMOUS;
         this.orderProducts = new ArrayList<>();
-        this.createdBy = "ANONYMOUS";
-        this.amount = 0d;
     }
 
     /**

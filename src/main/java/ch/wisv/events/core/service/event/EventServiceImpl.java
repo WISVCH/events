@@ -163,8 +163,6 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void update(Event event) throws EventNotFoundException, EventInvalidException {
-        this.assertIsValidEvent(event);
-        
         Event update = this.getByKey(event.getKey());
         this.updateLinkedProducts(event, update.getProducts(), false);
 
@@ -186,6 +184,7 @@ public class EventServiceImpl implements EventService {
             update.setImageUrl(event.getImageUrl());
         }
 
+        this.assertIsValidEvent(event);
         this.updateLinkedProducts(event, update.getProducts(), true);
         eventRepository.save(update);
     }

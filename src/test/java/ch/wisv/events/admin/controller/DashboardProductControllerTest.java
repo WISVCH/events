@@ -5,6 +5,7 @@ import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.contains;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

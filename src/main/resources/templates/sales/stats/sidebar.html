@@ -7,12 +7,14 @@
 <nav class="col-sm-3 col-md-2 d-none d-sm-block sidebar" th:fragment="sidebar">
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a th:href="@{'/sales/stats/event/' + ${key}}" class="nav-link">
+            <a th:href="@{'/sales/stats/event/' + ${key}}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/sales/stats/event/') ? 'active':''}">
                 <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Event
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{'/sales/stats/products/'+${key}}" class="nav-link">
+            <a th:href="@{'/sales/stats/products/'+${key}}" class="nav-link"
+               th:classappend="${#httpServletRequest.getRequestURI().contains('/sales/stats/product/') ? 'active':''}">
                 <i class="fas fa-ticket-alt fa-fw" aria-hidden="true"></i> Products
             </a>
         </li>

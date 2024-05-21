@@ -26,7 +26,7 @@ services:
       - mailcatcher
 
   postgres:
-    image: docker.io/library/postgres:latest
+    image: postgres:latest
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -36,7 +36,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
   adminer:
-    image: docker.io/library/adminer:latest
+    image: adminer
     restart: always
     depends_on: 
       - postgres
@@ -44,6 +44,6 @@ services:
       - "8082:8080"
 
   mailcatcher:
-    image: docker.io/schickling/mailcatcher:latest
+    image: schickling/mailcatcher
     restart: on-failure
     network_mode: service:postgres

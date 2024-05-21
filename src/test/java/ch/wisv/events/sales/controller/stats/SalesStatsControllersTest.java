@@ -2,6 +2,7 @@ package ch.wisv.events.sales.controller.stats;
 
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
+import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
@@ -12,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,6 +24,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
 
 /**

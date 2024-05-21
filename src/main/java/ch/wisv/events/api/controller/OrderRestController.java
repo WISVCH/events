@@ -1,6 +1,8 @@
 package ch.wisv.events.api.controller;
 
+import ch.wisv.events.core.service.order.OrderService;
 import ch.wisv.events.webshop.service.PaymentsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * OrderRestController class.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderRestController {

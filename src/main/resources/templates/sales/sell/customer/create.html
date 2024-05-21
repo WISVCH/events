@@ -29,12 +29,12 @@
 </head>
 
 <body id="scanPage">
-<nav th:replace="~{sales/fragments/header :: header}"></nav>
+<nav th:replace="sales/fragments/header :: header"></nav>
 
 <div class="container-fluid">
     <div class="row">
         <main class="col-12" role="main">
-            <div th:replace="~{fragments/messages :: messages}"></div>
+            <div th:replace="fragments/messages :: messages"></div>
 
             <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
             <form th:action="@{'/sales/sell/customer/' + ${order.getPublicReference()}}" th:object="${customer}"

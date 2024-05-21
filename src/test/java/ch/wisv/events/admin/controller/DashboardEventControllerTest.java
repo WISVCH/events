@@ -3,9 +3,14 @@ package ch.wisv.events.admin.controller;
 import ch.wisv.events.ControllerTest;
 import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventCategory;
+import ch.wisv.events.core.model.event.EventStatus;
+import ch.wisv.events.utils.LdapGroup;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,9 +19,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -72,7 +79,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePost() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -89,7 +96,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingTitle() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("shortDescription", "Short description")
                                 .param("description", "Description")
@@ -105,7 +112,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingShortDescription() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("description", "Description")
@@ -121,7 +128,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingDescription() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -137,7 +144,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingStart() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -153,7 +160,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingEnd() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -169,7 +176,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingTarget() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -185,7 +192,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingMaxSoldLowerThenTarget() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -202,7 +209,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
     @Test
     public void testCreatePostMissingEndBeforeStart() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/create/")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/create/")
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -239,7 +246,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPost() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Symposium")
                                 .param("shortDescription", "Short description of Symposium")
@@ -267,7 +274,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingTitle() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "")
                                 .param("shortDescription", "Short description of Symposium")
@@ -286,7 +293,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingShortDescription() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("description", "Description")
@@ -304,7 +311,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingDescription() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -322,7 +329,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingStart() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -340,7 +347,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingEnd() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -358,7 +365,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingTarget() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")
@@ -376,7 +383,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditPostMissingMaxSoldLowerThenTarget() throws Exception {
         Event event = this.createEvent();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/administrator/events/edit/" + event.getKey())
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/administrator/events/edit/" + event.getKey())
                                 .file(new MockMultipartFile("file", "orig", null, new byte[0]))
                                 .param("title", "Events")
                                 .param("shortDescription", "Short description")

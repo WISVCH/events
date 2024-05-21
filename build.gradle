@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '3.2.5'
+        springBootVersion = '2.7.18'
     }
     repositories {
         mavenCentral()
@@ -56,11 +56,16 @@ dependencies {
     //TEMP APPLICATION PROPERTIES HELPER
     runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
 
+
+    implementation 'javax.el:javax.el-api:2.2.5'
     implementation "be.woutschoovaerts:mollie:3.6.1"
 
-    implementation 'org.thymeleaf:thymeleaf-spring6'
-    implementation 'org.thymeleaf:thymeleaf'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    implementation 'org.thymeleaf:thymeleaf-spring5'
+     implementation 'org.thymeleaf:thymeleaf'
+     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+     implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time'
+
 
     implementation 'com.google.guava:guava:32.0.0-jre'
     implementation 'org.hibernate.validator:hibernate-validator'
