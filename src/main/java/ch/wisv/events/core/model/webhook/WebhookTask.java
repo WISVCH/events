@@ -1,11 +1,8 @@
 package ch.wisv.events.core.model.webhook;
 
 import java.time.LocalDateTime;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+
+import jakarta.persistence.*;
 import lombok.Data;
 import org.json.simple.JSONObject;
 
@@ -17,7 +14,7 @@ public class WebhookTask {
      * ID of the product, getter only so it can not be changed.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "webhook_task_seq")
     private Integer id;
 
     /**

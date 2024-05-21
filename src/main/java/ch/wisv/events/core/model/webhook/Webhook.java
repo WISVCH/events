@@ -3,10 +3,8 @@ package ch.wisv.events.core.model.webhook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -17,7 +15,7 @@ public class Webhook {
      * ID of the product, getter only so it can not be changed.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "webhook_seq")
     private Integer id;
 
     /**

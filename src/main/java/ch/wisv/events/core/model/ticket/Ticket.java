@@ -8,10 +8,8 @@ import ch.wisv.events.core.model.product.Product;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
@@ -26,7 +24,7 @@ public class Ticket {
      * ID of the ticket, getter only so it can not be changed.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticket_seq")
     @Setter(AccessLevel.NONE)
     public Integer id;
 

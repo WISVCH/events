@@ -20,7 +20,7 @@ public class OrderProduct {
      * Field id.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_product_seq")
     @Setter(AccessLevel.NONE)
     private Integer id;
 

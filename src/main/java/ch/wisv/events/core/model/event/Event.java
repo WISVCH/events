@@ -6,15 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
@@ -37,7 +30,7 @@ public class Event {
      * ID of the event, getter only so it can not be changed.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_seq")
     @Setter(AccessLevel.NONE)
     private Integer id;
 
