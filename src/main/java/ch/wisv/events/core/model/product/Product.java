@@ -27,7 +27,7 @@ public class Product {
      * ID of the product, getter only so it can not be changed.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     @Setter(AccessLevel.NONE)
     public Integer id;
 
