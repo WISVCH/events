@@ -32,17 +32,17 @@
 </head>
 
 <body>
-<nav th:replace="~{fragments/header :: header}"></nav>
+<nav th:replace="fragments/header :: header"></nav>
 
 <!--/*@thymesVar id="customer" type="ch.wisv.events.core.model.customer.Customer"*/-->
 <div class="container-fluid">
     <div class="row">
-        <nav th:replace="~{admin/sidebar :: sidebar}"></nav>
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>Create/update customer</h1>
 
-            <div th:replace="~{fragments/messages :: messages}"></div>
+            <div th:replace="fragments/messages :: messages"></div>
 
             <form th:action="@{./}" th:object="${customer}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">

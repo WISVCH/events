@@ -31,13 +31,13 @@
 </head>
 
 <body style="width: calc(100vw); height: calc(100vh)">
-<nav th:replace="~{fragments/header :: header}"></nav>
+<nav th:replace="fragments/header :: header"></nav>
 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
 <!--/*@thymesVar id="moneyEarned" type="java.lang.Double"*/-->
 <!--/*@thymesVar id="ticketsSold" type="java.lang.Integer"*/-->
 <div class="container-fluid">
     <div class="row">
-        <nav th:replace="~{sales/stats/sidebar :: sidebar}"></nav>
+        <nav th:replace="sales/stats/sidebar :: sidebar"></nav>
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1 th:text="${event.getTitle()}"/>
             <div class="row">

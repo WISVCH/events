@@ -108,7 +108,7 @@
                 </div>
             </div>
 
-            <div th:replace="~{fragments/messages :: messages}"></div>
+            <div th:replace="fragments/messages :: messages"></div>
 
             <div class="card-deck" th:if="${!event.hasExternalProductUrl()}">
                 <div class="card mb-3" th:each="product : ${event.getProducts()}">

@@ -1,6 +1,6 @@
 package ch.wisv.events.api.request;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 import ch.wisv.events.core.util.VatRate;
 import lombok.Getter;

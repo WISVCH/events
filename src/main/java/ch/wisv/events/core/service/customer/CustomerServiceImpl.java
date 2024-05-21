@@ -176,15 +176,15 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void update(Customer customer) throws CustomerInvalidException, CustomerNotFoundException {
-        this.assertIsValidCustomer(customer);
-        
         Customer model = this.getByKey(customer.getKey());
-        
+
         model.setName(customer.getName());
         model.setEmail(customer.getEmail());
         model.setRfidToken(customer.getRfidToken());
         model.setLdapGroups(customer.getLdapGroups());
         model.setVerifiedChMember(customer.isVerifiedChMember());
+
+        this.assertIsValidCustomer(model);
 
         customerRepository.save(model);
     }

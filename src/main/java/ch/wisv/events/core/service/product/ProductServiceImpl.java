@@ -108,8 +108,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void update(Product product) throws ProductNotFoundException, ProductInvalidException {
-        this.assertIsValidProduct(product);
-
         Product model = this.getByKey(product.getKey());
         this.updateLinkedProducts(product, model.getProducts(), false);
 
@@ -130,6 +128,7 @@ public class ProductServiceImpl implements ProductService {
             model.setSold(product.getSold());
         }
 
+        this.assertIsValidProduct(product);
         this.updateLinkedProducts(product, model.getProducts(), true);
         productRepository.save(model);
     }

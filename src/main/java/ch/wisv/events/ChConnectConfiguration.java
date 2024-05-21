@@ -9,10 +9,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -20,7 +20,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,11 +32,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ConfigurationProperties(prefix = "wisvch.connect")
 @Validated
 @Profile("!test")
-public class ChConnectConfiguration {
+public class ChConnectConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * Groups that are admin in the system.
@@ -65,29 +64,24 @@ public class ChConnectConfiguration {
      * @param http
      * @throws Exception
      */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
-                .csrf(Customizer.withDefaults())
-                .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers("/administrator/**").hasRole("ADMIN")
-                    .requestMatchers("/", "/management/health").permitAll()
+                .cors()
+                .and()
+                .csrf()
+                .and().authorizeRequests()
+                    .antMatchers("/administrator/**").hasRole("ADMIN")
+                    .antMatchers("/", "/management/health").permitAll()
                     .anyRequest().permitAll()
-                    )
-                .logout(logout -> logout
+                .and()
+                    .logout()
                     .logoutSuccessUrl("/")
-                    )
-                .csrf(csrf -> csrf
+                .and()
+                    .csrf()
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    .ignoringRequestMatchers("/api/v1/**")
-                )
-                .oauth2Login(oauth -> oauth
-                    .userInfoEndpoint(userInfo -> userInfo 
-                        .oidcUserService(oidcUserService())
-                    )
-                );
-        return http.build();
+                    .ignoringAntMatchers("/api/v1/**")
+                .and()
+                .oauth2Login().userInfoEndpoint().oidcUserService(oidcUserService());
     }
 
     /**

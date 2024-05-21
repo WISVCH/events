@@ -5,6 +5,7 @@ import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

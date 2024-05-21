@@ -33,17 +33,17 @@
 </head>
 
 <body>
-<nav th:replace="~{fragments/header :: header}"></nav>
+<nav th:replace="fragments/header :: header"></nav>
 
 <!--/*@thymesVar id="event" type="ch.wisv.events.core.model.event.Event"*/-->
 <div class="container-fluid">
     <div class="row">
-        <nav th:replace="~{admin/sidebar :: sidebar}"></nav>
+        <nav th:replace="admin/sidebar :: sidebar"></nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>Ticket [[${event.getTitle()}]]</h1>
 
-            <div th:replace="~{fragments/messages :: messages}"></div>
+            <div th:replace="fragments/messages :: messages"></div>
 
             <div class="row mb-4">
                 <div class="col-auto">
