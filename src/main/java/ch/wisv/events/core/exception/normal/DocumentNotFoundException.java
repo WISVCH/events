@@ -13,6 +13,6 @@ public class DocumentNotFoundException extends EventsException {
      * @param message of type String
      */
     public DocumentNotFoundException(String message) {
-        super(LogLevelEnum.WARN, "Event with " + message + " not found!");
+        super(LogLevelEnum.WARN, "Document with " + message + " not found!");
     }
 }
