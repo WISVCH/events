@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsConfiguration;
@@ -69,7 +70,6 @@ public class ChConnectConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers("/administrator/**").hasRole("ADMIN")
                     .requestMatchers("/", "/management/health").permitAll()
@@ -79,6 +79,7 @@ public class ChConnectConfiguration {
                     .logoutSuccessUrl("/")
                     )
                 .csrf(csrf -> csrf
+                    .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .ignoringRequestMatchers("/api/v1/**")
                 )
