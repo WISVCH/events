@@ -80,7 +80,7 @@ public class ChConnectConfiguration {
                     )
                 .csrf(csrf -> csrf
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    .ignoringRequestMatchers("/api/v1/**")
+                    .ignoringRequestMatchers("/api/v1/**", "/checkout")
                 )
                 .oauth2Login(oauth -> oauth
                     .userInfoEndpoint(userInfo -> userInfo 
