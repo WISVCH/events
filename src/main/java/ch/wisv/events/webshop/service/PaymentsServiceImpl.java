@@ -131,11 +131,11 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         PaymentMethod method;
 
-        if (order.getPaymentMethod() == ch.wisv.events.core.model.order.PaymentMethod.IDEAL) {
+//        if (order.getPaymentMethod() == ch.wisv.events.core.model.order.PaymentMethod.IDEAL) {
             method = PaymentMethod.IDEAL;
-        } else {
-            method = PaymentMethod.SOFORT;
-        }
+//        } else {
+//            method = PaymentMethod.SOFORT;
+//        }
 
         String returnUrl = clientUri + "/return/" + order.getPublicReference();
         String webhookUrl = clientUri + "/api/v1/orders/status";

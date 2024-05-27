@@ -25,11 +25,6 @@ public enum PaymentMethod {
     IDEAL("ideal", cost -> cost + 0.35),
 
     /**
-     * User paid his order via Mollie SOFORT.
-     */
-    SOFORT("sofort", cost -> 1.01089 * cost + 0.3025),
-
-    /**
      * User paid his order via another method.
      */
     OTHER("other", cost -> cost);
