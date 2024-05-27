@@ -42,17 +42,6 @@ public class PaymentMethodTest {
     }
 
     @Test
-    public void testCalculateCostIncludingTransaction_SOFORT() {
-        double cost = 50.0;
-        PaymentMethod paymentMethod = PaymentMethod.SOFORT;
-
-        double expected = 50.85; // Rounded 50.847
-        double actual = paymentMethod.calculateCostIncludingTransaction(cost);
-
-        assertEquals(expected, actual, 0.001);
-    }
-
-    @Test
     public void testCalculateCostIncludingTransaction_OTHER() {
         double cost = 50.0;
         PaymentMethod paymentMethod = PaymentMethod.OTHER;

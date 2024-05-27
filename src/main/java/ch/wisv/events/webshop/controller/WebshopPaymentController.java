@@ -130,19 +130,6 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Payment method using SOFORT.
-     *
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     *
-     * @return String string
-     */
-    @GetMapping("/sofort")
-    public String paymentSofort(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.SOFORT);
-    }
-
-    /**
      * Assert if an Order is suitable for Payment.
      *
      * @param order of type Order
