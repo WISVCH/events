@@ -79,7 +79,6 @@ public class ChConnectConfiguration {
                     .logoutSuccessUrl("/")
                     )
                 .csrf(csrf -> csrf
-                    .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .ignoringRequestMatchers("/api/v1/**", "/checkout")
                 )
