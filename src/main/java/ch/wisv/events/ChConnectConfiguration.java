@@ -70,9 +70,6 @@ public class ChConnectConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf((csrf) -> csrf
-                        .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
-                )
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers("/administrator/**").hasRole("ADMIN")
                     .requestMatchers("/", "/management/health").permitAll()
@@ -82,6 +79,7 @@ public class ChConnectConfiguration {
                     .logoutSuccessUrl("/")
                     )
                 .csrf(csrf -> csrf
+                    .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .ignoringRequestMatchers("/api/v1/**")
                 )
