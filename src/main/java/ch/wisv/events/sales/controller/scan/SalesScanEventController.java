@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/scan/event/{key}")
+@RequestMapping({"/sales/scan/event/{key}","/sales/scan/event/{key}/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanEventController {
 
@@ -50,7 +50,7 @@ public class SalesScanEventController {
      *
      * @return String
      */
-    @GetMapping("/{method}")
+    @GetMapping({"/{method}","/{method}/"})
     public String scanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);

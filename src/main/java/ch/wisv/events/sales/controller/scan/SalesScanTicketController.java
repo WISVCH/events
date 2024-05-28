@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * SalesScanEventController.
  */
 @Controller
-@RequestMapping(value = "/sales/scan/ticket")
+@RequestMapping({"/sales/scan/ticket","/sales/scan/ticket/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanTicketController {
 
@@ -38,7 +38,7 @@ public class SalesScanTicketController {
      *
      * @return String
      */
-    @GetMapping("/error")
+    @GetMapping({"/error","/error/"})
     public String error(Model model) {
         if (!model.containsAttribute(ATTRIBUTE_ERROR)) {
             return ERROR_REDIRECT;
@@ -59,7 +59,7 @@ public class SalesScanTicketController {
      *
      * @return String
      */
-    @GetMapping("/{status}")
+    @GetMapping({"/{status}","/{status}/"})
     public String index(Model model, @PathVariable String status) {
         ImmutableSet<String> validStatus = ImmutableSet.of("success", "double");
         if (!validStatus.contains(status)) {

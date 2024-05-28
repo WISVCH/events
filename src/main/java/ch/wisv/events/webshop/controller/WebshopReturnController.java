@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * WebshopReturnController class.
  */
 @Controller
-@RequestMapping("/return/{key}")
+@RequestMapping({"/return/{key}","/return/{key}/"})
 public class WebshopReturnController extends WebshopController {
 
     /**

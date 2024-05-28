@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @PreAuthorize("hasRole('USER')")
-@RequestMapping(value = "/sales/sell/payment/{publicReference}")
+@RequestMapping({"/sales/sell/payment/{publicReference}","/sales/sell/payment/{publicReference}/"})
 public class SalesSellPaymentController {
 
     /** OrderService. */

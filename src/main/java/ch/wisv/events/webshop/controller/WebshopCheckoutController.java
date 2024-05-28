@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * WebshopCheckoutController class.
  */
 @Controller
-@RequestMapping("/checkout")
+@RequestMapping({"/checkout","/checkout/"})
 public class WebshopCheckoutController extends WebshopController {
 
     /** Error message no products in Order. */
@@ -99,7 +99,7 @@ public class WebshopCheckoutController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/{key}")
+    @GetMapping({"/{key}","/{key}/"})
     public String checkoutOverview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -124,7 +124,7 @@ public class WebshopCheckoutController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/{key}/cancel")
+    @GetMapping({"/{key}/cancel","/{key}/cancel/"})
     public String checkoutCancel(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);

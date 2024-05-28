@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * ProductRESTController.
  */
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping({"/api/v1/products","/api/v1/products/"})
 public class ProductRestController {
 
     /**
@@ -79,7 +79,7 @@ public class ProductRestController {
      *
      * @return Search Object
      */
-    @GetMapping(value = "/search/unused")
+    @GetMapping({"/search/unused","/search/unused/"})
     @PreAuthorize("hasRole('ADMIN')")
     public Search getSearchProducts(@RequestParam(value = "query", required = false) String query) {
         List<Product> productList = productService.getAllProducts();

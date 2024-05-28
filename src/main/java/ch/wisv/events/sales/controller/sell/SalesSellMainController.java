@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * SalesSellMainController class.
  */
 @Controller
-@RequestMapping(value = "/sales/sell")
+@RequestMapping({"/sales/sell","/sales/sell/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesSellMainController {
 
@@ -66,7 +66,7 @@ public class SalesSellMainController {
      *
      * @return String
      */
-    @GetMapping("")
+    @GetMapping({"","/"})
     public String index(Model model) {
         Customer currentUser = authenticationService.getCurrentCustomer();
         model.addAttribute("products", salesService.getAllGrantedProductByCustomer(currentUser));
@@ -82,7 +82,7 @@ public class SalesSellMainController {
      *
      * @return String
      */
-    @PostMapping("")
+    @PostMapping({"","/"})
     public String createOrder(RedirectAttributes redirect, @ModelAttribute OrderProductDto orderProductDto) {
         if (orderProductDto.getProducts().isEmpty()) {
             redirect.addFlashAttribute("error", "Shopping cart can not be empty!");

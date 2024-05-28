@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
  * OrderRestController class.
  */
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping({"/api/v1/orders","/api/v1/orders/"})
 public class OrderRestController {
 
     /** PaymentsService. */
@@ -31,7 +31,7 @@ public class OrderRestController {
      *
      * @return Status Message
      */
-    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    @RequestMapping(value = {"/status","/status/"}, method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> updateOrderStatus(@RequestParam(name = "id") String providerReference) {
         paymentsService.updateStatusByProviderReference(providerReference);
         return new ResponseEntity<>(HttpStatus.OK);
