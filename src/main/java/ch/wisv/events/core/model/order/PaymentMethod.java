@@ -30,6 +30,11 @@ public enum PaymentMethod {
     SOFORT("sofort", cost -> 1.01089 * cost + 0.3025),
 
     /**
+     * User paid his order via Mollie.
+     */
+    MOLLIE("mollie", cost -> cost),
+
+    /**
      * User paid his order via another method.
      */
     OTHER("other", cost -> cost);

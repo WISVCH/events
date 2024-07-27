@@ -49,7 +49,7 @@ public class SalesExportSubmission {
             this.month = LocalDate.now().getMonthValue()-1;
         }
         
-        this.includedPaymentMethods = Lists.newArrayList(PaymentMethod.IDEAL, PaymentMethod.SOFORT);
+        this.includedPaymentMethods = Lists.newArrayList(PaymentMethod.IDEAL, PaymentMethod.SOFORT, PaymentMethod.MOLLIE);
 
         this.freeProductsIncluded = false;
 
