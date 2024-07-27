@@ -159,10 +159,10 @@ public class DashboardSalesExportController extends DashboardController {
             csvContent.append(entry.getValue().eventTitle)
                     .append(";").append(entry.getValue().organizedBy)           // organized by
                     .append(";").append(entry.getValue().productTitle)          // product title
-                    .append(";").append(String.format("%.2f", entry.getValue().totalIncome)) // total income
+                    .append(";").append(String.format(Locale.US, "%.2f", entry.getValue().totalIncome)) // total income
                     .append(";").append(entry.getValue().totalAmount)           // total amount
                     .append(";").append(entry.getValue().vatRate)               // vat rate
-                    .append(";").append(String.format("%.2f", entry.getValue().price)).append("\n"); // price
+                    .append(";").append(String.format(Locale.US, "%.2f", entry.getValue().price)).append("\n"); // price
         }
     return csvContent.toString();
     }
