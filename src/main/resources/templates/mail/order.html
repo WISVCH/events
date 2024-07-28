@@ -29,7 +29,7 @@
         }
         
         img.qrcode {
-            widht: 226px;
+            width: 226px;
             height: 226px;
             display: block;
         }
@@ -54,7 +54,6 @@
             margin: 0 auto;
             padding: 0;
             width: 100%;
-        !important;
         }
 
         table td {
@@ -155,11 +154,6 @@
     <style type="text/css" media="only screen and (max-width: 599px)">
         /* Mobile styles */
         @media only screen and (max-width: 599px) {
-
-            table[class*="w320"] {
-                width: 320px !important;
-            }
-
             td[class*="icons"] {
                 display: block !important;
                 text-align: center !important;
@@ -213,7 +207,7 @@
             width="100%">
 
             <center>
-                <table cellspacing="0" cellpadding="0" width="600" class="w320"
+                <table cellspacing="0" cellpadding="0"
                        style="border-collapse: collapse !important;">
                     <tr>
                         <td align="center" valign="top"
@@ -227,7 +221,7 @@
                                         <br/>
                                         <img src="cid:ch-logo.png"
                                              alt="Logo"
-                                             style="max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;"/>
+                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;"/>
                                     </td>
                                 </tr>
                             </table>
@@ -240,7 +234,6 @@
                                         <br/>
                                         <span style="font-size: 24px;">Thanks for your purchase!</span><br/>
                                         Your order has been completed! In this email you find a copy of your order.
-                                        Tickets can be transferred by using the transfer button in your account under "My Events" => "My tickets", or by handing over the unique code to one another.
                                         <br/>
                                         <br/>
                                     </td>
@@ -313,21 +306,38 @@
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 Ticket
                                                             </td>
+                                                            <td class="grey-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
+                                                            </td>
                                                         </tr>
                                                         <tr th:each="ticket : ${tickets}">
                                                             <td class="white-header"
                                                                 th:text="${ticket.getProduct().getTitle()}"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px; width: 80%">
                                                                 T.U.E.S.DAY
                                                             </td>
                                                             <td class="white-header"
-                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
-                                                                <img th:if="${ticket.getUniqueCode().length() == 6}" th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
-                                                                     width="226px"
-                                                                     class="barcode" alt="">
-                                                                <img th:if="${ticket.getUniqueCode().length() != 6}" th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}"
-                                                                     width="226px"
-                                                                     class="qrcode" alt="">
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;"
+                                                            >
+                                                                <img th:src="${'cid:ch-' + ticket.getUniqueCode() + '.png'}" width="250px" class="qrcode">
+                                                            </td>
+                                                            <td class="white-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px; text-align: center;"
+                                                            >
+                                                                <a
+                                                                    th:href="${origin + '/tickets/' + ticket.getKey() + '/wallet.pkpass'}"
+                                                                    target="_blank"
+                                                                    style="display: block; padding: 0 20px;"
+                                                                >
+                                                                    <img src="cid:apple-wallet.svg" class="apple-wallet" alt="Add to Apple Wallet" style="height: 40px;">
+                                                                </a>
+                                                                <a
+                                                                    th:href="${origin + '/tickets/'+ ticket.getKey() + '/googlewallet'}"
+                                                                    target="_blank"
+                                                                    style="display: block; padding: 0 20px;"
+                                                                >
+                                                                    <img src="cid:google-wallet.svg" class="google-wallet" alt="Add to Google Wallet" style="height: 40px;">
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     </table>

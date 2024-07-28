@@ -89,13 +89,18 @@ wisvch.connect:
 
 # CH Events Configuration
 wisvch.events:
-  image.path: http://localhost:8080/events/api/v1/documents/
+  image.path: http://localhost:8080/api/v1/documents/
 
 # CH mollie api key
 mollie:
   apikey: test
-  clientUri: http://localhost:8080/events
+  clientUri: http://localhost:8080
 
 links:
   gtc: https://ch.tudelft.nl
   passes: https://ch.tudelft.nl/passes
+
+googleWallet:
+  issuerId: 3388000000022297569
+  origin: http://localhost:8080
+  baseUrl: https://ch.tudelft.nl/events

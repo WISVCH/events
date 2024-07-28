@@ -198,4 +198,29 @@ public class WebshopTicketController extends WebshopController {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Redirect the user to the Google Pass URL.
+     */
+    @GetMapping("/{key}/googlewallet")
+    public void getGooglePass(HttpServletResponse response, @PathVariable  String key) throws IOException {
+        Customer customer = authenticationService.getCurrentCustomer();
+        try {
+            Ticket ticket = ticketService.getByKey(key);
+
+            if (!ticket.owner.equals(customer)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
+            String link = ticketService.getGooglePass(ticket);
+            response.sendRedirect(link);
+        }
+        catch (TicketNotFoundException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        catch (TicketPassFailedException | IOException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
