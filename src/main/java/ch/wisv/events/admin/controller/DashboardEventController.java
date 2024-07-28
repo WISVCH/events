@@ -37,7 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardEventController class.
  */
 @Controller
-@RequestMapping(value = "/administrator/events")
+@RequestMapping({"/administrator/events","/administrator/events/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardEventController extends DashboardController {
 
@@ -80,7 +80,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return path to Thymeleaf template
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_EVENTS, eventService.getAll());
 
@@ -96,7 +96,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/view/{key}")
+    @GetMapping({"/view/{key}","/view/{key}/"})
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             model.addAttribute(OBJ_EVENT, eventService.getByKey(key));
@@ -116,7 +116,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return path to Thymeleaf template
      */
-    @GetMapping("/create")
+    @GetMapping({"/create","/create/"})
     public String create(Model model) {
         if (!model.containsAttribute(OBJ_EVENT)) {
             model.addAttribute(OBJ_EVENT, new Event());
@@ -134,7 +134,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return redirect
      */
-    @PostMapping("/create")
+    @PostMapping({"/create","/create/"})
     public String create(RedirectAttributes redirect, @ModelAttribute Event event, @RequestParam("file") MultipartFile file) {
         try {
             if (file.getSize() > 0) {
@@ -168,7 +168,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return path to Thymeleaf template
      */
-    @GetMapping("/edit/{key}")
+    @GetMapping({"/edit/{key}","/edit/{key}/"})
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             if (!model.containsAttribute(OBJ_EVENT)) {
@@ -193,7 +193,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return redirect
      */
-    @PostMapping("/edit/{key}")
+    @PostMapping({"/edit/{key}","/edit/{key}/"})
     public String update(
             RedirectAttributes redirect,
             @ModelAttribute Event event,
@@ -235,7 +235,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/overview/{key}")
+    @GetMapping({"/overview/{key}","/overview/{key}/"})
     public String overview(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);
@@ -257,7 +257,7 @@ public class DashboardEventController extends DashboardController {
     /**
      *
      */
-    @GetMapping(value = "/overview/csv/{key}", produces = "text/csv")
+    @GetMapping(value = {"/overview/csv/{key}","/overview/csv/{key}/"}, produces = "text/csv")
     public HttpEntity<? extends Object> csvExport(@PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);
@@ -299,7 +299,7 @@ public class DashboardEventController extends DashboardController {
      *
      * @return redirect
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping({"/delete/{key}","/delete/{key}/"})
     public String deleteEvent(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Event event = eventService.getByKey(key);

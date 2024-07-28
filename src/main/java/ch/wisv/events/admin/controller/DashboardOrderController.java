@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardOrderController class.
  */
 @Controller
-@RequestMapping(value = "/administrator/orders")
+@RequestMapping({"/administrator/orders","/administrator/orders/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardOrderController extends DashboardController {
 
@@ -57,7 +57,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_ORDERS, this.orderService.getLimitedOrders());
 
@@ -73,7 +73,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/view/{key}")
+    @GetMapping({"/view/{key}","/view/{key}/"})
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -95,7 +95,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping({"/delete/{key}","/delete/{key}/"})
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -117,7 +117,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/resend-confirmation-mail/{key}")
+    @GetMapping({"/resend-confirmation-mail/{key}","/resend-confirmation-mail/{key}/"})
     public String resendConfirmationMail(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
@@ -140,7 +140,7 @@ public class DashboardOrderController extends DashboardController {
      *
      * @return String
      */
-    @GetMapping("/approve/{key}/{payment}")
+    @GetMapping({"/approve/{key}/{payment}","/approve/{key}/{payment}/"})
     public String approve(RedirectAttributes redirect, @PathVariable String key, @PathVariable PaymentMethod payment) {
         try {
             Order order = orderService.getByReference(key);

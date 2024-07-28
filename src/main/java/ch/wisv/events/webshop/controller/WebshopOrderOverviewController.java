@@ -16,7 +16,7 @@ import java.util.Collections;
  * WebshopOrderOverviewController class.
  */
 @Controller
-@RequestMapping("/overview")
+@RequestMapping({"/overview","/overview/"})
 @PreAuthorize("hasAuthority('ROLE_USER')")
 public class WebshopOrderOverviewController extends WebshopController {
 

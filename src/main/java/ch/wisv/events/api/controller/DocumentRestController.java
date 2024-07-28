@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * DocumentRestController class.
  */
 @RestController
-@RequestMapping("/api/v1/documents")
+@RequestMapping({"/api/v1/documents","/api/v1/documents/"})
 public class DocumentRestController {
 
     /** DocumentService. */
@@ -36,7 +36,7 @@ public class DocumentRestController {
      * @return of type byte[]
      */
     @ResponseBody
-    @GetMapping(value = "/{name}", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = {"/{name}","/{name}/"}, produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] getImagePng(@PathVariable String name) {
         return this.getDocumentBytes(name);
     }
@@ -49,7 +49,7 @@ public class DocumentRestController {
      * @return of type byte[]
      */
     @ResponseBody
-    @GetMapping(value = "/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = {"/{name}","/{name}/"}, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImageJpeg(@PathVariable String name) {
         return this.getDocumentBytes(name);
     }

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * DashboardWebhookController class.
  */
 @Controller
-@RequestMapping("/administrator/treasurer")
+@RequestMapping({"/administrator/treasurer","/administrator/treasurer/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardTreasurerController extends DashboardController {
 

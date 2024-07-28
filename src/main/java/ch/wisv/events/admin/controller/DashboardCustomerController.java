@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * DashboardCustomerController class.
  */
 @Controller
-@RequestMapping(value = "/administrator/customers")
+@RequestMapping({"/administrator/customers","/administrator/customers/"})
 @PreAuthorize("hasRole('ADMIN')")
 public class DashboardCustomerController extends DashboardController {
 
@@ -49,7 +49,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return path to customers index template
      */
-    @GetMapping()
+    @GetMapping({"","/"})
     public String index(Model model) {
         model.addAttribute(OBJ_CUSTOMERS, customerService.getAllCustomers());
 
@@ -66,7 +66,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return path to the customer edit template
      */
-    @GetMapping("/view/{key}")
+    @GetMapping({"/view/{key}","/view/{key}/"})
     public String view(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
@@ -88,7 +88,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return path to customer create template
      */
-    @GetMapping("/create")
+    @GetMapping({"/create","/create/"})
     public String create(Model model) {
         if (!model.containsAttribute(OBJ_CUSTOMER)) {
             model.addAttribute(OBJ_CUSTOMER, new Customer());
@@ -106,7 +106,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return redirect
      */
-    @PostMapping("/create")
+    @PostMapping({"/create","/create/"})
     public String create(RedirectAttributes redirect, @ModelAttribute Customer model) {
         try {
             customerService.create(model);
@@ -132,7 +132,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return path to the customer edit template
      */
-    @GetMapping("/edit/{key}")
+    @GetMapping({"/edit/{key}","/edit/{key}/"})
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);
@@ -159,7 +159,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return redirect
      */
-    @PostMapping("/edit/{key}")
+    @PostMapping({"/edit/{key}","/edit/{key}/"})
     public String edit(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String key) {
         try {
             customer.setKey(key);
@@ -185,7 +185,7 @@ public class DashboardCustomerController extends DashboardController {
      *
      * @return redirect
      */
-    @GetMapping("/delete/{key}")
+    @GetMapping({"/delete/{key}","/delete/{key}/"})
     public String delete(RedirectAttributes redirect, @PathVariable String key) {
         try {
             Customer customer = customerService.getByKey(key);

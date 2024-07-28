@@ -27,7 +27,7 @@ import java.io.IOException;
  * WebshopOrderOverviewController class.
  */
 @Controller
-@RequestMapping("/tickets")
+@RequestMapping({"/tickets","/tickets/"})
 @PreAuthorize("hasAuthority('ROLE_USER')")
 public class WebshopTicketController extends WebshopController {
     /** Model attribute tickets. */
@@ -66,7 +66,7 @@ public class WebshopTicketController extends WebshopController {
      *
      * @return String
      */
-    @GetMapping("/{key}/transfer")
+    @GetMapping({"/{key}/transfer","/{key}/transfer/"})
     public String getTransferPage(Model model, RedirectAttributes redirect, @PathVariable String key) {
         Customer customer = authenticationService.getCurrentCustomer();
 
@@ -99,7 +99,7 @@ public class WebshopTicketController extends WebshopController {
      *
      * @return String
      */
-    @PostMapping("/{key}/transfer")
+    @PostMapping({"/{key}/transfer","/{key}/transfer/"})
     public String transferTicket(Model model, RedirectAttributes redirect, @PathVariable String key, @RequestParam("email") String email) {
         Customer currentCustomer = authenticationService.getCurrentCustomer();
 

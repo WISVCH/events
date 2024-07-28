@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * SalesScanRestController.
  */
 @RestController
-@RequestMapping(value = "/api/v1/sales/scan/event/{key}")
+@RequestMapping({"/api/v1/sales/scan/event/{key}","/api/v1/sales/scan/event/{key}/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesScanRestController {
 
@@ -59,7 +59,7 @@ public class SalesScanRestController {
      *
      * @return String
      */
-    @PostMapping("/barcode")
+    @PostMapping({"/barcode","/barcode/"})
     public ResponseEntity barcodeScanner(@PathVariable String key, @RequestParam("barcode") String barcode) {
         if (barcode.length() != BARCODE_LENGTH) {
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid EAN 13 barcode length!");
@@ -76,7 +76,7 @@ public class SalesScanRestController {
      *
      * @return String
      */
-    @PostMapping("/code")
+    @PostMapping({"/code","/code/"})
     public ResponseEntity codeScanner(@PathVariable String key, @RequestParam("code") String code) {
         if (code.length() != UNIQUE_CODE_UUID_LENGTH && code.length() != UNIQUE_CODE_LEGACY_LENGTH) {
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid unique code length!");

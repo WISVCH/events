@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @PreAuthorize("hasRole('USER')")
-@RequestMapping(value = "/sales/sell/order/{publicReference}")
+@RequestMapping({"/sales/sell/order/{publicReference}","/sales/sell/order/{publicReference}/"})
 public class SalesSellOrderController {
 
     /** OrderService. */
@@ -61,7 +61,7 @@ public class SalesSellOrderController {
      *
      * @return String
      */
-    @GetMapping("/{ending}")
+    @GetMapping({"/{ending}","/{ending}/"})
     public String complete(RedirectAttributes redirect, @PathVariable String publicReference, @PathVariable String ending) {
         try {
             orderService.getByReference(publicReference);

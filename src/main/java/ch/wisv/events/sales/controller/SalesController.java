@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/sales")
+@RequestMapping({"/sales","/sales/"})
 @PreAuthorize("hasRole('USER')")
 public class SalesController {
 

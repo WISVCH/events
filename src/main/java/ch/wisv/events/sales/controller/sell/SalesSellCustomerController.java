@@ -25,7 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @PreAuthorize("hasRole('USER')")
-@RequestMapping("/sales/sell/customer/{publicReference}")
+@RequestMapping({"/sales/sell/customer/{publicReference}","/sales/sell/customer/{publicReference}/"})
 public class SalesSellCustomerController {
 
     /** CustomerService. */
@@ -55,7 +55,7 @@ public class SalesSellCustomerController {
      *
      * @return String
      */
-    @GetMapping("")
+    @GetMapping({"","/"})
     public String identifyCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
@@ -75,7 +75,7 @@ public class SalesSellCustomerController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping({"","/"})
     public String determineCustomer(RedirectAttributes redirect, @PathVariable String publicReference, @ModelAttribute Customer customer) {
         Order order;
         try {
@@ -105,7 +105,7 @@ public class SalesSellCustomerController {
         }
     }
 
-    @GetMapping("/create")
+    @GetMapping({"/create","/create/"})
     public String createCustomer(Model model, RedirectAttributes redirect, @PathVariable String publicReference) {
         try {
             model.addAttribute(orderService.getByReference(publicReference));
@@ -130,7 +130,7 @@ public class SalesSellCustomerController {
      *
      * @return String
      */
-    @PostMapping("/create")
+    @PostMapping({"/create","/create/"})
     public String create(RedirectAttributes redirect, @ModelAttribute Customer customer, @PathVariable String publicReference) {
         try {
             Order order = orderService.getByReference(publicReference);
