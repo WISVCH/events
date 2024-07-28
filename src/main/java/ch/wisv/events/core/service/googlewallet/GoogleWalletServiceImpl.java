@@ -68,8 +68,8 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
         }
 
         Product product = ticket.getProduct();
-        EventTicketClass newClass = this.createClass(product);
-        EventTicketObject newObject = this.createObject(ticket);
+        EventTicketClass ticketClass = this.createClass(product);
+        EventTicketObject ticketObject = this.createObject(ticket);
 
         HashMap<String, Object> claims = new HashMap<String, Object>();
         claims.put("iss", credentials.getClientEmail());
@@ -79,8 +79,8 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
         claims.put("iat", Instant.now().getEpochSecond());
 
         HashMap<String, Object> payload = new HashMap<String, Object>();
-        payload.put("eventTicketClasses", List.of(newClass));
-        payload.put("eventTicketObjects", List.of(newObject));
+        payload.put("eventTicketClasses", List.of(ticketClass));
+        payload.put("eventTicketObjects", List.of(ticketObject));
         claims.put("payload", payload);
 
         Algorithm algorithm = Algorithm.RSA256(
