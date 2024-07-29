@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.googlewallet.GoogleWalletService;
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,11 @@ public class TicketServiceImpl implements TicketService {
      */
     private final EventService eventService;
 
+    /**
+     * GoogleWalletService.
+     */
+    private final GoogleWalletService googleWalletService;
+
     @Value("${links.passes}")
     @NotNull
     private String passesLink;
@@ -51,9 +57,10 @@ public class TicketServiceImpl implements TicketService {
      * @param ticketRepository of type TicketRepository
      * @param eventService     of type EventService
      */
-    public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService) {
+    public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, GoogleWalletService googleWalletService) {
         this.ticketRepository = ticketRepository;
         this.eventService = eventService;
+        this.googleWalletService = googleWalletService;
     }
 
     /**
@@ -284,5 +291,15 @@ public class TicketServiceImpl implements TicketService {
             e.printStackTrace();
             throw new TicketPassFailedException(e.getMessage());
         }
+    }
+
+    /**
+     * Get Google Wallet pass for a Ticket.
+     * @param ticket of type Ticket.
+     * @return A link the user can use to add the ticket to their wallet.
+     * @throws TicketPassFailedException when pass is not generated
+     */
+    public String getGooglePass(Ticket ticket) throws TicketPassFailedException {
+        return this.googleWalletService.getPass(ticket);
     }
 }

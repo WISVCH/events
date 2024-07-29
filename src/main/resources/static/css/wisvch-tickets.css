@@ -103,7 +103,7 @@ and also iPads specifically.
 (min-device-width: 768px) and (max-device-width: 1024px) {
 
     /* Force table to not be like tables anymore */
-    thead th, tbody tr, tbody td, thead tr, tbody tr, tfoot tr {
+    .ticket-overview thead th, .ticket-overview tbody td, .ticket-overview thead tr, .ticket-overview tbody tr, .ticket-overview tfoot tr {
         display: block;
     }
 

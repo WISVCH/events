@@ -4,9 +4,11 @@ import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.core.service.product.ProductService;
+import ch.wisv.events.core.service.ticket.TicketService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,11 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/return/{key}")
 public class WebshopReturnController extends WebshopController {
+    /** TicketService. */
+    final TicketService ticketService;
+
+    /** Attribute to indicate if the order only contains reservable products. */
+    private static final String MODEL_ATTR_TICKETS = "tickets";
 
     /**
      * WebshopReturnController constructor.
@@ -32,8 +39,9 @@ public class WebshopReturnController extends WebshopController {
      * @param orderService          of type OrderService
      * @param authenticationService of type AuthenticationService
      */
-    public WebshopReturnController(OrderService orderService, AuthenticationService authenticationService) {
+    public WebshopReturnController(OrderService orderService, AuthenticationService authenticationService, TicketService ticketService) {
         super(orderService, authenticationService);
+        this.ticketService = ticketService;
     }
 
     /**
@@ -57,7 +65,11 @@ public class WebshopReturnController extends WebshopController {
                     .filter(product -> Objects.nonNull(product.getRedirectUrl()) && !product.getRedirectUrl().isEmpty())
                     .collect(Collectors.toList());
 
+
+            List<Ticket> tickets = this.ticketService.getAllByOrder(order);
+
             model.addAttribute(MODEL_ATTR_REDIRECT_PRODUCTS, productsWithRedirect);
+            model.addAttribute(MODEL_ATTR_TICKETS, tickets);
 
             switch (order.getStatus()) {
                 case PENDING:

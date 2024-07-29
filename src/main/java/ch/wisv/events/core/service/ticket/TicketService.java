@@ -133,4 +133,11 @@ public interface TicketService {
      */
     byte[] getApplePass(Ticket ticket) throws TicketPassFailedException;
 
+    /**
+     * Get Google Wallet pass for a Ticket.
+     * @param ticket of type Ticket.
+     * @return A link the user can use to add the ticket to their wallet.
+     * @throws TicketPassFailedException when pass is not generated
+     */
+    String getGooglePass(Ticket ticket) throws TicketPassFailedException;
 }

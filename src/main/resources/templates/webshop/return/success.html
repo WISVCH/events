@@ -45,19 +45,54 @@
                     <h4 class="display-4">Thanks for ordering!</h4>
                 </div>
             </div>
-            <div class="row justify-content-center mb-5">
+            <div class="row justify-content-center mb-2">
                 <div class="col-12">
-                    <p class="text-justify">Thanks for ordering your tickets! Within a few minutes you will receive an
+                    <p class="text-justify">
+                        Thanks for ordering your tickets! Within a few minutes you will receive an
                         e-mail with the information about your order. If you have any questions do not hesitate to ask
                         the board by sending an email to <a href="mailto:board@ch.tudelft.nl">board@ch.tudelft.nl</a>
-                        or swing by at the association area.</p>
+                        or swing by at the association area.
+                    </p>
                 </div>
+                <table th:if="${!tickets.isEmpty()}" class="table table-striped col-12">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket: ${tickets}">
+                            <td
+                                th:if="${#lists.size(ticket.product.event.products) > 1}"
+                                th:text="${ticket.product.event.title} + ' - ' + ${ticket.product.title}"
+                                style="vertical-align: middle;"
+                            ></td>
+                            <td
+                                th:if="${#lists.size(ticket.product.event.products) <= 1}"
+                                th:text="${ticket.product.event.title}"
+                                style="vertical-align: middle;"
+                            ></td>
+                            <td style="text-align: center;">
+                                <a th:href="@{'/passes/apple/'+ ${ticket.getKey()}+'/wallet.pkpass'}" target="_blank">
+                                    <img th:src="@{/images/apple-wallet.svg}" class="apple-wallet" alt="Add to Apple Wallet" style="height: 35px; max-width: 20vw;">
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a th:href="@{'/passes/google/'+ ${ticket.getKey()}}" target="_blank">
+                                    <img th:src="@{/images/google-wallet.svg}" class="google-wallet" alt="Add to Google Wallet" style="height: 35px; max-width: 25vw;">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div th:if="${redirect_products != null and !redirect_products.isEmpty()}" class="my-4">
                 <div class="row">
                     <div class="col my-4">
-                        <h5 class="display-3">Before you go!</h5>
+                        <h5 class="display-4">Before you go!</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -81,6 +116,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="row">
                 <div class="col my-4">
                     <h4 class="display-4">Promotion research</h4>
@@ -88,6 +124,7 @@
                     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf-TJiwzIUMbb0YKwg2RA7hWcHBWE444Z6P7UKzQqgfILZBiw/viewform?embedded=true" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-auto mr-auto">
                     <a th:href="@{/}" class="btn btn-secondary">
