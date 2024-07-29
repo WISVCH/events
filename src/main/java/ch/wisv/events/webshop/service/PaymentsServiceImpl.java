@@ -25,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -129,14 +128,6 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         metadata.put("products", productString);
 
-        PaymentMethod method;
-
-        if (order.getPaymentMethod() == ch.wisv.events.core.model.order.PaymentMethod.IDEAL) {
-            method = PaymentMethod.IDEAL;
-        } else {
-            method = PaymentMethod.SOFORT;
-        }
-
         String returnUrl = clientUri + "/return/" + order.getPublicReference();
         String webhookUrl = clientUri + "/api/v1/orders/status";
 
@@ -148,7 +139,6 @@ public class PaymentsServiceImpl implements PaymentsService {
         Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING)).currency("EUR").build();
 
         return PaymentRequest.builder()
-                .method(Optional.of(List.of(method)))
                 .amount(paymentAmount)
                 .description("W.I.S.V. 'Christiaan Huygens'")
                 .consumerName(Optional.of(order.getOwner().getName()))

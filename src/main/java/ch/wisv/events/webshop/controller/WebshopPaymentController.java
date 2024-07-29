@@ -86,7 +86,11 @@ public class WebshopPaymentController extends WebshopController {
                 );
             }
 
-            return "webshop/payment/index";
+            if (orderService.containsOnlyReservable(order)) {
+                return "webshop/payment/index";
+            }
+
+            return "redirect:/checkout/" + order.getPublicReference() + "/payment/mollie";
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
@@ -117,29 +121,16 @@ public class WebshopPaymentController extends WebshopController {
     }
 
     /**
-     * Payment method using iDeal.
+     * Payment method using Mollie.
      *
      * @param redirect of type RedirectAttributes
      * @param key      of type String
      *
      * @return String string
      */
-    @GetMapping("/ideal")
-    public String paymentIdeal(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.IDEAL);
-    }
-
-    /**
-     * Payment method using SOFORT.
-     *
-     * @param redirect of type RedirectAttributes
-     * @param key      of type String
-     *
-     * @return String string
-     */
-    @GetMapping("/sofort")
-    public String paymentSofort(RedirectAttributes redirect, @PathVariable String key) {
-        return this.payment(redirect, key, PaymentMethod.SOFORT);
+    @GetMapping("/mollie")
+    public String paymentMollie(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.MOLLIE);
     }
 
     /**

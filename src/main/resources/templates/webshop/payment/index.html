@@ -52,49 +52,18 @@
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-ideal.png}" alt="">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-now.png}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">IDEAL</h5> - Online payment using your
-                                            Dutch bank. Easy, fast and secure!<br>
-
-                                            <span class="text-info">(+ &euro; 0,35 transaction cost)</span>
+                                            <h5 class="d-inline mt-0">Pay Online</h5> - Pay now using iDeal<br>
                                         </div>
 
                                         <div class="col-12 align-self-end">
-                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/ideal'}"
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/mollie'}"
                                                class="btn btn-block btn-primary">
-                                                Pay with iDeal
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body h-100">
-                            <div class="row h-100">
-                                <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-sofort.png}" alt="">
-                                </div>
-                                <div class="col-9 h-100">
-                                    <div class="row h-100">
-                                        <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">SOFORT</h5> - Predominant online banking method in
-                                            countries across Europe.<br>
-
-                                            <span class="text-info">(+ &euro; 0,30 + 1,1% transaction cost)</span>
-                                        </div>
-
-                                        <div class="col-12 align-self-end">
-                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/sofort'}"
-                                               class="btn btn-block btn-primary">
-                                                Pay with SOFORT
+                                                Pay Online
                                             </a>
                                         </div>
                                     </div>
@@ -108,7 +77,7 @@
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-later.jpg}" alt="">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-later.png}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row">
