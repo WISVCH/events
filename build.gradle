@@ -69,7 +69,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.5.0'
     implementation 'com.google.zxing:javase:3.5.0'
 
-    implementation 'org.webjars:bootstrap:4.0.0-beta'
+    implementation 'org.webjars:bootstrap:4.0.0-beta.2'
     implementation 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
     implementation 'org.webjars.bower:momentjs:2.10.6'
     implementation 'org.webjars.bowergithub.wisvch:bootstrap-theme:4.6.1-3'
