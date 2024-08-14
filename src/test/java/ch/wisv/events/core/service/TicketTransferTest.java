@@ -11,6 +11,7 @@ import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.repository.TicketRepository;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.googlewallet.GoogleWalletService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.service.ticket.TicketServiceImpl;
 
@@ -42,6 +43,10 @@ public class TicketTransferTest extends ServiceTest {
     /** EventService. */
     private EventService eventService;
 
+    @Mock
+    /** GoogleWalletService. */
+    private GoogleWalletService googleWalletService;
+
     /** TicketService. */
     private TicketService ticketService;
 
@@ -59,7 +64,7 @@ public class TicketTransferTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        ticketService = new TicketServiceImpl(ticketRepository, eventService);
+        ticketService = new TicketServiceImpl(ticketRepository, eventService, googleWalletService);
 
         customer1 = new Customer();
         customer1.setVerifiedChMember(true);

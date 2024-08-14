@@ -18,7 +18,6 @@ import jakarta.validation.constraints.NotNull;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.QrCode;
 import com.google.zxing.WriterException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -53,6 +52,11 @@ public class MailServiceImpl implements MailService {
     @NotNull
     private String linkGTC;
 
+    /** Link to GTC. */
+    @Value("${googleWallet.origin}")
+    @NotNull
+    private String origin;
+
     /**
      * MailServiceImpl constructor.
      *
@@ -60,7 +64,6 @@ public class MailServiceImpl implements MailService {
      * @param templateEngine of type templateEngine
      * @param ticketService  of type TicketService
      */
-    @Autowired
     public MailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine, TicketService ticketService) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
@@ -80,6 +83,7 @@ public class MailServiceImpl implements MailService {
             ctx.setVariable("tickets", tickets);
             ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
             ctx.setVariable("linkGTC", linkGTC);
+            ctx.setVariable("origin", origin);
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), tickets);
@@ -170,6 +174,9 @@ public class MailServiceImpl implements MailService {
             message.addInline("ch-logo.png", new ClassPathResource("/static/images/ch-logo.png"), "image/png");
 
             if(tickets != null) {
+                message.addInline("apple-wallet.svg", new ClassPathResource("/static/images/apple-wallet.svg"), "image/svg+xml");
+                message.addInline("google-wallet.svg", new ClassPathResource("/static/images/google-wallet.svg"), "image/svg+xml");
+
                 for (Ticket ticket : tickets) {
                     String uniqueCode = ticket.getUniqueCode();
                     // Retrieve and return barcode (LEGACY)

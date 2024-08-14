@@ -11,7 +11,6 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +47,6 @@ public class WebshopCustomerController extends WebshopController {
      * @param customerService       of type CustomerService
      * @param authenticationService of type AuthenticationService
      */
-    @Autowired
     public WebshopCustomerController(
             OrderService orderService,
             CustomerService customerService,
