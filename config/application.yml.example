@@ -88,6 +88,7 @@ links:
   passes: https://ch.tudelft.nl/passes
 
 googleWallet:
+  serviceKeyPath: ./googleservicekey.json
   issuerId: 3388000000022297569
   origin: https://ch.tudelft.nl/events
   baseUrl: https://ch.tudelft.nl/events
