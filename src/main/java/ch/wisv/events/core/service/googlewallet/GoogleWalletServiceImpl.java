@@ -10,12 +10,12 @@ import ch.wisv.events.core.model.ticket.Ticket;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.api.services.walletobjects.WalletobjectsScopes;
 import com.google.api.services.walletobjects.model.*;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
@@ -30,6 +30,10 @@ import java.util.List;
 public class GoogleWalletServiceImpl implements GoogleWalletService {
     /** Service account credentials for Google Wallet APIs. */
     public static ServiceAccountCredentials credentials;
+
+    @Value("${googleWallet.serviceKeyPath}")
+    @NotNull
+    private String serviceKeyPath;
 
     @Value("${googleWallet.issuerId}")
     @NotNull
@@ -57,12 +61,10 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
     public String getPass(Ticket ticket) throws TicketPassFailedException {
         if (credentials == null) {
             try {
-                credentials = (ServiceAccountCredentials) ServiceAccountCredentials
-                        .getApplicationDefault()
-                        .createScoped(List.of(WalletobjectsScopes.WALLET_OBJECT_ISSUER));
-                credentials.refresh();
+                credentials = ServiceAccountCredentials.fromStream(new FileInputStream(this.serviceKeyPath));
             } catch (IOException e) {
-                System.out.println("WARN: Failed to authenticate with Google");
+                System.out.println("WARN: Failed to parse service account");
+                System.out.println(e);
                 return "https://pay.google.com/gp/v/save/FAILED";
             }
         }
