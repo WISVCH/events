@@ -45,7 +45,10 @@ $(document).ready(function () {
         altInput: true,
         altFormat: 'F j, Y H:i',
         dateFormat: "Y-m-dTH:i:S",
-        time_24hr: true
+        time_24hr: true,
+        locale: {
+            firstDayOfWeek: 1
+        }
     };
     $('#sellStart').flatpickr(config);
     $('#sellEnd').flatpickr(config);
