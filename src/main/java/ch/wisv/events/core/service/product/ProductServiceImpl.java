@@ -216,6 +216,10 @@ public class ProductServiceImpl implements ProductService {
         if (product.getParentProduct() == null && (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25)) {
             throw new ProductInvalidException("Max sold per customer should be between 1 and 25!");
         }
+
+        if (product.getParentProduct() != null && product.getChildProducts() != null && product.getChildProducts().size() > 0) {
+            throw new ProductInvalidException("A product can not have a parent product and be a parent product at the same time!");
+        }
     }
 
     /**
