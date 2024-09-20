@@ -36,7 +36,7 @@ public enum ProductTemplate {
 
     /** Product maxSoldperCustomer. */
     @Getter
-    private final int maxSolPerCustomer;
+    private final int maxSoldPerCustomer;
 
     /** Product chOnly. */
     @Getter
@@ -53,7 +53,7 @@ public enum ProductTemplate {
      * @param title             of type String
      * @param cost              of type double
      * @param vatRate           of type VatRate
-     * @param maxSolPerCustomer of type int
+     * @param maxSoldPerCustomer of type int
      * @param chOnly            of type boolean
      * @param reservable        of type boolean
      */
@@ -61,7 +61,7 @@ public enum ProductTemplate {
             String templateName, String title,
             double cost,
             VatRate vatRate,
-            int maxSolPerCustomer,
+            int maxSoldPerCustomer,
             boolean chOnly,
             boolean reservable
     ) {
@@ -69,7 +69,7 @@ public enum ProductTemplate {
         this.title = title;
         this.cost = cost;
         this.vatRate = vatRate;
-        this.maxSolPerCustomer = maxSolPerCustomer;
+        this.maxSoldPerCustomer = maxSoldPerCustomer;
         this.chOnly = chOnly;
         this.reservable = reservable;
     }
@@ -85,7 +85,7 @@ public enum ProductTemplate {
         object.put("title", this.getTitle());
         object.put("cost", this.getCost());
         object.put("vatRate", this.getVatRate());
-        object.put("maxSoldPerCustomer", this.getMaxSolPerCustomer());
+        object.put("maxSoldPerCustomer", this.getMaxSoldPerCustomer());
         object.put("chOnly", this.isChOnly());
         object.put("reservable", this.isReservable());
 

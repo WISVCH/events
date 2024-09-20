@@ -112,6 +112,15 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
+                                    <div class="row" th:if="${product.getParentProduct() != null}">
+                                        <div class="form-group col-12">
+                                            <p><span class="badge badge-warning">Warning</span> The stock and availability of this product is linked to the parent product.</p>
+                                            <a th:href="@{'/administrator/products/view/' + ${product.getParentProduct().getKey()} + '/'}">
+                                                <i class="fa fa-link" aria-hidden="true"></i> <span
+                                                        th:text="${product.getParentProduct().getTitle()}"></span>
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="form-group col-6">
                                             <label>Available

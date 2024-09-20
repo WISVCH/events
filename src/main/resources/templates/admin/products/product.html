@@ -143,11 +143,28 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="row">
+                                        <!-- Product selection -->
+                                        <div class="row" th:if="${product.event != null}">
+                                            <div class="form-group col-6">
+                                                <label>Parent product</label>
+                                                <select id="parentProduct" class="form-control"
+                                                        th:field="*{parentProduct}">
+                                                    <option value="">No parent product</option>
+                                                    <option th:each="parentProduct : ${parentProducts}"
+                                                            th:value="${parentProduct.id}"
+                                                            th:selected="${product.getParentProduct() != null && product.getParentProduct().getId() == parentProduct.getId()}">
+                                                            <!-- {title} (avail: {maxSold}, max: {maxSoldPerCustomer}) -->
+                                                        <span th:text="${parentProduct.getTitle() + ' (avail: ' + parentProduct.getMaxSold() + ', max: ' + parentProduct.getMaxSoldPerCustomer() + ')'}"></span>
+                                                    </option>
+                                                </select>
+                                                <small id="parentProductHint" class="form-text text-muted">The availability and max sold per customer will be inherited from the parent product.</small>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="productAvailability">
                                             <div class="form-group col-6">
                                                 <label>Available
                                                     <input type="number" class="form-control" th:field="*{maxSold}"
-                                                           th:value="${product.getMaxSold()}">
+                                                           th:value="${product.getMaxSold()}" th:disabled="${product.parentProduct != null}">
                                                 </label>
                                             </div>
                                             <div class="form-group col-6">
@@ -155,7 +172,8 @@
                                                     <input type="number" class="form-control" step="1" min="1" max="25"
                                                            th:field="*{maxSoldPerCustomer}"
                                                            th:value="${product.getMaxSoldPerCustomer()}"
-                                                           required>
+                                                           th:disabled="${product.parentProduct != null}"
+                                                           th:required="${product.parentProduct == null}">
                                                 </label>
                                             </div>
                                         </div>
@@ -250,6 +268,34 @@
                 </button>
             </div>
             <div class="modal-body" id="addProductForm">
+                <h4>Search product</h4>
+                <div class="input-group" style="width: 100%">
+                    <input id="q" autocomplete="off" type="text" class="form-control no-trigger"
+                           placeholder="Search for a product">
+
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-fw fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+                <small class="form-text text-muted">Start typing to look for a product.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="linkProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="linkProductLabel">Add product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="linkProductForm">
                 <h4>Search product</h4>
                 <div class="input-group" style="width: 100%">
                     <input id="q" autocomplete="off" type="text" class="form-control no-trigger"

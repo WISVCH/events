@@ -62,6 +62,19 @@ $(document).ready(function () {
         }
     });
 
+    hasParentFields($('#parentProduct').val() !== '');
+    $('#parentProduct').on('change', function () {
+        const hasParent = $(this).val() !== '';
+        hasParentFields(hasParent);
+    });
+
+    function hasParentFields(hasParent) {
+        $('#maxSold').prop('disabled', hasParent);
+        $('#maxSoldPerCustomer').prop('disabled', hasParent);
+        $('#productAvailability').toggle(!hasParent);
+        $('#parentProductHint').toggle(hasParent);
+    }
+
     $('.remove-product').on('click', function (e) {
         e.preventDefault();
 
