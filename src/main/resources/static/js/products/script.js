@@ -62,7 +62,8 @@ $(document).ready(function () {
         }
     });
 
-    hasParentFields($('#parentProduct').val() !== '');
+    // Check if parentProduct exists
+    hasParentFields($('#parentProduct').val() !== '' && $('#parentProduct').val() !== undefined);
     $('#parentProduct').on('change', function () {
         const hasParent = $(this).val() !== '';
         hasParentFields(hasParent);
