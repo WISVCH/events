@@ -8,9 +8,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +68,28 @@ public class ProductServiceImpl implements ProductService {
         return product.getEvent().getProducts().stream()
                 .filter(p -> p.getParentProduct() == null && !p.getKey().equals(product.getKey()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the parent, children, and sibling products, including the original product
+     *
+     * @return Collection of Products
+     */
+    @Override
+    public List<Product> getRelatedProducts(Product product) {
+        List<Product> result = new ArrayList<>();
+        Product parent = product;
+        while (parent.getParentProduct() != null) {
+            parent = parent.getParentProduct();
+        }
+        Queue<Product> q = new LinkedList<>();
+        q.add(parent);
+        while (!q.isEmpty()) {
+            Product p = q.remove();
+            result.add(p);
+            q.addAll(p.getChildProducts());
+        }
+        return result;
     }
 
     /**

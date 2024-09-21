@@ -13,6 +13,7 @@ import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,9 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     /** TicketService. */
     private final TicketService ticketService;
 
+    /** ProductService. */
+    private final ProductService productService;
+
     /** EventService. */
     private final EventService eventService;
 
@@ -42,9 +46,10 @@ public class OrderValidationServiceImpl implements OrderValidationService {
      * @param eventService    of type EventService
      */
     @Autowired
-    public OrderValidationServiceImpl(OrderRepository orderRepository, TicketService ticketService, EventService eventService) {
+    public OrderValidationServiceImpl(OrderRepository orderRepository, TicketService ticketService, ProductService productService, EventService eventService) {
         this.orderRepository = orderRepository;
         this.ticketService = ticketService;
+        this.productService = productService;
         this.eventService = eventService;
     }
 
@@ -80,16 +85,23 @@ public class OrderValidationServiceImpl implements OrderValidationService {
                 continue;
             }
 
-            int ticketSold = ticketService.getAllByProductAndCustomer(orderProduct.getProduct(), customer).size();
+            List<Product> relatedProducts = productService.getRelatedProducts(orderProduct.getProduct());
+
+            int ticketSold = ticketService.getAllByProductsAndCustomer(relatedProducts, customer).size();
 
             ticketSold += reservationOrders.stream()
                     .mapToInt(reservationOrder -> reservationOrder.getOrderProducts().stream()
-                            .filter(reservationOrderProduct -> orderProduct.getProduct().equals(reservationOrderProduct.getProduct()))
+                            .filter(reservationOrderProduct -> relatedProducts.contains(reservationOrderProduct.getProduct()))
                             .mapToInt(reservationOrderProduct -> reservationOrderProduct.getAmount().intValue())
                             .sum()
                     ).sum();
 
-            if (ticketSold + orderProduct.getAmount() > maxSoldPerCustomer) {
+            int tryingToOrder = order.getOrderProducts().stream()
+                    .filter(relatedOrderProduct -> relatedProducts.contains(relatedOrderProduct.getProduct()))
+                    .mapToInt(relatedOrderProduct -> relatedOrderProduct.getAmount().intValue())
+                    .sum();
+
+            if (ticketSold + tryingToOrder > maxSoldPerCustomer) {
                 throw new OrderExceedCustomerLimitException(maxSoldPerCustomer - ticketSold);
             }
         }
