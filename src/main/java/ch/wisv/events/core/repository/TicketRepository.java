@@ -24,6 +24,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> findAllByProductAndOwner(Product product, Customer owner);
 
     /**
+     * Find all Ticket by Products and Customer.
+     *
+     * @param products of type List<Product></Product>
+     * @param owner   of type Customer
+     *
+     * @return List
+     */
+    List<Ticket> findAllByProductInAndOwner(List<Product> products, Customer owner);
+
+    /**
      * Find all Ticket by Product.
      *
      * @param product of type Product

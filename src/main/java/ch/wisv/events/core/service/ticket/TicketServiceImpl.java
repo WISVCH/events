@@ -102,6 +102,19 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
+     * Get all Ticket for one of multiple products and Customer.
+     *
+     * @param products of type List<Product></Product>
+     * @param customer of type Customer
+     *
+     * @return List of Tickets
+     */
+    @Override
+    public List<Ticket> getAllByProductsAndCustomer(List<Product> products, Customer customer) {
+        return ticketRepository.findAllByProductInAndOwner(products, customer);
+    }
+
+    /**
      * Get all Ticket by a Product.
      *
      * @param product of type Product
