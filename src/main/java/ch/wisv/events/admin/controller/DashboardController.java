@@ -35,6 +35,9 @@ abstract class DashboardController {
     /** Object key product. */
     static final String OBJ_PRODUCT = "product";
 
+    /** Object key parentProducts. */
+    static final String OBJ_PARENT_PRODUCTS = "parentProducts";
+
     /** Object key tasks. */
     static final String OBJ_TASKS = "tasks";
 

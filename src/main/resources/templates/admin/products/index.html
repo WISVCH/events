@@ -64,15 +64,15 @@
                         <td th:text="${product.getTitle()}"></td>
                         <td th:text="'€ ' + ${#numbers.formatDecimal(product.getCost(), 1, 'POINT', 2, 'COMMA')}"></td>
                         <td>
-                            <span class="badge badge-success" th:text="'Sold: ' + ${product.getSold()}"></span>
+                            <span class="badge badge-success" th:text="'Sold: ' + ${product.getTotalSold()}"></span>
                             <span class="badge badge-warning" th:text="'Reserved: ' + ${product.getReserved()}"></span>
                             <span class="badge badge-info" th:text="'Available: ' + ${product.getMaxSold()}"></span>
                         </td>
                         <td>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${product.sold}"
+                                <div class="progress-bar" role="progressbar" th:aria-valuenow="${product.getTotalSold()}"
                                      aria-valuemin="0"
-                                     th:aria-valuemax="${product.maxSold}"
+                                     th:aria-valuemax="${product.getMaxSold()}"
                                      th:style="'width: ' + ${product.calcProgress()} + '%;'"
                                      th:text="${product.calcProgress()} + '%'">
                                 </div>

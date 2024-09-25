@@ -41,24 +41,25 @@ public class EventTestDataRunner extends TestDataRunner {
     }
 
     /**
-     * Method addProduct.
+     * Method addProducts.
      *
      * @param event      of type Event
      * @param jsonObject of type JSONObject
      *
      * @return Event
      */
-    private Event addProduct(Event event, JSONObject jsonObject) {
-        if (jsonObject.get("productNumber") != null) {
-            int productNumber = ((Long) jsonObject.get("productNumber")).intValue();
-            Optional<Product> optional = this.productRepository.findById(productNumber);
+    private Event addProducts(Event event, JSONObject jsonObject) {
+        if (jsonObject.get("productNumbers") != null) {
+            for (Object productNumber : (Iterable<?>) jsonObject.get("productNumbers")) {
+                Optional<Product> optional = this.productRepository.findById(((Long) productNumber).intValue());
 
-            optional.ifPresent(product -> {
-                product.setLinked(true);
-                this.productRepository.saveAndFlush(product);
+                optional.ifPresent(product -> {
+                    product.setLinked(true);
+                    this.productRepository.saveAndFlush(product);
 
-                event.addProduct(product);
-            });
+                    event.addProduct(product);
+                });
+            }
         }
 
         return event;
@@ -101,7 +102,7 @@ public class EventTestDataRunner extends TestDataRunner {
     @Override
     protected void loop(JSONObject jsonObject) {
         Event event = this.createEvent(jsonObject);
-        event = this.addProduct(event, jsonObject);
+        event = this.addProducts(event, jsonObject);
 
         this.eventRepository.save(event);
     }

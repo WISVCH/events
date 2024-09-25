@@ -18,11 +18,14 @@ import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderValidationService;
 import ch.wisv.events.core.service.order.OrderValidationServiceImpl;
+import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.VatRate;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +46,10 @@ public class OrderValidationServiceImplTest extends ServiceTest {
     @Mock
     private TicketService ticketService;
 
+    /** ProductService. */
+    @Mock
+    private ProductService productService;
+
     /** EventService. */
     @Mock
     private EventService eventService;
@@ -56,7 +63,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Before
     public void setUp() {
-        orderValidationService = new OrderValidationServiceImpl(orderRepository, ticketService, eventService);
+        orderValidationService = new OrderValidationServiceImpl(orderRepository, ticketService, productService, eventService);
 
         product = mock(Product.class);
         when(product.getVatRate()).thenReturn(VatRate.VAT_HIGH);
@@ -229,8 +236,9 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         Order prevOrder = mock(Order.class);
 
         when(product.getMaxSoldPerCustomer()).thenReturn(1);
+        when(productService.getRelatedProducts(product)).thenReturn(ImmutableList.of(product));
         when(orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION)).thenReturn(ImmutableList.of(prevOrder));
-        when(ticketService.getAllByProductAndCustomer(product, customer)).thenReturn(ImmutableList.of(mock(Ticket.class)));
+        when(ticketService.getAllByProductsAndCustomer(List.of(product), customer)).thenReturn(ImmutableList.of(mock(Ticket.class)));
 
         thrown.expect(OrderExceedCustomerLimitException.class);
         thrown.expectMessage("Customer limit exceeded (max 0 tickets allowed).");
@@ -249,8 +257,9 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(prevOrder.getOrderProducts()).thenReturn(ImmutableList.of(prevOrderProduct));
 
         when(product.getMaxSoldPerCustomer()).thenReturn(1);
+        when(productService.getRelatedProducts(product)).thenReturn(ImmutableList.of(product));
         when(orderRepository.findAllByOwnerAndStatus(customer, OrderStatus.RESERVATION)).thenReturn(ImmutableList.of(prevOrder));
-        when(ticketService.getAllByProductAndCustomer(product, customer)).thenReturn(ImmutableList.of());
+        when(ticketService.getAllByProductsAndCustomer(List.of(product), customer)).thenReturn(ImmutableList.of());
 
         thrown.expect(OrderExceedCustomerLimitException.class);
         thrown.expectMessage("Customer limit exceeded (max 0 tickets allowed).");

@@ -6,6 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import ch.wisv.events.core.model.event.Event;
@@ -102,12 +106,28 @@ public class Product {
 
     @ManyToOne
     @JoinTable(name = "event_products", joinColumns = @JoinColumn(name = "products_id"))
+    @JsonIgnore
     public Event event;
+
+    /**
+     * Parent Product. Shares the product availability.
+     */
+    @ManyToOne
+    @JoinColumn(name = "parent_product_id")
+    public Product parentProduct;
+
+    /**
+     * Field childProducts.
+     */
+    @OneToMany(mappedBy = "parentProduct", cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.LAZY)
+    @JsonIgnore
+    public List<Product> childProducts;
 
     /**
      * Field productList.
      */
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
+    @JsonIgnore
     public List<Product> products;
 
     /**
@@ -196,13 +216,13 @@ public class Product {
      * @return progress of event
      */
     public double calcProgress() {
-        if (this.maxSold == null) {
+        if (this.getMaxSold() == null) {
             return 100.d;
-        } else if (this.sold == 0) {
+        } else if (this.getTotalSold() == 0) {
             return 0.d;
         }
 
-        return Math.round((((double) this.sold / (double) this.maxSold) * 100.d) * 100.d) / 100.d;
+        return Math.round((((double) this.getTotalSold() / (double) this.getMaxSold()) * 100.d) * 100.d) / 100.d;
     }
 
     /**
@@ -229,7 +249,50 @@ public class Product {
      * @return boolean
      */
     public boolean isSoldOut() {
-        return this.maxSold != null && this.sold >= this.maxSold;
+        return this.getMaxSold() != null && this.getTotalSold() >= this.getMaxSold();
     }
 
+    public Integer getMaxSold() {
+        // If the product has a parent product, return the maxSold of the parent product.
+        if (this.parentProduct != null) {
+            return this.parentProduct.getMaxSold();
+        }
+
+        return this.maxSold;
+    }
+
+    public Integer getMaxSoldPerCustomer() {
+        // If the product has a parent product, return the maxSoldPerCustomer of the parent product.
+        if (this.parentProduct != null) {
+            return this.parentProduct.getMaxSoldPerCustomer();
+        }
+
+        return this.maxSoldPerCustomer;
+    }
+
+    public Integer getTotalSold() {
+        // If the product has a parent product, return the total sold of the parent product.
+        if (this.parentProduct != null) {
+            return this.parentProduct.getTotalSold();
+        }
+
+        int totalSold = this.sold;
+        if (this.childProducts != null) {
+            for (Product childProduct : this.childProducts) {
+                totalSold += childProduct.getSold();
+            }
+        }
+
+        return totalSold;
+    }
+
+    // Custom toString
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

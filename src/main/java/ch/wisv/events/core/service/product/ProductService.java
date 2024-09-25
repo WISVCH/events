@@ -27,6 +27,20 @@ public interface ProductService {
     List<Product> getAvailableProducts();
 
     /**
+     * Get possible parent products.
+     *
+     * @return Collection of Products
+     */
+    List<Product> getPossibleParentProductsByProduct(Product product);
+
+    /**
+     * Get the parent, children, and sibling products, including the original product
+     *
+     * @return Collection of Products
+     */
+    List<Product> getRelatedProducts(Product product);
+
+    /**
      * Get Product by Key.
      *
      * @param key key of a Product

@@ -43,5 +43,15 @@
     "maxSold": 250,
     "maxSoldPerCustomer": 25,
     "key": "7a5b9158-a9e4-40f5-ad7f-586092274e63"
+  },
+  {
+    "title": "T.U.E.S.Day lecture ticket zonder eten",
+    "description": "Ticket for the T.U.E.S.Day lecture. Zonder eten.",
+    "cost": 0.00,
+    "vatRate": "VAT_HIGH",
+    "maxSold": 100,
+    "maxSoldPerCustomer": 4,
+    "parentProductNumber": 1,
+    "key": "dd729c96-dacf-4eab-a2e8-19d2a1ad917d"
   }
 ]

@@ -52,6 +52,16 @@ public interface TicketService {
     List<Ticket> getAllByProductAndCustomer(Product product, Customer customer);
 
     /**
+     * Get all Ticket for one of multiple products and Customer.
+     *
+     * @param products of type List<Product></Product>
+     * @param customer of type Customer
+     *
+     * @return List of Tickets
+     */
+    List<Ticket> getAllByProductsAndCustomer(List<Product> products, Customer customer);
+
+    /**
      * Get all Ticket by a Product.
      *
      * @param product of type Product

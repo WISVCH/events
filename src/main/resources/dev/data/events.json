@@ -7,7 +7,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumber": 1
+    "productNumbers": [1, 6]
   },
   {
     "title": "Symposium",
@@ -17,7 +17,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumber": 2
+    "productNumbers": [2]
   },
   {
     "title": "MatCH CH vision Music Festival",
@@ -27,7 +27,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumber": 4
+    "productNumbers": [4]
   },
   {
     "title": "WiFi Rally",
@@ -37,7 +37,7 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumber": 3
+    "productNumbers": [3]
   },
   {
     "title": "Annu drinks",
@@ -47,6 +47,6 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumber": 5
+    "productNumbers": [5]
   }
 ]

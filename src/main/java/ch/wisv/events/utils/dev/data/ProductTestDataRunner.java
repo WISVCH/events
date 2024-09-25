@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import ch.wisv.events.core.util.VatRate;
 import org.json.simple.JSONObject;
@@ -51,6 +52,11 @@ public class ProductTestDataRunner extends TestDataRunner {
         );
         product.setKey((String) jsonObject.get("key"));
         product.setMaxSoldPerCustomer(((Long) jsonObject.get("maxSoldPerCustomer")).intValue());
+        if (jsonObject.get("parentProductNumber") != null) {
+            Optional<Product> optional = this.productRepository.findById(((Long) jsonObject.get("parentProductNumber")).intValue());
+
+            optional.ifPresent(product::setParentProduct);
+        }
 
         return product;
     }

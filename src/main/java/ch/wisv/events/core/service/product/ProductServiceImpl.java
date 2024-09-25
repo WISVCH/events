@@ -8,9 +8,7 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,8 +51,45 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAvailableProducts() {
         return productRepository.findAllBySellStartBefore(LocalDateTime.now()).stream()
                 .filter(product -> (product.getSellEnd() == null || !product.getSellEnd()
-                        .isBefore(LocalDateTime.now())) && (product.getMaxSold() == null || product.getSold() < product.getMaxSold()))
+                        .isBefore(LocalDateTime.now())) && (product.getMaxSold() == null || product.getTotalSold() < product.getMaxSold()))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Get possible parent products.
+     *
+     * @return Collection of Products
+     */
+    @Override
+    public List<Product> getPossibleParentProductsByProduct(Product product) {
+        if (product.getEvent() == null) {
+            return new ArrayList<>();
+        }
+        return product.getEvent().getProducts().stream()
+                .filter(p -> p.getParentProduct() == null && !p.getKey().equals(product.getKey()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the parent, children, and sibling products, including the original product
+     *
+     * @return Collection of Products
+     */
+    @Override
+    public List<Product> getRelatedProducts(Product product) {
+        List<Product> result = new ArrayList<>();
+        Product parent = product;
+        while (parent.getParentProduct() != null) {
+            parent = parent.getParentProduct();
+        }
+        Queue<Product> q = new LinkedList<>();
+        q.add(parent);
+        while (!q.isEmpty()) {
+            Product p = q.remove();
+            result.add(p);
+            q.addAll(p.getChildProducts());
+        }
+        return result;
     }
 
     /**
@@ -125,6 +160,7 @@ public class ProductServiceImpl implements ProductService {
         model.setMaxSoldPerCustomer(product.getMaxSoldPerCustomer());
         model.setChOnly(product.isChOnly());
         model.setReservable(product.isReservable());
+        model.setParentProduct(product.getParentProduct());
 
         if (product.getSold() != 0) {
             model.setSold(product.getSold());
@@ -197,8 +233,12 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductInvalidException("It is not possible to add the same product twice or more!");
         }
 
-        if (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25) {
+        if (product.getParentProduct() == null && (product.getMaxSoldPerCustomer() == null || product.getMaxSoldPerCustomer() < 1 || product.getMaxSoldPerCustomer() > 25)) {
             throw new ProductInvalidException("Max sold per customer should be between 1 and 25!");
+        }
+
+        if (product.getParentProduct() != null && product.getChildProducts() != null && product.getChildProducts().size() > 0) {
+            throw new ProductInvalidException("A product can not have a parent product and be a parent product at the same time!");
         }
     }
 

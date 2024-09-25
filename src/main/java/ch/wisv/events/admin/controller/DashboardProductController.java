@@ -140,11 +140,18 @@ public class DashboardProductController extends DashboardController {
      *
      * @return thymeleaf template path
      */
-    @GetMapping("/edit/{key}")
+    @GetMapping({"/edit/{key}","/edit/{key}/"})
     public String edit(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             if (!model.containsAttribute(OBJ_PRODUCT)) {
                 model.addAttribute(OBJ_PRODUCT, productService.getByKey(key));
+            }
+            if (!model.containsAttribute(OBJ_PARENT_PRODUCTS)) {
+                model.addAttribute(OBJ_PARENT_PRODUCTS,
+                        productService.getPossibleParentProductsByProduct(
+                                (Product) model.getAttribute(OBJ_PRODUCT)
+                        )
+                );
             }
 
             return "admin/products/product";
@@ -164,7 +171,7 @@ public class DashboardProductController extends DashboardController {
      *
      * @return String
      */
-    @PostMapping("/edit/{key}")
+    @PostMapping({"/edit/{key}","/edit/{key}/"})
     public String update(RedirectAttributes redirect, @ModelAttribute Product product, @PathVariable String key) {
         try {
             product.setKey(key);
