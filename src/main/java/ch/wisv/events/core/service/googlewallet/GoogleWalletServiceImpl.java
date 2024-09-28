@@ -149,6 +149,7 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
                 .setHexBackgroundColor("#1e274a")
                 .setFaceValue(cost)
                 .setBarcode(new Barcode().setType("QR_CODE").setValue(ticket.getUniqueCode()))
+                .setGroupingInfo(new GroupingInfo().setGroupingId(ticket.product.event.getKey()).setSortIndex(1))
                 .setLinksModuleData(new LinksModuleData().setUris(Arrays.asList(tnc)));
     }
 
