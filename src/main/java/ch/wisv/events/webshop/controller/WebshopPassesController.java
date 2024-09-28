@@ -37,17 +37,9 @@ public class WebshopPassesController extends WebshopController {
      * Get wallet pass of ticket.
      */
     @GetMapping("/apple/{key}/wallet.pkpass")
-    public void getApplePass(HttpServletResponse response, @PathVariable  String key) throws IOException {
-        Customer customer = authenticationService.getCurrentCustomer();
-
+    public void getApplePass(HttpServletResponse response, @PathVariable String key) throws IOException {
         try {
             Ticket ticket = ticketService.getByKey(key);
-
-            if (!ticket.owner.equals(customer) && ticket.owner.isVerifiedChMember()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
             byte[] bytes = ticketService.getApplePass(ticket);
 
             response.setContentType("application/vnd.apple.pkpass");
@@ -68,17 +60,10 @@ public class WebshopPassesController extends WebshopController {
      */
     @GetMapping("/google/{key}")
     public void getGooglePass(HttpServletResponse response, @PathVariable String key) throws IOException {
-        Customer customer = authenticationService.getCurrentCustomer();
-
         try {
             Ticket ticket = ticketService.getByKey(key);
-
-            if (!ticket.owner.equals(customer) && ticket.owner.isVerifiedChMember()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
             String link = ticketService.getGooglePass(ticket);
+
             response.sendRedirect(link);
         }
         catch (TicketNotFoundException e) {
