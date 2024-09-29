@@ -107,6 +107,12 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
                 .setDescription("Terms & Conditions")
                 .setId("LINK_GTC");
 
+        String locationName = product.getEvent().getLocation();
+
+        if(locationName == null || locationName.trim().isEmpty()) {
+            locationName = "Unknown";
+        }
+
         return new EventTicketClass()
                 .setId(this.getClassId(product))
                 .setIssuerName("Christiaan Huygens")
@@ -120,7 +126,7 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
                         .setUri(homePage)
                         .setDescription("Events"))
                 .setVenue(new EventVenue()
-                        .setName(this.makeLocalString(product.getEvent().getLocation()))
+                        .setName(this.makeLocalString(locationName))
                         .setAddress(this.makeLocalString("Mekelweg 4, 2628 CD Delft")))
                 .setDateTime(new EventDateTime()
                         .setStart(this.formatDate(product.getEvent().getStart()))
@@ -143,6 +149,7 @@ public class GoogleWalletServiceImpl implements GoogleWalletService {
                 .setHexBackgroundColor("#1e274a")
                 .setFaceValue(cost)
                 .setBarcode(new Barcode().setType("QR_CODE").setValue(ticket.getUniqueCode()))
+                .setGroupingInfo(new GroupingInfo().setGroupingId(ticket.product.event.getKey()).setSortIndex(1))
                 .setLinksModuleData(new LinksModuleData().setUris(Arrays.asList(tnc)));
     }
 

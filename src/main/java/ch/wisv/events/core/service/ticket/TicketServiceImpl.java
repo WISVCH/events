@@ -285,9 +285,8 @@ public class TicketServiceImpl implements TicketService {
     public byte[] getApplePass(Ticket ticket) throws TicketPassFailedException {
         try {
             RestTemplate restTemplate = new RestTemplate();
-
-
             Map<String, String> params = new HashMap<>();
+
             params.put("title", ticket.getProduct().getTitle());
             params.put("description", ticket.getProduct().getDescription());
             params.put("date", ticket.getProduct().getEvent().getStart().format(DateTimeFormatter.ISO_LOCAL_DATE));
