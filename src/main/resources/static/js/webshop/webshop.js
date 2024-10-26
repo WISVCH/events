@@ -75,6 +75,7 @@ var ShoppingBasket;
                 var shoppingBasketTable = "";
                 var shoppingBasketTotal = 0;
                 var countItems = 0;
+                var administrationCosts = 0;
 
                 $.each(ShoppingBasket.shoppingBasket, function (index, product) {
                     var rowBlueprint = "<tr><td>%s</td><td><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span class='px-4'>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></td><td>&euro; %s</td></tr>";
@@ -90,7 +91,19 @@ var ShoppingBasket;
                     countItems += product.amount;
 
                     shoppingBasketTotal += product.amount * product.cost;
+
+                    if (product.cost > 0) {
+                        administrationCosts = administrationCostsSetting;
+                    }
                 });
+
+                var rowBlueprint = "<tr><td>Administration costs</td><td><td>&euro; %s</td></tr>";
+
+                shoppingBasketTable += vsprintf(rowBlueprint, [
+                    parseFloat(Math.round(administrationCosts * 100) / 100).toFixed(2).replace(".", ",")
+                ]);
+
+                shoppingBasketTotal += administrationCosts;
 
                 $("#shoppingBasketTable").html(shoppingBasketTable);
                 $("#shoppingBasketCount").html(countItems);

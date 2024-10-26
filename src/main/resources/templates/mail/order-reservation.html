@@ -325,6 +325,20 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
+                                                            <td class="white-header"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                                Administration costs
+                                                            </td>
+                                                            <td class="white-header"
+                                                                th:text="'€ ' + ${#numbers.formatDecimal(order.getAdministrationCosts(), 1, 'POINT', 2, 'COMMA')}"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                            </td>
+                                                            <td class="white-header"
+                                                                colspan="2"
+                                                                style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #f3f3f3;padding: 5px;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
                                                             <td class="grey-header"
                                                                 style="font-family: Arial, sans-serif;color: #5e5e5e;font-size: 16px;text-align: left;border-collapse: collapse;background-color: #dedede;padding: 5px;font-weight: bold;">
                                                                 Total

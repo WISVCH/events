@@ -18,6 +18,7 @@ import ch.wisv.events.core.service.ticket.TicketService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,6 +38,12 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
     /** EventService. */
     private final EventService eventService;
+
+    /**
+     * Possible administration costs value
+     */
+    @Value("${administrationCosts}")
+    private double administrationCosts;
 
     /**
      * OrderValidationServiceImpl constructor.
@@ -133,10 +140,18 @@ public class OrderValidationServiceImpl implements OrderValidationService {
             throw new OrderInvalidException("Order amount can not be null");
         }
 
+        Double administrationCostShouldBe = order.getOrderProducts().stream()
+                .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
+                .anyMatch(c -> c > 0.0) ? administrationCosts : 0.0;
+
+        if (!order.getAdministrationCosts().equals(administrationCostShouldBe)) {
+            throw new OrderInvalidException("Order administration costs does not match");
+        }
+
         Double amountShouldBe = order.getOrderProducts()
                 .stream()
                 .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
-                .sum();
+                .sum() + order.getAdministrationCosts();
 
         if (!order.getAmount().equals(amountShouldBe)) {
             throw new OrderInvalidException("Order amount does not match");

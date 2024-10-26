@@ -131,9 +131,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         String returnUrl = clientUri + "/return/" + order.getPublicReference();
         String webhookUrl = clientUri + "/api/v1/orders/status";
 
-        double value = order.getOrderProducts().stream()
-                .mapToDouble(op -> op.getPrice() * op.getAmount())
-                .sum();
+        double value = order.getAmount();
 
         value = order.getPaymentMethod().calculateCostIncludingTransaction(value);  
         Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING)).currency("EUR").build();
