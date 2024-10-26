@@ -90,3 +90,5 @@ googleWallet:
   issuerId: 3388000000022297569
   origin: https://ch.tudelft.nl/events
   baseUrl: https://ch.tudelft.nl/events
+
+administrationCosts: 0.35
