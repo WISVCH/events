@@ -36,7 +36,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -62,30 +64,35 @@ import static org.mockito.Mockito.when;
 public class OrderServiceImplTest extends ServiceTest {
 
     /** OrderRepository. */
-    @Mock
+    @MockBean
     private OrderRepository orderRepository;
 
     /** OrderProductRepository. */
-    @Mock
+    @MockBean
     private OrderProductRepository orderProductRepository;
 
     /** OrderValidationService. */
-    @Mock
+    @MockBean
     private OrderValidationService orderValidationService;
 
     /** ProductService. */
-    @Mock
+    @MockBean
     private ProductService productService;
 
     /** MailService. */
-    @Mock
+    @MockBean
     private MailService mailService;
 
     /** TicketService. */
-    @Mock
+    @MockBean
     private TicketService ticketService;
 
+    /** Administration Costs*/
+    @Value("${administrationCosts}")
+    private double administrationCosts;
+
     /** OrderService. */
+    @Autowired
     private OrderService orderService;
 
     /** Order. */
@@ -99,21 +106,14 @@ public class OrderServiceImplTest extends ServiceTest {
      */
     @Before
     public void setUp() {
-        orderService = new OrderServiceImpl(
-                orderRepository,
-                orderProductRepository,
-                orderValidationService,
-                productService,
-                mailService,
-                ticketService
-        );
         product = mock(Product.class);
         when(product.getVatRate()).thenReturn(VatRate.VAT_HIGH);
 
         order = new Order();
         order.setOwner(mock(Customer.class));
         order.setCreatedBy("events-online");
-        order.setAmount(1.d);
+        order.setAdministrationCosts(administrationCosts);
+        order.setAmount(1.d + administrationCosts);
         order.setPaymentMethod(PaymentMethod.CASH);
         order.setStatus(OrderStatus.PAID);
         order.updateOrderAmount();
@@ -270,6 +270,48 @@ public class OrderServiceImplTest extends ServiceTest {
         Order order = orderService.createOrderByOrderProductDto(orderProductDto);
 
         assertEquals(order.getOrderProducts(), ImmutableList.of(new OrderProduct(mockProduct, 1.d, 1L)));
+    }
+
+    /**
+     * Administration costs
+     */
+    @Test
+    public void testCreateByOrderProductDtoAdministrationCosts() throws Exception {
+        HashMap<String, Long> products = new HashMap<>();
+        products.put("123-345-456", 1L);
+        OrderProductDto orderProductDto = new OrderProductDto();
+        orderProductDto.setProducts(products);
+
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getCost()).thenReturn(1.d);
+        when(mockProduct.getVatRate()).thenReturn(VatRate.VAT_HIGH);
+        when(productService.getByKey("123-345-456")).thenReturn(mockProduct);
+
+        Order order = orderService.createOrderByOrderProductDto(orderProductDto);
+
+        assertEquals((Double) administrationCosts, order.getAdministrationCosts());
+        assertEquals((Double) (1d + administrationCosts), order.getAmount());
+    }
+
+    /**
+     * No administration costs
+     */
+    @Test
+    public void testCreateByOrderProductDtoNoAdministrationCosts() throws Exception {
+        HashMap<String, Long> products = new HashMap<>();
+        products.put("123-345-456", 1L);
+        OrderProductDto orderProductDto = new OrderProductDto();
+        orderProductDto.setProducts(products);
+
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getCost()).thenReturn(0d);
+        when(mockProduct.getVatRate()).thenReturn(VatRate.VAT_HIGH);
+        when(productService.getByKey("123-345-456")).thenReturn(mockProduct);
+
+        Order order = orderService.createOrderByOrderProductDto(orderProductDto);
+
+        assertEquals((Double) 0d, order.getAdministrationCosts());
+        assertEquals((Double) 0d, order.getAmount());
     }
 
     /**
