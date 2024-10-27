@@ -141,7 +141,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         }
 
         Double administrationCostShouldBe = order.getOrderProducts().stream()
-                .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
+                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
                 .anyMatch(c -> c > 0.0) ? administrationCosts : 0.0;
 
         if (!order.getAdministrationCosts().equals(administrationCostShouldBe)) {
