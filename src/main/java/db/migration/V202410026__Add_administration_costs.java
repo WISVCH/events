@@ -20,7 +20,7 @@ public class V202410026__Add_administration_costs extends BaseJavaMigration {
      */
     public void migrate(Context context) throws Exception {
         try (Statement select = context.getConnection().createStatement()) {
-            select.execute("ALTER TABLE public.orders ADD COLUMN administrationCosts DOUBLE PRECISION NOT NULL DEFAULT 0");
+            select.execute("ALTER TABLE public.orders ADD COLUMN administration_costs DOUBLE PRECISION NOT NULL DEFAULT 0");
         }
     }
 
