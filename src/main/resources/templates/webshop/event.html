@@ -218,6 +218,11 @@
 <script th:src="@{/webjars/sprintf.js/1.0.0/sprintf.min.js}"></script>
 <script th:src="@{/js/js.storage.min.js}"></script>
 <script th:src="@{/js/webshop/webshop.min.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var administrationCostsSetting = /*[[${administrationCosts}]]*/ 0.67;
+    /*]]>*/
+</script>
 <script>
     jQuery(document).ready(function ($) {
         ShoppingBasket.init();

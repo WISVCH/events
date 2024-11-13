@@ -35,6 +35,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,6 +91,10 @@ public abstract class ControllerTest {
 
     @Autowired
     protected WebhookTaskRepository webhookTaskRepository;
+
+    /** Administration Costs*/
+    @Value("${administrationCosts}")
+    private double administrationCosts;
 
     /**
      * Other.
@@ -177,6 +182,9 @@ public abstract class ControllerTest {
 
         products.forEach(product -> {
             OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
+            if (product.getCost() > 0) {
+                order.setAdministrationCosts(administrationCosts);
+            }
             orderProductRepository.saveAndFlush(orderProduct);
             order.addOrderProduct(orderProduct);
         });

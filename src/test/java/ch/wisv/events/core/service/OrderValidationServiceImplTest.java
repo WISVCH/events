@@ -17,7 +17,6 @@ import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.repository.OrderRepository;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.order.OrderValidationService;
-import ch.wisv.events.core.service.order.OrderValidationServiceImpl;
 import ch.wisv.events.core.service.product.ProductService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import ch.wisv.events.core.util.VatRate;
@@ -29,7 +28,10 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,22 +41,27 @@ import static org.mockito.Mockito.when;
 public class OrderValidationServiceImplTest extends ServiceTest {
 
     /** OrderService. */
-    @Mock
+    @MockBean
     private OrderRepository orderRepository;
 
     /** TicketService. */
-    @Mock
+    @MockBean
     private TicketService ticketService;
 
     /** ProductService. */
-    @Mock
+    @MockBean
     private ProductService productService;
 
     /** EventService. */
-    @Mock
+    @MockBean
     private EventService eventService;
 
+    /** Administration Costs*/
+    @Value("${administrationCosts}")
+    private double administrationCosts;
+
     /** OrderValidationService. */
+    @Autowired
     private OrderValidationService orderValidationService;
 
     private Order order;
@@ -63,15 +70,14 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Before
     public void setUp() {
-        orderValidationService = new OrderValidationServiceImpl(orderRepository, ticketService, productService, eventService);
-
         product = mock(Product.class);
         when(product.getVatRate()).thenReturn(VatRate.VAT_HIGH);
 
         order = new Order();
         order.setOwner(mock(Customer.class));
         order.setCreatedBy("events-online");
-        order.setAmount(1.d);
+        order.setAmount(1d + administrationCosts);
+        order.setAdministrationCosts(administrationCosts);
         order.setPaymentMethod(PaymentMethod.CASH);
         order.setStatus(OrderStatus.PAID);
         order.updateOrderAmount();
@@ -85,6 +91,17 @@ public class OrderValidationServiceImplTest extends ServiceTest {
     @After
     public void tearDown() {
         orderValidationService = null;
+    }
+
+    @Test
+    public void assertOrderIsValidInvalidWrongAdministrationCosts() throws Exception {
+        order.setAdministrationCosts(0.0);
+        order.setAmount(1.0);
+
+        thrown.expect(OrderInvalidException.class);
+        thrown.expectMessage("Order administration costs does not match");
+
+        orderValidationService.assertOrderIsValid(order);
     }
 
     @Test
@@ -109,7 +126,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertOrderIsValidInvalidCreatedBy() throws Exception {
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
         order.setCreatedBy(null);
 
@@ -122,6 +139,8 @@ public class OrderValidationServiceImplTest extends ServiceTest {
     @Test
     public void assertOrderIsValidNoProducts() throws Exception {
         order.setOrderProducts(ImmutableList.of());
+        order.setAdministrationCosts(0d);
+        order.setAmount(0d);
 
         thrown.expect(OrderInvalidException.class);
         thrown.expectMessage("Order should contain products");
@@ -140,7 +159,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(null);
         when(product.getVatRate()).thenReturn(VatRate.VAT_FREE);
 
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
@@ -156,7 +175,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(null);
 
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
 
         thrown.expect(OrderExceedEventLimitException.class);
@@ -172,7 +191,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(null);
 
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
@@ -188,7 +207,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(10);
 
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
 
         thrown.expect(OrderExceedProductLimitException.class);
@@ -269,7 +288,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertOrderIsValidForIdealPayment() throws Exception {
-        order.setAmount(1.d);
+        order.setAmount(1.d + administrationCosts);
         order.setVat(0.17d);
         order.setStatus(OrderStatus.PENDING);
 
@@ -301,7 +320,8 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(0);
         when(product.getMaxSold()).thenReturn(10);
 
-        order.setAmount(1.d);
+        order.setAmount(1.0 + administrationCosts);
+        order.setAdministrationCosts(administrationCosts);
         order.setVat(0.17d);
 
         orderValidationService.assertOrderIsValid(order);

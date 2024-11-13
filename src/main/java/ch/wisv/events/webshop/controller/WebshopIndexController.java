@@ -32,6 +32,9 @@ public class WebshopIndexController extends WebshopController {
     /** Model attr of the OrderProductDTO. */
     private static final String MODEL_ATTR_ORDER_PRODUCT = "orderProduct";
 
+    /** Model attr administrationCosts.  */
+    private static final String MODEL_ATTR_ADMINISTRATION_COSTS = "administrationCosts";
+
     /** EventService. */
     private final EventService eventService;
 
@@ -44,6 +47,13 @@ public class WebshopIndexController extends WebshopController {
     @Value("${links.gtc}")
     @NotNull
     private String linkGTC;
+
+    /**
+     * Possible administration costs value
+     */
+    @Value("${administrationCosts}")
+    @NotNull
+    private double administrationCosts;
 
     /**
      * WebshopController constructor.
@@ -77,6 +87,7 @@ public class WebshopIndexController extends WebshopController {
         model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
         model.addAttribute(MODEL_ATTR_EVENTS, webshopService.filterEventProductNotSalable(upcoming));
         model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
+        model.addAttribute(MODEL_ATTR_ADMINISTRATION_COSTS, administrationCosts);
         model.addAttribute("linkGTC", linkGTC);
 
         return "webshop/index";
@@ -96,6 +107,7 @@ public class WebshopIndexController extends WebshopController {
             model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
             model.addAttribute(MODEL_ATTR_EVENT, webshopService.filterEventProductNotSalable(eventService.getByKey(key)));
             model.addAttribute(MODEL_ATTR_ORDER_PRODUCT, new OrderProductDto());
+            model.addAttribute(MODEL_ATTR_ADMINISTRATION_COSTS, administrationCosts);
 
             return "webshop/event";
         } catch (EventNotFoundException e) {

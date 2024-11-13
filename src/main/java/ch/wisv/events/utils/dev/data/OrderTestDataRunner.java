@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,12 @@ public class OrderTestDataRunner extends TestDataRunner {
 
     /** TicketRepository. */
     private final TicketRepository ticketRepository;
+
+    /**
+     * Possible administration costs value
+     */
+    @Value("${administrationCosts}")
+    private double administrationCosts;
 
     /**
      * Constructor EventTestDataRunner creates a new EventTestDataRunner instance.
@@ -101,6 +108,10 @@ public class OrderTestDataRunner extends TestDataRunner {
             orderProduct.setVatRate(product.getVatRate());
 
             orderProductRepository.saveAndFlush(orderProduct);
+
+            if(orderProduct.getPrice() > 0.0){
+                order.setAdministrationCosts(administrationCosts);
+            }
 
             order.addOrderProduct(orderProduct);
             order.getOrderProducts().forEach(x -> {

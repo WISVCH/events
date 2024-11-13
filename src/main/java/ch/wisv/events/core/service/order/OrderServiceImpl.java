@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -78,6 +79,12 @@ public class OrderServiceImpl implements OrderService {
      * TicketService.
      */
     private final TicketService ticketService;
+
+    /**
+     * Possible administration costs value
+     */
+    @Value("${administrationCosts}")
+    private double administrationCosts;
 
     /**
      * Constructor OrderServiceImpl creates a new OrderServiceImpl instance.
@@ -154,6 +161,10 @@ public class OrderServiceImpl implements OrderService {
         for (Map.Entry<String, Long> values : orderProductDto.getProducts().entrySet()) {
             if (values.getValue() > 0) {
                 Product product = productService.getByKey(values.getKey());
+
+                if(product.getCost() > 0){
+                    order.setAdministrationCosts(administrationCosts);
+                }
 
                 order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));
             }

@@ -131,6 +131,11 @@
                                                         <td th:text="${orderProduct.getAmount()}"></td>
                                                         <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td scope="row">Administration costs</td>
+                                                        <td></td>
+                                                        <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAdministrationCosts(), 1, 'POINT', 2, 'COMMA')}"></td>
+                                                    </tr>
                                                     </tbody>
                                                     <tfoot>
                                                     <tr>
