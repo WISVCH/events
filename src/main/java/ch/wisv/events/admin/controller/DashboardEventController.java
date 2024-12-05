@@ -5,6 +5,7 @@ import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.ticket.Ticket;
+import ch.wisv.events.core.model.ticket.TicketStatus;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.service.document.DocumentService;
 import ch.wisv.events.core.service.event.EventService;
@@ -265,9 +266,9 @@ public class DashboardEventController extends DashboardController {
                     .flatMap(product -> ticketService.getAllByProduct(product).stream())
                     .collect(Collectors.toList());
             String csvData = tickets.stream()
-                    .map(t -> t.getOwner().getName() + ";" + t.getOwner().getEmail() + ";" + t.getProduct().title)
+                    .map(t -> t.getOwner().getName() + ";" + t.getOwner().getEmail() + ";" + (t.getStatus() == TicketStatus.SCANNED ? "Yes" : "No") + ";" + t.getProduct().title)
                     .collect(Collectors.joining("\n"));
-            csvData = "Name;Email;Product\n" + csvData;
+            csvData = "Name;Email;Scanned;Product\n" + csvData;
             InputStream bufferedInputStream = new ByteArrayInputStream(csvData.getBytes(StandardCharsets.UTF_8));
             InputStreamResource fileInputStream = new InputStreamResource(bufferedInputStream);
 
