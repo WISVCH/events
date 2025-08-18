@@ -31,13 +31,19 @@ public enum PaymentMethod {
 
     /**
      * User paid his order via Mollie.
+     * Only using mollie for IDeal right now so easier this way.
      */
-    MOLLIE("mollie", cost -> cost),
+    MOLLIE("mollie", cost -> cost + 0.35),
 
     /**
      * User paid his order via another method.
      */
-    OTHER("other", cost -> cost);
+    OTHER("other", cost -> cost),
+
+    /**
+     * User paid his order with the best service on God's green earth.
+     */
+    CHPAY("CHpay", cost -> cost);
 
     /** gets the name. */
     @Getter
@@ -61,6 +67,10 @@ public enum PaymentMethod {
      */
     public double calculateCostIncludingTransaction(double cost) {
         return Math.round(transactionCost.apply(cost) * 100.d) / 100.d;
+    }
+
+    public double calculateAdministrativeCosts(double cost) {
+        return Math.round(calculateCostIncludingTransaction(cost) - cost);
     }
 
     /**

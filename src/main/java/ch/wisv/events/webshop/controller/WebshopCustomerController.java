@@ -8,6 +8,7 @@ import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.customer.CustomerService;
 import ch.wisv.events.core.service.order.OrderService;
@@ -29,7 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class WebshopCustomerController extends WebshopController {
 
     /** Redirect to the payment page. */
-    private static final String REDIRECT_CHECKOUT_PAYMENT = "redirect:/checkout/%s/payment";
+    private static final String REDIRECT_CHECKOUT_PAYMENT = "redirect:/checkout/%s";
 
     /** Redirect to the customer create page. */
     private static final String REDIRECT_CHECKOUT_CUSTOMER_GUEST = "redirect:/checkout/%s/customer/guest";
@@ -106,6 +107,34 @@ public class WebshopCustomerController extends WebshopController {
             Customer customer = authenticationService.getCurrentCustomer();
             orderService.addCustomerToOrder(order, customer);
 
+            //Hardcode the payments using CHConnect to mollie
+            order.setPaymentMethod(PaymentMethod.MOLLIE);
+            orderService.update(order);
+
+            return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
+        } catch (EventsException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+
+            return REDIRECT_EVENTS_HOME;
+        }
+    }
+
+
+    @GetMapping("/chpay")
+    @PreAuthorize("hasRole('USER')")
+    public String customerCHPay(RedirectAttributes redirect, @PathVariable String key) {
+        try {
+            Order order = orderService.getByReference(key);
+            if (this.orderCheck(order) != null) {
+                return this.orderCheck(order);
+            }
+
+            Customer customer = authenticationService.getCurrentCustomer();
+            orderService.addCustomerToOrder(order, customer);
+
+            order.setPaymentMethod(PaymentMethod.CHPAY);
+            orderService.update(order);
+
             return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
@@ -135,6 +164,10 @@ public class WebshopCustomerController extends WebshopController {
                 model.addAttribute(MODEL_ATTR_CUSTOMER, new Customer());
             }
             model.addAttribute(MODEL_ATTR_ORDER, order);
+
+            //Guest payments go through Mollie for now, should be updated if more payment methods are supported down the line.
+            order.setPaymentMethod(PaymentMethod.MOLLIE);
+            orderService.update(order);
 
             return "webshop/checkout/create";
         } catch (EventsException e) {

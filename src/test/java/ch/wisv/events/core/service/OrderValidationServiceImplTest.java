@@ -76,8 +76,8 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         order = new Order();
         order.setOwner(mock(Customer.class));
         order.setCreatedBy("events-online");
-        order.setAmount(1d + administrationCosts);
-        order.setAdministrationCosts(administrationCosts);
+        order.setAmount(1d);
+        order.setAdministrationCosts(0d);
         order.setPaymentMethod(PaymentMethod.CASH);
         order.setStatus(OrderStatus.PAID);
         order.updateOrderAmount();
@@ -95,7 +95,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertOrderIsValidInvalidWrongAdministrationCosts() throws Exception {
-        order.setAdministrationCosts(0.0);
+        order.setAdministrationCosts(0.35);
         order.setAmount(1.0);
 
         thrown.expect(OrderInvalidException.class);
@@ -126,7 +126,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertOrderIsValidInvalidCreatedBy() throws Exception {
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
         order.setCreatedBy(null);
 
@@ -159,7 +159,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getMaxSold()).thenReturn(null);
         when(product.getVatRate()).thenReturn(VatRate.VAT_FREE);
 
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
@@ -175,7 +175,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(null);
 
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
 
         thrown.expect(OrderExceedEventLimitException.class);
@@ -191,7 +191,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(null);
 
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
         orderValidationService.assertOrderIsValid(order);
     }
@@ -207,7 +207,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(1);
         when(product.getMaxSold()).thenReturn(10);
 
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
 
         thrown.expect(OrderExceedProductLimitException.class);
@@ -288,7 +288,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
 
     @Test
     public void assertOrderIsValidForIdealPayment() throws Exception {
-        order.setAmount(1.d + administrationCosts);
+        order.setAmount(1.d);
         order.setVat(0.17d);
         order.setStatus(OrderStatus.PENDING);
 
@@ -320,8 +320,7 @@ public class OrderValidationServiceImplTest extends ServiceTest {
         when(product.getReserved()).thenReturn(0);
         when(product.getMaxSold()).thenReturn(10);
 
-        order.setAmount(1.0 + administrationCosts);
-        order.setAdministrationCosts(administrationCosts);
+        order.setAmount(1.0);
         order.setVat(0.17d);
 
         orderValidationService.assertOrderIsValid(order);

@@ -54,6 +54,11 @@
                         Checkout through CH Connect
                     </a>
 
+                    <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chpay'}"
+                       class="btn btn-block btn-info my-2">
+                        Checkout with CHPay
+                    </a>
+
                     <p class="text-muted">
                         CH member and unable to use CH Connect? Please send an email to
                         <a href="mailto:board@ch.tudelft.nl">board@ch.tudelft.nl</a>
@@ -61,8 +66,8 @@
                     </p>
                 </div>
                 <div class="col-12 col-md-2">
+                    <div class="d-flex align-self-stretch h-100 justify-content-center">
                     <div class="d-flex flex-column align-self-stretch align-items-center h-100">
-                        <div class="d-flex align-self-stretch h-100 justify-content-center">
                             <div class="vertical-line"></div>
                         </div>
                         <h4 class="my-3">or</h4>

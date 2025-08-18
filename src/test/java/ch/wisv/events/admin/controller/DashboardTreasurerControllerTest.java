@@ -5,6 +5,7 @@ import ch.wisv.events.EventsApplicationTest;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
+import ch.wisv.events.core.model.order.PaymentMethod;
 import ch.wisv.events.core.model.product.Product;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,9 +35,11 @@ public class DashboardTreasurerControllerTest extends ControllerTest {
         Product product = this.createProduct();
         Customer customer = this.createCustomer();
         Order order = this.createOrder(customer, ImmutableList.of(product), OrderStatus.PENDING, "test");
+        order.setPaymentMethod(PaymentMethod.IDEAL);
         orderService.updateOrderStatus(order, OrderStatus.PAID);
 
         Order order1 = this.createOrder(customer, ImmutableList.of(product), OrderStatus.PENDING, "test");
+        order1.setPaymentMethod(PaymentMethod.IDEAL);
         orderService.updateOrderStatus(order1, OrderStatus.PAID);
 
         Map<LocalDate, Map<String, Triple<Double, Integer, String>>> map = new TreeMap<>();

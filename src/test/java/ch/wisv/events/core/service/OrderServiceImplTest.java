@@ -289,8 +289,7 @@ public class OrderServiceImplTest extends ServiceTest {
 
         Order order = orderService.createOrderByOrderProductDto(orderProductDto);
 
-        assertEquals((Double) administrationCosts, order.getAdministrationCosts());
-        assertEquals((Double) (1d + administrationCosts), order.getAmount());
+        assertEquals((Double) (1d), order.getAmount());
     }
 
     /**

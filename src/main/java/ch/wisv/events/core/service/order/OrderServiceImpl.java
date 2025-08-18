@@ -162,10 +162,6 @@ public class OrderServiceImpl implements OrderService {
             if (values.getValue() > 0) {
                 Product product = productService.getByKey(values.getKey());
 
-                if(product.getCost() > 0){
-                    order.setAdministrationCosts(administrationCosts);
-                }
-
                 order.addOrderProduct(new OrderProduct(product, product.getCost(), values.getValue()));
             }
         }
@@ -191,6 +187,14 @@ public class OrderServiceImpl implements OrderService {
         old.setOwner(order.getOwner());
         old.setPaymentMethod(order.getPaymentMethod());
         old.setChPaymentsReference(order.getChPaymentsReference());
+
+        if(order.getPaymentMethod() != null) {
+            //This is hideous
+            if(order.getAmount() > 0) {
+                old.setAdministrationCosts(order.getPaymentMethod().calculateAdministrativeCosts(order.getAmount()));
+            }
+        }
+
         old.updateOrderAmount();
 
         orderRepository.saveAndFlush(order);

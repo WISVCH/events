@@ -1,4 +1,4 @@
-package ch.wisv.events.admin.controller;
+ package ch.wisv.events.admin.controller;
 
 import ch.wisv.events.core.admin.TreasurerData;
 import ch.wisv.events.core.admin.SalesExportSubmission;

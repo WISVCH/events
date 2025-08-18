@@ -82,7 +82,7 @@ public class WebshopCheckoutController extends WebshopController {
             orderValidationService.assertOrderIsValid(order);
             orderService.create(order);
 
-            return "redirect:/checkout/" + order.getPublicReference();
+            return "redirect:/checkout/" + order.getPublicReference() + "/customer";
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 

@@ -49,7 +49,7 @@ public class WebshopCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/customer"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"));
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference()));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class WebshopCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/customer"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"));
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference()));
     }
 
     /**
@@ -92,7 +92,7 @@ public class WebshopCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/customer/guest"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"));
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference()));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class WebshopCustomerControllerTest extends ControllerTest {
                                 .param("email", "email@ch.tudelft.nl")
                                 .sessionAttr("customer", new Customer()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment"));
+                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference()));
     }
 
     @Test

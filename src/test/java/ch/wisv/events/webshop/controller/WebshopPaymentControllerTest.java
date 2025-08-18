@@ -27,6 +27,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
     /**
      * Overview tests
      */
+
     @Test
     public void testPaymentOverview() throws Exception {
         Order order = this.createPaymentOrder(OrderStatus.ASSIGNED, "events-webshop");

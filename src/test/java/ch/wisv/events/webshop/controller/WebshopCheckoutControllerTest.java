@@ -43,7 +43,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                         .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/checkout/*"));
+                .andExpect(redirectedUrlPattern("/checkout/*/customer"));
 
         Order order = orderRepository.findAll().get(0);
 
@@ -112,7 +112,7 @@ public class WebshopCheckoutControllerTest extends ControllerTest {
                         .param("agreedGTC", "True")
                         .sessionAttr("orderProduct", new OrderProductDto()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/checkout/*"));
+                .andExpect(redirectedUrlPattern("/checkout/*/customer"));
     }
 
     @Test

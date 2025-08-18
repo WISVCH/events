@@ -90,7 +90,7 @@ public class WebshopPaymentController extends WebshopController {
                 return "webshop/payment/index";
             }
 
-            return "redirect:/checkout/" + order.getPublicReference() + "/payment/mollie";
+            return "redirect:/checkout/" + order.getPublicReference() + "/payment/" + order.getPaymentMethod().toString().toLowerCase();
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
@@ -131,6 +131,11 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/mollie")
     public String paymentMollie(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.MOLLIE);
+    }
+
+    @GetMapping("/chpay")
+    public String paymentChPay(RedirectAttributes redirect, @PathVariable String key) {
+        return this.chPayPayment(redirect, key);
     }
 
     /**
@@ -195,6 +200,21 @@ public class WebshopPaymentController extends WebshopController {
             orderValidationService.assertOrderIsValidForPayment(order);
 
             return "redirect:" + paymentsService.getMollieUrl(order);
+        } catch (OrderNotFoundException | OrderInvalidException e) {
+            redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
+
+            return REDIRECT_EVENTS_HOME;
+        }
+    }
+
+    public String chPayPayment(RedirectAttributes redirect, String key) {
+        try {
+            Order order = this.getOrderAndCheck(key);
+            order.setStatus(OrderStatus.PENDING);
+            orderService.update(order);
+            orderValidationService.assertOrderIsValidForPayment(order);
+
+            return "redirect:" + paymentsService.getCHpayUrl(order);
         } catch (OrderNotFoundException | OrderInvalidException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
