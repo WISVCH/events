@@ -215,8 +215,7 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         double value = order.getAmount();
 
-        PaymentMethod paymentMethod = order.getPaymentMethod();
-
+        value = order.getPaymentMethod().calculateCostIncludingTransaction(value);
         Amount paymentAmount = Amount.builder().value(BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING)).currency("EUR").build();
 
         return PaymentRequest.builder()
