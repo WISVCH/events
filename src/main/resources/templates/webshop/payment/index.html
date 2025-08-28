@@ -47,48 +47,21 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-md-6 mb-4"
-                     th:if="${order.paymentMethod == T(ch.wisv.events.core.model.order.PaymentMethod).CHPAY}">
+                <div class="col-12 col-md-6 mb-4">
                     <div class="card h-100">
                         <div class="card-body h-100">
                             <div class="row h-100">
                                 <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-now.png}" alt="CHPay">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-now.png}" alt="">
                                 </div>
                                 <div class="col-9 h-100">
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">Pay with CHPay</h5><br/>
+                                            <h5 class="d-inline mt-0">Pay Online</h5> - Pay now using iDeal<br>
                                         </div>
-                                        <div class="col-12 align-self-end">
-                                            <a th:href="@{'/checkout/' + ${order.publicReference} + '/payment/chpay'}"
-                                               class="btn btn-block btn-primary">
-                                                Pay with CHPay
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- iDEAL/Mollie payment option (fallback if not CHPay) -->
-                <div class="col-12 col-md-6 mb-4"
-                     th:if="${order.paymentMethod != T(ch.wisv.events.core.model.order.PaymentMethod).CHPAY}">
-                    <div class="card h-100">
-                        <div class="card-body h-100">
-                            <div class="row h-100">
-                                <div class="col-3 px-3">
-                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-now.png}" alt="iDEAL">
-                                </div>
-                                <div class="col-9 h-100">
-                                    <div class="row h-100">
-                                        <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">Pay Online</h5> – Pay now using iDEAL<br/>
-                                        </div>
                                         <div class="col-12 align-self-end">
-                                            <a th:href="@{'/checkout/' + ${order.publicReference} + '/payment/mollie'}"
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/mollie'}"
                                                class="btn btn-block btn-primary">
                                                 Pay Online
                                             </a>
@@ -99,7 +72,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-md-6 mb-4" th:if="${customer != null}">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-3 px-3">
+                                    <img class="img-thumbnail" th:src="@{/images/icon-pay-now.png}" alt="">
+                                </div>
+                                <div class="col-9 h-100">
+                                    <div class="row h-100">
+                                        <div class="col-12 align-self-start mb-4">
+                                            <h5 class="d-inline mt-0">CHPay</h5> - Pay now using CHPay<br>
+                                        </div>
 
+                                        <div class="col-12 align-self-end">
+                                            <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment/chpay'}"
+                                               class="btn btn-block btn-primary">
+                                                CHPay
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 col-md-6 mb-4" th:if="${containsOnlyReservable}">
                     <div class="card h-100">
                         <div class="card-body h-100">
