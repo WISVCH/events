@@ -84,9 +84,9 @@
                         <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/cancel'}" class="btn btn-light">
                             Cancel
                         </a>
-                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment'}"
-                           class="btn btn-primary">
-                            Proceed to Payment
+                        <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer'}"
+                           class="btn btn-secondary">
+                            Next
                             <i class="fa fa-fw fa-arrow-right"></i>
                         </a>
                     </div>
