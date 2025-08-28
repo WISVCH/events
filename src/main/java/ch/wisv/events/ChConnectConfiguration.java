@@ -120,13 +120,11 @@ public class ChConnectConfiguration {
             Collection<String> groups = (Collection<String>) idToken.getClaims().get(claimName);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(roleUser);
-            if(groups != null) {
-                if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {
-                    authorities.add(roleAdmin);
-                }
-                if (groups.stream().anyMatch(group -> !group.equals("users"))) {
-                    authorities.add(roleCommittee);
-                }
+            if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {
+                authorities.add(roleAdmin);
+            }
+            if (groups.stream().anyMatch(group -> !group.equals("users"))) {
+                authorities.add(roleCommittee);
             }
             return new DefaultOidcUser(authorities, idToken, oidcUser.getUserInfo());
         };
