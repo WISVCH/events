@@ -143,7 +143,7 @@ public class Order {
                 this.getOrderProducts().stream()
                         .mapToDouble(orderProduct -> orderProduct.getProduct().getCost() * orderProduct.getAmount())
                         .sum()
-                + this.getAdministrationCosts()
+                        + this.administrationCosts
         );
 
         this.setVat(Math.round(this.getOrderProducts().stream()

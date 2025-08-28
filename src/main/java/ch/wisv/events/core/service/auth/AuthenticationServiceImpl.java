@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -153,20 +152,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Collection<String> ldapGroups = userInfo.getClaim(claimName);
 
-        if (ldapGroups != null) {
-            customer.setLdapGroups(
-                    ldapGroups.stream()
-                            .map(ldapString -> {
-                                try {
-                                    return LdapGroup.valueOf(ldapString.toUpperCase());
-                                } catch (IllegalArgumentException ignored) {
-                                    return null;
-                                }
-                            })
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList())
-            );
-        }
+        customer.setLdapGroups(
+                ldapGroups.stream()
+                        .map(ldapString -> {
+                            try {
+                                return LdapGroup.valueOf(ldapString.toUpperCase());
+                            } catch (IllegalArgumentException ignored) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
+        );
 
         customerService.update(customer);
     }

@@ -140,9 +140,10 @@ public class OrderValidationServiceImpl implements OrderValidationService {
             throw new OrderInvalidException("Order amount can not be null");
         }
 
-        Double administrationCostShouldBe = order.getPaymentMethod() != null
-                ? order.getPaymentMethod().calculateAdministrativeCosts(order.getAmount())
-                : 0.0;
+        Double administrationCostShouldBe = order.getOrderProducts().stream()
+                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
+                .anyMatch(c -> c > 0.0) ? administrationCosts : 0.0;
+
         if (!order.getAdministrationCosts().equals(administrationCostShouldBe)) {
             throw new OrderInvalidException("Order administration costs does not match");
         }
@@ -150,7 +151,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         Double amountShouldBe = order.getOrderProducts()
                 .stream()
                 .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getAmount())
-                .sum();
+                .sum() + order.getAdministrationCosts();
 
         if (!order.getAmount().equals(amountShouldBe)) {
             throw new OrderInvalidException("Order amount does not match");
