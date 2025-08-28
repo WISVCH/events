@@ -62,14 +62,17 @@ public class PaymentsServiceImpl implements PaymentsService {
     /**
      * Payments client url.
      */
-    @Value("${chpay.clientUri}")
+    @Value("${wisvch.chpay.clientUri}")
     @NotNull
     private String clientUri;
 
-    @Value("${chpay.api-key}")
+    @Value("${wisvch.chpay.api-key}")
     private String chpayApiKey;
 
-    private String CHPayUri = "http://localhost:8080";
+    @Value("${wisvch.chpay.uri}")
+    @NotNull
+    private String CHPayUri;
+
     private OAuth2AuthorizedClientService authorizedClientService;
 
     /**
@@ -113,7 +116,7 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         metadata.put("products", productString);
 
-        String chPayApi = "http://localhost:8080/api/events";
+        String chPayApi = CHPayUri;
         String returnUrl = clientUri + "/return/" + order.getPublicReference();
         String webhookUrl = clientUri + "/api/v1/orders/status";
         String fallbackUrl = clientUri + "/return/" + order.getPublicReference() + "/fallback";
