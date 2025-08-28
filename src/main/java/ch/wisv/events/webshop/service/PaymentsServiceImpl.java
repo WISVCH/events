@@ -62,7 +62,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     /**
      * Payments client url.
      */
-    @Value("${mollie.clientUri}")
+    @Value("${chpay.clientUri}")
     @NotNull
     private String clientUri;
 
