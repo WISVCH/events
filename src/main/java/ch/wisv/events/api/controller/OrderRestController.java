@@ -33,7 +33,6 @@ public class OrderRestController {
      */
     @RequestMapping(value = "/status", method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> updateOrderStatus(@RequestParam(name = "id") String providerReference) {
-        System.out.println("Webhook hit");
         paymentsService.updateStatusByProviderReference(providerReference);
         return new ResponseEntity<>(HttpStatus.OK);
     }
