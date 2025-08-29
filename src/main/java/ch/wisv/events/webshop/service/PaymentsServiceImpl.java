@@ -60,11 +60,18 @@ public class PaymentsServiceImpl implements PaymentsService {
     private final MailService mailService;
 
     /**
-     * Payments client url.
+     * Payments client url for mollie.
+     */
+    @Value("${mollie.clientUri}")
+    @NotNull
+    private String clientUriMollie;
+
+    /**
+     * Payments client url for CHPay.
      */
     @Value("${wisvch.chpay.clientUri}")
     @NotNull
-    private String clientUri;
+    private String clientUriCHPay;
 
     @Value("${wisvch.chpay.api-key}")
     private String chpayApiKey;
@@ -117,9 +124,9 @@ public class PaymentsServiceImpl implements PaymentsService {
         metadata.put("products", productString);
 
         String chPayApi = CHPayUri;
-        String returnUrl = clientUri + "/return/" + order.getPublicReference();
-        String webhookUrl = clientUri + "/api/v1/orders/status";
-        String fallbackUrl = clientUri + "/return/" + order.getPublicReference() + "/fallback";
+        String returnUrl = clientUriCHPay + "/return/" + order.getPublicReference();
+        String webhookUrl = clientUriCHPay + "/api/v1/orders/status";
+        String fallbackUrl = clientUriCHPay + "/return/" + order.getPublicReference() + "/fallback";
 
         CHPaymentRequest request = new CHPaymentRequest();
         request.setAmount(BigDecimal.valueOf(order.getAmount()));
@@ -210,8 +217,8 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         metadata.put("products", productString);
 
-        String returnUrl = clientUri + "/return/" + order.getPublicReference();
-        String webhookUrl = clientUri + "/api/v1/orders/status";
+        String returnUrl = clientUriMollie + "/return/" + order.getPublicReference();
+        String webhookUrl = clientUriMollie + "/api/v1/orders/status";
 
         double value = order.getAmount();
 
