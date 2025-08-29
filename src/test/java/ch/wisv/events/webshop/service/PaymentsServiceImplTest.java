@@ -7,8 +7,6 @@ import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
 import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
 import be.woutschoovaerts.mollie.handler.PaymentHandler;
 import ch.wisv.events.ServiceTest;
-import ch.wisv.events.core.exception.normal.OrderInvalidException;
-import ch.wisv.events.core.exception.normal.OrderNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -29,8 +27,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
@@ -76,7 +74,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
         paymentResponse.setId("thisisanid");
         PaymentHandler handler = mock(PaymentHandler.class);
         when(mollie.payments()).thenReturn(handler);
-        when(handler.createPayment(any())).thenReturn(paymentResponse);
+        when(handler.createPayment(Mockito.any())).thenReturn(paymentResponse);
 
         assertEquals(link.getHref(), paymentsService.getMollieUrl(order));
     }
@@ -86,7 +84,7 @@ public class PaymentsServiceImplTest extends ServiceTest {
      *
      */
     @Test
-    public void testCreateMolliePaymentRequestFromOrder() throws OrderNotFoundException, OrderInvalidException {
+    public void testCreateMolliePaymentRequestFromOrder() {
         List<Product> products = new ArrayList<>();
 
         // Use a product ending on .05 to ensure correct rounding of decimals
@@ -99,20 +97,11 @@ public class PaymentsServiceImplTest extends ServiceTest {
         product.setMaxSoldPerCustomer(1);
 
         Order order = this.createOrder(createCustomer(), products, OrderStatus.PENDING,"WISVCH.1234");
-        order.setPaymentMethod(PaymentMethod.MOLLIE);
 
         // Add two
         OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 3L);
         order.addOrderProduct(orderProduct);
 
-        //Mock the behaviour of update, since that's where transaction costs are calculated now.
-        doAnswer(invocation -> {
-            Order o = invocation.getArgument(0);
-            o.setAmount(o.getAmount() + 0.35);
-            return null;
-        }).when(orderService).update(any(Order.class));
-
-        orderService.update(order);
         PaymentRequest paymentRequest = paymentsService.createMolliePaymentRequestFromOrder(order);
 
 

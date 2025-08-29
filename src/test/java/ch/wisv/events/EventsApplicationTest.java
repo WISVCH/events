@@ -61,8 +61,7 @@ public class EventsApplicationTest {
     public PaymentsService paymentsService() {
         PaymentsService paymentsService = Mockito.mock(PaymentsService.class);
 
-        Mockito.when(paymentsService.getMollieUrl(Mockito.any(Order.class)))
-                .thenReturn("https://paymentURL.com");
+        Mockito.when(paymentsService.getMollieUrl(Mockito.any(Order.class))).then(invocation -> "https://paymentURL.com");
 
         return paymentsService;
     }
