@@ -134,14 +134,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         request.setWebhookURL(webhookUrl);
         request.setMetadata(metadata);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("wisvchconnect", authentication.getName());
-
-        String accessToken = client.getAccessToken().getTokenValue();
-
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(accessToken);
         httpHeaders.set("X-API-KEY", chpayApiKey);
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<CHPaymentRequest> requestEntity = new HttpEntity<>(request, httpHeaders);
