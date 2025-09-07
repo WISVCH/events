@@ -12,7 +12,6 @@ import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.model.order.PaymentMethod;
-import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.service.mail.MailService;
 import ch.wisv.events.core.service.order.OrderService;
 
@@ -23,9 +22,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -132,7 +128,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         request.setAmount(BigDecimal.valueOf(order.getAmount()));
         request.setDescription("CH Events Payment for " + order.getOrderProducts().stream().map(op -> op.getProduct().getTitle()).reduce((a,b) -> a + ", " + b).orElse(""));
         request.setConsumerName(order.getOwner().getName());
-        request.setBillingEmail(order.getOwner().getEmail());
+        request.setConsumerEmail(order.getOwner().getEmail());
         request.setRedirectURL(returnUrl);
         request.setFallbackURL(fallbackUrl);
         request.setWebhookURL(webhookUrl);
