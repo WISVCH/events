@@ -120,7 +120,7 @@ public class TicketServiceTest extends ServiceTest {
      */
     @Test
     public void generateQrCodeException() throws Exception {
-        thrown.expect(NotFoundException.class);
+        thrown.expect(IllegalArgumentException.class);
         String uniqueCode = "131313";
         Ticket ticket = new Ticket();
         ticket.setUniqueCode(uniqueCode);
