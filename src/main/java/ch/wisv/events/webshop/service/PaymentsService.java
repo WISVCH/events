@@ -24,4 +24,8 @@ public interface PaymentsService {
      */
     void updateStatusByProviderReference(String providerOrderReference);
 
+
+    String getCHpayUrl(Order order);
+
+    void updateCHOrderByProviderReference(String providerOrderReference);
 }

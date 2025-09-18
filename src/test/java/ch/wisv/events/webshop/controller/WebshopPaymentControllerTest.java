@@ -38,6 +38,7 @@ public class WebshopPaymentControllerTest extends ControllerTest {
                 .andExpect(view().name("webshop/payment/index"))
                 .andExpect(model().attribute("order", order))
                 .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/mollie\"")))
+                .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/chpay\"")))
                 .andExpect(content().string(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/reservation\"")));
     }
 
@@ -47,8 +48,9 @@ public class WebshopPaymentControllerTest extends ControllerTest {
         order.getOrderProducts().get(0).getProduct().setReservable(false);
 
         mockMvc.perform(get("/checkout/" + order.getPublicReference() + "/payment"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/checkout/" + order.getPublicReference() + "/payment/mollie"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("webshop/payment/index"))
+                .andExpect(content().string(not(containsString("href=\"/checkout/" + order.getPublicReference() + "/payment/reservation\""))));
     }
 
     @Test
