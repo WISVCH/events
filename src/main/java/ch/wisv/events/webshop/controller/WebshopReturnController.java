@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -91,5 +92,17 @@ public class WebshopReturnController extends WebshopController {
 
             return "redirect:/";
         }
+    }
+
+    /**
+     * Fallback error page.
+     * @param message The message to display on the page. If null, a generic message will be displayed.
+     * @param model The model to add the message to.
+     * @return The error page.
+     */
+    @GetMapping("/fallback")
+    public String fallbackError(@RequestParam(required = false) String message, Model model) {
+        model.addAttribute("message", message != null ? message : "Something went wrong. Please try again later.");
+        return "error";
     }
 }

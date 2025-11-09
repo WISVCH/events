@@ -67,6 +67,12 @@ wisvch.connect:
 wisvch.events:
   image.path: http://localhost:8080/events/api/v1/documents/
 
+# CH Pay Configuration
+wisvch.chpay:
+  uri: http://localhost:8080/api/events
+  api-key: <api-key>
+  clientUri:  http://localhost:8080/events/
+
 # CH mollie api key
 mollie:
   apikey: test
