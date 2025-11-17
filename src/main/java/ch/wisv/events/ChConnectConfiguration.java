@@ -2,6 +2,7 @@ package ch.wisv.events;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -117,7 +118,12 @@ public class ChConnectConfiguration {
             SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
             OidcIdToken idToken = oidcUser.getIdToken();
 
-            Collection<String> groups = (Collection<String>) idToken.getClaims().get(claimName);
+            Object claim = idToken.getClaims().get(claimName);
+
+            Collection<String> groups = (claim instanceof Collection<?>)
+                    ? (Collection<String>) claim
+                    : Collections.emptyList();
+
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(roleUser);
             if (groups.stream().anyMatch(o -> adminGroups.contains(o))) {
