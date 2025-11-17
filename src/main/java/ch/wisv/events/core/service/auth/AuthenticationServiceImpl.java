@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -150,10 +151,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         customer.setVerifiedChMember(true);
 
-        Collection<String> ldapGroups = userInfo.getClaim(claimName);
+        Object claim = userInfo.getClaim(claimName);
+
+        Collection<String> groups = (claim instanceof Collection<?>)
+                ? (Collection<String>) claim
+                : Collections.emptyList();
 
         customer.setLdapGroups(
-                ldapGroups.stream()
+                groups.stream()
                         .map(ldapString -> {
                             try {
                                 return LdapGroup.valueOf(ldapString.toUpperCase());
