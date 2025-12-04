@@ -32,7 +32,7 @@ public enum PaymentMethod {
     /**
      * User paid his order via Mollie.
      */
-    MOLLIE("mollie", cost -> cost + 0.35),
+    MOLLIE("mollie", cost -> cost + 0.39),
 
     /**
      * User paid his order via CHpay.
