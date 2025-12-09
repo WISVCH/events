@@ -62,7 +62,7 @@
                             <td th:text="${orderProduct.getAmount()}"></td>
                             <td th:text="'€ ' + ${#numbers.formatDecimal(orderProduct.getPrice() * orderProduct.getAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
                         </tr>
-                        <tr>
+                        <tr th:if="${@environment.getProperty('administrationCosts', T(java.lang.Double)) > 0}">
                             <td>Administration costs</td>
                             <td></td>
                             <td th:text="'€ ' + ${#numbers.formatDecimal(order.getAdministrationCosts(), 1, 'POINT', 2, 'COMMA')}"></td>

@@ -99,9 +99,11 @@ var ShoppingBasket;
 
                 var rowBlueprint = "<tr><td>Administration costs</td><td><td>&euro; %s</td></tr>";
 
-                shoppingBasketTable += vsprintf(rowBlueprint, [
-                    parseFloat(Math.round(administrationCosts * 100) / 100).toFixed(2).replace(".", ",")
-                ]);
+                if (administrationCostsSetting > 0.0){
+                    shoppingBasketTable += vsprintf(rowBlueprint, [
+                        parseFloat(Math.round(administrationCosts * 100) / 100).toFixed(2).replace(".", ",")
+                    ]);
+                }
 
                 shoppingBasketTotal += administrationCosts;
 
