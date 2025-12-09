@@ -58,6 +58,8 @@
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
                                             <h5 class="d-inline mt-0">iDeal</h5> - Pay now using iDeal<br>
+                                            <span class="text-info"
+                                                  th:text="${'Transaction costs: €' + #numbers.formatDecimal(T(ch.wisv.events.core.model.order.PaymentMethod).MOLLIE.calculateCostIncludingTransaction(order.amount) - order.amount, 1, 'POINT', 2, 'COMMA')}"></span>
                                         </div>
 
                                         <div class="col-12 align-self-end">
@@ -83,6 +85,8 @@
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
                                             <h5 class="d-inline mt-0">CHPay</h5> - Pay now using CHPay<br>
+                                            <span class="text-info"
+                                                  th:text="${'Transaction costs: €' + #numbers.formatDecimal(T(ch.wisv.events.core.model.order.PaymentMethod).CHPAY.calculateCostIncludingTransaction(order.amount) - order.amount, 1, 'POINT', 2, 'COMMA')}"></span>
                                         </div>
 
                                         <div class="col-12 align-self-end">
