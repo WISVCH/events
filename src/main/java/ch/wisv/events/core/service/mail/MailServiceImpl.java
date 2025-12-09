@@ -57,6 +57,9 @@ public class MailServiceImpl implements MailService {
     @NotNull
     private String origin;
 
+    /** Administration costs from configuration. */
+    @Value("${administrationCosts}")
+    private double administrationCosts;
     /**
      * MailServiceImpl constructor.
      *
@@ -84,6 +87,7 @@ public class MailServiceImpl implements MailService {
             ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
             ctx.setVariable("linkGTC", linkGTC);
             ctx.setVariable("origin", origin);
+            ctx.setVariable("adminCostsConfig", administrationCosts);
             String subject = String.format("Ticket overview %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
             this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order", ctx), tickets);
@@ -134,6 +138,7 @@ public class MailServiceImpl implements MailService {
     public void sendOrderReservation(Order order) {
         final Context ctx = new Context(new Locale("en"));
         ctx.setVariable("order", order);
+        ctx.setVariable("adminCostsConfig", administrationCosts);
         String subject = String.format("Ticket reservation %s", order.getPublicReference().substring(0, ORDER_NUMBER_LENGTH));
 
         this.sendMailWithContent(order.getOwner().getEmail(), subject, this.templateEngine.process("mail/order-reservation", ctx));
