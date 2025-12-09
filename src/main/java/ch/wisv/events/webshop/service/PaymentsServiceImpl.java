@@ -310,11 +310,9 @@ public class PaymentsServiceImpl implements PaymentsService {
     private Order updateCHPayOrder(Order order) {
         //Totally not ripping off the code above for this one, could not even imagine that.
         try {
-            String chPayApi = "http://localhost:8080/api/events";
-
             UUID paymentID = UUID.fromString(order.getChPaymentsReference());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(chPayApi + "/status").queryParam("PaymentId", paymentID);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(CHPayUri + "/status").queryParam("PaymentId", paymentID);
 
             RestTemplate restTemplate = new RestTemplate();
 
