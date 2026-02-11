@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -52,6 +53,17 @@ public class EventsApplicationTest {
         Customer customer = new Customer();
         customer.setLdapGroups(ImmutableList.of(LdapGroup.BEHEER));
         Mockito.when(service.getCurrentCustomer()).thenReturn(customer);
+
+        return service;
+    }
+
+    @Bean
+    @Primary
+    public OAuth2AuthorizedClientService oauth2AuthorizedClientService() {
+        OAuth2AuthorizedClientService service = Mockito.mock(OAuth2AuthorizedClientService.class);
+//        Customer customer = new Customer();
+//        customer.setLdapGroups(ImmutableList.of(LdapGroup.BEHEER));
+//        Mockito.when(service.getCurrentCustomer()).thenReturn(customer);
 
         return service;
     }

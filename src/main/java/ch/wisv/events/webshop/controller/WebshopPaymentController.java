@@ -79,18 +79,7 @@ public class WebshopPaymentController extends WebshopController {
                 return "redirect:/return/" + order.getPublicReference();
             }
 
-            if (order.getOwner().getRfidToken() == null || order.getOwner().getRfidToken().equals("")) {
-                model.addAttribute(
-                        MODEL_ATTR_MESSAGE,
-                        "No card linked to your account! Link a card to your account, for an easier and faster check-in at the event(s)."
-                );
-            }
-
-            if (orderService.containsOnlyReservable(order)) {
-                return "webshop/payment/index";
-            }
-
-            return "redirect:/checkout/" + order.getPublicReference() + "/payment/mollie";
+            return "webshop/payment/index";
         } catch (EventsException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
 
@@ -131,6 +120,11 @@ public class WebshopPaymentController extends WebshopController {
     @GetMapping("/mollie")
     public String paymentMollie(RedirectAttributes redirect, @PathVariable String key) {
         return this.payment(redirect, key, PaymentMethod.MOLLIE);
+    }
+
+    @GetMapping("/chpay")
+    public String paymentChPay(RedirectAttributes redirect, @PathVariable String key) {
+        return this.payment(redirect, key, PaymentMethod.CHPAY);
     }
 
     /**
@@ -193,6 +187,10 @@ public class WebshopPaymentController extends WebshopController {
             order.setStatus(OrderStatus.PENDING);
             orderService.update(order);
             orderValidationService.assertOrderIsValidForPayment(order);
+
+            if (method.equals(PaymentMethod.CHPAY)) {
+                return "redirect:" + paymentsService.getCHpayUrl(order);
+            }
 
             return "redirect:" + paymentsService.getMollieUrl(order);
         } catch (OrderNotFoundException | OrderInvalidException e) {

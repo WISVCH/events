@@ -178,7 +178,7 @@ public abstract class ControllerTest {
         order.setOwner(customer);
         order.setStatus(status);
         order.setCreatedBy(createdBy);
-        order.setPaymentMethod(PaymentMethod.IDEAL);
+        order.setPaymentMethod(PaymentMethod.MOLLIE);
 
         products.forEach(product -> {
             OrderProduct orderProduct = new OrderProduct(product, product.getCost(), 1L);
@@ -199,7 +199,7 @@ public abstract class ControllerTest {
         order.setOwner(customer);
         order.setStatus(status);
         order.setCreatedBy(createdBy);
-        order.setPaymentMethod(PaymentMethod.IDEAL);
+        order.setPaymentMethod(PaymentMethod.MOLLIE);
 
         
         OrderProduct orderProduct = new OrderProduct(product, product.getCost(), amount);

@@ -70,13 +70,20 @@ server:
 
 # CH Connect Configuration
 wisvch.connect:
-  # Change <MyLDAPgroup> to a LDAP group you're in (e.g. hoothub, dienst2, etc.)
+  # Change <MyGooglegroup> to a Google group you're in (e.g. hoothub, dienst2, etc.)
   admin-groups:
-    - <MyLDAPgroup>
+    - <MyGooglegroup>
+  claimName: google_groups
 
 # CH Events Configuration
 wisvch.events:
   image.path: http://localhost:8080/events/api/v1/documents/
+
+# CH Pay Configuration
+wisvch.chpay:
+  uri: http://localhost:8080/api/events
+  api-key: <api-key>
+  clientUri:  http://localhost:8080/events/
 
 # CH mollie api key
 mollie:
