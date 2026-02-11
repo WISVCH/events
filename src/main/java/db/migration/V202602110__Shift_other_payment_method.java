@@ -19,6 +19,8 @@ public class V202602110__Shift_other_payment_method extends BaseJavaMigration {
      */
     public void migrate(Context context) throws Exception {
         try (Statement statement = context.getConnection().createStatement()) {
+            statement.execute("ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_payment_method_check");
+            statement.execute("ALTER TABLE public.orders ADD CONSTRAINT orders_payment_method_check CHECK (payment_method BETWEEN 0 AND 6)");
             statement.execute("UPDATE public.orders SET payment_method = 6 WHERE payment_method = 5");
         }
     }
