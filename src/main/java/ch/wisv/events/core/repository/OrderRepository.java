@@ -101,8 +101,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
                     "INNER JOIN ORDERS_ORDER_PRODUCTS OOP ON A.OOPID = OOP.ORDER_PRODUCTS_ID) B " +
                     "INNER JOIN ORDERS O ON B.ORDER_ID = O.ID " +
                     "WHERE O.STATUS = 5 " +
-                    "AND (O.PAYMENT_METHOD = 2 " +
-                    "OR O.PAYMENT_METHOD = 3)", nativeQuery = true)
+                    "AND (O.PAYMENT_METHOD = 4 " +
+                    "OR O.PAYMENT_METHOD = 5)", nativeQuery = true)
     List<TreasurerData> findallPayments();
 
 
