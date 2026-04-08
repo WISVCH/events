@@ -103,7 +103,7 @@ mollie:
   clientUri: http://localhost:8080
 
 links:
-  gtc: https://ch.tudelft.nl
+  gtc: https://ch.tudelft.nl/wp-content/uploads/General_terms_and_conditions-4.pdf
   passes: https://ch.tudelft.nl/passes
 
 googleWallet:
