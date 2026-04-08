@@ -37,7 +37,7 @@ public enum LdapGroup {
     COI("COI"),
     CPR("CPR"),
     CC("CC"),
-    HACKCIE("HackCie"),
+    HACKDELFT("HackDelft"),
     CHESSCO("CHessCo"),
     COH("CoH"),
     EIWEIW("EIWEIW"),
