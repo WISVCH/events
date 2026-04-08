@@ -91,7 +91,7 @@ mollie:
   clientUri: http://localhost:8080/events
 
 links:
-  gtc: https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf
+  gtc: https://ch.tudelft.nl/wp-content/uploads/General_terms_and_conditions-4.pdf
   passes: https://ch.tudelft.nl/passes
 
 googleWallet:
