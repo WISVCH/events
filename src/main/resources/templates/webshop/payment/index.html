@@ -84,8 +84,7 @@
                                 <div class="col-9 h-100">
                                     <div class="row h-100">
                                         <div class="col-12 align-self-start mb-4">
-                                            <h5 class="d-inline mt-0">CHPay
-                                                <span class="badge badge-pill badge-primary">Beta</span></h5>
+                                            <h5 class="d-inline mt-0">CHPay</h5>
                                             - Pay now using CHPay<br>
                                             <span class="text-info"
                                                   th:text="${'Transaction costs: €' + #numbers.formatDecimal(T(ch.wisv.events.core.model.order.PaymentMethod).CHPAY.calculateCostIncludingTransaction(order.amount) - order.amount, 1, 'POINT', 2, 'COMMA')}"></span>
