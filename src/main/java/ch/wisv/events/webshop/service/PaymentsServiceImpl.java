@@ -135,11 +135,11 @@ public class PaymentsServiceImpl implements PaymentsService {
         request.setMetadata(metadata);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("X-API-KEY", chpayApiKey);
+        httpHeaders.setBearerAuth(chpayApiKey);
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<CHPaymentRequest> requestEntity = new HttpEntity<>(request, httpHeaders);
 
-        ResponseEntity<CHPaymentResponse> response = restTemplate.postForEntity(chPayApi, requestEntity, CHPaymentResponse.class);
+        ResponseEntity<CHPaymentResponse> response = restTemplate.postForEntity(chPayApi + "/external-payment", requestEntity, CHPaymentResponse.class);
 
         if(response.getStatusCode().is2xxSuccessful()){
             CHPaymentResponse body = response.getBody();
@@ -312,12 +312,12 @@ public class PaymentsServiceImpl implements PaymentsService {
         try {
             UUID paymentID = UUID.fromString(order.getChPaymentsReference());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(CHPayUri + "/status").queryParam("PaymentId", paymentID);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(CHPayUri + "/external-payment/status").queryParam("PaymentId", paymentID);
 
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("X-API-KEY", chpayApiKey);
+            httpHeaders.setBearerAuth(chpayApiKey);
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
 
