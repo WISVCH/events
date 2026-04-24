@@ -97,6 +97,7 @@ public class SalesSellCustomerController {
 
             return "redirect:/sales/sell/order/" + order.getPublicReference();
         } catch (CustomerNotFoundException e) {
+            redirect.addFlashAttribute("customer", customer);
             return "redirect:/sales/sell/customer/" + order.getPublicReference() + "/create";
         } catch (EventsException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -139,7 +140,7 @@ public class SalesSellCustomerController {
 
             redirect.addFlashAttribute("success", "Customer successfully created!");
 
-            return "redirect:/sales/order/" + order.getPublicReference();
+            return "redirect:/sales/sell/order/" + order.getPublicReference();
         } catch (CustomerInvalidException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             redirect.addFlashAttribute("customer", customer);
