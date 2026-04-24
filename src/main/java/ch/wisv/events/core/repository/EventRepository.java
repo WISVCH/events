@@ -4,8 +4,10 @@ import ch.wisv.events.core.admin.Attendance;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.product.Product;
+import ch.wisv.events.utils.LdapGroup;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +37,36 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return List
      */
     List<Event> findAllByPublishedAndEndingIsAfter(EventStatus published, LocalDateTime ending);
+
+    /**
+     * Find all sales-visible events (upcoming from start of day and published/not published).
+     *
+     * @param dateTime of type LocalDateTime
+     * @param statuses of type EventStatus collection
+     *
+     * @return list of events
+     */
+    @Query("select e from Event e where e.ending >= :dateTime and e.published in :statuses order by e.start asc")
+    List<Event> findAllSalesVisibleEvents(
+            @Param("dateTime") LocalDateTime dateTime,
+            @Param("statuses") Collection<EventStatus> statuses
+    );
+
+    /**
+     * Find all sales-visible events for specific organizing LDAP groups.
+     *
+     * @param dateTime of type LocalDateTime
+     * @param statuses of type EventStatus collection
+     * @param groups   of type LdapGroup collection
+     *
+     * @return list of events
+     */
+    @Query("select e from Event e where e.ending >= :dateTime and e.published in :statuses and e.organizedBy in :groups order by e.start asc")
+    List<Event> findAllSalesVisibleEventsByOrganizedByIn(
+            @Param("dateTime") LocalDateTime dateTime,
+            @Param("statuses") Collection<EventStatus> statuses,
+            @Param("groups") Collection<LdapGroup> groups
+    );
 
     /**
      * Find an Event by key.
