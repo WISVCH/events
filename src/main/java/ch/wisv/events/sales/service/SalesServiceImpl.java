@@ -89,6 +89,28 @@ public class SalesServiceImpl implements SalesService {
     }
 
     /**
+     * Check if customer can access the given event.
+     *
+     * @param customer of type Customer
+     * @param event    of type Event
+     * @return true when user is admin or has matching LDAP group
+     */
+    @Override
+    public boolean hasAccessToEvent(Customer customer, Event event) {
+        if (event == null) {
+            return false;
+        }
+
+        if (this.currentUserHasAdminRole()) {
+            return true;
+        }
+
+        return customer != null
+                && customer.getLdapGroups() != null
+                && customer.getLdapGroups().contains(event.getOrganizedBy());
+    }
+
+    /**
      * Get all orders associated with the given event.
      *
      * @param event of type Event

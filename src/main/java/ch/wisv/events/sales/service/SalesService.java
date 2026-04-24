@@ -26,6 +26,15 @@ public interface SalesService {
     List<Product> getAllGrantedProductByCustomer(Customer customer);
 
     /**
+     * Check whether the given customer can access data for a specific event.
+     *
+     * @param customer of type Customer
+     * @param event    of type Event
+     * @return true when the customer is admin or is in the event organizer LDAP group
+     */
+    boolean hasAccessToEvent(Customer customer, Event event);
+
+    /**
      * Get all orders of an event.
      *
      * @param event of type Event

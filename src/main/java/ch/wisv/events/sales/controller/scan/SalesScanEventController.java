@@ -1,8 +1,11 @@
 package ch.wisv.events.sales.controller.scan;
 
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.sales.service.SalesService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +33,26 @@ public class SalesScanEventController {
 
     /** EventService. */
     private final EventService eventService;
+    /** AuthenticationService. */
+    private final AuthenticationService authenticationService;
+    /** SalesService. */
+    private final SalesService salesService;
 
     /**
      * SalesScanEventController.
      *
-     * @param eventService of type EventService
+     * @param eventService          of type EventService
+     * @param authenticationService of type AuthenticationService
+     * @param salesService          of type SalesService
      */
-    public SalesScanEventController(EventService eventService) {
+    public SalesScanEventController(
+            EventService eventService,
+            AuthenticationService authenticationService,
+            SalesService salesService
+    ) {
         this.eventService = eventService;
+        this.authenticationService = authenticationService;
+        this.salesService = salesService;
     }
 
     /**
@@ -54,6 +69,12 @@ public class SalesScanEventController {
     public String scanner(Model model, RedirectAttributes redirect, @PathVariable String key, @PathVariable String method) {
         try {
             Event event = eventService.getByKey(key);
+            Customer currentUser = authenticationService.getCurrentCustomer();
+            if (!salesService.hasAccessToEvent(currentUser, event)) {
+                redirect.addFlashAttribute(ATTR_ERROR, "You do not have access to this event.");
+
+                return ERROR_REDIRECT;
+            }
             model.addAttribute(ATTR_EVENT, event);
 
             return "sales/scan/event/" + method;

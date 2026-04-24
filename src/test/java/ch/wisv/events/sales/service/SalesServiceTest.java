@@ -231,4 +231,52 @@ public class SalesServiceTest extends ServiceTest {
         assertEquals(orders, returnedOrders);
     }
 
+    @Test
+    public void testHasAccessToEventAsAdminRole() {
+        Customer customer = mock(Customer.class);
+        Event event = mock(Event.class);
+        when(event.getOrganizedBy()).thenReturn(LdapGroup.BT);
+        when(customer.getLdapGroups()).thenReturn(List.of(LdapGroup.WIFI));
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                "admin",
+                "n/a",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        ));
+
+        assertTrue(salesService.hasAccessToEvent(customer, event));
+    }
+
+    @Test
+    public void testHasAccessToEventAsGroupMember() {
+        Customer customer = mock(Customer.class);
+        Event event = mock(Event.class);
+        when(event.getOrganizedBy()).thenReturn(LdapGroup.WIFI);
+        when(customer.getLdapGroups()).thenReturn(List.of(LdapGroup.WIFI));
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                "user",
+                "n/a",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+        ));
+
+        assertTrue(salesService.hasAccessToEvent(customer, event));
+    }
+
+    @Test
+    public void testHasAccessToEventDeniedForNonMatchingGroup() {
+        Customer customer = mock(Customer.class);
+        Event event = mock(Event.class);
+        when(event.getOrganizedBy()).thenReturn(LdapGroup.WIFI);
+        when(customer.getLdapGroups()).thenReturn(List.of(LdapGroup.BT));
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                "user",
+                "n/a",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+        ));
+
+        assertFalse(salesService.hasAccessToEvent(customer, event));
+    }
+
 }
