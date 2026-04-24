@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -43,12 +43,12 @@
                 </div>
                 <div class="col-12">
                     <div class="row justify-content-between">
-                        <!-- <div class="col-4 text-center"> This feature does not work yet, can be added back when fixed
+                        <div class="col-4 text-center" sec:authorize="hasRole('ADMIN')">
                             <a th:href="@{/sales/sell}">
                                 <i class="fa fa-ticket-alt fa-fw fa-4x"></i>
                                 <p>Sell tickets</p>
                             </a>
-                        </div> -->
+                        </div>
                         <div class="col-4 text-center">
                             <a th:href="@{/sales/stats}">
                                 <i class="fas fa-coins fa-fw fa-4x"></i>

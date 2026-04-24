@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * SalesSellCustomerController class.
  */
 @Controller
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/sales/sell/customer/{publicReference}")
 public class SalesSellCustomerController {
 
