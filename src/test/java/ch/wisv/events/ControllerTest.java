@@ -135,6 +135,7 @@ public abstract class ControllerTest {
         event.setTarget(100);
         event.setDescription("description");
         event.setShortDescription("short description");
+        event.setOrganizedBy(LdapGroup.BEHEER);
 
         eventRepository.saveAndFlush(event);
 

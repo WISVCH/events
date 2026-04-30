@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,8 +84,14 @@ public class SalesStatsController {
      * @return String
      */
     @GetMapping("/products/{key}")
-    public String ticketSalesindex(Model model, @PathVariable String key) throws EventNotFoundException {
+    public String ticketSalesindex(Model model, RedirectAttributes redirect, @PathVariable String key) throws EventNotFoundException {
         Event event = eventService.getByKey(key);
+        Customer currentUser = authenticationService.getCurrentCustomer();
+        if (!salesService.hasAccessToEvent(currentUser, event)) {
+            redirect.addFlashAttribute("error", "You do not have access to this event.");
+
+            return ERROR_REDIRECT;
+        }
 
         model.addAttribute("products", event.getProducts());
         model.addAttribute("target", event.getTarget());
@@ -101,8 +108,15 @@ public class SalesStatsController {
      * @return String
      */
     @GetMapping("/event/{key}")
-    public String eventSalesView(Model model, @PathVariable String key) throws EventNotFoundException {
+    public String eventSalesView(Model model, RedirectAttributes redirect, @PathVariable String key) throws EventNotFoundException {
         Event event = eventService.getByKey(key);
+        Customer currentUser = authenticationService.getCurrentCustomer();
+        if (!salesService.hasAccessToEvent(currentUser, event)) {
+            redirect.addFlashAttribute("error", "You do not have access to this event.");
+
+            return ERROR_REDIRECT;
+        }
+
         List<Order> orders = salesService.getAllOrdersByEvent(event).stream().peek((Order order) -> {
             order.setOwner(null);
             order.setChPaymentsReference(null);

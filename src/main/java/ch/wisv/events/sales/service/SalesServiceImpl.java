@@ -2,16 +2,20 @@ package ch.wisv.events.sales.service;
 
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
+import ch.wisv.events.core.model.event.EventStatus;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
-import ch.wisv.events.core.service.event.EventService;
+import ch.wisv.events.core.repository.EventRepository;
 import ch.wisv.events.core.service.order.OrderService;
-import ch.wisv.events.utils.LdapGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,25 +25,29 @@ import java.util.stream.Collectors;
 @Service
 public class SalesServiceImpl implements SalesService {
 
-    /**
-     * EventService.
-     */
-    private final EventService eventService;
+    /** EventRepository. */
+    private final EventRepository eventRepository;
 
     /**
      * OrderService.
      */
     private final OrderService orderService;
 
+    /** Event statuses visible in sales views. */
+    private static final List<EventStatus> SALES_VISIBLE_STATUSES = List.of(
+            EventStatus.PUBLISHED,
+            EventStatus.NOT_PUBLISHED
+    );
+
     /**
      * Default constructor.
      *
-     * @param eventService of type EventService.
+     * @param eventRepository of type EventRepository.
      * @param orderService of type OrderService.
      */
     @Autowired
-    public SalesServiceImpl(EventService eventService, OrderService orderService) {
-        this.eventService = eventService;
+    public SalesServiceImpl(EventRepository eventRepository, OrderService orderService) {
+        this.eventRepository = eventRepository;
         this.orderService = orderService;
     }
 
@@ -50,13 +58,20 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public List<Event> getAllGrantedEventByCustomer(Customer customer) {
-        if (customer.getLdapGroups().contains(LdapGroup.BESTUUR) || customer.getLdapGroups().contains(LdapGroup.BEHEER)) {
-            return eventService.getUpcoming();
-        } else {
-            return eventService.getUpcoming().stream()
-                .filter(events -> customer.getLdapGroups().contains(events.getOrganizedBy()))
-                .collect(Collectors.toList());
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        if (this.currentUserHasAdminRole()) {
+            return eventRepository.findAllSalesVisibleEvents(startOfToday, SALES_VISIBLE_STATUSES);
         }
+
+        if (customer == null || customer.getLdapGroups() == null || customer.getLdapGroups().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return eventRepository.findAllSalesVisibleEventsByOrganizedByIn(
+                startOfToday,
+                SALES_VISIBLE_STATUSES,
+                customer.getLdapGroups()
+        );
     }
 
     /**
@@ -74,6 +89,28 @@ public class SalesServiceImpl implements SalesService {
     }
 
     /**
+     * Check if customer can access the given event.
+     *
+     * @param customer of type Customer
+     * @param event    of type Event
+     * @return true when user is admin or has matching LDAP group
+     */
+    @Override
+    public boolean hasAccessToEvent(Customer customer, Event event) {
+        if (event == null) {
+            return false;
+        }
+
+        if (this.currentUserHasAdminRole()) {
+            return true;
+        }
+
+        return customer != null
+                && customer.getLdapGroups() != null
+                && customer.getLdapGroups().contains(event.getOrganizedBy());
+    }
+
+    /**
      * Get all orders associated with the given event.
      *
      * @param event of type Event
@@ -86,5 +123,20 @@ public class SalesServiceImpl implements SalesService {
         event.getProducts().stream().forEach(product -> ordersAssociatedWithEvent.addAll(orderService.getAllByProduct(product)));
 
         return ordersAssociatedWithEvent;
+    }
+
+    /**
+     * Check if current authenticated user has admin role.
+     *
+     * @return true if current user has ROLE_ADMIN, false otherwise
+     */
+    private boolean currentUserHasAdminRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 }

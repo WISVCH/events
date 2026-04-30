@@ -2,15 +2,18 @@ package ch.wisv.events.sales.controller.scan;
 
 import ch.wisv.events.core.exception.normal.EventsException;
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
+import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.ticket.Ticket;
 import ch.wisv.events.core.model.ticket.TicketStatus;
+import ch.wisv.events.core.service.auth.AuthenticationService;
 import ch.wisv.events.core.service.event.EventService;
 import ch.wisv.events.core.service.ticket.TicketService;
 import static ch.wisv.events.utils.ResponseEntityBuilder.createResponseEntity;
 import java.util.Objects;
 
 import ch.wisv.events.sales.model.ScanDto;
+import ch.wisv.events.sales.service.SalesService;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +44,29 @@ public class SalesScanRestController {
 
     /** TicketService. */
     private final TicketService ticketService;
+    /** AuthenticationService. */
+    private final AuthenticationService authenticationService;
+    /** SalesService. */
+    private final SalesService salesService;
 
     /**
      * SalesScanRestController.
      *
-     * @param eventService  of type EventService
-     * @param ticketService of type TicketService
+     * @param eventService          of type EventService
+     * @param ticketService         of type TicketService
+     * @param authenticationService of type AuthenticationService
+     * @param salesService          of type SalesService
      */
-    public SalesScanRestController(EventService eventService, TicketService ticketService) {
+    public SalesScanRestController(
+            EventService eventService,
+            TicketService ticketService,
+            AuthenticationService authenticationService,
+            SalesService salesService
+    ) {
         this.eventService = eventService;
         this.ticketService = ticketService;
+        this.authenticationService = authenticationService;
+        this.salesService = salesService;
     }
 
     /**
@@ -122,6 +138,10 @@ public class SalesScanRestController {
 
         try {
             Event event = eventService.getByKey(key);
+            Customer currentUser = authenticationService.getCurrentCustomer();
+            if (!salesService.hasAccessToEvent(currentUser, event)) {
+                return createResponseEntity(HttpStatus.FORBIDDEN, "You do not have access to this event.");
+            }
             Ticket ticket = this.getTicketByUniqueCode(event, code);
             ScanDto scan = new ScanDto(ticket.getProduct().getTitle(), ticket.getOwner().getName());
 
