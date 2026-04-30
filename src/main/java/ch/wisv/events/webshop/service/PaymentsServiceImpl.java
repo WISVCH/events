@@ -304,7 +304,8 @@ public class PaymentsServiceImpl implements PaymentsService {
     public enum TransactionStatus {
         SUCCESSFUL,
         FAILED,
-        PENDING
+        PENDING,
+        CANCELLED,
     }
 
     private Order updateCHPayOrder(Order order) {
@@ -335,7 +336,7 @@ public class PaymentsServiceImpl implements PaymentsService {
 
             switch (response) {
                 case PENDING -> orderService.updateOrderStatus(order,OrderStatus.PENDING);
-                case FAILED -> orderService.updateOrderStatus(order,OrderStatus.CANCELLED);
+                case FAILED, CANCELLED -> orderService.updateOrderStatus(order,OrderStatus.CANCELLED);
                 case SUCCESSFUL -> orderService.updateOrderStatus(order,OrderStatus.PAID);
                 default -> orderService.updateOrderStatus(order,order.getStatus());
             }
