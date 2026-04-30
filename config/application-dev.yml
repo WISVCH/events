@@ -81,6 +81,7 @@ wisvch.events:
 wisvch.chpay:
   uri: http://localhost:3080/api/events
   api-key: "dev-api-key"
+  uri: http://localhost:3080/api/v1
   clientUri: http://localhost:3090/events
 
 mollie:
