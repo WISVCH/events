@@ -34,7 +34,7 @@
 
 <body>
 <nav
-        th:replace="~{webshop/fragments/header :: header ('Order has been cancelled!', 'events_order-cancelled-owl.jpg')}"></nav>
+        th:replace="~{webshop/fragments/header :: header ('Payment cancelled', 'events_order-cancelled-owl.jpg')}"></nav>
 
 <div class="container">
     <div class="row">
@@ -43,14 +43,15 @@
 
             <div class="row">
                 <div class="col my-4">
-                    <h4 class="display-4">Order has been cancelled!</h4>
+                    <h4 class="display-4">Payment cancelled</h4>
                 </div>
             </div>
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
-                    <p class="text-justify">Your order has been cancelled. If you want to try it again the
-                        payment again, click on the 'Try payment again' button. Otherwise click on the
-                        'Back to the homepage' to go back to the homepage.
+                    <p class="text-justify">
+                        Your payment was cancelled before completion, so this order was not paid.
+                        You can retry and select a different payment method using the button below,
+                        or return to the homepage.
                     </p>
                 </div>
             </div>
@@ -64,7 +65,7 @@
                 </div>
                 <div class="col-auto">
                     <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/payment'}" class="btn btn-info">
-                        Try payment again
+                        Retry payment
                         <i class="fas fa-fw fa-sync"></i>
                     </a>
                 </div>
