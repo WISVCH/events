@@ -79,9 +79,8 @@ wisvch.events:
   image.path: http://localhost:3090/events/api/v1/documents/
 
 wisvch.chpay:
-  uri: http://localhost:3080/api/events
-  api-key: "dev-api-key"
   uri: http://localhost:3080/api/v1
+  api-key: "CHANGE_ME"
   clientUri: http://localhost:3090/events
 
 mollie:
