@@ -1,0 +1,29 @@
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="!production">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="production">
+        <!-- Write structured entries directly to Cloud Logging via Workload Identity. -->
+        <appender name="GOOGLE_CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+            <log>application.events</log>
+            <resourceType>k8s_container</resourceType>
+            <flushLevel>ERROR</flushLevel>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="GOOGLE_CLOUD" />
+        </root>
+    </springProfile>
+
+</configuration>
