@@ -1,37 +1,31 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/java-postgres
 {
-  "name": "Java & PostgreSQL",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  "features": {
-    "ghcr.io/devcontainers/features/java:1.6.0": {
-      "installGradle": "true"
-    }
-  },
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // This can be used to network with other containers or with the host.
-  "forwardPorts": [
-    1080, // Mailcatcher
-    5432, // PostgreSQL
-    8080, // Events
-    8082 // Adminer
+  "name": "events-dev",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "docker-compose.yml"
   ],
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "gradle bootRun",
-  // Configure tool-specific properties.
-  // "customizations": {},
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  "remoteUser": "root",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "overrideCommand": true,
   "customizations": {
     "vscode": {
       "extensions": [
-        "vmware.vscode-boot-dev-pack",
-        "vscjava.vscode-gradle",
-        "vscjava.vscode-java-pack"
-      ]
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "vscjava.vscode-gradle"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-17",
+            "path": "/opt/java/openjdk"
+          }
+        ],
+        "java.jdt.ls.java.home": "/opt/java/openjdk"
+      }
     }
-  }
+  },
+  "forwardPorts": [3090],
+  "postCreateCommand": "git config --global --add safe.directory /workspace || true",
+  "remoteUser": "dev"
 }
