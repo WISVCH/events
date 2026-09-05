@@ -6,7 +6,7 @@ import be.woutschoovaerts.mollie.data.payment.PaymentLinks;
 import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
 import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
 import be.woutschoovaerts.mollie.handler.PaymentHandler;
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * PaymentsServiceImpl test.
  */
-public class PaymentsServiceImplTest extends ServiceTest {
+public class PaymentsServiceImplTest extends MockitoTest {
 
     @Mock
     private OrderService orderService;

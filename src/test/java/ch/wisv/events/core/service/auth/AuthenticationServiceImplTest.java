@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service.auth;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.service.customer.CustomerService;
 
@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 
-public class AuthenticationServiceImplTest extends ServiceTest {
+public class AuthenticationServiceImplTest extends MockitoTest {
 
     /** CustomerService. */
     @Mock

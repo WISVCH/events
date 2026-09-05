@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.exception.normal.TicketNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * TicketService test.
  */
-public class TicketServiceTest extends ServiceTest {
+public class TicketServiceTest extends MockitoTest {
 
     /** Mock of TicketRepository. */
     @Mock

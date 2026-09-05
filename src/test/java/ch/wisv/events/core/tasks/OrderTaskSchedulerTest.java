@@ -1,6 +1,6 @@
 package ch.wisv.events.core.tasks;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderStatus;
 import ch.wisv.events.core.service.order.OrderService;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * OrderTaskScheduler test.
  */
-public class OrderTaskSchedulerTest extends ServiceTest {
+public class OrderTaskSchedulerTest extends MockitoTest {
 
     @Mock
     private OrderService orderService;
