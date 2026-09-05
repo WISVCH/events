@@ -7,9 +7,9 @@ import java.sql.Statement;
 
 
 /**
- * DB migration which adds parent_product_id to products
+ * DB migration which adds Transaction cost field.
  */
-public class V202409024__Add_product_parent_id extends BaseJavaMigration {
+public class V20241026__Add_administration_costs extends BaseJavaMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
@@ -20,10 +20,7 @@ public class V202409024__Add_product_parent_id extends BaseJavaMigration {
      */
     public void migrate(Context context) throws Exception {
         try (Statement select = context.getConnection().createStatement()) {
-            select.execute("ALTER TABLE public.product ADD parent_product_id INTEGER");
-
-            select.execute("ALTER TABLE public.product ADD CONSTRAINT FK_PRODUCT_ON_PARENT_PRODUCT FOREIGN KEY " +
-                    "(parent_product_id) REFERENCES public.product (id)");
+            select.execute("ALTER TABLE public.orders ADD COLUMN administration_costs DOUBLE PRECISION NOT NULL DEFAULT 0");
         }
     }
 
