@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Optional;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -260,5 +261,17 @@ public class EventServiceImplTest extends ServiceTest {
         when(repository.findByProductsContaining(any(Product.class))).thenReturn(Optional.of(this.event));
 
         assertEquals(this.event, service.getByProduct(product));
+    }
+    @Test
+    public void testReplaceProductsUpdatesBothSidesOfRelationship() {
+        Product oldProduct = new Product();
+        Product replacement = new Product();
+        this.event.addProduct(oldProduct);
+
+        this.event.replaceProducts(Collections.singletonList(replacement));
+
+        assertNull(oldProduct.getEvent());
+        assertEquals(this.event, replacement.getEvent());
+        assertEquals(Collections.singletonList(replacement), this.event.getProducts());
     }
 }
