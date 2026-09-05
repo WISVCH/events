@@ -74,9 +74,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-flyway'
     implementation 'org.flywaydb:flyway-database-postgresql'
-    implementation 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok:1.18.48'
 
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok:1.18.48'
 
     implementation "com.googlecode.json-simple:json-simple:1.1.1"
     runtimeOnly 'org.hsqldb:hsqldb'
