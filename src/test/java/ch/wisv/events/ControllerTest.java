@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.filter.UrlHandlerFilter;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -102,6 +103,9 @@ public abstract class ControllerTest {
     @Autowired
     protected WebApplicationContext wac;
 
+    @Autowired
+    private UrlHandlerFilter urlHandlerFilter;
+
     protected MockMvc mockMvc;
 
     /**
@@ -109,7 +113,9 @@ public abstract class ControllerTest {
      */
     @Before
     public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
+                .addFilters(this.urlHandlerFilter)
+                .build();
     }
 
     @After
