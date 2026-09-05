@@ -54,7 +54,7 @@ dependencies {
     //TEMP APPLICATION PROPERTIES HELPER
     runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
 
-    implementation "be.woutschoovaerts:mollie:3.6.1"
+    implementation "be.woutschoovaerts:mollie:4.6.4"
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'

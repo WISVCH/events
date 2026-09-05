@@ -217,9 +217,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         return PaymentRequest.builder()
                 .amount(paymentAmount)
                 .description("W.I.S.V. 'Christiaan Huygens'")
-                .consumerName(Optional.of(order.getOwner().getName()))
-                .billingEmail(Optional.of(order.getOwner().getEmail()))
-                .redirectUrl(Optional.of(returnUrl))
+                .redirectUrl(returnUrl)
                 .webhookUrl(Optional.of(webhookUrl))
                 .metadata(metadata)
                 .build();
