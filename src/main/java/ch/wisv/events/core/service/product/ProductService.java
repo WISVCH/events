@@ -3,6 +3,7 @@ package ch.wisv.events.core.service.product;
 import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import java.util.List;
@@ -82,6 +83,16 @@ public interface ProductService {
      * @throws ProductInvalidException  when Product is invalid
      */
     void update(Product product) throws ProductNotFoundException, ProductInvalidException;
+
+    /**
+     * Set the event that owns a Product.
+     *
+     * @param product Product to associate
+     * @param event   Event that owns the product, or null to remove the association
+     *
+     * @throws ProductNotFoundException when Product is not found
+     */
+    void setEvent(Product product, Event event) throws ProductNotFoundException;
 
     /**
      * Remove a Product.

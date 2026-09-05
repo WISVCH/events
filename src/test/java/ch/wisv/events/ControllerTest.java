@@ -118,7 +118,7 @@ public abstract class ControllerTest {
 
         // Clear repository
         orderRepository.deleteAll();
-        eventRepository.deleteAll();
+        eventRepository.findAll().forEach(eventService::delete);
         productRepository.deleteAll();
         customerRepository.deleteAll();
         orderProductRepository.deleteAll();
