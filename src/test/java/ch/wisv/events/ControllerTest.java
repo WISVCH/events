@@ -121,15 +121,6 @@ public abstract class ControllerTest {
     @After
     public void tearDown() {
         this.mockMvc = null;
-
-        // Clear repository
-        orderRepository.deleteAll();
-        eventRepository.findAll().forEach(eventService::delete);
-        productRepository.deleteAll();
-        customerRepository.deleteAll();
-        orderProductRepository.deleteAll();
-        webhookTaskRepository.deleteAll();
-        webhookRepository.deleteAll();
     }
 
     protected Event createEvent() {
