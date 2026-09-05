@@ -8,7 +8,7 @@ import java.sql.Statement;
 /**
  * DB migration to shift OTHER payment method after introducing CHPAY.
  */
-public class V202602110__Shift_other_payment_method extends BaseJavaMigration {
+public class V20260211__Shift_other_payment_method extends BaseJavaMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying

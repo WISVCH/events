@@ -1,10 +1,12 @@
 package ch.wisv.events.core.model.webhook;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.json.simple.JSONObject;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Data
@@ -31,7 +33,8 @@ public class WebhookTask {
     /**
      * Field object.
      */
-    private JSONObject object;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, Object> object;
 
     /**
      * Field createdAt.
@@ -64,6 +67,6 @@ public class WebhookTask {
      */
     @Override
     public String toString() {
-        return "WebhookTask{" + "trigger=" + trigger + ", webhook=" + webhook.getPayloadUrl() + ", object=" + object.toString() + '}';
+        return "WebhookTask{" + "trigger=" + trigger + ", webhook=" + webhook.getPayloadUrl() + ", object=" + object + '}';
     }
 }
