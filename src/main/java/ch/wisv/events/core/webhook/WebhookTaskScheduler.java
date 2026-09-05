@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,7 @@ public class WebhookTaskScheduler {
                 "EventAuthorization",
                 "Basic " + Base64.getEncoder().encodeToString(("CH events:" + webhookTask.getWebhook().getSecret()).getBytes())
         );
-        httpPost.setEntity(new StringEntity(webhookTask.getObject().toJSONString(), "UTF8"));
+        httpPost.setEntity(new StringEntity(new JSONObject(webhookTask.getObject()).toJSONString(), "UTF8"));
 
         try {
             HttpResponse response = httpClient.execute(httpPost);

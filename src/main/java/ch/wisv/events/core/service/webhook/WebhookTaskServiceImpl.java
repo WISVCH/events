@@ -4,6 +4,7 @@ import ch.wisv.events.core.model.webhook.Webhook;
 import ch.wisv.events.core.model.webhook.WebhookTask;
 import ch.wisv.events.core.model.webhook.WebhookTrigger;
 import ch.wisv.events.core.repository.WebhookTaskRepository;
+import java.util.LinkedHashMap;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -60,7 +61,7 @@ public class WebhookTaskServiceImpl implements WebhookTaskService {
         WebhookTask webhookTask = new WebhookTask();
         webhookTask.setTrigger(webhookTrigger);
         webhookTask.setWebhook(webhook);
-        webhookTask.setObject(jsonObject);
+        webhookTask.setObject(new LinkedHashMap<>(jsonObject));
 
         this.create(webhookTask);
     }
