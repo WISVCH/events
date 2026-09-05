@@ -196,6 +196,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void delete(Event event) {
+        this.updateLinkedProducts(event, event.getProducts(), false);
         eventRepository.delete(event);
     }
 

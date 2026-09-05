@@ -253,6 +253,17 @@ public class EventServiceImplTest extends ServiceTest {
     }
 
     @Test
+    public void testDeleteUnlinksProducts() throws Exception {
+        Product product = new Product();
+        this.event.addProduct(product);
+
+        service.delete(this.event);
+
+        verify(productService).setEvent(product, null);
+        verify(repository).delete(this.event);
+    }
+
+    @Test
     public void testGetEventByProductKey() throws Exception {
         Product product = new Product();
         this.event.addProduct(product);
