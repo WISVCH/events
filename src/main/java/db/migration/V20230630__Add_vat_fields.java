@@ -9,7 +9,7 @@ import java.sql.Statement;
 /**
  * DB migration which adds VAT fields to product, orderproduct and order.
  */
-public class V202306030__Add_vat_fields extends BaseJavaMigration {
+public class V20230630__Add_vat_fields extends BaseJavaMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
