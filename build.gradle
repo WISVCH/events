@@ -96,7 +96,7 @@ dependencies {
 
     implementation 'org.javatuples:javatuples:1.2'
 
-    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'com.auth0:java-jwt:4.6.0'
     implementation 'com.google.api-client:google-api-client:2.6.0'
     implementation 'com.google.apis:google-api-services-walletobjects:v1-rev20240723-2.0.0'
 }
