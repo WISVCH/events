@@ -75,6 +75,7 @@ dependencies {
     implementation 'org.webjars.bowergithub.alex-d:trumbowyg:2.18.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
