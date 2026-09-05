@@ -313,7 +313,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         try {
             UUID paymentID = UUID.fromString(order.getChPaymentsReference());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(CHPayUri + "/external-payment/status").queryParam("PaymentId", paymentID);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(CHPayUri + "/external-payment/status").queryParam("PaymentId", paymentID);
 
             RestTemplate restTemplate = new RestTemplate();
 
