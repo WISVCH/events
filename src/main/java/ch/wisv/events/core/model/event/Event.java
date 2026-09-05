@@ -78,7 +78,7 @@ public class Event {
      * Product that are related to this event and can be sold. OneToMany so one Product can be used by one Event, but
      * an Event can contain multiple Products.
      */
-    @OneToMany(cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.MERGE, targetEntity = Product.class, fetch = FetchType.EAGER)
     @OrderBy(value = "cost ASC")
     private List<Product> products;
 
@@ -178,6 +178,18 @@ public class Event {
      */
     public void addProduct(Product product) {
         this.products.add(product);
+        product.event = this;
+    }
+
+    /**
+     * Replace the products that belong to this event.
+     *
+     * @param products the products to associate with this event
+     */
+    public void replaceProducts(List<Product> products) {
+        this.products.forEach(product -> product.event = null);
+        this.products = new ArrayList<>(products);
+        this.products.forEach(product -> product.event = this);
     }
 
     /**

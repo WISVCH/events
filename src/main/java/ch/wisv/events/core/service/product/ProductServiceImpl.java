@@ -4,6 +4,7 @@ import ch.wisv.events.api.request.ProductDto;
 import ch.wisv.events.core.exception.normal.ProductInvalidException;
 import ch.wisv.events.core.exception.normal.ProductNotFoundException;
 import ch.wisv.events.core.exception.runtime.ProductAlreadyLinkedException;
+import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.product.Product;
 import ch.wisv.events.core.repository.ProductRepository;
@@ -167,6 +168,19 @@ public class ProductServiceImpl implements ProductService {
         }
 
         this.updateLinkedProducts(product, model.getProducts(), true);
+        productRepository.save(model);
+    }
+
+    /**
+     * Set the event that owns a Product.
+     *
+     * @param product Product to associate
+     * @param event   Event that owns the product, or null to remove the association
+     */
+    @Override
+    public void setEvent(Product product, Event event) throws ProductNotFoundException {
+        Product model = this.getByKey(product.getKey());
+        model.setEvent(event);
         productRepository.save(model);
     }
 

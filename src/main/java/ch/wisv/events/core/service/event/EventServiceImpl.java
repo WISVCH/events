@@ -151,9 +151,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public void create(Event event) throws EventInvalidException {
         this.assertIsValidEvent(event);
-        this.updateLinkedProducts(event, event.getProducts(), true);
-
         eventRepository.saveAndFlush(event);
+        this.updateLinkedProducts(event, event.getProducts(), true);
     }
 
     /**
@@ -166,7 +165,7 @@ public class EventServiceImpl implements EventService {
         this.assertIsValidEvent(event);
         
         Event update = this.getByKey(event.getKey());
-        this.updateLinkedProducts(event, update.getProducts(), false);
+        this.updateLinkedProducts(update, update.getProducts(), false);
 
         update.setTitle(event.getTitle());
         update.setShortDescription(event.getShortDescription());
@@ -176,7 +175,7 @@ public class EventServiceImpl implements EventService {
         update.setEnding(event.getEnding());
         update.setTarget(event.getTarget());
         update.setMaxSold(event.getMaxSold());
-        update.setProducts(event.getProducts());
+        update.replaceProducts(event.getProducts());
         update.setPublished(event.getPublished());
         update.setOrganizedBy(event.getOrganizedBy());
         update.setCategories(event.getCategories());
@@ -186,7 +185,7 @@ public class EventServiceImpl implements EventService {
             update.setImageUrl(event.getImageUrl());
         }
 
-        this.updateLinkedProducts(event, update.getProducts(), true);
+        this.updateLinkedProducts(update, update.getProducts(), true);
         eventRepository.save(update);
     }
 
@@ -197,6 +196,8 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void delete(Event event) {
+        this.updateLinkedProducts(event, event.getProducts(), false);
+        eventRepository.flush();
         eventRepository.delete(event);
     }
 
@@ -285,6 +286,11 @@ public class EventServiceImpl implements EventService {
                 p.setSellEnd((linked) ? event.getStart() : null);
                 productService.update(p);
             } catch (ProductNotFoundException | ProductInvalidException ignored) {
+            }
+
+            try {
+                productService.setEvent(p, linked ? event : null);
+            } catch (ProductNotFoundException ignored) {
             }
         });
     }
