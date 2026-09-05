@@ -7,10 +7,9 @@ import java.sql.Statement;
 
 
 /**
- * DB migration which adds an external product URL to an event.
- * If it is present, the event will have a button to this URL instead of normal prducts.
+ * DB migration which adds parent_product_id to products
  */
-public class V202304016__Add_external_product_url_to_event extends BaseJavaMigration {
+public class V20240924__Add_product_parent_id extends BaseJavaMigration {
 
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
@@ -21,8 +20,10 @@ public class V202304016__Add_external_product_url_to_event extends BaseJavaMigra
      */
     public void migrate(Context context) throws Exception {
         try (Statement select = context.getConnection().createStatement()) {
-            select.execute("ALTER TABLE public.event ADD COLUMN external_product_url varchar(255)");
-            select.execute("UPDATE public.event SET external_product_url = NULL");
+            select.execute("ALTER TABLE public.product ADD parent_product_id INTEGER");
+
+            select.execute("ALTER TABLE public.product ADD CONSTRAINT FK_PRODUCT_ON_PARENT_PRODUCT FOREIGN KEY " +
+                    "(parent_product_id) REFERENCES public.product (id)");
         }
     }
 
