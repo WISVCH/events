@@ -197,6 +197,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Event event) {
         this.updateLinkedProducts(event, event.getProducts(), false);
+        eventRepository.flush();
         eventRepository.delete(event);
     }
 
@@ -284,8 +285,12 @@ public class EventServiceImpl implements EventService {
                 p.setLinked(linked);
                 p.setSellEnd((linked) ? event.getStart() : null);
                 productService.update(p);
-                productService.setEvent(p, linked ? event : null);
             } catch (ProductNotFoundException | ProductInvalidException ignored) {
+            }
+
+            try {
+                productService.setEvent(p, linked ? event : null);
+            } catch (ProductNotFoundException ignored) {
             }
         });
     }
