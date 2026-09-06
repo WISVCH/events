@@ -1,15 +1,14 @@
 package ch.wisv.events;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.filter.UrlHandlerFilter;
 
 @Configuration
-public class WebConfiguration implements WebMvcConfigurer {
+public class WebConfiguration {
 
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-      configurer.setUseTrailingSlashMatch(true);
+    @Bean
+    public UrlHandlerFilter urlHandlerFilter() {
+        return UrlHandlerFilter.trailingSlashHandler("/**").wrapRequest().build();
     }
-
 }

@@ -217,9 +217,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         return PaymentRequest.builder()
                 .amount(paymentAmount)
                 .description("W.I.S.V. 'Christiaan Huygens'")
-                .consumerName(Optional.of(order.getOwner().getName()))
-                .billingEmail(Optional.of(order.getOwner().getEmail()))
-                .redirectUrl(Optional.of(returnUrl))
+                .redirectUrl(returnUrl)
                 .webhookUrl(Optional.of(webhookUrl))
                 .metadata(metadata)
                 .build();
@@ -313,7 +311,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         try {
             UUID paymentID = UUID.fromString(order.getChPaymentsReference());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(CHPayUri + "/external-payment/status").queryParam("PaymentId", paymentID);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(CHPayUri + "/external-payment/status").queryParam("PaymentId", paymentID);
 
             RestTemplate restTemplate = new RestTemplate();
 

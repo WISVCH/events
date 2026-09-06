@@ -1,6 +1,5 @@
 package ch.wisv.events.core.service.mail;
 
-import biweekly.util.IOUtils;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.ticket.Ticket;
@@ -189,8 +188,10 @@ public class MailServiceImpl implements MailService {
                         // Get barcode from url
                         String url = "https://barcode.tec-it.com/barcode.ashx?data=978020" + uniqueCode + "&code=EAN13&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23FFFFFF&qunit=Mm&quiet=0";
                         URL urlObj = new URL(url);
-                        InputStream is = urlObj.openStream();
-                        byte[] bytes = IOUtils.toByteArray(is);
+                        byte[] bytes;
+                        try (InputStream inputStream = urlObj.openStream()) {
+                            bytes = inputStream.readAllBytes();
+                        }
     
                         // Attach image inline to message
                         message.addInline("ch-" + uniqueCode + ".png", new ByteArrayResource(bytes), "image/png");

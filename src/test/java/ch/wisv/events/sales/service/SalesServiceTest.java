@@ -1,6 +1,6 @@
 package ch.wisv.events.sales.service;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.exception.normal.EventNotFoundException;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.event.Event;
@@ -25,7 +25,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class SalesServiceTest extends ServiceTest {
+public class SalesServiceTest extends MockitoTest {
 
     /**
      * EventService.

@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,19 +41,19 @@ import static org.mockito.Mockito.when;
 public class OrderValidationServiceImplTest extends ServiceTest {
 
     /** OrderService. */
-    @MockBean
+    @MockitoBean
     private OrderRepository orderRepository;
 
     /** TicketService. */
-    @MockBean
+    @MockitoBean
     private TicketService ticketService;
 
     /** ProductService. */
-    @MockBean
+    @MockitoBean
     private ProductService productService;
 
     /** EventService. */
-    @MockBean
+    @MockitoBean
     private EventService eventService;
 
     /** Administration Costs*/

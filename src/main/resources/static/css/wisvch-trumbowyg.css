@@ -7204,6 +7204,7 @@
         margin-top: 1rem
     }
 
+    table thead th,
     table thead td {
         text-align: center;
         color: #fff;

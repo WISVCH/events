@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.exception.normal.EventInvalidException;
 import ch.wisv.events.core.model.event.Event;
 import ch.wisv.events.core.model.event.EventStatus;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 /**
  * EventService test.
  */
-public class EventServiceImplTest extends ServiceTest {
+public class EventServiceImplTest extends MockitoTest {
 
     @Mock
     private EventRepository repository;

@@ -164,8 +164,8 @@ var ShoppingBasket;
         __pulseShoppingBasket: function () {
             var shoppingBasketButton = $("#shoppingBasketButton");
 
-            shoppingBasketButton.addClass('animated pulse').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                $(this).removeClass('animated pulse');
+            shoppingBasketButton.addClass('animate__animated animate__pulse').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass('animate__animated animate__pulse');
             });
 
             ShoppingBasket.__toast("Product added to your shopping basket.")
@@ -174,8 +174,8 @@ var ShoppingBasket;
         __shakeShoppingBasket: function () {
             var shoppingBasketButton = $("#shoppingBasketButton");
 
-            shoppingBasketButton.addClass('animated shake').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                $(this).removeClass('animated shake');
+            shoppingBasketButton.addClass('animate__animated animate__shakeX').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass('animate__animated animate__shakeX');
             });
 
             ShoppingBasket.__toast("You reached the maximum sold per customer.")

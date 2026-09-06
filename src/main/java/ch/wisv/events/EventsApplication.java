@@ -2,15 +2,13 @@ package ch.wisv.events;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * EventsApplication class.
- * Jsr310JpaConverters.class is necessary for correctly persisting e.g. LocalDateTime objects.
  */
-@EntityScan(basePackageClasses = {EventsApplication.class, Jsr310JpaConverters.class})
+@EntityScan(basePackageClasses = EventsApplication.class)
 @SpringBootApplication
 @EnableScheduling
 public class EventsApplication {
