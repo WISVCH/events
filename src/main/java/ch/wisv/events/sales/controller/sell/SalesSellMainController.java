@@ -87,7 +87,7 @@ public class SalesSellMainController {
         if (orderProductDto.getProducts().isEmpty()) {
             redirect.addFlashAttribute("error", "Shopping cart can not be empty!");
 
-            return "redirect:/sales/sell/";
+            return "redirect:/sales/sell";
         }
 
         try {

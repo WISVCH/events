@@ -106,7 +106,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -151,12 +151,12 @@ public class DashboardEventController extends DashboardController {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         } catch (EventInvalidException | IOException e) {
             redirect.addFlashAttribute(OBJ_EVENT, event);
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/create/";
+            return "redirect:/administrator/events/create";
         }
     }
 
@@ -180,7 +180,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -251,7 +251,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -311,6 +311,6 @@ public class DashboardEventController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, "Event with key not-found not found!");
         }
 
-        return "redirect:/administrator/events/";
+        return "redirect:/administrator/events";
     }
 }

@@ -41,7 +41,7 @@
 
         <main class="col-sm-9 ml-sm-auto col-md-10 p-5" role="main">
             <h1>Products
-                <a class="badge badge-danger" th:href="@{create/}">
+                <a class="badge badge-danger" th:href="@{/administrator/products/create}">
                     <i class="fa fa-plus" aria-hidden="true"></i> New
                 </a>
             </h1>
@@ -80,13 +80,13 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'edit/' + ${product.getKey()} + '/'" class="btn btn-sm btn-info">
+                                <a th:href="@{'/administrator/products/edit/' + ${product.getKey()}}" class="btn btn-sm btn-info">
                                     <i class="fas fa-fw fa-edit"></i>
                                 </a>
-                                <a th:href="'overview/' + ${product.getKey()} + '/'" class="btn btn-sm btn-success">
+                                <a th:href="@{'/administrator/products/overview/' + ${product.getKey()}}" class="btn btn-sm btn-success">
                                     <i class="fas fa-fw fa-ticket-alt"></i>
                                 </a>
-                                <a th:href="'delete/' + ${product.getKey()} + '/'"
+                                <a th:href="@{'/administrator/products/delete/' + ${product.getKey()}}"
                                    th:data-confirm-delete="|Are you sure you want to delete  ${product.getTitle()} ?|"
                                    onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
                                    class="btn btn-sm btn-danger">

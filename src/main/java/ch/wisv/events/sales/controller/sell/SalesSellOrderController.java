@@ -49,7 +49,7 @@ public class SalesSellOrderController {
         } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
+            return "redirect:/sales";
         }
     }
 
@@ -70,7 +70,7 @@ public class SalesSellOrderController {
         } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/sales/";
+            return "redirect:/sales";
         }
     }
 }

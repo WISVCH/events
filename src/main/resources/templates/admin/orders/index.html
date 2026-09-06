@@ -73,7 +73,7 @@
                         <td th:text="${order.getStatus()}"></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
-                                <a th:href="'delete/' + ${order.getPublicReference()} + '/'"
+                                <a th:href="@{'/administrator/orders/delete/' + ${order.getPublicReference()}}"
                                    th:onclick="'return confirm(\'Are you sure you want to delete order #' + ${order.getId()} + '?\');'"
                                    class="btn btn-sm btn-danger">
                                     <i class="far fa-fw fa-trash-alt"></i>

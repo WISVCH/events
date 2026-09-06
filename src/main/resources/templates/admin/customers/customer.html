@@ -43,7 +43,7 @@
 
             <div th:replace="~{fragments/messages :: messages}"></div>
 
-            <form th:action="@{./}" th:object="${customer}" method="POST">
+            <form th:action="${customer.getKey() == null} ? @{/administrator/customers/create} : @{/administrator/customers/edit/{key}(key=${customer.getKey()})}" th:object="${customer}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="card">

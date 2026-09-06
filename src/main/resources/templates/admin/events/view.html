@@ -192,7 +192,7 @@
                 <div class="col">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <a th:href="'delete/' + ${event.getKey()} + '/'"
+                            <a th:href="@{'/administrator/events/delete/' + ${event.getKey()}}"
                                th:data-confirm-delete="|Are you sure you want to delete  ${event.title} ?|"
                                onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
                                class="btn btn-danger">

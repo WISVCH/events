@@ -83,7 +83,7 @@ public class DashboardOrderController extends DashboardController {
         } catch (OrderNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/orders/";
+            return "redirect:/administrator/orders";
         }
     }
 
@@ -106,7 +106,7 @@ public class DashboardOrderController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
-        return "redirect:/administrator/orders/";
+        return "redirect:/administrator/orders";
     }
 
     /**
@@ -152,6 +152,6 @@ public class DashboardOrderController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
-        return "redirect:/administrator/orders/";
+        return "redirect:/administrator/orders";
     }
 }

@@ -81,7 +81,7 @@
           </h1>
           <div th:replace="~{fragments/messages :: messages}"></div>
           <form
-            th:action="@{./csv}"
+            th:action="@{/administrator/salesexport/csv}"
             th:object="${SalesExportSubmission}"
             method="GET"
           >

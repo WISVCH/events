@@ -77,7 +77,7 @@ public class DashboardCustomerController extends DashboardController {
         } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/customers/";
+            return "redirect:/administrator/customers";
         }
     }
 
@@ -112,12 +112,12 @@ public class DashboardCustomerController extends DashboardController {
             customerService.create(model);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Customer with name " + model.getName() + "  has been created!");
 
-            return "redirect:/administrator/customers/";
+            return "redirect:/administrator/customers";
         } catch (CustomerInvalidException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
             redirect.addFlashAttribute(OBJ_CUSTOMER, model);
 
-            return "redirect:/administrator/customers/create/";
+            return "redirect:/administrator/customers/create";
         }
 
     }
@@ -145,7 +145,7 @@ public class DashboardCustomerController extends DashboardController {
         } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/customers/";
+            return "redirect:/administrator/customers";
         }
     }
 
@@ -193,11 +193,11 @@ public class DashboardCustomerController extends DashboardController {
 
             redirect.addFlashAttribute(FLASH_SUCCESS, "Customer with name " + customer.getName() + " has been deleted!");
 
-            return "redirect:/administrator/customers/";
+            return "redirect:/administrator/customers";
         } catch (CustomerNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/customers/";
+            return "redirect:/administrator/customers";
         }
     }
 }

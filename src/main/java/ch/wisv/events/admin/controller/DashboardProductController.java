@@ -83,7 +83,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -126,7 +126,7 @@ public class DashboardProductController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
             redirect.addFlashAttribute(OBJ_PRODUCT, product);
 
-            return "redirect:/administrator/products/create/";
+            return "redirect:/administrator/products/create";
         }
     }
 
@@ -158,7 +158,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -212,7 +212,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -236,6 +236,6 @@ public class DashboardProductController extends DashboardController {
             redirectAttributes.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
-        return "redirect:/administrator/products/";
+        return "redirect:/administrator/products";
     }
 }

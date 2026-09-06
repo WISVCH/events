@@ -63,7 +63,7 @@
                             <img class="img-fluid" th:src="@{'/tickets/'+ ${ticket.getKey()}+'/qrcode.png'}">
                         </div>
                     </div>
-                    <form th:action="@{'./transfer'}" method="POST">
+                    <form th:action="@{'/tickets/' + ${ticket.getKey()} + '/transfer'}" method="POST">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
