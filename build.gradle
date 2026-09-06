@@ -70,7 +70,7 @@ dependencies {
     implementation 'org.webjars:sprintf.js:1.0.0'
     implementation 'org.webjars:font-awesome:7.3.0'
     implementation 'org.webjars.npm:flatpickr:4.6.13'
-    implementation 'org.webjars.bowergithub.alex-d:trumbowyg:2.18.0'
+    implementation 'org.webjars.npm:trumbowyg:2.31.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-flyway'
     implementation 'org.flywaydb:flyway-database-postgresql'
