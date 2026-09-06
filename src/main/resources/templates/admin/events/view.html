@@ -27,7 +27,7 @@
     <link th:href="@{/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/css/wisvch-dashboard.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" integrity="sha384-bsGkvB1NLsaPUZL6GG0N5H9GOW9DK6KiHrrDvO57EJXoD9H3gzlohtuPENw9/24L" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/webjars/datatables/1.10.16/css/dataTables.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/7.3.0/css/all.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/trumbowyg/2.31.0/dist/ui/trumbowyg.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/trumbowyg/2.31.0/dist/plugins/table/ui/trumbowyg.table.min.css}">
@@ -207,8 +207,8 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/jquery/3.2.1/dist/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.16.1/dist/umd/popper.min.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/devbridge-autocomplete@2.0.4/dist/jquery.autocomplete.min.js" integrity="sha384-uYmw6JhGLos1Jn0g0mdLGO7Z8VA1ILhRMtLEh0pHOFvwISqTG5myjCGqH+NwQZMx" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/dist/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/flatpickr/4.6.13/dist/flatpickr.min.js}"></script>
