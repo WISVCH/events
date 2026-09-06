@@ -78,7 +78,7 @@ var ShoppingBasket;
                 var administrationCosts = 0;
 
                 $.each(ShoppingBasket.shoppingBasket, function (index, product) {
-                    var rowBlueprint = "<tr><td>%s</td><td><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span class='px-4'>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></td><td>&euro; %s</td></tr>";
+                    var rowBlueprint = "<tr><td>%s</td><td><span class='shopping-basket-quantity'><a href='#' class='decreaseBasketAmount' data-product-key='%s'><i class='fas fa-minus'></i></a><span>%s</span><a href='#' class='increaseBasketAmount' data-product-key='%s'><i class='fas fa-plus'></i></a></span></td><td>&euro; %s</td></tr>";
 
                     shoppingBasketTable += vsprintf(rowBlueprint, [
                         product.title,
