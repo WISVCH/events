@@ -64,7 +64,7 @@
                         <td th:text="${customer.getEmail()}"></td>
                         <td>
                             <span th:text="${customer.getSub()}"></span>
-                            <span class="text-warning">
+                            <span class="text-warning" th:unless="${customer.isVerifiedChMember()}">
                                 <i class="fa-regular fa-circle-question fa-fw" data-toggle="tooltip"
                                    title="Not verified by dienst2 yet"
                                    aria-hidden="true"></i>
