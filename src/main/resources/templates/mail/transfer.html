@@ -290,11 +290,11 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    &nbsp;<table th:if="${redirectLink}" cellspacing="0" cellpadding="0" width="100%"
+                                                    &nbsp;<table th:if="${ticket.getProduct().hasRedirectUrl()}" cellspacing="0" cellpadding="0" width="100%"
                                                                  style="border-collapse: collapse !important;">
                                                     <tr>
                                                         <td>
-                                                            <h3>Form links for your ticket!</h3>
+                                                            <h3>Link for your ticket!</h3>
                                                         </td>
                                                     </tr>
                                                     <tr>

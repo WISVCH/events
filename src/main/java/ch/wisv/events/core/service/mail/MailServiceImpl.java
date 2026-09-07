@@ -83,7 +83,7 @@ public class MailServiceImpl implements MailService {
             final Context ctx = new Context(new Locale("en"));
             ctx.setVariable("order", order);
             ctx.setVariable("tickets", tickets);
-            ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().getRedirectUrl() != null));
+            ctx.setVariable("redirectLinks", tickets.stream().anyMatch(ticket -> ticket.getProduct().hasRedirectUrl()));
             ctx.setVariable("linkGTC", linkGTC);
             ctx.setVariable("origin", origin);
             ctx.setVariable("adminCostsConfig", administrationCosts);
@@ -107,7 +107,6 @@ public class MailServiceImpl implements MailService {
         ctx.setVariable("ticket", ticket);
         ctx.setVariable("oldCustomer", oldCustomer);
         ctx.setVariable("oldCustomer", oldCustomer);
-        ctx.setVariable("redirectLink", ticket.getProduct().getRedirectUrl());
         String subject = String.format("Ticket transfer %s", ticket.getProduct().getTitle());
 
         List<Ticket> tickets = List.of(ticket);

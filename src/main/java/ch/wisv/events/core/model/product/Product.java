@@ -286,6 +286,10 @@ public class Product {
         return totalSold;
     }
 
+    public boolean hasRedirectUrl() {
+        return this.redirectUrl != null && !this.redirectUrl.isEmpty();
+    }
+
     // Custom toString
     @Override
     public String toString() {

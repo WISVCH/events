@@ -369,7 +369,7 @@
                                                                                 </td>
                                                                             </tr>
                                                                             <tr th:each="ticket: ${tickets}"
-                                                                                th:if="${ticket.getProduct().getRedirectUrl() != null}"
+                                                                                th:if="${ticket.getProduct().hasRedirectUrl()}"
                                                                                 }>
                                                                                 <td class="white-header"
                                                                                     th:text="${ticket.getProduct().getTitle()}"

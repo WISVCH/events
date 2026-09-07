@@ -63,7 +63,7 @@ public class WebshopReturnController extends WebshopController {
             // Get all OrderProducts that have a redirect url.
             List<Product> productsWithRedirect = order.getOrderProducts().stream()
                     .map(OrderProduct::getProduct)
-                    .filter(product -> Objects.nonNull(product.getRedirectUrl()) && !product.getRedirectUrl().isEmpty())
+                    .filter(Product::hasRedirectUrl)
                     .collect(Collectors.toList());
 
 
