@@ -9,7 +9,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^build\\.gradle$"],
+      "managerFilePatterns": [
+        "/^build\\.gradle$/"
+      ],
       "matchStrings": ["ext\\['tomcat\\.version'\\] = '(?<currentValue>[^']+)'"],
       "depNameTemplate": "org.apache.tomcat.embed:tomcat-embed-core",
       "datasourceTemplate": "maven",
