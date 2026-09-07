@@ -131,9 +131,7 @@ public class WebshopCustomerController extends WebshopController {
                 return this.orderCheck(order);
             }
 
-            if (!model.containsAttribute(MODEL_ATTR_CUSTOMER)) {
-                model.addAttribute(MODEL_ATTR_CUSTOMER, new Customer());
-            }
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
             return "webshop/checkout/create";
@@ -171,7 +169,6 @@ public class WebshopCustomerController extends WebshopController {
             return String.format(REDIRECT_CHECKOUT_PAYMENT, order.getPublicReference());
         } catch (CustomerInvalidException e) {
             redirect.addFlashAttribute(MODEL_ATTR_ERROR, e.getMessage());
-            redirect.addFlashAttribute(MODEL_ATTR_CUSTOMER, customer);
 
             return String.format(REDIRECT_CHECKOUT_CUSTOMER_GUEST, key);
         } catch (EventsException e) {
