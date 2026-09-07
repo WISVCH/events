@@ -6,4 +6,14 @@
   "ignorePaths": [
       "docs/"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/build\\.gradle$/"],
+      "matchStrings": ["ext\\['tomcat\\.version'\\] = '(?<currentValue>[^']+)'"],
+      "depNameTemplate": "org.apache.tomcat.embed:tomcat-embed-core",
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven"
+    }
+  ]
 }

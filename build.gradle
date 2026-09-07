@@ -29,6 +29,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 
+ext['tomcat.version'] = '11.0.24'
+
 repositories {
     mavenCentral()
 }
