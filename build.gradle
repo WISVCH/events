@@ -77,7 +77,7 @@ dependencies {
     implementation('org.webjars:datatables:1.13.5') {
         exclude group: 'org.webjars', module: 'jquery'
     }
-    implementation('org.webjars:datatables-plugins:1.10.16') {
+    implementation('org.webjars:datatables-plugins:1.13.6') {
         exclude group: 'org.webjars', module: 'jquery'
     }
     implementation 'org.webjars.npm:animate.css:4.1.1'
