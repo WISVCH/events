@@ -178,8 +178,8 @@ public class DashboardProductController extends DashboardController {
             if (product.getRedirectUrl() != null && product.getRedirectUrl().length() == 0){
                 product.setRedirectUrl(null);
             }
-            productService.update(product);
-            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
+            Product updatedProduct = productService.update(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, updatedProduct);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Product changes have been saved!");
 
             return "redirect:/administrator/products/view/" + product.getKey();

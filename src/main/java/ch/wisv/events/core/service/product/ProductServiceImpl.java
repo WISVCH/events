@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
      * @param product Product containing the new product information
      */
     @Override
-    public void update(Product product) throws ProductNotFoundException, ProductInvalidException {
+    public Product update(Product product) throws ProductNotFoundException, ProductInvalidException {
         this.assertIsValidProduct(product);
 
         Product model = this.getByKey(product.getKey());
@@ -168,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         this.updateLinkedProducts(product, model.getProducts(), true);
-        productRepository.save(model);
+        return productRepository.save(model);
     }
 
     /**

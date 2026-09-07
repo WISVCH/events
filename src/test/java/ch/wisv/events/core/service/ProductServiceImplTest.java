@@ -140,8 +140,9 @@ public class ProductServiceImplTest extends MockitoTest {
     @Test
     public void testUpdate() throws Exception {
         when(productRepository.findByKey(product.getKey())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
 
-        productService.update(product);
+        assertEquals(product, productService.update(product));
         verify(productRepository, times(1)).save(product);
     }
 
