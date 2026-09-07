@@ -7,7 +7,7 @@
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
-    "ghcr.io/devcontainers/features/java:1.6.0": {
+    "ghcr.io/devcontainers/features/java:1.8.3": {
       "installGradle": "true"
     }
   },
