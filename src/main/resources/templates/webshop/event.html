@@ -37,36 +37,7 @@
 <header class="page-header">
 
     <!-- Top Bar -->
-    <div class="wisv-header header-left">
-        <nav class="navbar navbar-expand-xl navbar-light wisv-header-bg">
-            <a class="navbar-brand" href="https://ch.tudelft.nl/">
-                <img th:src=@{'/images/ch-logo.png'}
-                     alt="W.I.S.V. 'Christiaan Huygens'" >
-            </a>
-
-            <button class="navbar-toggler btn btn-secondary" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item m-2" th:if="${customer != null}">
-                        <a th:href="@{/overview/}" class="btn btn-block btn-primary">
-                            Ticket overview
-                        </a>
-                    </li>
-                    <li class="nav-item m-2" th:if="${customer != null}">
-                        <a th:href="@{/logout}" class="btn btn-block btn-secondary">
-                            logout
-                            <span th:text="${customer.getName()}" th:if="${customer != null}"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+    <div th:replace="~{webshop/fragments/header :: navigation}"></div>
 
 
     <!-- Page title -->

@@ -58,6 +58,7 @@ public class WebshopReturnController extends WebshopController {
     public String returnIndex(Model model, RedirectAttributes redirect, @PathVariable String key) {
         try {
             Order order = orderService.getByReference(key);
+            model.addAttribute(MODEL_ATTR_CUSTOMER, authenticationService.getCurrentCustomer());
             model.addAttribute(MODEL_ATTR_ORDER, order);
 
             // Get all OrderProducts that have a redirect url.
