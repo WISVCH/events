@@ -41,20 +41,20 @@
 
             <div class="row">
                 <div class="col-12 col-md-5">
-                    <h4 class="display-5 mb-5">CH Connect</h4>
+                    <h4 class="display-5 mb-5">CH Account</h4>
 
                     <p class="mb-2">
-                        Proceed checking out by logging in through CH Connect. You will need to be a member of W.I.S.V.
-                        'Christiaan Huygens' with a TU Delft NetID or a CH account.
+                        Proceed with checkout by logging in to your CH Account. You need to be a member of W.I.S.V.
+                        'Christiaan Huygens' with a TU Delft NetID or a CH Google account.
                     </p>
 
                     <a th:href="@{'/checkout/' + ${order.getPublicReference()} + '/customer/chconnect'}"
                        class="btn btn-block btn-info my-4">
-                        Checkout through CH Connect
+                        Checkout with your CH Account
                     </a>
 
                     <p class="text-muted">
-                        CH member and unable to use CH Connect? Please send an email to
+                        CH member and unable to access your CH Account? Please send an email to
                         <a href="mailto:board@ch.tudelft.nl">board@ch.tudelft.nl</a>
                         including your full name, student number and NetID so that we can update your membership record.
                     </p>
@@ -75,7 +75,7 @@
                     <h4 class="display-5 mb-5">Guest</h4>
 
                     <p class="mb-2">
-                        <b>Not a CH member or unable to use CH Connect?</b>
+                        <b>Not a CH member or unable to access your CH Account?</b>
                         No problem, proceed checking out without logging in.
                     </p>
 
