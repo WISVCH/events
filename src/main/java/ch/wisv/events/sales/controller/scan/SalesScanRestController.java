@@ -122,7 +122,7 @@ public class SalesScanRestController {
                 })
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new TicketNotFoundException("Ticket " + uniqueCode + " does not exists"));
+                .orElseThrow(() -> new TicketNotFoundException("Ticket does not exist."));
     }
 
     /**
