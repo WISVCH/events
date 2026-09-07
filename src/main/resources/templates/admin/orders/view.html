@@ -122,7 +122,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card">
+                    <div class="card" th:if="${order.getOwner() != null}">
                         <h6 class="card-header">Customer</h6>
                         <div class="card-body">
                             <div class="row form mb-4">
