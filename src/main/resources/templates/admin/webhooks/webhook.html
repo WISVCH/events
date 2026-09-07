@@ -43,7 +43,7 @@
 
             <div th:replace="~{fragments/messages :: messages}"></div>
 
-            <form th:action="${webhook.getKey() == null} ? @{/administrator/webhooks/create} : @{/administrator/webhooks/edit/{key}(key=${webhook.getKey()})}" th:object="${webhook}" method="POST">
+            <form th:action="${webhook.getId() == null} ? @{/administrator/webhooks/create} : @{/administrator/webhooks/edit/{key}(key=${webhook.getKey()})}" th:object="${webhook}" method="POST">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="row">
