@@ -241,8 +241,9 @@ public class EventServiceImplTest extends MockitoTest {
     @Test
     public void testUpdateEvent() throws Exception {
         when(repository.findByKey(this.event.getKey())).thenReturn(Optional.of(this.event));
+        when(repository.save(this.event)).thenReturn(this.event);
 
-        service.update(this.event);
+        assertEquals(this.event, service.update(this.event));
         verify(repository, times(1)).save(this.event);
     }
 

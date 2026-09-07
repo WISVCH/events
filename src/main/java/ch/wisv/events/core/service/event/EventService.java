@@ -98,10 +98,12 @@ public interface EventService {
      *
      * @param event Event
      *
+     * @return the persisted Event with the updates applied
+     *
      * @throws EventNotFoundException when Event is not found
      * @throws EventInvalidException  when Event is invalid
      */
-    void update(Event event) throws EventNotFoundException, EventInvalidException;
+    Event update(Event event) throws EventNotFoundException, EventInvalidException;
 
     /**
      * Delete an Event.

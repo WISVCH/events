@@ -161,7 +161,7 @@ public class EventServiceImpl implements EventService {
      * @param event Event
      */
     @Override
-    public void update(Event event) throws EventNotFoundException, EventInvalidException {
+    public Event update(Event event) throws EventNotFoundException, EventInvalidException {
         this.assertIsValidEvent(event);
         
         Event update = this.getByKey(event.getKey());
@@ -186,7 +186,7 @@ public class EventServiceImpl implements EventService {
         }
 
         this.updateLinkedProducts(update, update.getProducts(), true);
-        eventRepository.save(update);
+        return eventRepository.save(update);
     }
 
     /**

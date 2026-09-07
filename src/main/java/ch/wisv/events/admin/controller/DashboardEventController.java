@@ -209,13 +209,13 @@ public class DashboardEventController extends DashboardController {
             if (event.getExternalProductUrl() != null && event.getExternalProductUrl().length() == 0){
                event.setExternalProductUrl(null);
             }
-            eventService.update(event);
+            Event updatedEvent = eventService.update(event);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Event changes saved!");
 
-            if (event.getPublished() == EventStatus.PUBLISHED) {
-                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+            if (updatedEvent.getPublished() == EventStatus.PUBLISHED) {
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, updatedEvent);
             } else {
-                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, updatedEvent);
             }
 
             return "redirect:/administrator/events/view/" + event.getKey();
