@@ -47,7 +47,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
     public void testViewNotFound() throws Exception {
         mockMvc.perform(get("/administrator/orders/view/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attribute("error", "Order with reference not-found not found!"));
     }
 
@@ -57,7 +57,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/orders/delete/" + order.getPublicReference()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attributeExists("success"));
     }
 
@@ -65,7 +65,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
     public void testDeleteNotFound() throws Exception {
         mockMvc.perform(get("/administrator/orders/delete/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attribute("error", "Order with reference not-found not found!"));
     }
 
@@ -75,7 +75,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/orders/delete/" + order.getPublicReference()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attribute("error", "Not allowed to update status from REJECTED to REJECTED"));
     }
 
@@ -85,7 +85,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/orders/approve/" + order.getPublicReference() + "/IDEAL"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attributeExists("success"));
     }
 
@@ -93,7 +93,7 @@ public class DashboardOrderControllerTest extends ControllerTest {
     public void testApproveNotFound() throws Exception {
         mockMvc.perform(get("/administrator/orders/approve/not-found/IDEAL"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/orders/"))
+                .andExpect(redirectedUrl("/administrator/orders"))
                 .andExpect(flash().attribute("error", "Order with reference not-found not found!"));
     }
 

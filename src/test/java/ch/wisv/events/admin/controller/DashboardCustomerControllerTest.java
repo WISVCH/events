@@ -52,7 +52,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/customers/view/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/"))
+                .andExpect(redirectedUrl("/administrator/customers"))
                 .andExpect(flash().attribute("error", "Customer with key not-found not found!"));
     }
 
@@ -84,7 +84,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
                                 .param("rfidToken", "RF123456")
                                 .sessionAttr("customer", customer))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/create/"))
+                .andExpect(redirectedUrl("/administrator/customers/create"))
                 .andExpect(flash().attribute("error", "Name is empty, but a required field, so please fill in this field!"));
     }
 
@@ -98,7 +98,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
                                 .param("rfidToken", "RF123456")
                                 .sessionAttr("customer", customer))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/create/"))
+                .andExpect(redirectedUrl("/administrator/customers/create"))
                 .andExpect(flash().attribute("error", "Email is empty, but a required field, so please fill in this field!"));
     }
 
@@ -113,7 +113,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
                                 .param("rfidToken", "RF123458")
                                 .sessionAttr("customer", new Customer()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/create/"))
+                .andExpect(redirectedUrl("/administrator/customers/create"))
                 .andExpect(flash().attribute("error", "Email address is already used!"));
     }
 
@@ -128,7 +128,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
                                 .param("rfidToken", customer.getRfidToken())
                                 .sessionAttr("customer", new Customer()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/create/"))
+                .andExpect(redirectedUrl("/administrator/customers/create"))
                 .andExpect(flash().attribute("error", "RFID token is already used!"));
     }
 
@@ -142,7 +142,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
                                 .param("rfidToken", "RF123456")
                                 .sessionAttr("customer", customer))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/"))
+                .andExpect(redirectedUrl("/administrator/customers"))
                 .andExpect(flash().attribute("success", "Customer with name Piet Hein  has been created!"));
     }
 
@@ -164,7 +164,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/customers/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/"))
+                .andExpect(redirectedUrl("/administrator/customers"))
                 .andExpect(flash().attribute("error", "Customer with key not-found not found!"));
     }
 
@@ -222,7 +222,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/customers/delete/" + customer.getKey()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/"))
+                .andExpect(redirectedUrl("/administrator/customers"))
                 .andExpect(flash().attribute("success", "Customer with name " + customer.getName() + " has been deleted!"));
     }
 
@@ -233,7 +233,7 @@ public class DashboardCustomerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/customers/delete/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/customers/"))
+                .andExpect(redirectedUrl("/administrator/customers"))
                 .andExpect(flash().attribute("error", "Customer with key not-found not found!"));
     }
 }

@@ -53,7 +53,7 @@ public class DashboardProductControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/products/view/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(redirectedUrl("/administrator/products"))
                 .andExpect(flash().attribute("error", "Product with key not-found not found!"));
     }
 
@@ -89,7 +89,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Title is required, and therefore should be filled in!"));
     }
 
@@ -105,7 +105,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Starting date for selling should be before the ending time"));
     }
 
@@ -122,7 +122,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Starting date for selling should be before the ending time"));
     }
 
@@ -139,7 +139,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "1")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Price is required, and therefore should be filled in!"));
     }
 
@@ -156,7 +156,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                         .param("maxSoldPerCustomer", "1")
                         .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "VAT rate is required, and therefore should be filled in!"));
     }
 
@@ -173,7 +173,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "26")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
     }
 
@@ -190,7 +190,7 @@ public class DashboardProductControllerTest extends ControllerTest {
                                 .param("maxSoldPerCustomer", "0")
                                 .sessionAttr("product", product))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/create/"))
+                .andExpect(redirectedUrl("/administrator/products/create"))
                 .andExpect(flash().attribute("error", "Max sold per customer should be between 1 and 25!"));
     }
 
@@ -229,7 +229,7 @@ public class DashboardProductControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/products/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(redirectedUrl("/administrator/products"))
                 .andExpect(flash().attribute("error", "Product with key not-found not found!"));
     }
 
@@ -358,7 +358,7 @@ public class DashboardProductControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/products/delete/" + product.getKey()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(redirectedUrl("/administrator/products"))
                 .andExpect(flash().attribute("success", "Product Product product has been deleted!"));
     }
 
@@ -366,7 +366,7 @@ public class DashboardProductControllerTest extends ControllerTest {
     public void testDeleteGetNotFound() throws Exception {
         mockMvc.perform(get("/administrator/products/delete/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(redirectedUrl("/administrator/products"))
                 .andExpect(flash().attribute("error", "Product with key not-found not found!"));
     }
 
@@ -387,7 +387,7 @@ public class DashboardProductControllerTest extends ControllerTest {
     public void testOverviewGetNotFound() throws Exception {
         mockMvc.perform(get("/administrator/products/overview/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/products/"))
+                .andExpect(redirectedUrl("/administrator/products"))
                 .andExpect(flash().attribute("error", "Product with key not-found not found!"));
     }
 }

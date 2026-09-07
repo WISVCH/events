@@ -119,6 +119,6 @@ public class SalesStatsControllersTest extends ControllerTest {
     public void eventNotFoundRedirectTest() throws Exception {
         mockMvc.perform(get("/sales/stats/event/____"))
             .andExpect(status().isFound())
-            .andExpect(view().name("redirect:/sales/stats/"));
+            .andExpect(view().name("redirect:/sales/stats"));
     }
 }
