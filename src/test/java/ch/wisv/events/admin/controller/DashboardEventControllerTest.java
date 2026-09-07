@@ -49,7 +49,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testViewNotFound() throws Exception {
         mockMvc.perform(get("/administrator/events/view/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("error", "Event with key not-found not found!"));
     }
 
@@ -83,7 +83,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("success", "Event Events has been created!"));
     }
 
@@ -99,7 +99,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Title is required, and therefore should be filled in!"));
     }
 
@@ -115,7 +115,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Short description is required, and therefore should be filled in!"));
     }
 
@@ -131,7 +131,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Description is required, and therefore should be filled in!"));
     }
 
@@ -147,7 +147,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Starting time is required, and therefore should be filled in!"));
     }
 
@@ -163,7 +163,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Ending time is required, and therefore should be filled in!"));
     }
 
@@ -179,7 +179,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Target is required, and therefore should be filled in!"));
     }
 
@@ -196,7 +196,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "80")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Limit should be greater or equal to the target!"));
     }
 
@@ -213,7 +213,7 @@ public class DashboardEventControllerTest extends ControllerTest {
                                 .param("maxSold", "100")
                                 .sessionAttr("event", new Event()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/create/"))
+                .andExpect(redirectedUrl("/administrator/events/create"))
                 .andExpect(flash().attribute("error", "Starting time should be before the ending time"));
     }
 
@@ -231,7 +231,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testEditGetNotFound() throws Exception {
         mockMvc.perform(get("/administrator/events/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("error", "Event with key not-found not found!"));
     }
 
@@ -406,7 +406,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testOverviewNotFound() throws Exception {
         mockMvc.perform(get("/administrator/events/overview/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("error", "Event with key not-found not found!"));
     }
 
@@ -416,7 +416,7 @@ public class DashboardEventControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/events/delete/" + event.getKey()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("success", "Event " + event.getTitle() + " has been deleted!"));
     }
 
@@ -424,7 +424,7 @@ public class DashboardEventControllerTest extends ControllerTest {
     public void testDeleteNotFound() throws Exception {
         mockMvc.perform(get("/administrator/events/delete/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/events/"))
+                .andExpect(redirectedUrl("/administrator/events"))
                 .andExpect(flash().attribute("error", "Event with key not-found not found!"));
     }
 }

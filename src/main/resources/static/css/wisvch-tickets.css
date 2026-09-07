@@ -146,6 +146,13 @@ and also iPads specifically.
     color: #2AA1A9;
 }
 
+#shoppingBasketTable .shopping-basket-quantity {
+    align-items: center;
+    display: inline-flex;
+    gap: 1rem;
+    white-space: nowrap;
+}
+
 .vertical-line {
     border-left: 3px solid #e7ebf1;
     width: 1px;

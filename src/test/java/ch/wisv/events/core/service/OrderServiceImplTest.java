@@ -38,7 +38,7 @@ import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -64,27 +64,27 @@ import static org.mockito.Mockito.when;
 public class OrderServiceImplTest extends ServiceTest {
 
     /** OrderRepository. */
-    @MockBean
+    @MockitoBean
     private OrderRepository orderRepository;
 
     /** OrderProductRepository. */
-    @MockBean
+    @MockitoBean
     private OrderProductRepository orderProductRepository;
 
     /** OrderValidationService. */
-    @MockBean
+    @MockitoBean
     private OrderValidationService orderValidationService;
 
     /** ProductService. */
-    @MockBean
+    @MockitoBean
     private ProductService productService;
 
     /** MailService. */
-    @MockBean
+    @MockitoBean
     private MailService mailService;
 
     /** TicketService. */
-    @MockBean
+    @MockitoBean
     private TicketService ticketService;
 
     /** Administration Costs*/

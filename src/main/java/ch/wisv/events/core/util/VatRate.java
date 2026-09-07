@@ -1,5 +1,7 @@
 package ch.wisv.events.core.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum VatRate {
@@ -17,6 +19,16 @@ public enum VatRate {
 
     public String toString() {
         return this.name() + " (" + this.vatRate + "%)";
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static VatRate fromJson(String value) {
+        return VatRate.valueOf(value);
+    }
+
+    @JsonValue
+    public String toJson() {
+        return this.name();
     }
 
     public String getPercentage() {

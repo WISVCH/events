@@ -29,7 +29,7 @@ public class SalesScanEventController {
     private static final String ATTR_ERROR = "error";
 
     /** Default return redirect on error. */
-    private static final String ERROR_REDIRECT = "redirect:/sales/scan/";
+    private static final String ERROR_REDIRECT = "redirect:/sales/scan";
 
     /** EventService. */
     private final EventService eventService;

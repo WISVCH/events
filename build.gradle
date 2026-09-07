@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '3.2.5'
+        springBootVersion = '4.1.1'
     }
     repositories {
         mavenCentral()
@@ -41,63 +41,67 @@ configurations {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation platform('com.google.cloud:libraries-bom:26.85.0')
+    implementation platform('com.google.cloud:libraries-bom:26.88.0')
     implementation 'com.google.cloud:google-cloud-logging-logback'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-tomcat'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
 
     //TEMP APPLICATION PROPERTIES HELPER
     runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
 
-    implementation "be.woutschoovaerts:mollie:3.6.1"
+    implementation "be.woutschoovaerts:mollie:4.6.4"
 
-    implementation 'org.thymeleaf:thymeleaf-spring6'
-    implementation 'org.thymeleaf:thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-    implementation 'com.google.guava:guava:32.0.0-jre'
+    implementation 'com.google.guava:guava:33.7.1-jre'
     implementation 'org.hibernate.validator:hibernate-validator'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.apache.httpcomponents:httpclient'
-    implementation 'com.google.zxing:core:3.5.0'
-    implementation 'com.google.zxing:javase:3.5.0'
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'com.google.zxing:javase:3.5.4'
 
-    implementation 'org.webjars:bootstrap:4.0.0-beta.2'
-    implementation 'org.webjars.bower:eonasdan-bootstrap-datetimepicker:4.17.37'
-    implementation 'org.webjars.bower:momentjs:2.10.6'
     implementation 'org.webjars.bowergithub.wisvch:bootstrap-theme:4.6.1-3'
-    implementation 'org.webjars.bower:quagga:0.11.6'
     implementation 'org.webjars:sprintf.js:1.0.0'
-    implementation 'org.webjars:font-awesome:5.0.13'
-    implementation 'org.webjars.npm:flatpickr:4.5.1'
-    implementation 'org.webjars.bowergithub.alex-d:trumbowyg:2.18.0'
+    implementation 'org.webjars:font-awesome:7.3.0'
+    implementation 'org.webjars.npm:flatpickr:4.6.13'
+    implementation 'org.webjars.npm:trumbowyg:2.31.0'
+    implementation 'org.webjars.npm:jquery:3.2.1'
+    implementation 'org.webjars.npm:popper.js:1.16.1'
+    implementation('org.webjars:datatables:1.10.16') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    implementation('org.webjars:datatables-plugins:1.10.16') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    implementation 'org.webjars.npm:animate.css:4.1.1'
 
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.projectlombok:lombok:1.18.48'
 
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok:1.18.48'
 
     implementation "com.googlecode.json-simple:json-simple:1.1.1"
-    implementation 'net.sf.biweekly:biweekly:0.6.0'
-
     runtimeOnly 'org.hsqldb:hsqldb'
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.fluttercode.datafactory:datafactory:0.8'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'com.tngtech.java:junit-dataprovider:1.5.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
 
     implementation 'org.javatuples:javatuples:1.2'
 
-    implementation 'com.auth0:java-jwt:4.4.0'
-    implementation 'com.google.api-client:google-api-client:2.6.0'
-    implementation 'com.google.apis:google-api-services-walletobjects:v1-rev20240723-2.0.0'
+    implementation 'com.auth0:java-jwt:4.6.0'
+    implementation 'com.google.api-client:google-api-client:2.9.1'
+    implementation 'com.google.apis:google-api-services-walletobjects:v1-rev20260806-2.0.0'
 }
 
 test {

@@ -47,7 +47,7 @@ public class SalesScanTicketControllerTest extends ControllerTest {
     public void testErrorMissingError() throws Exception {
         mockMvc.perform(get("/sales/scan/ticket/error"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/sales/scan/"));
+                .andExpect(redirectedUrl("/sales/scan"));
     }
 
     @Test
@@ -83,13 +83,13 @@ public class SalesScanTicketControllerTest extends ControllerTest {
     public void testIndexMissingTicket() throws Exception {
         mockMvc.perform(get("/sales/scan/ticket/success"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/sales/scan/"));
+                .andExpect(redirectedUrl("/sales/scan"));
     }
 
     @Test
     public void testIndexRandom() throws Exception {
         mockMvc.perform(get("/sales/scan/ticket/random"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/sales/scan/"));
+                .andExpect(redirectedUrl("/sales/scan"));
     }
 }

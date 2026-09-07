@@ -106,7 +106,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -151,12 +151,12 @@ public class DashboardEventController extends DashboardController {
                 this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
             }
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         } catch (EventInvalidException | IOException e) {
             redirect.addFlashAttribute(OBJ_EVENT, event);
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/create/";
+            return "redirect:/administrator/events/create";
         }
     }
 
@@ -180,7 +180,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -209,13 +209,13 @@ public class DashboardEventController extends DashboardController {
             if (event.getExternalProductUrl() != null && event.getExternalProductUrl().length() == 0){
                event.setExternalProductUrl(null);
             }
-            eventService.update(event);
+            Event updatedEvent = eventService.update(event);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Event changes saved!");
 
-            if (event.getPublished() == EventStatus.PUBLISHED) {
-                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, event);
+            if (updatedEvent.getPublished() == EventStatus.PUBLISHED) {
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_CREATE_UPDATE, updatedEvent);
             } else {
-                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, event);
+                this.webhookPublisher.createWebhookTask(WebhookTrigger.EVENT_DELETE, updatedEvent);
             }
 
             return "redirect:/administrator/events/view/" + event.getKey();
@@ -251,7 +251,7 @@ public class DashboardEventController extends DashboardController {
         } catch (EventNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/events/";
+            return "redirect:/administrator/events";
         }
     }
 
@@ -311,6 +311,6 @@ public class DashboardEventController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, "Event with key not-found not found!");
         }
 
-        return "redirect:/administrator/events/";
+        return "redirect:/administrator/events";
     }
 }

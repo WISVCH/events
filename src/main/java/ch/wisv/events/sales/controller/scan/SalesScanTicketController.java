@@ -29,7 +29,7 @@ public class SalesScanTicketController {
     private static final String DEFAULT_REDIRECT = "/sales/scan/";
 
     /** Default return redirect on error. */
-    private static final String ERROR_REDIRECT = "redirect:/sales/scan/";
+    private static final String ERROR_REDIRECT = "redirect:/sales/scan";
 
     /**
      * Ticket index view.

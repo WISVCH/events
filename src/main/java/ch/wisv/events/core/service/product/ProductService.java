@@ -79,10 +79,12 @@ public interface ProductService {
      *
      * @param product Product containing the new product information
      *
+     * @return the persisted Product with the updates applied
+     *
      * @throws ProductNotFoundException when Product is not found
      * @throws ProductInvalidException  when Product is invalid
      */
-    void update(Product product) throws ProductNotFoundException, ProductInvalidException;
+    Product update(Product product) throws ProductNotFoundException, ProductInvalidException;
 
     /**
      * Set the event that owns a Product.

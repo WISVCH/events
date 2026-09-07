@@ -36,6 +36,6 @@ public class SalesScanEventControllerTest extends ControllerTest {
     public void testScannerEventNotExists() throws Exception {
         mockMvc.perform(get("/sales/scan/event/" + UUID.randomUUID() + "/barcode"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/sales/scan/"));
+                .andExpect(redirectedUrl("/sales/scan"));
     }
 }

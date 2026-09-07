@@ -52,7 +52,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/webhooks/view/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/"))
+                .andExpect(redirectedUrl("/administrator/webhooks"))
                 .andExpect(flash().attribute("error", "Webhook with key not-found not found!"));
     }
 
@@ -80,7 +80,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(post("/administrator/webhooks/create").sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/create/"))
+                .andExpect(redirectedUrl("/administrator/webhooks/create"))
                 .andExpect(flash().attribute("error", "Payload URL can not be empty!"));
     }
 
@@ -92,7 +92,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
                                 .param("payloadUrl", "https://test.frl")
                                 .sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/create/"))
+                .andExpect(redirectedUrl("/administrator/webhooks/create"))
                 .andExpect(flash().attribute("error", "LDAP group can not be null!"));
     }
 
@@ -105,7 +105,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
                                 .param("ldapGroup", "BEHEER")
                                 .sessionAttr("webhook", webhook))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/"))
+                .andExpect(redirectedUrl("/administrator/webhooks"))
                 .andExpect(flash().attribute("success", "Webhook https://test.frl has been added!"));
     }
 
@@ -127,7 +127,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/webhooks/edit/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/"))
+                .andExpect(redirectedUrl("/administrator/webhooks"))
                 .andExpect(flash().attribute("error", "Webhook with key not-found not found!"));
     }
 
@@ -181,7 +181,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/webhooks/delete/" + webhook.getKey()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/"))
+                .andExpect(redirectedUrl("/administrator/webhooks"))
                 .andExpect(flash().attribute("success", "Webhook for " + webhook.getPayloadUrl() + " has been deleted!"));
     }
 
@@ -192,7 +192,7 @@ public class DashboardWebhookControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/administrator/webhooks/delete/not-found"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/administrator/webhooks/"))
+                .andExpect(redirectedUrl("/administrator/webhooks"))
                 .andExpect(flash().attribute("error", "Webhook with key not-found not found!"));
     }
 }

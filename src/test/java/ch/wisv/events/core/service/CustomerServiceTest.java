@@ -1,6 +1,6 @@
 package ch.wisv.events.core.service;
 
-import ch.wisv.events.ServiceTest;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.exception.normal.CustomerInvalidException;
 import ch.wisv.events.core.exception.normal.CustomerNotFoundException;
 import ch.wisv.events.core.exception.runtime.CustomerAlreadyPlacedOrdersException;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CustomerServiceTest extends ServiceTest {
+public class CustomerServiceTest extends MockitoTest {
 
     /**
      * Mock CustomerRepository

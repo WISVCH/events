@@ -11,12 +11,13 @@ import org.mockito.Mockito;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -66,6 +67,12 @@ public class EventsApplicationTest {
 //        Mockito.when(service.getCurrentCustomer()).thenReturn(customer);
 
         return service;
+    }
+
+    @Bean
+    @Primary
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return Mockito.mock(ClientRegistrationRepository.class);
     }
 
     @Bean

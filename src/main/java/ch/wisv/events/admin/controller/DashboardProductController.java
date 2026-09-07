@@ -83,7 +83,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -126,7 +126,7 @@ public class DashboardProductController extends DashboardController {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
             redirect.addFlashAttribute(OBJ_PRODUCT, product);
 
-            return "redirect:/administrator/products/create/";
+            return "redirect:/administrator/products/create";
         }
     }
 
@@ -158,7 +158,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -178,8 +178,8 @@ public class DashboardProductController extends DashboardController {
             if (product.getRedirectUrl() != null && product.getRedirectUrl().length() == 0){
                 product.setRedirectUrl(null);
             }
-            productService.update(product);
-            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, product);
+            Product updatedProduct = productService.update(product);
+            webhookPublisher.createWebhookTask(WebhookTrigger.PRODUCT_CREATE_UPDATE, updatedProduct);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Product changes have been saved!");
 
             return "redirect:/administrator/products/view/" + product.getKey();
@@ -212,7 +212,7 @@ public class DashboardProductController extends DashboardController {
         } catch (ProductNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/products/";
+            return "redirect:/administrator/products";
         }
     }
 
@@ -236,6 +236,6 @@ public class DashboardProductController extends DashboardController {
             redirectAttributes.addFlashAttribute(FLASH_ERROR, e.getMessage());
         }
 
-        return "redirect:/administrator/products/";
+        return "redirect:/administrator/products";
     }
 }

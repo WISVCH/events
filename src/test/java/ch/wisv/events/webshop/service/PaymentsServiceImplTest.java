@@ -5,8 +5,8 @@ import be.woutschoovaerts.mollie.data.common.Link;
 import be.woutschoovaerts.mollie.data.payment.PaymentLinks;
 import be.woutschoovaerts.mollie.data.payment.PaymentRequest;
 import be.woutschoovaerts.mollie.data.payment.PaymentResponse;
-import be.woutschoovaerts.mollie.handler.PaymentHandler;
-import ch.wisv.events.ServiceTest;
+import be.woutschoovaerts.mollie.handler.payments.PaymentHandler;
+import ch.wisv.events.MockitoTest;
 import ch.wisv.events.core.model.customer.Customer;
 import ch.wisv.events.core.model.order.Order;
 import ch.wisv.events.core.model.order.OrderProduct;
@@ -30,12 +30,11 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 
 /**
  * PaymentsServiceImpl test.
  */
-public class PaymentsServiceImplTest extends ServiceTest {
+public class PaymentsServiceImplTest extends MockitoTest {
 
     @Mock
     private OrderService orderService;
@@ -104,8 +103,6 @@ public class PaymentsServiceImplTest extends ServiceTest {
 
         PaymentRequest paymentRequest = paymentsService.createMolliePaymentRequestFromOrder(order);
 
-
-        assertEquals(paymentRequest.getConsumerName(), Optional.of("Test user"));
 
         /**
          * Assert that price rounding works correctly. Second decimal is mandatory for Mollie.

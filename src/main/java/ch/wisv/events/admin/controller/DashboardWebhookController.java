@@ -69,7 +69,7 @@ public class DashboardWebhookController extends DashboardController {
         } catch (WebhookNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/webhooks/";
+            return "redirect:/administrator/webhooks";
         }
     }
 
@@ -103,12 +103,12 @@ public class DashboardWebhookController extends DashboardController {
             webhookService.create(webhook);
             redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook " + webhook.getPayloadUrl() + " has been added!");
 
-            return "redirect:/administrator/webhooks/";
+            return "redirect:/administrator/webhooks";
         } catch (WebhookInvalidException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
             redirect.addFlashAttribute(OBJ_WEBHOOK, webhook);
 
-            return "redirect:/administrator/webhooks/create/";
+            return "redirect:/administrator/webhooks/create";
         }
     }
 
@@ -131,7 +131,7 @@ public class DashboardWebhookController extends DashboardController {
         } catch (WebhookNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/webhooks/";
+            return "redirect:/administrator/webhooks";
         }
     }
 
@@ -176,11 +176,11 @@ public class DashboardWebhookController extends DashboardController {
 
             redirect.addFlashAttribute(FLASH_SUCCESS, "Webhook for " + webhook.getPayloadUrl() + " has been deleted!");
 
-            return "redirect:/administrator/webhooks/";
+            return "redirect:/administrator/webhooks";
         } catch (WebhookNotFoundException e) {
             redirect.addFlashAttribute(FLASH_ERROR, e.getMessage());
 
-            return "redirect:/administrator/webhooks/";
+            return "redirect:/administrator/webhooks";
         }
     }
 }

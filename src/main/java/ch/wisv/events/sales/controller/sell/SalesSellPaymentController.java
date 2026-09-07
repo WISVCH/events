@@ -52,7 +52,7 @@ public class SalesSellPaymentController {
 
             return "redirect:/sales/sell/order/" + order.getPublicReference() + "/complete";
         } catch (EventsException e) {
-            return "redirect:/sales/sell/";
+            return "redirect:/sales/sell";
         }
     }
 }

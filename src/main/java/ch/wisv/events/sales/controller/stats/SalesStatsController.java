@@ -31,7 +31,7 @@ public class SalesStatsController {
     /**
      * Default return redirect on error.
      */
-    private static final String ERROR_REDIRECT = "redirect:/sales/stats/";
+    private static final String ERROR_REDIRECT = "redirect:/sales/stats";
 
     /**
      * EventService.
