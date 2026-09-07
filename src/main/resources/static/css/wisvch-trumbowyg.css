@@ -2,6 +2,11 @@
     margin-top: 0;
 }
 
+.trumbowyg-box.is-invalid,
+.trumbowyg-box.is-invalid .trumbowyg-editor-box {
+    border-color: #dc3545;
+}
+
 .trumbowyg-button-pane {
     background: #f3f3f3;
 }

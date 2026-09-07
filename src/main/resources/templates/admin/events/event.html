@@ -63,7 +63,7 @@
 
             <div th:replace="~{fragments/messages :: messages}"></div>
 
-            <form th:action="${event.getId() == null} ? @{/administrator/events/create} : @{/administrator/events/edit/{key}(key=${event.getKey()})}" th:object="${event}" method="POST" enctype="multipart/form-data">
+            <form id="event-form" th:action="${event.getId() == null} ? @{/administrator/events/create} : @{/administrator/events/edit/{key}(key=${event.getKey()})}" th:object="${event}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{key}" th:value="*{key}">
 
                 <div class="row">
@@ -87,13 +87,13 @@
                                         </label>
                                     </div>
                                     <div class="form-group col-12">
-                                        <label>Description*
-                                            <textarea type="text" class="form-control" rows="5" style="height: 150px; display: none;"
-                                                      id="description_textarea"
-                                                      th:field="*{description}"
-                                                      th:text="${event.getDescription()}" required></textarea>
-                                        </label>
-                                        <div id="description_trumbowyg"></div>
+                                        <label for="description_textarea">Description*</label>
+                                        <textarea class="form-control" rows="5" style="height: 150px;"
+                                                  id="description_textarea"
+                                                  aria-describedby="description-error"
+                                                  th:field="*{description}"
+                                                  th:text="${event.getDescription()}"></textarea>
+                                        <div id="description-error" class="invalid-feedback" role="alert"></div>
                                     </div>
                                     <div class="form-group col-12">
                                         <label>External Product URL
@@ -424,9 +424,12 @@
 <script th:src="@{/webjars/trumbowyg/dist/plugins/table/trumbowyg.table.min.js}"></script>
 <script th:src="@{/js/events/script.min.js}"></script>
 <script>
-    const description_textarea = $('#description_textarea')
-    const description_trumbowyg = $('#description_trumbowyg')
-    description_trumbowyg.trumbowyg({
+    const eventForm = $('#event-form');
+    const descriptionTextarea = $('#description_textarea');
+    const descriptionError = $('#description-error');
+    let descriptionValidationAttempted = false;
+
+    descriptionTextarea.trumbowyg({
         btns: [
             ['viewHTML'],
             ['formatting'],
@@ -441,7 +444,36 @@
         linkTargets: ['_blank', '_self'],
         urlProtocol: true,
     });
-    description_trumbowyg.trumbowyg('html', description_textarea.val());
-    description_trumbowyg.on('tbwchange', function(){ description_textarea.val(description_trumbowyg.trumbowyg('html')) })
+
+    function descriptionHasContent() {
+        const description = $('<div>').html(descriptionTextarea.trumbowyg('html'));
+        return description.text().replace(/\u00a0/g, ' ').trim() !== '' || description.find('img').length > 0;
+    }
+
+    function validateDescription() {
+        const isValid = descriptionHasContent();
+        const editor = descriptionTextarea.closest('.trumbowyg-box');
+
+        editor.toggleClass('is-invalid', !isValid);
+        descriptionError.text(isValid ? '' : 'Please enter a description.');
+        descriptionError.toggleClass('d-block', !isValid);
+
+        return isValid;
+    }
+
+    descriptionTextarea.on('tbwchange', function () {
+        if (descriptionValidationAttempted) {
+            validateDescription();
+        }
+    });
+
+    eventForm.on('submit', function (event) {
+        descriptionValidationAttempted = true;
+
+        if (!validateDescription()) {
+            event.preventDefault();
+            descriptionTextarea.closest('.trumbowyg-box').find('.trumbowyg-editor').trigger('focus');
+        }
+    });
 </script>
 </body>
