@@ -33,6 +33,7 @@
     "vatRate": "VAT_HIGH",
     "maxSold": 5,
     "maxSoldPerCustomer": 5,
+    "redirectUrl": "https://example.com",
     "key": "8d7900db-07d6-4922-91da-55e80daec441"
   },
   {
@@ -42,6 +43,7 @@
     "vatRate": "VAT_HIGH",
     "maxSold": 5,
     "maxSoldPerCustomer": 5,
+    "redirectUrl": "https://example.com",
     "key": "953f1148-0e68-4f8d-a101-c29d6d37e193"
   },
   {

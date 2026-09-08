@@ -89,5 +89,19 @@
     "productKeys": ["d162a95b-04b8-4b48-bdf4-3e5a432be178", "e1740ab1-2e25-4b2f-a516-b3c5f039580d"],
     "startOffsetHours": 96,
     "durationHours": 2
+  },
+  {
+    "key": "d1879f23-a8c9-4f5c-857c-0f57391fb7cd",
+    "title": "Programming contest",
+    "shortDescription": "Put your programming skills to the test.",
+    "description": "<p>Join us for a friendly programming contest.</p>",
+    "location": "TBD",
+    "target": 50,
+    "maxSold": 50,
+    "imageUrl": "",
+    "externalProductUrl": "https://example.com",
+    "productKeys": [],
+    "startOffsetHours": 240,
+    "durationHours": 4
   }
 ]

@@ -110,6 +110,7 @@ public class DevDataSeeder {
             product.setKey(string(fixture, "key"));
             product.setMaxSoldPerCustomer(number(fixture, "maxSoldPerCustomer").intValue());
             product.setChOnly(booleanOrDefault(fixture, "chOnly", false));
+            product.setRedirectUrl(optionalString(fixture, "redirectUrl"));
             productRepository.save(product);
             products.put(product.getKey(), product);
         }
@@ -141,6 +142,7 @@ public class DevDataSeeder {
                     string(fixture, "shortDescription")
             );
             event.setKey(string(fixture, "key"));
+            event.setExternalProductUrl(optionalString(fixture, "externalProductUrl"));
             event.setPublished(EventStatus.PUBLISHED);
             event.setOrganizedBy(LdapGroup.FLITCIE);
             event.setCategories(List.of(EventCategory.CAREER));
