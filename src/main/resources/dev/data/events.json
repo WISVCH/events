@@ -1,5 +1,6 @@
 [
   {
+    "key": "50c3abce-2a0e-4f6a-aec2-9e7e17ad1ba1",
     "title": "T.U.E.S.Day lecture with drinks ING",
     "shortDescription": "Op 4 april zal ING een borrellezing geven!",
     "description": "Op 4 april zal ING een borrellezing geven! De lezing begint om 16:00 uur, waarna we rond ongeveer 17:00 uur zullen verplaatsen naar de /Pub. De borrel is vervolgens een ideale gelegenheid om op een informele manier vragen te stellen aan de spreker en werknemers van ING!",
@@ -7,9 +8,12 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumbers": [1, 6]
+    "productKeys": ["dd729c96-dacf-4eab-a2e8-19d2a1ad917c", "dd729c96-dacf-4eab-a2e8-19d2a1ad917d"],
+    "startOffsetHours": -48,
+    "durationHours": 2
   },
   {
+    "key": "63867d94-a4c2-4df6-8bd2-d5d1ca2d1f56",
     "title": "Symposium",
     "shortDescription": "‘The key to your privacy: The science behind cyber security’",
     "description": "On Monday the 1st of May, our symposium themed ‘The key to your privacy: The science behind cyber security’ will take place in Theater de Veste, Delft. During the day, there will be two separated tracks and also multiple plenary sessions. At the end of the day, we will finish with a discussion about the ethics behind cyber security, followed by drinks and the possibility to network and share thoughts on the discussed topics.",
@@ -17,9 +21,12 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumbers": [2]
+    "productKeys": ["cfc66e3d-cf77-441d-a04a-9e81bd3e1117"],
+    "startOffsetHours": -1,
+    "durationHours": 2
   },
   {
+    "key": "ca42e3de-d541-4da2-ae86-f4a29e8c1a82",
     "title": "MatCH CH vision Music Festival",
     "shortDescription": "Show yourself off on the Just Dance Tournament in the /pub",
     "description": "Ever thought, I am a dancing queen! Do you have the moves like Jagger? Show yourself off on the Just Dance Tournement in the /pub",
@@ -27,9 +34,12 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumbers": [4]
+    "productKeys": ["8d7900db-07d6-4922-91da-55e80daec441", "953f1148-0e68-4f8d-a101-c29d6d37e193"],
+    "startOffsetHours": 24,
+    "durationHours": 3
   },
   {
+    "key": "1adcf3b3-8b7d-4a22-9f8d-fd1c2a7f5e44",
     "title": "WiFi Rally",
     "shortDescription": "Solve cryptic puzzles to find your way to a variety of destinations.",
     "description": "The WiFi will take you on a mesmerizing trip through Europe, with the second WiFi Weekendrally. Solve cryptic puzzles to find your way to a variety of destinations. Get a car, form a team and join us for this wonderful and challenging weekend! The weekend will feature a dinner, drink, sleepover and breakfast.",
@@ -37,9 +47,12 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumbers": [3]
+    "productKeys": ["f0d3a2a5-150e-4799-8679-db6778edb2a9"],
+    "startOffsetHours": 168,
+    "durationHours": 48
   },
   {
+    "key": "d7ac30d5-fc68-4735-9042-0e247f842c23",
     "title": "Annu drinks",
     "shortDescription": "Buy your yearbook for only 1 euro!",
     "description": "Join us in the /Pub for some drinks and buy your own yearbook (Annu) for only 1 euro! The yearbook will contain a personal message from every member of the committee AnnuCie.",
@@ -47,6 +60,34 @@
     "target": 50,
     "maxSold": 100,
     "imageUrl": "https://ch.tudelft.nl/wp-content/uploads/2017/01/pt-boards.jpg",
-    "productNumbers": [5]
+    "productKeys": ["7a5b9158-a9e4-40f5-ad7f-586092274e63"],
+    "startOffsetHours": 336,
+    "durationHours": 3
+  },
+  {
+    "key": "b15b19e4-7d33-44c4-b8bb-ec00bcfb8620",
+    "title": "Gala",
+    "shortDescription": "Join us for an evening of dinner, drinks, and dancing.",
+    "description": "<p>Join us for the annual CH Gala.</p><p>Choose from dinner and party tickets, party-only tickets, and a bus ticket for the journey home. Non-alcoholic variants are available.</p>",
+    "location": "TBD",
+    "target": 100,
+    "maxSold": 260,
+    "imageUrl": "",
+    "productKeys": ["f0377be5-c0ee-445e-bad6-8f7c6fdaed50", "1d2fe951-4ae9-4aa9-b2c1-7b3df1ef7630", "fa76e9d8-1833-4ac3-b802-d1e5ee6f9529", "96cc77d0-8052-4e0b-9322-455d82a22e4b", "e6acabb4-6ecc-41e4-b499-4fd41cffec31", "d83bd333-c907-4768-b737-41d355e6f3ef", "82ae1a7e-f3f5-4983-9dc2-1e03bde6d2a8", "f5c897ef-b3d3-4a24-bb01-6b493e07887f", "3c14c122-f8b3-4cee-ac7d-3c9c0473389d", "4dfc6c8c-35f4-4ad2-bd57-8415494700b9"],
+    "startOffsetHours": 504,
+    "durationHours": 8
+  },
+  {
+    "key": "d0f2eaa9-9779-4bae-b0b9-b79ad718cc76",
+    "title": "Board game night",
+    "shortDescription": "An evening of board games at CH.",
+    "description": "<p>Join us for an evening of board games at CH. Choose a standard ticket or a ticket including one drink.</p>",
+    "location": "CH /Pub",
+    "target": 2,
+    "maxSold": 2,
+    "imageUrl": "",
+    "productKeys": ["d162a95b-04b8-4b48-bdf4-3e5a432be178", "e1740ab1-2e25-4b2f-a516-b3c5f039580d"],
+    "startOffsetHours": 96,
+    "durationHours": 2
   }
 ]

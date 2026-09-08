@@ -4,13 +4,15 @@
     "name": "Sven Popping",
     "email": "svenp@ch.tudelft.nl",
     "chUserman": "svenp",
-    "rfidToken": "3061a041"
+    "rfidToken": "3061a041",
+    "verifiedChMember": true
   },
   {
     "sub": "WISVCH.0001",
     "name": "Test",
     "email": "test@ch.tudelft.nl",
     "chUserman": "test",
-    "rfidToken": "123"
+    "rfidToken": "123",
+    "verifiedChMember": false
   }
 ]
