@@ -1,51 +1,142 @@
 [
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "OTHER",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "dd729c96-dacf-4eab-a2e8-19d2a1ad917c",
+    "ticketCode" : "100001",
+    "ticketStatus" : "OPEN"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "MOLLIE",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "cfc66e3d-cf77-441d-a04a-9e81bd3e1117",
+    "ticketCode" : "100002",
+    "ticketStatus" : "SCANNED"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "CHPAY",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "f0d3a2a5-150e-4799-8679-db6778edb2a9",
+    "ticketCode" : "100003",
+    "ticketStatus" : "OPEN"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "OTHER",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "8d7900db-07d6-4922-91da-55e80daec441",
+    "ticketCode" : "100004",
+    "ticketStatus" : "SCANNED"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "MOLLIE",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "7a5b9158-a9e4-40f5-ad7f-586092274e63",
+    "ticketCode" : "100005",
+    "ticketStatus" : "OPEN"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "OTHER",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "dd729c96-dacf-4eab-a2e8-19d2a1ad917d",
+    "ticketCode" : "100006",
+    "ticketStatus" : "OPEN"
   },
   {
     "orderStatus" : "PAID",
-    "paymentMethod" : "IDEAL",
+    "paymentMethod" : "CHPAY",
     "customerRfid" : "3061a041",
     "owner" : 1,
-    "createdBy" : "Sven Popping"
+    "createdBy" : "Sven Popping",
+    "productKey" : "cfc66e3d-cf77-441d-a04a-9e81bd3e1117",
+    "ticketCode" : "100007",
+    "ticketStatus" : "SCANNED"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "MOLLIE",
+    "customerRfid" : "3061a041",
+    "owner" : 1,
+    "createdBy" : "Sven Popping",
+    "productKey" : "d162a95b-04b8-4b48-bdf4-3e5a432be178",
+    "ticketCode" : "100008",
+    "ticketStatus" : "OPEN"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "CHPAY",
+    "customerRfid" : "3061a041",
+    "owner" : 1,
+    "createdBy" : "Sven Popping",
+    "productKey" : "e1740ab1-2e25-4b2f-a516-b3c5f039580d",
+    "ticketCode" : "100009",
+    "ticketStatus" : "SCANNED"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "MOLLIE",
+    "customerRfid" : "123",
+    "owner" : 2,
+    "createdBy" : "Test",
+    "productKey" : "953f1148-0e68-4f8d-a101-c29d6d37e193",
+    "ticketCode" : "100010",
+    "ticketStatus" : "OPEN"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "CHPAY",
+    "customerRfid" : "3061a041",
+    "owner" : 1,
+    "createdBy" : "Sven Popping",
+    "productKey" : "f0377be5-c0ee-445e-bad6-8f7c6fdaed50",
+    "ticketCode" : "100011",
+    "ticketStatus" : "OPEN"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "MOLLIE",
+    "customerRfid" : "3061a041",
+    "owner" : 1,
+    "createdBy" : "Sven Popping",
+    "productKey" : "e6acabb4-6ecc-41e4-b499-4fd41cffec31",
+    "ticketCode" : "100012",
+    "ticketStatus" : "OPEN"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "CHPAY",
+    "customerRfid" : "123",
+    "owner" : 2,
+    "createdBy" : "Test",
+    "productKey" : "82ae1a7e-f3f5-4983-9dc2-1e03bde6d2a8",
+    "ticketCode" : "100013",
+    "ticketStatus" : "SCANNED"
+  },
+  {
+    "orderStatus" : "PAID",
+    "paymentMethod" : "MOLLIE",
+    "customerRfid" : "123",
+    "owner" : 2,
+    "createdBy" : "Test",
+    "productKey" : "4dfc6c8c-35f4-4ad2-bd57-8415494700b9",
+    "ticketCode" : "100014",
+    "ticketStatus" : "OPEN"
   }
 ]

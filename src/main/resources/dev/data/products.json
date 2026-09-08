@@ -29,11 +29,22 @@
   {
     "title": "MatCH ticket",
     "description": "Ticket for the MatCH activity.",
-    "cost": 1.00,
+    "cost": 0.00,
     "vatRate": "VAT_HIGH",
     "maxSold": 5,
     "maxSoldPerCustomer": 5,
+    "redirectUrl": "https://example.com",
     "key": "8d7900db-07d6-4922-91da-55e80daec441"
+  },
+  {
+    "title": "MatCH ticket + Pizza",
+    "description": "Ticket for the MatCH activity including pizza.",
+    "cost": 2.50,
+    "vatRate": "VAT_HIGH",
+    "maxSold": 5,
+    "maxSoldPerCustomer": 5,
+    "redirectUrl": "https://example.com",
+    "key": "953f1148-0e68-4f8d-a101-c29d6d37e193"
   },
   {
     "title": "Annuarium",
@@ -51,7 +62,138 @@
     "vatRate": "VAT_HIGH",
     "maxSold": 100,
     "maxSoldPerCustomer": 4,
-    "parentProductNumber": 1,
+    "parentProductKey": "dd729c96-dacf-4eab-a2e8-19d2a1ad917c",
     "key": "dd729c96-dacf-4eab-a2e8-19d2a1ad917d"
+  },
+  {
+    "title": "CH member duo-ticket dinner + gala",
+    "description": "Admission for two CH members to the Gala dinner and party.",
+    "cost": 155.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 59,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "sellEndOffsetHours": 480,
+    "key": "f0377be5-c0ee-445e-bad6-8f7c6fdaed50"
+  },
+  {
+    "title": "CH member duo-ticket dinner + gala, one person non-alcoholic",
+    "description": "Admission for two CH members to the Gala dinner and party. One person receives non-alcoholic drinks.",
+    "cost": 147.50,
+    "vatRate": "VAT_FREE",
+    "maxSold": 59,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "parentProductKey": "f0377be5-c0ee-445e-bad6-8f7c6fdaed50",
+    "sellEndOffsetHours": 480,
+    "key": "1d2fe951-4ae9-4aa9-b2c1-7b3df1ef7630"
+  },
+  {
+    "title": "CH member duo-ticket dinner + gala, two people non-alcoholic",
+    "description": "Admission for two CH members to the Gala dinner and party. Both people receive non-alcoholic drinks.",
+    "cost": 140.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 59,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "parentProductKey": "f0377be5-c0ee-445e-bad6-8f7c6fdaed50",
+    "sellEndOffsetHours": 480,
+    "key": "fa76e9d8-1833-4ac3-b802-d1e5ee6f9529"
+  },
+  {
+    "title": "CH member duo-ticket gala",
+    "description": "Admission for two CH members to the Gala party, excluding dinner.",
+    "cost": 75.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "sellEndOffsetHours": 480,
+    "key": "96cc77d0-8052-4e0b-9322-455d82a22e4b"
+  },
+  {
+    "title": "CH member duo-ticket gala, one person non-alcoholic",
+    "description": "Admission for two CH members to the Gala party, excluding dinner. One person receives non-alcoholic drinks.",
+    "cost": 67.50,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "parentProductKey": "96cc77d0-8052-4e0b-9322-455d82a22e4b",
+    "sellEndOffsetHours": 480,
+    "key": "e6acabb4-6ecc-41e4-b499-4fd41cffec31"
+  },
+  {
+    "title": "CH member duo-ticket gala, two people non-alcoholic",
+    "description": "Admission for two CH members to the Gala party, excluding dinner. Both people receive non-alcoholic drinks.",
+    "cost": 60.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "chOnly": true,
+    "parentProductKey": "96cc77d0-8052-4e0b-9322-455d82a22e4b",
+    "sellEndOffsetHours": 480,
+    "key": "d83bd333-c907-4768-b737-41d355e6f3ef"
+  },
+  {
+    "title": "Non-CH member duo-ticket gala",
+    "description": "Admission for two guests to the Gala party, excluding dinner.",
+    "cost": 90.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "sellEndOffsetHours": 480,
+    "key": "82ae1a7e-f3f5-4983-9dc2-1e03bde6d2a8"
+  },
+  {
+    "title": "Non-CH member duo-ticket gala, one person non-alcoholic",
+    "description": "Admission for two guests to the Gala party, excluding dinner. One person receives non-alcoholic drinks.",
+    "cost": 82.50,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "parentProductKey": "82ae1a7e-f3f5-4983-9dc2-1e03bde6d2a8",
+    "sellEndOffsetHours": 480,
+    "key": "f5c897ef-b3d3-4a24-bb01-6b493e07887f"
+  },
+  {
+    "title": "Non-CH member duo-ticket gala, two people non-alcoholic",
+    "description": "Admission for two guests to the Gala party, excluding dinner. Both people receive non-alcoholic drinks.",
+    "cost": 75.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 84,
+    "maxSoldPerCustomer": 1,
+    "parentProductKey": "82ae1a7e-f3f5-4983-9dc2-1e03bde6d2a8",
+    "sellEndOffsetHours": 480,
+    "key": "3c14c122-f8b3-4cee-ac7d-3c9c0473389d"
+  },
+  {
+    "title": "Gala bus ticket",
+    "description": "One-way bus ticket after the Gala.",
+    "cost": 9.00,
+    "vatRate": "VAT_FREE",
+    "maxSold": 260,
+    "maxSoldPerCustomer": 2,
+    "sellEndOffsetHours": 480,
+    "key": "4dfc6c8c-35f4-4ad2-bd57-8415494700b9"
+  },
+  {
+    "title": "Board game night ticket",
+    "description": "Admission to the board game night.",
+    "cost": 5.00,
+    "vatRate": "VAT_HIGH",
+    "maxSold": 2,
+    "maxSoldPerCustomer": 2,
+    "key": "d162a95b-04b8-4b48-bdf4-3e5a432be178"
+  },
+  {
+    "title": "Board game night ticket + drink",
+    "description": "Admission to the board game night including one drink.",
+    "cost": 7.50,
+    "vatRate": "VAT_HIGH",
+    "maxSold": 2,
+    "maxSoldPerCustomer": 2,
+    "parentProductKey": "d162a95b-04b8-4b48-bdf4-3e5a432be178",
+    "key": "e1740ab1-2e25-4b2f-a516-b3c5f039580d"
   }
 ]
