@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Application [dev]",
+            "request": "launch",
+            "mainClass": "ch.wisv.events.EventsApplication",
+            "args": "--spring.profiles.active=dev"
+        },
+        {
+            "type": "java",
+            "name": "Application [devcontainer]",
+            "request": "launch",
+            "mainClass": "ch.wisv.events.EventsApplication",
+            "args": "--spring.profiles.active=dev,devcontainer"
+        }
+    ]
+}
