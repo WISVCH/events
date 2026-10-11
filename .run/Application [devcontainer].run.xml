@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Application [devcontainer]" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev,devcontainer" />
+    <module name="events.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.wisv.events.EventsApplication" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="ch.wisv.events.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
