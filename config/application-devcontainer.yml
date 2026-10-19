@@ -1,54 +1,9 @@
-############## Production properties #############################################################
-# This is the default property file which can be used as a template for default configuration.   #
-# Copy this file to `/config/application.properties`, with the runnable jar in the `/` directory #
-##################################################################################################
-
 spring:
   datasource:
-    # DATABASE PROPERTIES
-    driverClassName: org.postgresql.Driver
-    # Change <MyDb> with the name of your database name
-    url: jdbc:postgresql://localhost:5432/events
-
-    # Username to log in to the database
-    # It's recommended to create a dedicated Database user instead of using the default postgres user
-    username: postgres
-
-    # Password to log in with <MyDbPassword> in database <MyDb>
-    password:
-
-  data.jpa.repositories.enabled: true
-
-  flyway:
-    enabled: false
-
-  jpa:
-    # Set to false in production to prevent spamming of console
-    show-sql: false
-    hibernate.type: trace
-    type: trace
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
-    hibernate.ddl-auto: update
-
-    # This setting defines the database creation/update behaviour. Change with caution.
-    properties.hibernate.default_schema: public
-
-  thymeleaf:
-    # THYMELEAF (ThymeleafAutoConfiguration)
-    check-template-location: true
-    suffix: .html
-    mode: HTML
-    encoding: UTF-8
-    content-type: text/html
-    
-  web:
-    resources:
-      static-locations[0]: "file:src/main/resources/static/"
-      static-locations[1]: "classpath:/static/"
+    url: jdbc:postgresql://db:5432/events
 
   mail:
-    host: 127.0.0.1
+    host: mailcatcher
     port: 1025
 
   security:
@@ -56,60 +11,5 @@ spring:
       client:
         provider:
           wisvchconnect:
-            issuer-uri: https://connect.ch.tudelft.nl
-            clientUri: http://localhost:8080/events
-        registration:
-          wisvchconnect:
-            client-id: events-devcontainer
-            client-secret: AN6tZXQea8gFFfDgs_hoUDeiBXPh6CZuvZFE9kBgxzQ2MoHgVzWkPrtSMrNpn75Ems9v4iaz6gRFf0ECY4Q8YEE
-            scope:
-              - auth
-              - profile
-              - email
-              - openid
-              - auth
-
-logging.level.web: DEBUG
-
-# Spring mail
-# Database migration automation. Set to false for development
-
-# Serve connect
-server:
-  port: 8080
-  servlet.context-path: /
-
-# CH Connect Configuration
-wisvch.connect:
-  # Change <MyGooglegroup> to a Google group you're in (e.g. hoothub, dienst2, etc.)
-  admin-groups:
-    - hoothub
-    - beheer
-  claimName: google_groups
-
-# CH Events Configuration
-wisvch.events:
-  image.path: http://localhost:8080/api/v1/documents/
-
-# CH Pay Configuration
-wisvch.chpay:
-  uri: http://localhost:8080/api/v1
-  api-key: test
-  clientUri:  http://localhost:8080/events/
-
-# CH mollie api key
-mollie:
-  apikey: test
-  clientUri: http://localhost:8080
-
-links:
-  gtc: https://ch.tudelft.nl/wp-content/uploads/General_terms_and_conditions-4.pdf
-  passes: https://ch.tudelft.nl/passes
-
-googleWallet:
-  serviceKeyPath: ./googleservicekey.json
-  issuerId: 3388000000022297569
-  origin: http://localhost:8080
-  baseUrl: https://ch.tudelft.nl/events
-
-administrationCosts: 0.35
+            issuer-uri: http://oidc:8080
+            authorization-uri: http://localhost:3093/connect/authorize
