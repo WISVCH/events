@@ -1,0 +1,100 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:35433/events
+    username: postgres
+    password: postgres
+
+  data.jpa.repositories.enabled: true
+
+  flyway:
+    enabled: false
+
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate.ddl-auto: update
+    properties.hibernate.default_schema: public
+
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    cache: false
+    check-template-location: true
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    content-type: text/html
+
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        cachecontrol:
+          max-age: 0
+          no-cache: true
+          no-store: true
+
+  mail:
+    host: localhost
+    port: 3588
+    username: events.devcontainer@mailcatcher.local
+    password: ""
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+      mail.smtp.starttls.required: false
+
+  security:
+    oauth2:
+      client:
+        provider:
+          wisvchconnect:
+            issuer-uri: http://localhost:3093
+            clientUri: http://localhost:3090/events
+        registration:
+          wisvchconnect:
+            client-id: events.devcontainer
+            client-secret:
+            scope:
+              - openid
+              - profile
+              - email
+              - roles
+              
+logging.level.web: DEBUG
+
+server:
+  port: 3090
+  servlet.context-path: /events
+
+wisvch.connect:
+  admin-groups:
+    - bestuur
+    - vc
+    - beheer
+  claimName: groups
+
+wisvch.events:
+  image.path: http://localhost:3090/events/api/v1/documents/
+
+wisvch.chpay:
+  uri: http://localhost:3080/api/v1
+  api-key: "CHANGE_ME"
+  clientUri: http://localhost:3090/events
+
+mollie:
+  apikey: test
+  clientUri: http://localhost:3090/events
+
+links:
+  gtc: https://ch.tudelft.nl/wp-content/uploads/Deelnemersvoorwaarden_versie_12_06_2023.pdf
+  passes: https://ch.tudelft.nl/passes
+
+googleWallet:
+  serviceKeyPath: ./googleservicekey.json
+  issuerId: 3388000000022297569
+  origin: http://localhost:3090/events
+  baseUrl: https://ch.tudelft.nl/events
+
+administrationCosts: 0.35

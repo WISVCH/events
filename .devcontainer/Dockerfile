@@ -1,10 +1,13 @@
-FROM mcr.microsoft.com/devcontainers/java:17
+FROM eclipse-temurin:17-jdk-jammy
 
-RUN su vscode -c "umask 0002 && . /usr/local/sdkman/bin/sdkman-init.sh && sdk install gradle "
+RUN apt-get update -y \
+ && apt-get install -y curl wget tar git unzip ca-certificates gnupg \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+ENV GRADLE_USER_HOME=/home/gradle
+RUN useradd -ms /bin/bash dev \
+ && mkdir -p ${GRADLE_USER_HOME} \
+ && chown -R dev:dev ${GRADLE_USER_HOME}
 
-# [Optional] Uncomment this line to install global node packages.
-# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+USER dev
+WORKDIR /workspace
