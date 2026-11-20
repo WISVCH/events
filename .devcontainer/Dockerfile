@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/java:17
+FROM mcr.microsoft.com/devcontainers/java:17@sha256:0ca496787387b3fa5957a9e596d7eee77808d98081e62bd02e468ea9f4c9f377
 
 RUN su vscode -c "umask 0002 && . /usr/local/sdkman/bin/sdkman-init.sh && sdk install gradle "
 
