@@ -76,7 +76,7 @@ dependencies {
     implementation 'org.webjars.npm:trumbowyg:2.31.0'
     implementation 'org.webjars.npm:jquery:3.7.1'
     implementation 'org.webjars.npm:popper.js:1.16.1'
-    implementation('org.webjars:datatables:1.13.5') {
+    implementation('org.webjars:datatables:3.0.4') {
         exclude group: 'org.webjars', module: 'jquery'
     }
     implementation('org.webjars:datatables-plugins:1.13.6') {
