@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15@sha256:868b5ee219026c0f34c99d696d4494ccb3705cf1a18bed1e0b9de64d9c011ccd
+        image: postgres:19@sha256:4ea94de574c17f0372722806c949757050fbb1cd7648410fe45d6bba275cc00e
         env:
           POSTGRES_DB: events
           POSTGRES_USER: postgres
